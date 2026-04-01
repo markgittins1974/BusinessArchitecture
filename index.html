@@ -16,3 +16,115 @@
       margin-bottom: 30px;
       padding-bottom: 10px;
       border-bottom: 1px solid #ccc;
+    }
+
+    nav a {
+      margin-right: 20px;
+      text-decoration: none;
+      color: #003366;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    section {
+      margin-top: 60px;
+    }
+
+    h1, h2 {
+      color: #003366;
+    }
+
+    footer {
+      margin-top: 80px;
+      font-size: 12px;
+      color: #666;
+      border-top: 1px solid #ccc;
+      padding-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#overview">Overview</a>
+  <a href="#capabilities">Capabilities</a>
+  <a href="#value-streams">Value Streams</a>
+  <a href="#processes">Processes</a>
+</nav>
+
+<section id="overview">
+  <h1>Business Architecture</h1>
+  <p>
+    This page provides a conceptual view of the business architecture,
+    bringing together capabilities, value streams, and processes to support
+    shared understanding and design discussions.
+  </p>
+</section>
+
+<section id="capabilities">
+  <h2>Business Capabilities</h2>
+  <p>
+    Business capabilities describe <strong>what the organisation must be able to do</strong>,
+    independent of organisational structure or systems.
+  </p>
+
+  <ul>
+    <li>Customer Management</li>
+    <li>Revenue Assessment</li>
+    <li>Payment &amp; Refund Management</li>
+    <li>Compliance &amp; Enforcement</li>
+  </ul>
+</section>
+
+<section id="value-streams">
+  <h2>Value Streams</h2>
+
+  <div id="valueStreamContainer">
+    Loading value stream…
+  </div>
+</section>
+
+<section id="processes">
+  <h2>Processes</h2>
+  <p>
+    Processes describe <strong>how work is executed</strong> to realise capabilities,
+    including decision points and hand‑offs.
+  </p>
+
+  <ul>
+    <li>Validate Ownership Change</li>
+    <li>Assess Liability</li>
+    <li>Issue Notice</li>
+    <li>Manage Objections</li>
+  </ul>
+</section>
+
+<footer>
+  Conceptual prototype only. Not a production system.
+  No real data used. No integration with SRO systems.
+</footer>
+
+<script>
+  fetch('./value-stream.html')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('HTTP ' + response.status);
+      }
+      return response.text();
+    })
+    .then(html => {
+      document.getElementById('valueStreamContainer').innerHTML = html;
+    })
+    .catch(error => {
+      console.error('Value stream load failed:', error);
+      document.getElementById('valueStreamContainer').innerText =
+        'Failed to load value stream.';
+    });
+</script>
+
+</body>
+</html>
+``

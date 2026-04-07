@@ -1,519 +1,568 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Land Tax — Heat Maps</title>
-  <!-- Fonts (as specified) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #eef3f7;
-      --surface: #f0f4f8;
-      --surface-raised: #ffffff;
-      --border-subtle: #dce6ef;
-      --text-dark: #1e2d3d;
-      --text-muted: #4a5f72;
-      --accent: #2d7ff9;
-
-      /* Heat map additions */
-      --l1-header-bg: #1a3a5c;
-      --l2-header-bg: #2d5a8e;
-
-      /* Maturity colour pairs (bg + text) */
-      --m-opt-bg: #d6f0f5; --m-opt-text: #1a6e7a;
-      --m-def-bg: #dff0e0; --m-def-text: #2a7a3b;
-      --m-man-bg: #fff5d6; --m-man-text: #8a6500;
-      --m-pla-bg: #eae6f4; --m-pla-text: #5a3fa0;
-      --m-ini-bg: #fde8e8; --m-ini-text: #b53030;
-    }
-
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text-dark);
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    }
-
-    .wrap { max-width: 1400px; margin: 0 auto; padding: 22px 18px 26px; }
-
-    .kicker {
-      font-family: Inter, sans-serif;
-      font-size: 12px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #7A95AA;
-      margin-bottom: 6px;
-    }
-    .title {
-      font-size: 22px;
-      font-weight: 800;
-      margin: 0 0 12px 0;
-      color: #1a3a5c;
-    }
-
-    /* Tabs */
-    .tabs { display: flex; gap: 8px; margin: 14px 0 14px; }
-    .tab-btn {
-      border: 1px solid var(--border-subtle);
-      background: var(--surface-raised);
-      color: var(--text-muted);
-      border-radius: 8px;
-      padding: 10px 12px;
-      font-weight: 700;
-      font-size: 12px;
-      cursor: pointer;
-    }
-    .tab-btn.is-active {
-      color: var(--text-dark);
-      border-color: rgba(45,127,249,0.35);
-      box-shadow: 0 0 0 2px rgba(45,127,249,0.18);
-    }
-
-    /* Views */
-    .hm-view { display: none; }
-    .hm-view.is-active { display: block; }
-
-    /* Filter row */
-    .hm-filter {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-      margin: 6px 0 12px;
-    }
-    .hm-filter__label {
-      font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: rgba(74,95,114,0.85);
-      margin-right: 4px;
-    }
-    .hm-filter__btn {
-      font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 10px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      border-radius: 999px;
-      padding: 6px 10px;
-      border: 1px solid var(--border-subtle);
-      cursor: pointer;
-      user-select: none;
-    }
-    .hm-filter__btn.is-inactive { opacity: 0.3; }
-
-    .hm-filter__btn--all { background:#fff; border-color:#dce6ef; color:#4a5f72; }
-    .hm-filter__btn--defined { background: var(--m-def-bg); border-color: var(--m-def-text); color: var(--m-def-text); }
-    .hm-filter__btn--managed { background: var(--m-man-bg); border-color: var(--m-man-text); color: var(--m-man-text); }
-    .hm-filter__btn--planned { background: var(--m-pla-bg); border-color: var(--m-pla-text); color: var(--m-pla-text); }
-    .hm-filter__btn--initial { background: var(--m-ini-bg); border-color: var(--m-ini-text); color: var(--m-ini-text); }
-    .hm-filter__btn--optimised { background: var(--m-opt-bg); border-color: var(--m-opt-text); color: var(--m-opt-text); }
-
-    /* Grid layout */
-    .hm-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 8px;
-      align-items: start;
-    }
-
-    /* Column header */
-    .hm-col-header {
-      background: var(--l1-header-bg);
-      border-radius: 8px 8px 0 0;
-      padding: 10px 10px 12px;
-      text-align: center;
-    }
-    .hm-col-header__vs {
-      font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.6);
-      margin-bottom: 6px;
-    }
-    .hm-col-header__title {
-      font-size: 11px;
-      font-weight: 700;
-      line-height: 1.3;
-      color: #fff;
-    }
-
-    .hm-col-body {
-      background: transparent;
-      border-radius: 0 0 8px 8px;
-      padding: 8px 0 0;
-    }
-
-    /* Capability cells */
-    .hm-cell {
-      background: var(--surface-raised);
-      border: 1px solid var(--border-subtle);
-      border-radius: 6px;
-      padding: 8px 10px;
-      transition: opacity 0.2s ease;
-      margin-bottom: 6px;
-    }
-    .hm-cell:last-child { margin-bottom: 0; }
-
-    .hm-cell__name {
-      font-size: 11px;
-      font-weight: 600;
-      line-height: 1.35;
-      margin-bottom: 5px;
-      color: var(--text-dark);
-    }
-    .hm-cell__badge {
-      display: inline-block;
-      font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 2px 7px;
-      border-radius: 3px;
-    }
-
-    .is-highlighted { box-shadow: 0 0 0 2px var(--accent); }
-    .is-faded { opacity: 0.18; }
-
-    /* Badge colours */
-    .m-High { background: var(--m-opt-bg); color: var(--m-opt-text); border: 1px solid rgba(26,110,122,0.25); }
-    .m-Medium { background: var(--m-def-bg); color: var(--m-def-text); border: 1px solid rgba(42,122,59,0.25); }
-    .m-Low { background: var(--m-man-bg); color: var(--m-man-text); border: 1px solid rgba(138,101,0,0.25); }
-    .m-Planned { background: var(--m-pla-bg); color: var(--m-pla-text); border: 1px solid rgba(90,63,160,0.25); }
-    .m-Initial { background: var(--m-ini-bg); color: var(--m-ini-text); border: 1px solid rgba(181,48,48,0.25); }
-
-    /* Process cards */
-    .proc-card {
-      background: var(--surface-raised);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 6px;
-    }
-    .proc-card:last-child { margin-bottom: 0; }
-
-    .proc-card__header {
-      background: var(--l2-header-bg);
-      padding: 8px 12px;
-      font-size: 11px;
-      font-weight: 700;
-      line-height: 1.3;
-      color: #fff;
-    }
-
-    .proc-card__caps {
-      padding: 6px 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .proc-cap {
-      display: flex;
-      align-items: flex-start;
-      gap: 6px;
-      padding: 5px 8px;
-      background: var(--surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: 5px;
-    }
-
-    .proc-cap__name {
-      font-size: 10px;
-      font-weight: 500;
-      line-height: 1.35;
-      color: var(--text-dark);
-      flex: 1;
-    }
-
-    .proc-cap__badge {
-      flex-shrink: 0;
-      font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 2px 7px;
-      border-radius: 3px;
-    }
-
-    .note {
-      margin-top: 10px;
-      font-size: 12px;
-      color: rgba(74,95,114,0.95);
-    }
-    .note code { font-family: 'Roboto Mono', monospace; font-size: 11px; }
-  
-
-/* === Corrected maturity colour semantics === */
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Land Tax — Heat Maps v1.4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
 :root {
-  --m-high-bg: #dff0e0;   /* green */
-  --m-high-text: #2a7a3b;
-
-  --m-medium-bg: #e6f0ff; /* blue */
-  --m-medium-text: #1f4fbf;
-
-  --m-low-bg: #fff5d6;    /* yellow */
-  --m-low-text: #8a6500;
+--bg: #eef3f7;
+--surface: #f0f4f8;
+--surface-raised: #ffffff;
+--border-subtle: #dce6ef;
+--text-dark: #1e2d3d;
+--text-muted: #4a5f72;
+--accent: #2d7ff9;
+--l1-header-bg: #1a3a5c;
+--l2-header-bg: #2d5a8e;
+--common-header-bg: #3d6e8e;
+--m-high-bg: #dff0e0; --m-high-text: #2a7a3b;
+--m-medium-bg: #e6f0ff; --m-medium-text: #1f4fbf;
+--m-low-bg: #fff5d6; --m-low-text: #8a6500;
 }
+html, body { height: 100%; }
+body { margin:0; background:var(--bg); color:var(--text-dark); font-family:Inter, system-ui, sans-serif; }
+.wrap { max-width:1500px; margin:0 auto; padding:22px 18px 26px; }
+.kicker { font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:#7A95AA; margin-bottom:6px; }
+.title { font-size:22px; font-weight:800; margin:0 0 4px; color:#1a3a5c; }
+.subtitle { font-size:13px; color:var(--text-muted); margin:0 0 14px; }
 
-.hm-cell.m-High { background: var(--m-high-bg); border-color: rgba(42,122,59,0.35); }
-.hm-cell.m-Medium { background: var(--m-medium-bg); border-color: rgba(31,79,191,0.35); }
-.hm-cell.m-Low { background: var(--m-low-bg); border-color: rgba(138,101,0,0.35); }
+```
+.tabs { display:flex; gap:8px; margin:14px 0; }
+.tab-btn { border:1px solid var(--border-subtle); background:var(--surface-raised); color:var(--text-muted); border-radius:8px; padding:10px 14px; font-weight:700; font-size:12px; cursor:pointer; font-family:Inter,sans-serif; }
+.tab-btn.is-active { color:var(--text-dark); border-color:rgba(45,127,249,0.35); box-shadow:0 0 0 2px rgba(45,127,249,0.18); }
 
-.hm-cell.m-High .hm-cell__badge { background: var(--m-high-bg); color: var(--m-high-text); }
-.hm-cell.m-Medium .hm-cell__badge { background: var(--m-medium-bg); color: var(--m-medium-text); }
-.hm-cell.m-Low .hm-cell__badge { background: var(--m-low-bg); color: var(--m-low-text); }
+.hm-view { display:none; }
+.hm-view.is-active { display:block; }
+
+.hm-filter { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:6px 0 12px; }
+.hm-filter__label { font-family:'Roboto Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(74,95,114,0.85); margin-right:4px; }
+.hm-filter__btn { font-family:'Roboto Mono',monospace; font-size:10px; letter-spacing:0.06em; text-transform:uppercase; border-radius:999px; padding:6px 10px; border:1px solid var(--border-subtle); cursor:pointer; user-select:none; background:#fff; }
+.hm-filter__btn.is-inactive { opacity:0.3; }
+.hm-filter__btn--all { background:#fff; border-color:#dce6ef; color:#4a5f72; }
+.hm-filter__btn--high { background:var(--m-high-bg); border-color:var(--m-high-text); color:var(--m-high-text); }
+.hm-filter__btn--medium { background:var(--m-medium-bg); border-color:var(--m-medium-text); color:var(--m-medium-text); }
+.hm-filter__btn--low { background:var(--m-low-bg); border-color:var(--m-low-text); color:var(--m-low-text); }
+
+.hm-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; align-items:start; }
+
+.hm-col-header { background:var(--l1-header-bg); border-radius:8px 8px 0 0; padding:10px 10px 12px; text-align:center; }
+.hm-col-header__vs { font-family:'Roboto Mono',monospace; font-size:9px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.6); margin-bottom:6px; }
+.hm-col-header__title { font-size:11px; font-weight:700; line-height:1.3; color:#fff; }
+.hm-col-body { background:transparent; border-radius:0 0 8px 8px; padding:8px 0 0; }
+
+.hm-l1-label { font-family:'Roboto Mono',monospace; font-size:8px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--common-header-bg); padding:8px 4px 4px; border-top:1px dashed rgba(61,110,142,0.35); margin-top:4px; }
+.hm-l1-label:first-child { border-top:none; margin-top:0; padding-top:0; }
+
+.hm-cell { background:var(--surface-raised); border:1px solid var(--border-subtle); border-radius:6px; padding:8px 10px; transition:opacity .2s ease; margin-bottom:6px; }
+.hm-cell:last-child { margin-bottom:0; }
+.hm-cell__name { font-size:11px; font-weight:600; line-height:1.35; margin-bottom:5px; color:var(--text-dark); }
+.hm-cell__badge { display:inline-block; font-family:'Roboto Mono',monospace; font-size:9px; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; padding:2px 7px; border-radius:3px; }
+.hm-cell__common-tag { display:inline-block; font-family:'Roboto Mono',monospace; font-size:7px; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; padding:1px 5px; border-radius:2px; background:rgba(61,110,142,0.1); color:var(--common-header-bg); margin-left:4px; vertical-align:middle; }
+.is-highlighted { box-shadow:0 0 0 2px var(--accent); }
+.is-faded { opacity:0.18; }
+
+.hm-cell.m-High { background:var(--m-high-bg); border-color:rgba(42,122,59,0.35); }
+.hm-cell.m-Medium { background:var(--m-medium-bg); border-color:rgba(31,79,191,0.35); }
+.hm-cell.m-Low { background:var(--m-low-bg); border-color:rgba(138,101,0,0.35); }
+.m-High { background:var(--m-high-bg); color:var(--m-high-text); border:1px solid rgba(42,122,59,0.25); }
+.m-Medium { background:var(--m-medium-bg); color:var(--m-medium-text); border:1px solid rgba(31,79,191,0.25); }
+.m-Low { background:var(--m-low-bg); color:var(--m-low-text); border:1px solid rgba(138,101,0,0.25); }
+
+/* Process cards */
+.proc-card { background:var(--surface-raised); border:1px solid var(--border-subtle); border-radius:8px; overflow:hidden; margin-bottom:6px; }
+.proc-card:last-child { margin-bottom:0; }
+.proc-card__header { background:var(--l2-header-bg); padding:8px 12px; font-size:11px; font-weight:700; line-height:1.3; color:#fff; }
+.proc-card__header--common { background:var(--common-header-bg); }
+.proc-card__caps { padding:6px 8px; display:flex; flex-direction:column; gap:4px; }
+
+.proc-cap { display:flex; align-items:flex-start; gap:6px; padding:5px 8px; background:var(--surface); border:1px solid var(--border-subtle); border-radius:5px; flex-wrap:wrap; }
+.proc-cap__name { font-size:10px; font-weight:500; line-height:1.35; color:var(--text-dark); flex:1; min-width:80px; }
+.proc-cap__badge { flex-shrink:0; font-family:'Roboto Mono',monospace; font-size:9px; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; padding:2px 7px; border-radius:3px; }
+
+/* Work item tags */
+.proc-cap__wi-row { width:100%; display:flex; flex-direction:column; gap:2px; margin-top:3px; padding-top:3px; border-top:1px dotted var(--border-subtle); }
+.wi-tag { display:flex; align-items:center; gap:5px; padding:2px 0; }
+.wi-tag__icon { flex-shrink:0; width:12px; height:12px; border-radius:2px; background:rgba(45,127,249,0.1); display:flex; align-items:center; justify-content:center; }
+.wi-tag__icon svg { width:8px; height:8px; fill:var(--accent); }
+.wi-tag__name { font-family:'Roboto Mono',monospace; font-size:8px; font-weight:500; color:var(--accent); flex:1; line-height:1.3; }
+.wi-tag__kpi { font-family:'Roboto Mono',monospace; font-size:8px; font-weight:500; color:var(--text-muted); white-space:nowrap; }
+.wi-tag__items { font-family:'Roboto Mono',monospace; font-size:7px; color:rgba(74,95,114,0.7); white-space:nowrap; }
+
+.view-desc { background:var(--surface-raised); border:1px solid var(--border-subtle); border-radius:8px; margin-bottom:14px; overflow:hidden; }
+.view-desc summary { padding:12px 18px; cursor:pointer; list-style:none; display:flex; align-items:center; gap:8px; user-select:none; }
+.view-desc summary::-webkit-details-marker { display:none; }
+.view-desc summary::before { content:''; display:inline-block; width:0; height:0; border-left:5px solid var(--text-muted); border-top:4px solid transparent; border-bottom:4px solid transparent; transition:transform .15s ease; flex-shrink:0; }
+.view-desc[open] summary::before { transform:rotate(90deg); }
+.view-desc__title { font-size:13px; font-weight:700; color:var(--text-dark); margin:0; }
+.view-desc__content { padding:0 18px 14px; }
+.view-desc__body { font-size:12px; line-height:1.55; color:var(--text-muted); margin:0; }
+.view-desc__body strong { color:var(--text-dark); font-weight:600; }
+.view-desc__cols { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px; }
+.view-desc__col-title { font-family:'Roboto Mono',monospace; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); margin-bottom:4px; }
+.view-desc__col-body { font-size:11px; line-height:1.5; color:var(--text-muted); }
+
+.note { margin-top:10px; font-size:12px; color:rgba(74,95,114,0.95); }
+.note code { font-family:'Roboto Mono',monospace; font-size:11px; }
+
+.legend { display:flex; gap:16px; margin:14px 0 6px; padding:10px 14px; background:var(--surface-raised); border:1px solid var(--border-subtle); border-radius:8px; flex-wrap:wrap; align-items:center; }
+.legend__title { font-family:'Roboto Mono',monospace; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-right:4px; }
+.legend__item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-dark); }
+.legend__swatch { width:12px; height:12px; border-radius:3px; }
+.legend__desc { font-size:10px; color:var(--text-muted); max-width:260px; }
+```
 
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="kicker">SRO TRANSFORMATION ARCHITECTURE</div>
-    <h1 class="title">Land Tax — Heat Maps</h1>
+<div class="wrap">
+<div class="kicker">SRO TRANSFORMATION ARCHITECTURE</div>
+<h1 class="title">Land Tax — Heat Maps</h1>
+<p class="subtitle">Capability and process maturity views across all six value stages — including Common capabilities.</p>
 
-    <div class="tabs">
-      <button id="tabCap" class="tab-btn is-active" onclick="switchTab('cap')">Capability Heat Map</button>
-      <button id="tabProc" class="tab-btn" onclick="switchTab('proc')">Process Heat Map</button>
-    </div>
+```
+<div class="tabs">
+<button id="tabCap" class="tab-btn is-active" onclick="switchTab('cap')">Capability Heat Map</button>
+<button id="tabProc" class="tab-btn" onclick="switchTab('proc')">Process Heat Map</button>
+</div>
 
-    <div id="capView" class="hm-view is-active">
-      <div class="hm-filter">
-        <span class="hm-filter__label">Maturity</span>
-        <button class="hm-filter__btn hm-filter__btn--all" data-level="all" onclick="setFilter('all')">All</button>
-        <button class="hm-filter__btn hm-filter__btn--optimised is-inactive" data-level="High" onclick="setFilter('High')">High</button>
-        <button class="hm-filter__btn hm-filter__btn--defined is-inactive" data-level="Medium" onclick="setFilter('Medium')">Medium</button>
-        <button class="hm-filter__btn hm-filter__btn--managed is-inactive" data-level="Low" onclick="setFilter('Low')">Low</button>
-        <button class="hm-filter__btn hm-filter__btn--planned is-inactive" data-level="Planned" onclick="setFilter('Planned')">Planned</button>
-        <button class="hm-filter__btn hm-filter__btn--initial is-inactive" data-level="Initial" onclick="setFilter('Initial')">Initial</button>
-      </div>
+<div id="capView" class="hm-view is-active">
+<details class="view-desc">
+<summary><span class="view-desc__title">What am I looking at?</span></summary>
+<div class="view-desc__content">
+<p class="view-desc__body">This view shows every <strong>Land Tax capability</strong> organised by the six value stages that make up the end to end Land Tax lifecycle — from maintaining land records (VS1) through to issuing certificates (VS6). Each card represents an L3 capability — the most granular unit of business function. The colour indicates its current <strong>maturity</strong>: how well established, consistent, and effective that capability is today.</p>
+<div class="view-desc__cols">
+<div>
+<div class="view-desc__col-title">How to read it</div>
+<div class="view-desc__col-body">Each column is a <strong>value stage</strong> — a major phase of Land Tax administration. Capabilities are listed top to bottom within each stage. Cards tagged <strong style="color:var(--common-header-bg);">COM</strong> are Common capabilities — reusable platform functions (e.g. Customer Management, Property Data) that are shared across multiple value stages.</div>
+</div>
+<div>
+<div class="view-desc__col-title">How to use the filter</div>
+<div class="view-desc__col-body">Use the maturity buttons above the grid to highlight capabilities at a specific level. <strong>High</strong> (green) capabilities are stable and effective. <strong>Medium</strong> (blue) have gaps in execution. <strong>Low</strong> (yellow) are fragmented, heavily manual, or reliant on workarounds — these are typically priority areas for improvement.</div>
+</div>
+</div>
+</div>
+</details>
+<div class="hm-filter">
+<span class="hm-filter__label">Maturity</span>
+<button class="hm-filter__btn hm-filter__btn--all" data-level="all" onclick="setFilter('all')">All</button>
+<button class="hm-filter__btn hm-filter__btn--high is-inactive" data-level="High" onclick="setFilter('High')">High</button>
+<button class="hm-filter__btn hm-filter__btn--medium is-inactive" data-level="Medium" onclick="setFilter('Medium')">Medium</button>
+<button class="hm-filter__btn hm-filter__btn--low is-inactive" data-level="Low" onclick="setFilter('Low')">Low</button>
+</div>
+<div id="capGrid" class="hm-grid"></div>
+<div class="legend">
+<span class="legend__title">Legend</span>
+<div class="legend__item"><div class="legend__swatch" style="background:var(--m-high-bg);border:1px solid rgba(42,122,59,0.35);"></div><div><strong>High</strong><div class="legend__desc">Well established, stable, consistently effective.</div></div></div>
+<div class="legend__item"><div class="legend__swatch" style="background:var(--m-medium-bg);border:1px solid rgba(31,79,191,0.35);"></div><div><strong>Medium</strong><div class="legend__desc">Processes exist but incomplete. Execution inconsistent.</div></div></div>
+<div class="legend__item"><div class="legend__swatch" style="background:var(--m-low-bg);border:1px solid rgba(138,101,0,0.35);"></div><div><strong>Low</strong><div class="legend__desc">Limited or fragmented. Heavily manual, workaround-reliant.</div></div></div>
+<div class="legend__item"><div class="legend__swatch" style="background:rgba(61,110,142,0.1);border:1px solid rgba(61,110,142,0.25);"></div><div><strong style="color:var(--common-header-bg);">COM</strong><div class="legend__desc">Common capability shared across value stages.</div></div></div>
+</div>
+</div>
 
-      <div id="capGrid" class="hm-grid"></div>
-      <div class="note">
-        <strong>Data note:</strong> Maturity values are taken from <code>Maturity Level</code> in the CSV. Any non‑spec values are displayed as <code>Planned</code> (default per spec) with the original value retained in the tooltip.
-      </div>
-    </div>
+<div id="procView" class="hm-view">
+<details class="view-desc">
+<summary><span class="view-desc__title">What am I looking at?</span></summary>
+<div class="view-desc__content">
+<p class="view-desc__body">This view reorganises the same capabilities by the <strong>business process</strong> they belong to, rather than listing them individually. Each card represents a named process (e.g. "Administer Land Ownership and Notice of Acquisition") and lists the capabilities that are performed within it. This reveals which processes carry the most capabilities and where maturity is concentrated or lacking.</p>
+<div class="view-desc__cols">
+<div>
+<div class="view-desc__col-title">Work Items</div>
+<div class="view-desc__col-body">Where a capability has been linked to operational <strong>work items</strong>, these appear below the capability name in blue. Work items are the discrete tasks that staff perform day to day — e.g. "LOAN - Resolve Party Match" or "PPR". Each shows its <strong>KPI target</strong> (days to complete) and current <strong>items on hand</strong> (backlog volume).</div>
+</div>
+<div>
+<div class="view-desc__col-title">Common Processes</div>
+<div class="view-desc__col-body">Process cards with a <strong>lighter header</strong> contain Common capabilities — shared platform functions invoked by the value stage. These are distinguished visually so you can see at a glance which processes are stage specific versus shared across Land Tax.</div>
+</div>
+</div>
+</div>
+</details>
+<div class="hm-filter" id="procLegend" style="margin-bottom:12px;">
+<span class="hm-filter__label">Process Heat Map</span>
+<span style="font-size:10px;color:var(--text-muted);">Work items shown with <span style="color:var(--accent);font-weight:600;">name</span> and <span style="font-family:'Roboto Mono',monospace;font-weight:500;">KPI days</span> where linked.</span>
+</div>
+<div id="procGrid" class="hm-grid"></div>
+</div>
+```
 
-    <div id="procView" class="hm-view">
-      <div id="procGrid" class="hm-grid"></div>
-    </div>
-  </div>
+</div>
 
-  <script>
-    // Inline DATA array (value stages only)
-    const DATA = [{"vs": "VS1", "title": "Maintain Land & Ownership Records", "l1": [{"name": "Maintain Land & Ownership Records", "l2": [{"name": "Taxable Land Maintenance", "maturity": "High", "process": "Administer Land Ownership and Notice of Acquisition"}, {"name": "Subdivisions & Consolidations", "maturity": "Low", "process": "Process Subdivision & Consolidation"}, {"name": "Title to Property Relationship", "maturity": "High", "process": "Administer Land Ownership and Notice of Acquisition"}, {"name": "Ownership Maintenance", "maturity": "High", "process": "Administer Land Ownership and Notice of Acquisition"}, {"name": "Joint Ownership", "maturity": "Low", "process": "Register Joint Ownership"}, {"name": "Land Held on Trust", "maturity": "Low", "process": "Register Land Held on Trust"}, {"name": "Unknown Customer", "maturity": "High", "process": "Administer Land Ownership and Notice of Acquisition"}]}]}, {"vs": "VS2", "title": "Determine How Land Is Taxed", "l1": [{"name": "Determine How Land Is Taxed", "l2": [{"name": "Joint Ownership", "maturity": "Low", "process": "Determine Joint Ownership Tax Treatment"}, {"name": "Land Held on Trust", "maturity": "Low", "process": "Determine Trust Tax Treatment"}, {"name": "Determine Land Tax Liability", "maturity": "Low", "process": "Determine Land Tax Liability"}, {"name": "Exemption Creation Management", "maturity": "Low", "process": "Configure Land Tax Exemption Types"}, {"name": "Exemption Application Management", "l3": [{"name": "Automated Exemption Application", "maturity": "High", "process": "Administer Land Ownership and Notice of Acquisition"}, {"name": "Manual Exemption Application", "maturity": "Low", "process": "Process Exemption Application"}]}, {"name": "Concession Application", "maturity": "Low", "process": "Process Concession Application"}, {"name": "Tax/Entitlement Rate Management", "maturity": "Low", "process": "Manage Land Tax Rates"}, {"name": "Threshold Management", "l3": [{"name": "Tax Free Threshold Management", "maturity": "Low", "process": "Manage Tax Free Threshold"}]}, {"name": "Land Tax", "l3": [{"name": "Absentee Owner Management", "maturity": "Low", "process": "Manage Absentee Owner Surcharge"}, {"name": "Build to Rent Management", "maturity": "Low", "process": "Manage Build to Rent Registration"}]}, {"name": "Usage Management", "maturity": "Low", "process": "Record & Assess Property Usage"}]}]}, {"vs": "VS3", "title": "Assess & Issue Land Tax", "l1": [{"name": "Assess & Issue Land Tax", "l2": [{"name": "Valuations Maintenance", "maturity": "Low", "process": "Maintain Land Valuations"}, {"name": "General Valuations", "maturity": "Low", "process": "Apply General Valuation Cycle"}, {"name": "Supplementary Valuations", "maturity": "Low", "process": "Apply Supplementary Valuation"}, {"name": "SRO Requested Valuations", "maturity": "Low", "process": "Request & Apply SRO Valuation"}, {"name": "Single Valuation for Multiple Properties", "maturity": "Low", "process": "Apply Single Valuation Across Properties"}, {"name": "Generate Land Tax Assessments", "maturity": "Low", "process": "Generate Land Tax Assessments"}, {"name": "Issue Land Tax Assessments", "maturity": "Low", "process": "Issue Land Tax Assessment Notices"}, {"name": "Issue Cycle Management", "l3": [{"name": "Issue Cycle Schedule Management", "maturity": "Low", "process": "Schedule Annual Issue Cycle"}, {"name": "First Time Liability Management", "maturity": "Low", "process": "Identify & Assess First Time Liability"}]}, {"name": "Liability/Entitlement Calculation Management", "l3": [{"name": "Automated Liability/Entitlement Calculation", "maturity": "High", "process": "Administer Land Ownership and Notice of Acquisition"}, {"name": "Manual Liability/Entitlement Calculation", "maturity": "Low", "process": "Calculate Land Tax Liability (Manual)"}]}, {"name": "Deduction Management", "l3": [{"name": "Trust Deduction Management", "maturity": "Low", "process": "Apply Trust Deduction"}]}, {"name": "Threshold Management", "l3": [{"name": "Minimum Liability Threshold Management", "maturity": "Low", "process": "Apply Minimum Liability Threshold"}]}]}]}, {"vs": "VS4", "title": "Manage Payments & Adjustments", "l1": [{"name": "Manage Payments & Adjustments", "l2": [{"name": "Payment Management", "maturity": "Low", "process": "Receive & Record Payment"}, {"name": "Payment Allocation Management", "maturity": "Low", "process": "Allocate Payment to Liability", "l3": [{"name": "Property Liability Allocation", "maturity": "Low", "process": "Allocate Payment to Property Liability"}]}, {"name": "Instalment Management", "maturity": "Low", "process": "Manage Payment Instalment Arrangement"}, {"name": "Refund Management", "maturity": "Low", "process": "Process Land Tax Refund"}, {"name": "Adjustment Management", "maturity": "Low", "process": "Apply Financial Adjustment"}]}]}, {"vs": "VS5", "title": "Resolve Issues & Enforce Compliance", "l1": [{"name": "Resolve Issues & Enforce Compliance", "l2": [{"name": "Objection Management", "maturity": "Low", "process": "Manage Land Tax Objection"}, {"name": "Valuation Objection Management", "maturity": "Low", "process": "Manage Valuation Objection"}, {"name": "Dispute Resolution Management", "maturity": "Low", "process": "Resolve Land Tax Dispute"}, {"name": "Case Management", "maturity": "Low", "process": "Manage Land Tax Case"}, {"name": "Compliance Management", "maturity": "Low", "process": "Monitor & Enforce Compliance"}, {"name": "Audit Management", "maturity": "Low", "process": "Conduct Land Tax Audit"}, {"name": "Risk Management", "maturity": "Low", "process": "Identify & Manage Compliance Risk"}, {"name": "Quality Assurance Management", "maturity": "Low", "process": "Perform Quality Assurance Review"}, {"name": "Referral Management", "l3": [{"name": "Private Ruling Management", "maturity": "Low", "process": "Process Private Ruling Application"}]}]}]}, {"vs": "VS6", "title": "Provide Certificates & Assurance", "l1": [{"name": "Provide Certificates & Assurance", "l2": [{"name": "Issue Land Tax Certificates", "maturity": "Low", "process": "Issue Land Tax Certificate"}, {"name": "Certificate Evidence & Record Management", "maturity": "Low", "process": "Maintain Certificate Evidence & Records"}]}]}];
+<script>
+// Work Items mapped by capability name -> [{workItem, kpiDays, itemsOnHand}]
+const WORK_ITEMS = {
+"Absentee Owner Management": [{"wi":"Absentee Owner","kpi":60,"oh":"74"}],
+"Ownership Maintenance": [{"wi":"Automated Land Sold","kpi":21,"oh":"587"},{"wi":"Land Ownership","kpi":120,"oh":"1,843"},{"wi":"LOAN - Resolve Excluded Party","kpi":60,"oh":"895"},{"wi":"Manual Land Sold LTX","kpi":21,"oh":"80"}],
+"Customer Identity Verification": [{"wi":"Change Of Customer Details","kpi":21,"oh":"1,635"}],
+"Customer Detail Amendment Management": [{"wi":"Change Of Customer Details","kpi":21,"oh":"1,635"}],
+"Customer Communication Record Management": [{"wi":"Complex Correspondence","kpi":60,"oh":"31"},{"wi":"General Correspondence","kpi":21,"oh":"39"}],
+"Address Validation Management": [{"wi":"Cust Delivery Address Change","kpi":14,"oh":"1"}],
+"Duplicate Customer Detection": [{"wi":"Customer Data Maintenance","kpi":90,"oh":"89"}],
+"Customer Decommission Management": [{"wi":"Decommission (Customer)","kpi":3,"oh":"1,334"}],
+"Objection Management": [{"wi":"Formal Objection","kpi":120,"oh":"1,409"}],
+"First Time Liability Management": [{"wi":"FTI Investigations","kpi":60,"oh":"9,594"}],
+"Property Data Validation": [{"wi":"LOAN - Resolve Multi Property Conflict","kpi":60,"oh":"298"},{"wi":"LOAN - Resolve Multi Property Match","kpi":60,"oh":"164"},{"wi":"LOAN - Resolve Property Conflict","kpi":60,"oh":"3,538"},{"wi":"LOAN - Resolve Property Match","kpi":60,"oh":"1,082"},{"wi":"MD - Prop Match Error Metro","kpi":90,"oh":"279"},{"wi":"MD - Prop Match Error NMetro","kpi":90,"oh":"334"}],
+"Customer Data Matching": [{"wi":"LOAN - Resolve Party Match","kpi":60,"oh":"7,193"}],
+"Trustee Management": [{"wi":"LOAN - Resolve Trust Party Exception","kpi":60,"oh":"1,899"}],
+"Title to Property Relationship": [{"wi":"LOAN - Review Unsupported NoA","kpi":60,"oh":"78"}],
+"Insolvency Relationship Management": [{"wi":"LTX Insolvency","kpi":90,"oh":"137"}],
+"Penalty Management": [{"wi":"LTX Penalty Notification Drift","kpi":14,"oh":"555"}],
+"Refund Management": [{"wi":"LTX Refund Approval Required","kpi":5,"oh":"987"},{"wi":"Refund Application","kpi":60,"oh":"30"}],
+"Land Held on Trust": [{"wi":"LTX Trust Form 14","kpi":60,"oh":"3,108"},{"wi":"Trust Amendments","kpi":60,"oh":"117"}],
+"Subdivisions & Consolidations": [{"wi":"Plans","kpi":90,"oh":"89"}],
+"Concession Application": [{"wi":"PPL","kpi":120,"oh":"479"}],
+"Manual Exemption Application": [{"wi":"PPR","kpi":120,"oh":"2,143"}],
+"Private Ruling Management": [{"wi":"Private Rulings","kpi":120,"oh":"624"}],
+"Taxable Land Maintenance": [{"wi":"Property Data Maintenance","kpi":90,"oh":"0"}],
+"Valuation Objection Management": [{"wi":"Property Valuation Objection","kpi":60,"oh":"2,154"},{"wi":"Valuation Objection","kpi":10,"oh":"105"},{"wi":"Valuation Objection Amendment","kpi":300,"oh":"2,177"},{"wi":"Valuation Objection Decision","kpi":28,"oh":"0"},{"wi":"Vg Objection Error","kpi":60,"oh":"2"},{"wi":"Vg Objection Property Error","kpi":60,"oh":"161"}],
+"Unknown Customer": [{"wi":"Owner Unknown Prop Data Invest","kpi":60,"oh":"565"}],
+"Build to Rent Management": [{"wi":"Pending Special Tax","kpi":10,"oh":"0"}],
+"Joint Ownership": [{"wi":"Related Party Automation","kpi":21,"oh":"97"}],
+"Service of Notice Management": [{"wi":"Returned Unclaimed Amendments","kpi":60,"oh":"4,636"}],
+"Self Reporting Management": [{"wi":"Section 105 - Online","kpi":14,"oh":"1,057"}],
+"Suspense Management": [{"wi":"Suspense - LTX","kpi":60,"oh":"23,648"}],
+"SRO Requested Valuations": [{"wi":"SV Requests","kpi":90,"oh":"38"}],
+"Assessment Cancellation Management": [{"wi":"User Withdrawn Assessment From Print","kpi":2,"oh":"7,467"}],
+"Valuation Data Acquisition": [{"wi":"MD - Prop Missing Val Taxable","kpi":90,"oh":"3,919"},{"wi":"Vals Supps Format Test","kpi":21,"oh":"1"}],
+"Valuation Data Management": [{"wi":"MD - Prop Missing Val Nontaxable","kpi":90,"oh":"1,302"}],
+"Property Creation": [{"wi":"MD - Prop No Match Metro","kpi":90,"oh":"341"},{"wi":"MD - Prop No Match NMetro","kpi":90,"oh":"359"}],
+"Manual Liability/Entitlement Calculation": [{"wi":"Multiple Amendments","kpi":120,"oh":"41"}],
+"Quality Assessment & Validation": [{"wi":"QA - LOAN Work Item","kpi":3,"oh":"0"},{"wi":"QA - LTX Work Item","kpi":3,"oh":"0"},{"wi":"QA - WGT Salesforce","kpi":1,"oh":"1"},{"wi":"Quality Checking LTX","kpi":10,"oh":"0"},{"wi":"Quality Checking VAL","kpi":0,"oh":"13"}]
+};
 
-    let capBuilt = false;
-    let procBuilt = false;
+const DATA = [
+{
+"vs":"VS1","title":"Maintain Land & Ownership Records",
+"l1":[
+{"name":"Maintain Land & Ownership Records","isCommon":false,"l2":[
+{"name":"Taxable Land Maintenance","maturity":"High","process":"Administer Land Ownership and Notice of Acquisition"},
+{"name":"Subdivisions & Consolidations","maturity":"Low","process":"Process Subdivision & Consolidation"},
+{"name":"Title to Property Relationship","maturity":"High","process":"Administer Land Ownership and Notice of Acquisition"},
+{"name":"Ownership Maintenance","maturity":"High","process":"Administer Land Ownership and Notice of Acquisition"},
+{"name":"Joint Ownership","maturity":"Low","process":"Register Joint Ownership"},
+{"name":"Land Held on Trust","maturity":"Low","process":"Register Land Held on Trust"},
+{"name":"Unknown Customer","maturity":"High","process":"Administer Land Ownership and Notice of Acquisition"}
+]},
+{"name":"Customer Management","isCommon":true,"l2":[
+{"name":"Customer Data Matching","maturity":"High","process":"Administer Land Ownership and Notice of Acquisition"},
+{"name":"Customer Identity Verification","maturity":"High","process":"Administer Land Ownership and Notice of Acquisition"},
+{"name":"Customer Detail Amendment Management","maturity":"Low","process":"Administer Land Ownership and Notice of Acquisition"},
+{"name":"Duplicate Customer Detection","maturity":"High","process":"Administer Land Ownership and Notice of Acquisition"},
+{"name":"Customer Decommission Management","maturity":"Low","process":"Manage Duplicate Customer Records"},
+{"name":"Trustee Management","maturity":"Low","process":"Administer Land Ownership and Notice of Acquisition"},
+{"name":"Automated Customer Creation","maturity":"High","process":"Administer Land Ownership and Notice of Acquisition"},
+{"name":"Manual Customer Creation","maturity":"High","process":"Administer Land Ownership and Notice of Acquisition"},
+{"name":"Joint Ownership Member Management","maturity":"Low","process":"Register Joint Ownership"}
+]},
+{"name":"Property & Data Management","isCommon":true,"l2":[
+{"name":"Address Validation Management","maturity":"High","process":"Administer Land Ownership and Notice of Acquisition"},
+{"name":"Property Data Validation","maturity":"High","process":"Administer Land Ownership and Notice of Acquisition"},
+{"name":"Property Creation","maturity":"High","process":"Administer Land Ownership and Notice of Acquisition"},
+{"name":"Ownership Management","maturity":"High","process":"Administer Land Ownership and Notice of Acquisition"},
+{"name":"Subdivision/Consolidation Management","maturity":"Low","process":"Process Subdivision & Consolidation"}
+]},
+{"name":"Revenue Line Management","isCommon":true,"l2":[
+{"name":"Automatic Revenue Line Registration Creation","maturity":"High","process":"Administer Land Ownership and Notice of Acquisition"}
+]}
+]
+},
+{
+"vs":"VS2","title":"Determine How Land Is Taxed",
+"l1":[
+{"name":"Determine How Land Is Taxed","isCommon":false,"l2":[
+{"name":"Joint Ownership","maturity":"Low","process":"Determine Joint Ownership Tax Treatment"},
+{"name":"Land Held on Trust","maturity":"Low","process":"Determine Trust Tax Treatment"},
+{"name":"Determine Land Tax Liability","maturity":"Low","process":"Determine Land Tax Liability"},
+{"name":"Exemption Creation Management","maturity":"Low","process":"Configure Land Tax Exemption Types"},
+{"name":"Exemption Application Management","l3":[
+{"name":"Automated Exemption Application","maturity":"High","process":"Administer Land Ownership and Notice of Acquisition"},
+{"name":"Manual Exemption Application","maturity":"Low","process":"Process Exemption Application"}
+]},
+{"name":"Concession Application","maturity":"Low","process":"Process Concession Application"},
+{"name":"Tax/Entitlement Rate Management","maturity":"Low","process":"Manage Land Tax Rates"},
+{"name":"Threshold Management","l3":[
+{"name":"Tax Free Threshold Management","maturity":"Low","process":"Manage Tax Free Threshold"}
+]},
+{"name":"Land Tax","l3":[
+{"name":"Absentee Owner Management","maturity":"Low","process":"Manage Absentee Owner Surcharge"},
+{"name":"Build to Rent Management","maturity":"Low","process":"Manage Build to Rent Registration"}
+]},
+{"name":"Usage Management","maturity":"Low","process":"Record & Assess Property Usage"}
+]}
+]
+},
+{
+"vs":"VS3","title":"Assess & Issue Land Tax",
+"l1":[
+{"name":"Assess & Issue Land Tax","isCommon":false,"l2":[
+{"name":"Valuations Maintenance","maturity":"Low","process":"Maintain Land Valuations"},
+{"name":"General Valuations","maturity":"Low","process":"Apply General Valuation Cycle"},
+{"name":"Supplementary Valuations","maturity":"Low","process":"Apply Supplementary Valuation"},
+{"name":"SRO Requested Valuations","maturity":"Low","process":"Request & Apply SRO Valuation"},
+{"name":"Single Valuation for Multiple Properties","maturity":"Low","process":"Apply Single Valuation Across Properties"},
+{"name":"Generate Land Tax Assessments","maturity":"Low","process":"Generate Land Tax Assessments"},
+{"name":"Issue Land Tax Assessments","maturity":"Low","process":"Issue Land Tax Assessment Notices"},
+{"name":"Issue Cycle Management","l3":[
+{"name":"Issue Cycle Schedule Management","maturity":"Low","process":"Schedule Annual Issue Cycle"},
+{"name":"First Time Liability Management","maturity":"Low","process":"Identify & Assess First Time Liability"}
+]},
+{"name":"Liability/Entitlement Calculation Management","l3":[
+{"name":"Automated Liability/Entitlement Calculation","maturity":"High","process":"Administer Land Ownership and Notice of Acquisition"},
+{"name":"Manual Liability/Entitlement Calculation","maturity":"Low","process":"Calculate Land Tax Liability (Manual)"}
+]},
+{"name":"Deduction Management","l3":[
+{"name":"Trust Deduction Management","maturity":"Low","process":"Apply Trust Deduction"}
+]},
+{"name":"Threshold Management","l3":[
+{"name":"Minimum Liability Threshold Management","maturity":"Low","process":"Apply Minimum Liability Threshold"}
+]}
+]},
+{"name":"Assessment Management","isCommon":true,"l2":[
+{"name":"Assessment Cancellation Management","maturity":"Low","process":"Manage Land Tax Assessments"},
+{"name":"Assessment Generation Management","maturity":"Low","process":"Generate Land Tax Assessments"},
+{"name":"Assessment Withdrawal Management","maturity":"Low","process":"Manage Land Tax Assessments"},
+{"name":"Service of Notice Management","maturity":"Low","process":"Manage Land Tax Assessment"}
+]},
+{"name":"Valuation Management","isCommon":true,"l2":[
+{"name":"Valuation Data Acquisition","maturity":"Low","process":"Manage Land Tax Valuations"},
+{"name":"Valuation Data Management","maturity":"Low","process":"Manage Land Tax Valuations"}
+]},
+{"name":"Customer Communication Management","isCommon":true,"l2":[
+{"name":"Customer Communication Record Management","maturity":"Low","process":"Manage Customer Correspondence"},
+{"name":"Automated Communication Management","maturity":"Low","process":"Manage Customer Correspondence"},
+{"name":"Electronic Communication Consent Management","maturity":"Low","process":"Manage Customer Correspondence"}
+]}
+]
+},
+{
+"vs":"VS4","title":"Manage Payments & Adjustments",
+"l1":[
+{"name":"Manage Payments & Adjustments","isCommon":false,"l2":[
+{"name":"Payment Management","maturity":"Low","process":"Receive & Record Payment"},
+{"name":"Payment Allocation Management","maturity":"Low","process":"Allocate Payment to Liability","l3":[
+{"name":"Property Liability Allocation","maturity":"Low","process":"Allocate Payment to Property Liability"}
+]},
+{"name":"Instalment Management","maturity":"Low","process":"Manage Payment Instalment Arrangement"},
+{"name":"Refund Management","maturity":"Low","process":"Process Land Tax Refund"},
+{"name":"Adjustment Management","maturity":"Low","process":"Apply Financial Adjustment"}
+]},
+{"name":"Financial Obligations Management","isCommon":true,"l2":[
+{"name":"Interest Management","maturity":"Low","process":"Manage Land Tax Interest"},
+{"name":"Penalty Management","maturity":"Low","process":"Manage Land Tax Penalty"},
+{"name":"Write Off Management","maturity":"Low","process":"Manage Land Tax Write-Offs"}
+]},
+{"name":"Payment & Financial Management","isCommon":true,"l2":[
+{"name":"Customer Liability Allocation","maturity":"Low","process":"Allocate Payment to Liability"},
+{"name":"Suspense Management","maturity":"Low","process":"Manage Suspense Payments"},
+{"name":"Refund Data Management","maturity":"Low","process":"Process Land Tax Refund"}
+]}
+]
+},
+{
+"vs":"VS5","title":"Resolve Issues & Enforce Compliance",
+"l1":[
+{"name":"Resolve Issues & Enforce Compliance","isCommon":false,"l2":[
+{"name":"Objection Management","maturity":"Low","process":"Manage Land Tax Objection"},
+{"name":"Valuation Objection Management","maturity":"Low","process":"Manage Valuation Objection"},
+{"name":"Dispute Resolution Management","maturity":"Low","process":"Resolve Land Tax Dispute"},
+{"name":"Case Management","maturity":"Low","process":"Manage Land Tax Case"},
+{"name":"Compliance Management","maturity":"Low","process":"Monitor & Enforce Compliance"},
+{"name":"Audit Management","maturity":"Low","process":"Conduct Land Tax Audit"},
+{"name":"Risk Management","maturity":"Low","process":"Identify & Manage Compliance Risk"},
+{"name":"Quality Assurance Management","maturity":"Low","process":"Perform Quality Assurance Review"},
+{"name":"Referral Management","l3":[
+{"name":"Private Ruling Management","maturity":"Low","process":"Process Private Ruling Application"}
+]}
+]},
+{"name":"Case & Compliance Management","isCommon":true,"l2":[
+{"name":"Objection Creation Management","maturity":"Low","process":"Manage Land Tax Objection"},
+{"name":"Case Creation","maturity":"Low","process":"Manage Land Tax Case"},
+{"name":"Formal Objection Management","maturity":"Low","process":"Manage Land Tax Objection"},
+{"name":"Self Reporting Management","maturity":"Low","process":"Manage Section 105 Applications"},
+{"name":"Tip Offs & Voluntary Disclosure Management","maturity":"Low","process":"Monitor & Enforce Compliance"},
+{"name":"Potential Investigation Cases (PICs)","maturity":"Low","process":"Monitor & Enforce Compliance"},
+{"name":"Insolvency Relationship Management","maturity":"Low","process":"Manage Land Tax Insolvencies"}
+]}
+]
+},
+{
+"vs":"VS6","title":"Provide Certificates & Assurance",
+"l1":[
+{"name":"Provide Certificates & Assurance","isCommon":false,"l2":[
+{"name":"Issue Land Tax Certificates","maturity":"Low","process":"Issue Land Tax Certificate"},
+{"name":"Certificate Evidence & Record Management","maturity":"Low","process":"Maintain Certificate Evidence & Records"}
+]},
+{"name":"Assessment Management","isCommon":true,"l2":[
+{"name":"Assessment Cancellation Management","maturity":"Low","process":"Manage Land Tax Assessments"},
+{"name":"Assessment Generation Management","maturity":"Low","process":"Generate Land Tax Assessments"},
+{"name":"Assessment Withdrawal Management","maturity":"Low","process":"Manage Land Tax Assessments"},
+{"name":"Service of Notice Management","maturity":"Low","process":"Manage Land Tax Assessment"}
+]},
+{"name":"Customer Communication Management","isCommon":true,"l2":[
+{"name":"Customer Communication Record Management","maturity":"Low","process":"Manage Customer Correspondence"},
+{"name":"Automated Communication Management","maturity":"Low","process":"Manage Customer Correspondence"},
+{"name":"Electronic Communication Consent Management","maturity":"Low","process":"Manage Customer Correspondence"}
+]}
+]
+}
+];
 
-    function switchTab(tab) {
-      const tabCap = document.getElementById('tabCap');
-      const tabProc = document.getElementById('tabProc');
-      const capView = document.getElementById('capView');
-      const procView = document.getElementById('procView');
+let capBuilt = false, procBuilt = false;
 
-      if (tab === 'cap') {
-        tabCap.classList.add('is-active');
-        tabProc.classList.remove('is-active');
-        capView.classList.add('is-active');
-        procView.classList.remove('is-active');
-        if (!capBuilt) buildCapHeatMap();
-      } else {
-        tabProc.classList.add('is-active');
-        tabCap.classList.remove('is-active');
-        procView.classList.add('is-active');
-        capView.classList.remove('is-active');
-        if (!procBuilt) buildProcHeatMap();
-      }
-    }
+function switchTab(tab) {
+document.getElementById('tabCap').classList.toggle('is-active', tab==='cap');
+document.getElementById('tabProc').classList.toggle('is-active', tab==='proc');
+document.getElementById('capView').classList.toggle('is-active', tab==='cap');
+document.getElementById('procView').classList.toggle('is-active', tab==='proc');
+if (tab==='cap' && !capBuilt) buildCapHeatMap();
+if (tab==='proc' && !procBuilt) buildProcHeatMap();
+}
 
-    function normaliseMaturity(m) {
-      const levels = ['High','Medium','Low'];
-      if (!m) return { level:'Low', note:null };
-      const s = String(m).trim();
-      const match = levels.find(x => x.toLowerCase() === s.toLowerCase());
-      if (match) return { level:match, note:null };
-      return { level:'Low', note:s };
-    }
+function getL3s(stage) {
+const out = [];
+(stage.l1||[]).forEach(l1 => {
+const isCommon = !!l1.isCommon;
+(l1.l2||[]).forEach(l2 => {
+if (l2.l3 && l2.l3.length) {
+l2.l3.forEach(l3 => out.push({name:l3.name, maturity:l3.maturity||'Low', process:l3.process||'TBA', isCommon, l1Name:l1.name}));
+} else {
+out.push({name:l2.name, maturity:l2.maturity||'Low', process:l2.process||'TBA', isCommon, l1Name:l1.name});
+}
+});
+});
+return out;
+}
 
-    // Returns flat array of {name, maturity, note} for all L3 capabilities in a stage
-    function getL3s(stage) {
-      const out = [];
-      (stage.l1 || []).forEach(l1 => {
-        (l1.l2 || []).forEach(l2 => {
-          if (l2.l3 && l2.l3.length) {
-            l2.l3.forEach(l3 => {
-              const nm = normaliseMaturity(l3.maturity);
-              out.push({ name: l3.name, maturity: nm.level, note: l3.maturityNote || nm.note });
-            });
-          } else {
-            const nm = normaliseMaturity(l2.maturity);
-            out.push({ name: l2.name, maturity: nm.level, note: l2.maturityNote || nm.note });
-          }
-        });
-      });
-      return out;
-    }
+function getProcGroups(stage) {
+const map = new Map(), order = [];
+function add(proc, cap, isCommon) {
+const key = proc||'TBA';
+if (!map.has(key)) { map.set(key, {caps:[], isCommon:false}); order.push(key); }
+const g = map.get(key);
+g.caps.push(cap);
+if (isCommon) g.isCommon = true;
+}
+getL3s(stage).forEach(c => add(c.process, {name:c.name, maturity:c.maturity}, c.isCommon));
+return order.map(p => ({process:p, caps:map.get(p).caps, isCommon:map.get(p).isCommon}));
+}
 
-    // Returns [{process, caps:[]}] grouped by process name
-    function getProcGroups(stage) {
-      const map = new Map();
-      const order = [];
+const WI_ICON_SVG = '<svg viewBox="0 0 16 16"><path d="M3 1h10a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V3a2 2 0 012-2zm1 3v2h8V4H4zm0 4v2h6V8H4z"/></svg>';
 
-      function add(proc, cap) {
-        const key = proc || 'TBA';
-        if (!map.has(key)) { map.set(key, []); order.push(key); }
-        map.get(key).push(cap);
-      }
+function renderWorkItems(capName) {
+const wis = WORK_ITEMS[capName];
+if (!wis || !wis.length) return '';
+let html = '<div class="proc-cap__wi-row">';
+wis.forEach(w => {
+html += `<div class="wi-tag">
+<div class="wi-tag__icon">${WI_ICON_SVG}</div>
+<span class="wi-tag__name">${escapeHtml(w.wi)}</span>
+<span class="wi-tag__kpi">${w.kpi}d KPI</span>
+<span class="wi-tag__items">${w.oh} on hand</span>
+</div>`;
+});
+html += '</div>';
+return html;
+}
 
-      (stage.l1 || []).forEach(l1 => {
-        (l1.l2 || []).forEach(l2 => {
-          if (l2.l3 && l2.l3.length) {
-            l2.l3.forEach(l3 => {
-              const nm = normaliseMaturity(l3.maturity);
-              add(l3.process || 'TBA', { name: l3.name, maturity: nm.level, note: l3.maturityNote || nm.note });
-            });
-          } else {
-            const nm = normaliseMaturity(l2.maturity);
-            add(l2.process || 'TBA', { name: l2.name, maturity: nm.level, note: l2.maturityNote || nm.note });
-          }
-        });
-      });
+function buildCapHeatMap() {
+const grid = document.getElementById('capGrid');
+grid.innerHTML = '';
+DATA.forEach(stage => {
+const col = document.createElement('div');
+const header = document.createElement('div');
+header.className = 'hm-col-header';
+header.innerHTML = `<div class="hm-col-header__vs">${stage.vs}</div><div class="hm-col-header__title">${stage.title}</div>`;
+const body = document.createElement('div');
+body.className = 'hm-col-body';
+const l3s = getL3s(stage);
+let currentL1 = null;
+l3s.forEach(item => {
+if (item.l1Name !== currentL1) {
+currentL1 = item.l1Name;
+if (item.isCommon) {
+const label = document.createElement('div');
+label.className = 'hm-l1-label';
+label.textContent = item.l1Name;
+body.appendChild(label);
+}
+}
+const cell = document.createElement('div');
+cell.className = 'hm-cell m-' + item.maturity;
+cell.dataset.maturity = item.maturity;
+const commonTag = item.isCommon ? '<span class="hm-cell__common-tag">COM</span>' : '';
+cell.innerHTML = `<div class="hm-cell__name">${escapeHtml(item.name)}${commonTag}</div><span class="hm-cell__badge m-${item.maturity}">${item.maturity}</span>`;
+body.appendChild(cell);
+});
+col.appendChild(header);
+col.appendChild(body);
+grid.appendChild(col);
+});
+capBuilt = true;
+setFilter('all');
+}
 
-      return order.map(p => ({ process: p, caps: map.get(p) }));
-    }
+function buildProcHeatMap() {
+const grid = document.getElementById('procGrid');
+grid.innerHTML = '';
+DATA.forEach(stage => {
+const col = document.createElement('div');
+const header = document.createElement('div');
+header.className = 'hm-col-header';
+header.innerHTML = `<div class="hm-col-header__vs">${stage.vs}</div><div class="hm-col-header__title">${stage.title}</div>`;
+const body = document.createElement('div');
+body.className = 'hm-col-body';
+const groups = getProcGroups(stage);
+groups.forEach(g => {
+const card = document.createElement('div');
+card.className = 'proc-card';
+const h = document.createElement('div');
+h.className = 'proc-card__header' + (g.isCommon ? ' proc-card__header--common' : '');
+h.textContent = g.process;
+const caps = document.createElement('div');
+caps.className = 'proc-card__caps';
+g.caps.forEach(c => {
+const row = document.createElement('div');
+row.className = 'proc-cap';
+const hasWI = WORK_ITEMS[c.name] && WORK_ITEMS[c.name].length > 0;
+row.innerHTML = `<div class="proc-cap__name">${escapeHtml(c.name)}</div><span class="proc-cap__badge m-${c.maturity}">${c.maturity}</span>${renderWorkItems(c.name)}`;
+caps.appendChild(row);
+});
+card.appendChild(h);
+card.appendChild(caps);
+body.appendChild(card);
+});
+col.appendChild(header);
+col.appendChild(body);
+grid.appendChild(col);
+});
+procBuilt = true;
+}
 
-    function buildCapHeatMap() {
-      const grid = document.getElementById('capGrid');
-      grid.innerHTML = '';
+function setFilter(level) {
+const cells = document.querySelectorAll('#capView .hm-cell');
+if (level==='all') {
+cells.forEach(c => c.classList.remove('is-faded','is-highlighted'));
+} else {
+cells.forEach(c => {
+if (c.dataset.maturity===level) { c.classList.remove('is-faded'); c.classList.add('is-highlighted'); }
+else { c.classList.remove('is-highlighted'); c.classList.add('is-faded'); }
+});
+}
+document.querySelectorAll('#capView .hm-filter__btn').forEach(b => {
+const lv = b.getAttribute('data-level');
+b.classList.toggle('is-inactive', level==='all' ? lv!=='all' : lv!==level);
+});
+}
 
-      DATA.forEach(stage => {
-        const col = document.createElement('div');
+function escapeHtml(str) {
+return String(str).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+}
 
-        const header = document.createElement('div');
-        header.className = 'hm-col-header';
-        header.innerHTML = `<div class="hm-col-header__vs">${stage.vs}</div><div class="hm-col-header__title">${stage.title}</div>`;
+document.addEventListener('DOMContentLoaded', () => buildCapHeatMap());
+</script>
 
-        const body = document.createElement('div');
-        body.className = 'hm-col-body';
-
-        const l3s = getL3s(stage);
-        l3s.forEach(item => {
-          const cell = document.createElement('div');
-          cell.className = 'hm-cell m-' + item.maturity;
-          cell.dataset.maturity = item.maturity;
-          cell.title = item.note ? `CSV maturity: ${item.note}` : '';
-
-          const badgeClass = `hm-cell__badge m-${item.maturity}`;
-          cell.innerHTML = `<div class="hm-cell__name">${escapeHtml(item.name)}</div><span class="${badgeClass}">${item.maturity}</span>`;
-          body.appendChild(cell);
-        });
-
-        col.appendChild(header);
-        col.appendChild(body);
-        grid.appendChild(col);
-      });
-
-      capBuilt = true;
-      setFilter('all');
-    }
-
-    function buildProcHeatMap() {
-      const grid = document.getElementById('procGrid');
-      grid.innerHTML = '';
-
-      DATA.forEach(stage => {
-        const col = document.createElement('div');
-
-        const header = document.createElement('div');
-        header.className = 'hm-col-header';
-        header.innerHTML = `<div class="hm-col-header__vs">${stage.vs}</div><div class="hm-col-header__title">${stage.title}</div>`;
-
-        const body = document.createElement('div');
-        body.className = 'hm-col-body';
-
-        const groups = getProcGroups(stage);
-        groups.forEach(g => {
-          const card = document.createElement('div');
-          card.className = 'proc-card';
-
-          const h = document.createElement('div');
-          h.className = 'proc-card__header';
-          h.textContent = g.process;
-
-          const caps = document.createElement('div');
-          caps.className = 'proc-card__caps';
-
-          g.caps.forEach(c => {
-            const row = document.createElement('div');
-            row.className = 'proc-cap';
-            row.title = c.note ? `CSV maturity: ${c.note}` : '';
-            row.innerHTML = `<div class="proc-cap__name">${escapeHtml(c.name)}</div><span class="proc-cap__badge m-${c.maturity}">${c.maturity}</span>`;
-            caps.appendChild(row);
-          });
-
-          card.appendChild(h);
-          card.appendChild(caps);
-          body.appendChild(card);
-        });
-
-        col.appendChild(header);
-        col.appendChild(body);
-        grid.appendChild(col);
-      });
-
-      procBuilt = true;
-    }
-
-    // Maturity filter (Capability Heat Map only)
-    function setFilter(level) {
-      const cells = document.querySelectorAll('#capView .hm-cell');
-      if (level === 'all') {
-        cells.forEach(c => { c.classList.remove('is-faded'); c.classList.remove('is-highlighted'); });
-      } else {
-        cells.forEach(c => {
-          if (c.dataset.maturity === level) {
-            c.classList.remove('is-faded');
-            c.classList.add('is-highlighted');
-          } else {
-            c.classList.remove('is-highlighted');
-            c.classList.add('is-faded');
-          }
-        });
-      }
-
-      const btns = document.querySelectorAll('#capView .hm-filter__btn');
-      btns.forEach(b => {
-        const lv = b.getAttribute('data-level');
-        if (level === 'all') {
-          if (lv === 'all') b.classList.remove('is-inactive');
-          else b.classList.add('is-inactive');
-        } else {
-          if (lv === level) b.classList.remove('is-inactive');
-          else b.classList.add('is-inactive');
-        }
-      });
-    }
-
-    function escapeHtml(str) {
-      return String(str)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      buildCapHeatMap();
-    });
-  </script>
 </body>
 </html>

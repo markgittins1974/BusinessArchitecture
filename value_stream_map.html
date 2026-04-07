@@ -1,1 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Land Tax — Value Stream Map v1.0</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --chevron-default: #e8eef3;
+  --chevron-hover: #d6e4ef;
+  --chevron-selected: #4f81bd;
+  --chevron-border: #ffffff;
+
+  --text-dark: #1e2d3d;
+  --text-mid: #4a5f72;
+  --text-light: #7a95aa;
+
+  --surface: #f0f4f8;
+  --surface-raised: #ffffff;
+  --border-subtle: #dce6ef;
+
+  --accent: #4f81bd;
+  --accent-dark: #2d5a8e;
+
+  --l1-header-bg: #1a3a5c;
+  --l2-header-bg: #2d5a8e;
+  --l2-header-text: #ffffff;
+
+  --process-pill-bg: #e8f4f0;
+  --process-pill-border: #2a9d7a;
+  --process-pill-text: #1a7a5e;
+
+  --process-pill-tba-bg: #f0f0f0;
+  --process-pill-tba-border: #b0bec5;
+  --process-pill-tba-text: #7a95aa;
+
+  --pill-bg: #e8eef3;
+  --pill-border: #4f81bd;
+  --pill-text: #4f81bd;
+
+  --common-base: #3d6b4f;
+  --common-hover: #4a7c5f;
+  --common-selected: #2f5a41;
+
+  --support-base: #5a3e8a;
+  --support-hover: #6b4fa1;
+  --support-selected: #4b3276;
+
+  --mat-defined-bg: #dff0e0;
+  --mat-defined-text: #2a7a3b;
+
+  --mat-managed-bg: #fff5d6;
+  --mat-managed-text: #8a6500;
+
+  --mat-planned-bg: #eae6f4;
+  --mat-planned-text: #5a3fa0;
+
+  --mat-initial-bg: #fde8e8;
+  --mat-initial-text: #b53030;
+
+  --mat-optimised-bg: #d6f0f5;
+  --mat-optimised-text: #1a6e7a;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--surface);
+  color: var(--text-dark);
+}
+
+.shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.eyebrow {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: var(--text-mid);
+  margin-bottom: 28px;
+}
+
+.section-label {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 10px;
+}
+
+/* Chevron Track */
+#chevronTrack {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  margin-bottom: 20px;
+}
+
+.chevron {
+  cursor: pointer;
+  padding: 16px 12px 16px 32px;
+  background: var(--chevron-default);
+  clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 50%, calc(100% - 26px) 100%, 0 100%, 26px 50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chevron:first-child {
+  clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 50%, calc(100% - 26px) 100%, 0 100%);
+  padding-left: 16px;
+}
+
+.chevron:hover {
+  background: var(--chevron-hover);
+}
+
+.chevron.is-selected {
+  background: var(--chevron-selected);
+}
+
+.chevron__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.chevron.is-selected .chevron__label {
+  color: #fff;
+}
+
+/* Lens Toggle */
+.lens-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.lens-label {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
+
+.lens-btn {
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border-subtle);
+  background: var(--surface-raised);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#lensToggleCommon.is-active {
+  background: var(--common-base);
+  color: #fff;
+  border-color: var(--common-base);
+}
+
+#lensToggleSupport.is-active {
+  background: var(--support-base);
+  color: #fff;
+  border-color: var(--support-base);
+}
+
+/* Context Header */
+#contextHeader {
+  display: none;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+#contextHeader.is-visible {
+  display: block;
+}
+
+/* Capability hierarchy styles unchanged */
+
+/* Maturity badges */
+.maturity-badge {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+
+.maturity-badge--defined { background: var(--mat-defined-bg); color: var(--mat-defined-text); }
+.maturity-badge--managed { background: var(--mat-managed-bg); color: var(--mat-managed-text); }
+.maturity-badge--planned { background: var(--mat-planned-bg); color: var(--mat-planned-text); }
+.maturity-badge--initial { background: var(--mat-initial-bg); color: var(--mat-initial-text); }
+.maturity-badge--optimised { background: var(--mat-optimised-bg); color: var(--mat-optimised-text); }
+
+.process-pill--tba {
+  background: var(--process-pill-tba-bg);
+  border-color: var(--process-pill-tba-border);
+  color: var(--process-pill-tba-text);
+}
+</style>
+</head>
+
+<body>
+<div class="shell">
+  <div class="eyebrow">SRO Transformation Architecture</div>
+  <h1 class="page-title">Land Tax — Value Stream Map</h1>
+  <p class="page-subtitle">
+    Select a value stage to explore its Land Tax capabilities.
+    Use the lens toggle to view Common or Supporting capabilities (one lens at a time).
+  </p>
+
+  <div class="section-label">VALUE STAGES</div>
+  <div id="chevronTrack"></div>
+
+  <div class="lens-row">
+    <span class="lens-label">Capability Lens</span>
+    <button class="lens-btn" id="lensToggleCommon" onclick="selectCommon()">Common Capabilities</button>
+    <button class="lens-btn" id="lensToggleSupport" onclick="selectSupport()">Supporting Capabilities</button>
+  </div>
+
+  <div id="contextHeader"></div>
+
+  <div id="emptyState">
+    <div class="empty-text">Select a value stage above to explore its capabilities.</div>
+  </div>
+
+  <div id="capabilityPanel">
+    <div id="panelContent"></div>
+  </div>
+</div>
+
+<!-- JavaScript unchanged — your original script block goes here verbatim -->
+</body>
+</html>
+``

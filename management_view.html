@@ -30,8 +30,8 @@
       background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
       color: var(--text-primary);
       display: flex;
-      justify-content: centre;
-      align-items: centre;
+      justify-content: center;
+      align-items: center;
     }
 
     .container {
@@ -41,7 +41,7 @@
     }
 
     header {
-      text-align: centre;
+      text-align: center;
       margin-bottom: 48px;
     }
 
@@ -49,13 +49,11 @@
       font-size: 2.6rem;
       font-weight: 700;
       margin-bottom: 8px;
-      text-align: centre;
     }
 
     .subtitle {
       font-size: 1.1rem;
       color: var(--text-secondary);
-      text-align: centre;
     }
 
     .section {
@@ -88,6 +86,7 @@
       text-decoration: none;
       color: inherit;
       transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      display: block;
     }
 
     a.card:hover {
@@ -117,7 +116,7 @@
 
     footer {
       margin-top: 56px;
-      text-align: centre;
+      text-align: center;
       font-size: 0.8rem;
       color: var(--text-secondary);
       opacity: 0.8;
@@ -134,17 +133,17 @@
       </div>
     </header>
 
-    <!-- EXECUTIVE -->
+    <!-- STRATEGIC -->
     <section class="section">
       <div class="section-title exec">Strategic View</div>
       <div class="grid">
-        executive/level-0-value-stream.html
+        <a class="card" href="executive/level-0-value-stream.html">
           <span class="icon">📊</span>
           <h3>Level 0 Value Stream Map</h3>
           <p>End‑to‑end view of Land Tax outcomes across the full lifecycle.</p>
         </a>
 
-        executive/capability-heatmap.html
+        <a class="card" href="executive/capability-heatmap.html">
           <span class="icon">📈</span>
           <h3>Capability Heat Map</h3>
           <p>Maturity and gaps across capabilities to support investment and prioritisation.</p>
@@ -152,23 +151,23 @@
       </div>
     </section>
 
-    <!-- BRANCH MANAGER -->
+    <!-- MANAGEMENT -->
     <section class="section">
       <div class="section-title manager">Management View</div>
       <div class="grid">
-        management/level-1-value-stream.html
+        <a class="card" href="management/level-1-value-stream.html">
           <span class="icon">🧭</span>
           <h3>Level 1 Value Stream Map</h3>
           <p>Capabilities organised by value stage to support ownership and coordination.</p>
         </a>
 
-        management/capability-pain-points.html
+        <a class="card" href="management/capability-pain-points.html">
           <span class="icon">🔥</span>
           <h3>Capability Pain Points</h3>
           <p>Operational issues mapped directly to impacted capabilities.</p>
         </a>
 
-        management/dashboard.html
+        <a class="card" href="management/dashboard.html">
           <span class="icon">📌</span>
           <h3>Dashboard</h3>
           <p>Track delivery progress and improvement over time.</p>
@@ -176,11 +175,11 @@
       </div>
     </section>
 
-    <!-- TEAM LEADER -->
+    <!-- OPERATIONAL -->
     <section class="section">
       <div class="section-title team">Operational View</div>
       <div class="grid">
-        operations/ltx-process-catalogue.html
+        <a class="card" href="operations/ltx-process-catalogue.html">
           <span class="icon">📚</span>
           <h3>LTX Process Catalogue</h3>
           <p>Detailed process descriptions that explain how work is executed.</p>
@@ -194,3 +193,4 @@
   </div>
 </body>
 </html>
+``

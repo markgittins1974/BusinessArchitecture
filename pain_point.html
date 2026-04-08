@@ -1,1 +1,242 @@
+<!DOCTYPE html>
 
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRO Capability Pain Heat Map v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f0f4f8;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --border-subtle: #dce6ef;
+  --text-dark: #1e2d3d;
+  --text-light: #4a5f72;
+  --text-muted: #7a8ea0;
+  --l1-header-bg: #1a3a5c;
+  --l2-header-bg: #2d5a8e;
+  --accent: #2d5a8e;
+
+/* Pain level colours — mapped from BA maturity palette */
+–vhigh-bg: #fde8e8;
+–vhigh-text: #b53030;
+–vhigh-border: #f5c2c2;
+–high-bg: #fff5d6;
+–high-text: #8a6500;
+–high-border: #e8d87a;
+–mod-bg: #eae6f4;
+–mod-text: #5a3fa0;
+–mod-border: #cdc4e6;
+–low-bg: #dff0e0;
+–low-text: #2a7a3b;
+–low-border: #b5ddb9;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(–bg);color:var(–text-dark);font-family:‘Inter’,sans-serif;min-height:100vh}
+
+/* Header */
+.page-header{background:var(–surface);border-bottom:1px solid var(–border-subtle);padding:24px 32px 20px}
+.page-header__eyebrow{font-family:‘Roboto Mono’,monospace;font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(–text-muted);margin-bottom:6px}
+.page-header__title{font-size:clamp(22px,3.5vw,30px);font-weight:700;color:var(–text-dark);line-height:1.2}
+.page-header__sub{font-size:13px;color:var(–text-light);margin-top:4px}
+
+/* Controls */
+.controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 32px;background:var(–surface);border-bottom:1px solid var(–border-subtle)}
+.controls__label{font-family:‘Roboto Mono’,monospace;font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(–text-muted);margin-right:4px}
+
+.filter-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:6px;border:1px solid var(–border-subtle);background:var(–surface);font-family:‘Inter’,sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:opacity .2s,border-color .2s}
+.filter-btn.is-inactive{opacity:0.3}
+.filter-btn–all{color:var(–text-light)}
+.filter-btn–red{background:var(–vhigh-bg);border-color:var(–vhigh-border);color:var(–vhigh-text)}
+.filter-btn–orange{background:var(–high-bg);border-color:var(–high-border);color:var(–high-text)}
+.filter-btn–yellow{background:var(–mod-bg);border-color:var(–mod-border);color:var(–mod-text)}
+.filter-btn–green{background:var(–low-bg);border-color:var(–low-border);color:var(–low-text)}
+
+.sep{width:1px;height:20px;background:var(–border-subtle)}
+
+.view-btn{padding:5px 12px;border-radius:6px;border:1px solid var(–border-subtle);background:var(–surface);font-family:‘Inter’,sans-serif;font-size:11px;font-weight:500;color:var(–text-light);cursor:pointer;transition:.2s}
+.view-btn.is-active{background:var(–l1-header-bg);color:#fff;border-color:var(–l1-header-bg)}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px;padding:20px 32px 40px;max-width:1280px}
+
+/* Card */
+.card{background:var(–surface-raised);border:1px solid var(–border-subtle);border-radius:8px;overflow:hidden;cursor:pointer;transition:box-shadow .2s,opacity .2s}
+.card:hover{box-shadow:0 4px 16px rgba(26,58,92,.1)}
+.card.is-faded{opacity:0.12;pointer-events:none}
+.card__bar{height:4px}
+.card[data-level=“red”] .card__bar{background:var(–vhigh-text)}
+.card[data-level=“orange”] .card__bar{background:var(–high-text)}
+.card[data-level=“yellow”] .card__bar{background:var(–mod-text)}
+.card[data-level=“green”] .card__bar{background:var(–low-text)}
+.card__body{padding:14px 16px 16px}
+.card__top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
+.card__title{font-size:13px;font-weight:700;color:var(–text-dark);line-height:1.3}
+.card__badge{font-family:‘Roboto Mono’,monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+.card[data-level=“red”] .card__badge{background:var(–vhigh-bg);color:var(–vhigh-text)}
+.card[data-level=“orange”] .card__badge{background:var(–high-bg);color:var(–high-text)}
+.card[data-level=“yellow”] .card__badge{background:var(–mod-bg);color:var(–mod-text)}
+.card[data-level=“green”] .card__badge{background:var(–low-bg);color:var(–low-text)}
+.card__desc{font-size:11px;color:var(–text-light);line-height:1.4;margin-bottom:8px}
+.card__insight{font-size:10px;font-weight:600;color:var(–text-muted);font-style:italic;margin-bottom:8px}
+.card__tags{display:flex;flex-wrap:wrap;gap:4px}
+.card__tag{font-size:10px;font-weight:500;padding:2px 6px;border-radius:4px;background:var(–bg);border:1px solid var(–border-subtle);color:var(–text-light)}
+.card__more{font-family:‘Roboto Mono’,monospace;font-size:9px;color:var(–text-muted);margin-top:10px;letter-spacing:0.04em}
+
+/* Detail Panel */
+.overlay{position:fixed;inset:0;background:rgba(26,58,92,.35);z-index:100;opacity:0;pointer-events:none;transition:opacity .25s}
+.overlay.open{opacity:1;pointer-events:all}
+.detail{position:fixed;right:0;top:0;bottom:0;width:min(500px,92vw);background:var(–surface);z-index:101;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;border-left:1px solid var(–border-subtle)}
+.detail.open{transform:translateX(0)}
+.detail__header{background:var(–l1-header-bg);padding:20px 24px;position:relative}
+.detail__close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.detail__title{font-size:17px;font-weight:700;color:#fff;line-height:1.3}
+.detail__badge-row{margin-top:6px}
+.detail__content{padding:20px 24px 32px}
+.detail__section{margin-bottom:16px}
+.detail__section-title{font-family:‘Roboto Mono’,monospace;font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(–text-muted);margin-bottom:8px}
+.detail__section-body{background:var(–bg);border:1px solid var(–border-subtle);border-radius:6px;padding:12px 14px}
+.detail__section-body ul{padding-left:16px}
+.detail__section-body li{font-size:12px;color:var(–text-light);line-height:1.5;margin-bottom:3px}
+.detail__quote{font-size:11px;font-style:italic;color:var(–text-light);padding:5px 10px;border-left:3px solid var(–border-subtle);margin:5px 0;line-height:1.45}
+.detail__insight{font-size:12px;font-weight:600;color:var(–accent);margin-top:12px;padding:10px 14px;background:rgba(45,90,142,.06);border-radius:6px;border:1px solid rgba(45,90,142,.15)}
+
+@media(max-width:640px){.page-header,.controls,.grid{padding-left:16px;padding-right:16px}.grid{grid-template-columns:1fr}}
+</style>
+
+</head>
+<body>
+
+<div class="page-header">
+  <div class="page-header__eyebrow">SRO Transformation Architecture</div>
+  <div class="page-header__title">Land Tax — Pain Heat Map</div>
+  <div class="page-header__sub">SRO capability pain drivers across the Land Tax operating model</div>
+</div>
+
+<div class="controls" id="controls"></div>
+<div class="grid" id="grid"></div>
+
+<div class="overlay" id="overlay"></div>
+<div class="detail" id="detail">
+  <div class="detail__header">
+    <button class="detail__close" id="detailClose">✕</button>
+    <div id="detailHeaderContent"></div>
+  </div>
+  <div class="detail__content" id="detailContent"></div>
+</div>
+
+<script>
+const DATA = [
+  {title:"Customer Data Management",level:"red",label:"Very High",icon:"👤",subtitle:"Siloed systems, duplicates, inconsistent addresses, manual cleansing",why:["Siloed systems","Duplicate customers","Inconsistent addresses","Manual data cleansing","Poor verification during calls","Data not synchronising across systems"],evidence:['"Hard to identify customers"','"Data inconsistent across systems"','"Manual validation errors"','"Customer data duplicated"','"Address accuracy issues"'],l3:["Identification of Customer","Customer Data Verification & Validation","Customer Address / Format Management","Duplicate handling"],insight:"This is the single biggest root cause of pain."},
+  {title:"Customer Service Request & Support",level:"red",label:"Very High",icon:"🎧",subtitle:"No reference numbers, poor case visibility, unclear ownership",why:["No reference numbers","Poor case visibility","Queries repeated","Unclear ownership","Long handling times"],evidence:['"No case tracking"','"Customers unsure if requests received"','"CSOs can\'t see what other teams are doing"','"Status confusion leads to repeat calls"'],l3:["Enquiry Handling","SLA Management","Case creation / tracking gaps"],insight:"Where operational pain turns into customer pain."},
+  {title:"Customer Communication & Engagement",level:"red",label:"Very High",icon:"💬",subtitle:"Inconsistent letters, missing references, untimely notifications",why:["Inconsistent letters","No reference numbers in emails","Untimely notifications","Generic messaging","Channel fragmentation"],evidence:['"Emails don\'t include reference numbers"','"Customers don\'t know if something was received"','"Messaging inconsistent across systems"','"Notification overload / irrelevance"'],l3:["Customer Notifications","Inbound / Outbound Notifications","Communication Channel Management"],insight:"Directly fuels distrust and complaints."},
+  {title:"Entity Association Management",level:"orange",label:"High",subtitle:"No property-centric view, grouping errors, trust/joint-owner complexity",why:["No property-centric view","Grouping errors","Trustees / joint owners hard to resolve","Aggregation logic buried in rules"],evidence:['"Lack of property centricity"','"Managing multiple accounts is hard"','"Grouping accuracy risks"'],l3:["Entity Association","Customer Relationship links"],insight:"Amplifies pain when combined with red-zone issues."},
+  {title:"Property Data Management",level:"orange",label:"High",subtitle:"Ownership quality issues, delayed feeds, incorrect valuations",why:["Ownership data quality issues","Delayed external feeds","Manual corrections","Incorrect valuations flowing downstream"],evidence:['"Poor property data quality"','"Ownership not up to date"','"VicRoads feeds infrequent"','"Manual interventions required"'],l3:["Identification of Property","Property Address Management","Ownership / Transfer Management"],insight:"Bad property data ripples through assessments and correspondence."},
+  {title:"Workflow & SLA Management",level:"orange",label:"High",subtitle:"Unclear prioritisation, invisible SLA breaches, routing delays",why:["Task prioritisation unclear","No visualisation of workload","SLA breaches invisible","Routing delays"],evidence:['"CSOs can\'t prioritise"','"Tracking progress is difficult"','"Escalation delays"','"Case status unclear"'],l3:["SLA Management","Workflow Escalation"],insight:"Without visibility, everything feels urgent."},
+  {title:"Document & Lodgement Management",level:"yellow",label:"Moderate",subtitle:"Manual document creation, slow generators, storage fragmentation",why:["Manual document creation","Slow generators","Storage fragmentation"],evidence:['"Manual document handling"','"Slow document generation"','"CM9/CM10 risks"'],l3:["Document Generation","Document Storage"],insight:"Secondary but compounds when upstream data is wrong."},
+  {title:"Assessment & Reassessment",level:"yellow",label:"Moderate",subtitle:"Customers don't understand changes, poor explainability",why:["Customers don't understand changes","Explainability lacking","Amendments cause confusion"],evidence:['"Why did my amount change?"','"Decision accuracy questioned"','"Reassessment confusion"'],l3:["Assessment Calculation","Reassessment Triggers"],insight:"Opacity in assessments drives complaints."},
+  {title:"Refunds Management",level:"yellow",label:"Moderate",subtitle:"Manual tracking, poor transparency, approval delays",why:["Manual tracking","Poor status transparency","Delays in approvals"],evidence:['"Refund tracking manual"','"No visibility of approval"','"Refund status verification delays"'],l3:["Refund Processing","Refund Status Tracking"],insight:"Low volume but high frustration when it goes wrong."},
+  {title:"Revenue Line Alert Management",level:"green",label:"Low",subtitle:"Causes pain mainly when upstream data or workflow is weak",why:[],evidence:[],l3:[],insight:"Contained when upstream capabilities work."},
+  {title:"Rate Table / Penalty Maintenance",level:"green",label:"Low",subtitle:"Localised impact, manageable independently",why:[],evidence:[],l3:[],insight:"Contained when upstream capabilities work."},
+  {title:"Print & Mail",level:"green",label:"Low",subtitle:"Downstream dependency, low standalone pain",why:[],evidence:[],l3:[],insight:"Contained when upstream capabilities work."},
+  {title:"Payment Channel Management",level:"green",label:"Low",subtitle:"Localised, manageable",why:[],evidence:[],l3:[],insight:"Contained when upstream capabilities work."}
+];
+
+const LEVELS=[
+  {key:"all",cls:"filter-btn--all",label:"All"},
+  {key:"red",cls:"filter-btn--red",label:"Very High"},
+  {key:"orange",cls:"filter-btn--orange",label:"High"},
+  {key:"yellow",cls:"filter-btn--yellow",label:"Moderate"},
+  {key:"green",cls:"filter-btn--green",label:"Low"}
+];
+const VIEWS=[];
+
+let activeLevel="all", activeView="all";
+const controls=document.getElementById('controls');
+
+// Filter buttons
+const fLabel=document.createElement('span');fLabel.className='controls__label';fLabel.textContent='Pain Level';controls.appendChild(fLabel);
+LEVELS.forEach(l=>{
+  const b=document.createElement('button');
+  b.className='filter-btn '+l.cls+(l.key==='all'?'':' is-inactive');
+  if(l.key==='all') b.classList.remove('is-inactive');
+  b.textContent=l.label;
+  b.dataset.level=l.key;
+  b.onclick=()=>{activeLevel=l.key;applyFilters()};
+  controls.appendChild(b);
+});
+
+// No view buttons
+
+function applyFilters(){
+  // Update filter button states
+  controls.querySelectorAll('.filter-btn').forEach(b=>{
+    if(activeLevel==='all'){b.classList.remove('is-inactive')}
+    else{b.dataset.level===activeLevel||b.dataset.level==='all'?b.classList.remove('is-inactive'):b.classList.add('is-inactive')}
+  });
+  controls.querySelectorAll('.view-btn').forEach(b=>{
+    b.dataset.view===activeView?b.classList.add('is-active'):b.classList.remove('is-active');
+  });
+  // Filter cards
+  document.querySelectorAll('.card').forEach(c=>{
+    let show=true;
+    const lv=c.dataset.level;
+    if(activeLevel!=='all'&&lv!==activeLevel) show=false;
+    c.classList.toggle('is-faded',!show);
+  });
+}
+
+// Build cards
+const grid=document.getElementById('grid');
+DATA.forEach((d,i)=>{
+  const c=document.createElement('div');c.className='card';c.dataset.level=d.level;c.dataset.idx=i;
+  c.innerHTML=`<div class="card__bar"></div>
+    <div class="card__body">
+      <div class="card__top"><span class="card__title">${d.title}</span><span class="card__badge">${d.label}</span></div>
+      <div class="card__desc">${d.subtitle}</div>
+      <div class="card__insight">${d.insight}</div>
+      ${d.l3.length?`<div class="card__tags">${d.l3.map(t=>`<span class="card__tag">${t}</span>`).join('')}</div>`:''}
+      <div class="card__more">Click to explore →</div>
+    </div>`;
+  c.onclick=()=>openDetail(i);
+  grid.appendChild(c);
+});
+
+// Detail panel
+const overlay=document.getElementById('overlay');
+const detail=document.getElementById('detail');
+document.getElementById('detailClose').onclick=closeDetail;
+overlay.onclick=closeDetail;
+
+function openDetail(i){
+  const d=DATA[i];
+  document.getElementById('detailHeaderContent').innerHTML=`
+    <div class="detail__title">${d.title}</div>
+    <div class="detail__badge-row"><span class="card__badge" style="margin-top:8px;display:inline-block">${d.label} Pain</span></div>`;
+  // apply badge colour to detail header badge
+  const badge=document.querySelector('.detail__badge-row .card__badge');
+  const map={red:'var(--vhigh-bg)',orange:'var(--high-bg)',yellow:'var(--mod-bg)',green:'var(--low-bg)'};
+  const mapC={red:'var(--vhigh-text)',orange:'var(--high-text)',yellow:'var(--mod-text)',green:'var(--low-text)'};
+  badge.style.background=map[d.level];badge.style.color=mapC[d.level];
+
+  let html='';
+  if(d.why.length){
+    html+=`<div class="detail__section"><div class="detail__section-title">Why it's hot</div><div class="detail__section-body"><ul>${d.why.map(w=>`<li>${w}</li>`).join('')}</ul></div></div>`;
+  }
+  if(d.evidence.length){
+    html+=`<div class="detail__section"><div class="detail__section-title">Pain evidence</div><div class="detail__section-body">${d.evidence.map(e=>`<div class="detail__quote">${e}</div>`).join('')}</div></div>`;
+  }
+  if(d.l3.length){
+    html+=`<div class="detail__section"><div class="detail__section-title">Key L3 stress points</div><div class="detail__section-body"><ul>${d.l3.map(t=>`<li>${t}</li>`).join('')}</ul></div></div>`;
+  }
+  html+=`<div class="detail__insight">${d.insight}</div>`;
+  document.getElementById('detailContent').innerHTML=html;
+  detail.classList.add('open');overlay.classList.add('open');
+}
+function closeDetail(){detail.classList.remove('open');overlay.classList.remove('open')}
+</script>
+
+</body>
+</html>

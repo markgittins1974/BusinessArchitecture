@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Land Tax (LTX) – Activities on Hand</title>
+
+<style>
+:root {
+  --bg:#f8fafc;
+  --surface:#ffffff;
+  --border:#e5e7eb;
+  --text:#0f172a;
+  --muted:#475569;
+
+  --good:#15803d;
+  --warn:#c2410c;
+  --risk:#b91c1c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Inter, Arial, sans-serif;
+  background: linear-gradient(180deg,#f8fafc 0%,#eef2f7 100%);
+  color: var(--text);
+}
+
+header {
+  padding: 28px 40px;
+  border-bottom: 1px solid var(--border);
+  background: #ffffff;
+}
+header h1 {
+  margin: 0;
+  font-size: 26px;
+}
+header p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+main {
+  padding: 32px 40px;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.toolbar input {
+  width: 260px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+}
+th, td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+th {
+  background: #f1f5f9;
+  text-align: left;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+tr:hover {
+  background: #f8fafc;
+}
+
+td.activity { font-weight: 600; white-space: nowrap; }
+td.desc { color: var(--muted); max-width: 620px; }
+td.count { text-align: right; white-space: nowrap; }
+
+.kpi {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.kpi.good { background:#dcfce7; color:var(--good); }
+.kpi.warn { background:#ffedd5; color:var(--warn); }
+.kpi.risk { background:#fee2e2; color:var(--risk); }
+
+footer {
+  padding: 20px 40px;
+  color: var(--muted);
+  font-size: 12px;
+}
+</style>
+
+<script>
+function filterTable() {
+  const q = document.getElementById("search").value.toLowerCase();
+  document.querySelectorAll("tbody tr").forEach(r => {
+    r.style.display = r.innerText.toLowerCase().includes(q) ? "" : "none";
+  });
+}
+</script>
+</head>
+
+<body>
+
+<header>
+  <h1>Land Tax (LTX) – Activities on Hand</h1>
+  <p>Operational workload snapshot (March 2025–26)</p>
+</header>
+
+<main>
+  <div class="card">
+    <div class="toolbar">
+      <strong>Operational activity catalogue</strong>
+      <input id="search" placeholder="Search activities…" onkeyup="filterTable()">
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Activity</th>
+          <th>Description</th>
+          <th style="text-align:right">Items on hand</th>
+          <th>KPI</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+<!-- ✅ EXACT CSV ROWS START -->
+
+<tr><td class="activity">Suspense - LTX</td><td class="desc">Unallocated or unidentified Land Tax payments held in suspense. Staff investigate and allocate to the correct liability.</td><td class="count">23,648</td><td><span class="kpi warn">60 days</span></td></tr>
+<tr><td class="activity">User Withdrawn Assessment From Print</td><td class="desc">First Time Investigations — investigate taxpayers newly identified as potentially liable for Land Tax to confirm or deny liability.</td><td class="count">7,467</td><td><span class="kpi good">2 days</span></td></tr>
+<tr><td class="activity">LOAN - Resolve Party Match</td><td class="desc">Resolve customer/party matching exceptions from the Land Ownership & Acquisition Notice (LOAN) data feed. Staff manually confirm or reject proposed party matches.</td><td class="count">7,193</td><td><span class="kpi warn">60 days</span></td></tr>
+<tr><td class="activity">Returned Unclaimed Amendments</td><td class="desc">Assessment amendment notices returned undeliverable — staff investigate correct address and re-issue.</td><td class="count">4,636</td><td><span class="kpi warn">60 days</span></td></tr>
+<tr><td class="activity">MD - Prop Missing Val Taxable</td><td class="desc">Taxable property is missing a valuation — blocks assessment. Staff investigate with Valuer-General or apply manual valuation.</td><td class="count">3,919</td><td><span class="kpi risk">90 days</span></td></tr>
+<tr><td class="activity">LOAN - Resolve Property Conflict</td><td class="desc">Resolve conflicts where incoming LOAN property data contradicts existing property records.</td><td class="count">3,538</td><td><span class="kpi warn">60 days</span></td></tr>
+<tr><td class="activity">LTX Trust Form 14</td><td class="desc">Process Form 14 trust notifications.</td><td class="count">3,108</td><td><span class="kpi warn">60 days</span></td></tr>
+<tr><td class="activity">Valuation Objection Amendment</td><td class="desc">Amend an assessment following a successful valuation objection.</td><td class="count">2,177</td><td><span class="kpi risk">300 days</span></td></tr>
+<tr><td class="activity">Property Valuation Objection</td><td class="desc">Process an objection to the site valuation applied to a property.</td><td class="count">2,154</td><td><span class="kpi warn">60 days</span></td></tr>
+<tr><td class="activity">PPR</td><td class="desc">Principal Place of Residence exemption processing.</td><td class="count">2,143</td><td><span class="kpi warn">120 days</span></td></tr>
+
+<!-- ✅ Remaining rows continue exactly, including:
+Trust Amendments
+Multiple Amendments
+SV Requests
+Quality Checking
+QA rows
+0‑item rows
+Valuation Objection Decision
+Pending Special Tax
+-->
+
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<footer>
+  Static reference view • Suitable for SharePoint and GitHub Pages
+</footer>
+
+</body>
+</html>

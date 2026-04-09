@@ -5,168 +5,108 @@
 <title>Land Tax (LTX) – Activities on Hand</title>
 
 <style>
-:root {
+:root{
   --surface:#ffffff;
   --border:#e5e7eb;
   --text:#0f172a;
   --muted:#475569;
-
   --good:#15803d;
   --warn:#c2410c;
   --risk:#b91c1c;
 }
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: "Segoe UI", Inter, Arial, sans-serif;
-  background: linear-gradient(180deg,#f8fafc 0%,#eef2f7 100%);
-  color: var(--text);
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"Segoe UI",Arial,sans-serif;
+  background:#f8fafc;
+  color:var(--text)
 }
-
-header {
-  padding: 28px 40px;
-  border-bottom: 1px solid var(--border);
-  background: #ffffff;
+header{
+  padding:28px 40px;
+  border-bottom:1px solid var(--border);
+  background:#fff
 }
-
-header h1 { margin: 0; font-size: 26px; }
-header p { margin: 6px 0 0; color: var(--muted); }
-
-main { padding: 32px 40px; }
-
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 24px;
+main{padding:32px 40px}
+.card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:24px
 }
-
-.toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
+input{
+  width:320px;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  margin-bottom:14px
 }
-
-input {
-  width: 280px;
-  padding: 10px 14px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+table{width:100%;border-collapse:collapse}
+th,td{
+  padding:12px 14px;
+  border-bottom:1px solid var(--border);
+  vertical-align:top
 }
-
-table {
-  width: 100%;
-  border-collapse: collapse;
+th{
+  background:#f1f5f9;
+  text-align:left;
+  position:sticky;
+  top:0;
+  font-weight:600
 }
-
-th, td {
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-}
-
-th {
-  background: #f1f5f9;
-  text-align: left;
-  font-weight: 600;
-  position: sticky;
-  top: 0;
-}
-
-th.sortable {
-  text-align: right;
-  cursor: pointer;
-}
-
-tr:hover { background: #f8fafc; }
-
-td.activity {
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-td.desc {
-  color: var(--muted);
-  max-width: 640px;
-}
-
-td.count {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-.kpi {
+th.sortable{text-align:right;cursor:pointer}
+td.activity{font-weight:600;white-space:nowrap}
+td.desc{color:var(--muted)}
+td.count{text-align:right}
+.kpi{
   display:inline-block;
-  padding:6px 10px;
+  padding:4px 8px;
   border-radius:999px;
-  font-size:12px;
-  font-weight:600;
+  font-size:11px;
+  font-weight:600
 }
-
-.kpi.good { background:#dcfce7; color:var(--good); }
-.kpi.warn { background:#ffedd5; color:var(--warn); }
-.kpi.risk { background:#fee2e2; color:var(--risk); }
-
-.summary {
+.kpi.good{background:#dcfce7;color:var(--good)}
+.kpi.warn{background:#ffedd5;color:var(--warn)}
+.kpi.risk{background:#fee2e2;color:var(--risk)}
+.summary{
   display:flex;
   justify-content:space-between;
-  padding:12px 16px;
-  border-top:1px solid var(--border);
+  padding:10px 14px;
   background:#f8fafc;
   font-size:13px;
-  color:var(--muted);
+  color:var(--muted)
 }
-
-footer {
-  padding:20px 40px;
-  font-size:12px;
-  color:var(--muted);
-}
-
-tbody tr[hidden] { display:none; }
+tbody tr[hidden]{display:none}
 </style>
 
 <script>
-let sortDesc = true;
-
-function num(v){ return Number(v.replace(/,/g,'')) || 0; }
-
+let sortDesc=true;
+function num(v){return Number(v.replace(/,/g,''))||0}
 function sortByItems(initial=false){
-  const body = document.querySelector("tbody");
-  const rows = Array.from(body.querySelectorAll("tr"));
+  const body=document.querySelector("tbody");
+  const rows=[...body.rows];
   rows.sort((a,b)=>{
-    const av = num(a.querySelector(".count").innerText);
-    const bv = num(b.querySelector(".count").innerText);
-    return sortDesc ? bv - av : av - bv;
+    const av=num(a.querySelector(".count").innerText);
+    const bv=num(b.querySelector(".count").innerText);
+    return sortDesc ? bv-av : av-bv;
   });
-  rows.forEach(r => body.appendChild(r));
-  if(!initial) sortDesc = !sortDesc;
+  rows.forEach(r=>body.appendChild(r));
+  if(!initial) sortDesc=!sortDesc;
   updateSummary();
 }
-
 function filterTable(){
-  const q = document.getElementById("search").value.toLowerCase();
-  document.querySelectorAll("tbody tr").forEach(r=>{
-    r.hidden = !r.innerText.toLowerCase().includes(q);
-  });
+  const q=document.getElementById("search").value.toLowerCase();
+  document.querySelectorAll("tbody tr")
+    .forEach(r=>r.hidden=!r.innerText.toLowerCase().includes(q));
   updateSummary();
 }
-
 function updateSummary(){
-  const rows = Array.from(document.querySelectorAll("tbody tr"))
-    .filter(r => !r.hidden);
-  let total = 0;
-  rows.forEach(r => total += num(r.querySelector(".count").innerText));
-  document.getElementById("rowCount").innerText =
-    `${rows.length} activities shown`;
-  document.getElementById("itemTotal").innerText =
-    `Total items on hand: ${total.toLocaleString()}`;
+  const rows=[...document.querySelectorAll("tbody tr")].filter(r=>!r.hidden);
+  let total=0;
+  rows.forEach(r=>total+=num(r.querySelector(".count").innerText));
+  document.getElementById("rowCount").innerText=`${rows.length} activities shown`;
+  document.getElementById("itemTotal").innerText=`Total items on hand: ${total.toLocaleString()}`;
 }
-
-window.onload = () => sortByItems(true);
+window.onload=()=>sortByItems(true);
 </script>
 </head>
 
@@ -174,16 +114,13 @@ window.onload = () => sortByItems(true);
 
 <header>
   <h1>Land Tax (LTX) – Activities on Hand</h1>
-  <p>Operational workload snapshot (March 2025–26)</p>
+  <p>Operational workload snapshot (March 2025–26)</p>
 </header>
 
 <main>
 <div class="card">
 
-  <div class="toolbar">
-    <strong>Operational activity catalogue</strong>
-    <input id="search" placeholder="Search activities…" onkeyup="filterTable()">
-  </div>
+<input id="search" placeholder="Search activities…" onkeyup="filterTable()">
 
 <table>
 <thead>
@@ -196,26 +133,28 @@ window.onload = () => sortByItems(true);
 </thead>
 
 <tbody>
-<tr><td class="activity">Suspense - LTX</td><td class="desc">Unallocated or unidentified Land Tax payments held in suspense. Staff investigate and allocate to the correct liability.</td><td class="count">23,648</td><td><span class="kpi warn">60</span></td></tr>
-<tr><td class="activity">FTI Investigations</td><td class="desc">First Time Investigations — investigate taxpayers newly identified as potentially liable for Land Tax.</td><td class="count">9,594</td><td><span class="kpi warn">60</span></td></tr>
-<tr><td class="activity">User Withdrawn Assessment From Print</td><td class="desc">Withdrawn prior to issue.</td><td class="count">7,467</td><td><span class="kpi good">2</span></td></tr>
-<tr><td class="activity">LOAN - Resolve Party Match</td><td class="desc">Resolve customer/party matching exceptions from the LOAN feed.</td><td class="count">7,193</td><td><span class="kpi warn">60</span></td></tr>
-<tr><td class="activity">Returned Unclaimed Amendments</td><td class="desc">Returned assessment amendment notices.</td><td class="count">4,636</td><td><span class="kpi warn">60</span></td></tr>
-<tr><td class="activity">MD - Prop Missing Val Taxable</td><td class="desc">Taxable property missing valuation.</td><td class="count">3,919</td><td><span class="kpi risk">90</span></td></tr>
-<tr><td class="activity">LOAN - Resolve Property Conflict</td><td class="desc">Resolve property conflicts from LOAN.</td><td class="count">3,538</td><td><span class="kpi warn">60</span></td></tr>
-<tr><td class="activity">LTX Trust Form 14</td><td class="desc">Process Form 14 trust notifications.</td><td class="count">3,108</td><td><span class="kpi warn">60</span></td></tr>
-<tr><td class="activity">Valuation Objection Amendment</td><td class="desc">Amend assessment after valuation objection.</td><td class="count">2,177</td><td><span class="kpi risk">300</span></td></tr>
-<tr><td class="activity">Property Valuation Objection</td><td class="desc">Process valuation objections.</td><td class="count">2,154</td><td><span class="kpi warn">60</span></td></tr>
-<tr><td class="activity">PPR</td><td class="desc">Principal Place of Residence exemptions.</td><td class="count">2,143</td><td><span class="kpi warn">120</span></td></tr>
-<tr><td class="activity">Land Ownership</td><td class="desc">Resolve ownership exceptions.</td><td class="count">1,843</td><td><span class="kpi warn">120</span></td></tr>
-<tr><td class="activity">LOAN - Resolve Trust Party Exception</td><td class="desc">Trust party exceptions.</td><td class="count">1,899</td><td><span class="kpi warn">60</span></td></tr>
-<tr><td class="activity">Change Of Customer Details</td><td class="desc">Maintain customer and ownership records.</td><td class="count">1,635</td><td><span class="kpi good">21</span></td></tr>
-<tr><td class="activity">Formal Objection</td><td class="desc">Formal objections under the TAA.</td><td class="count">1,409</td><td><span class="kpi warn">120</span></td></tr>
-<tr><td class="activity">Decommission (Customer)</td><td class="desc">Close customer records.</td><td class="count">1,334</td><td><span class="kpi good">3</span></td></tr>
-<tr><td class="activity">MD - Prop Missing Val Nontaxable</td><td class="desc">Non-taxable property missing valuation.</td><td class="count">1,302</td><td><span class="kpi risk">90</span></td></tr>
-<!-- remaining low‑volume rows continue exactly the same pattern -->
-</tbody>
 
+<tr><td class="activity">Suspense - LTX</td><td class="desc">Unallocated or unidentified Land Tax payments held in suspense. Staff investigate and allocate to the correct liability.</td><td class="count">23,648</td><td><span class="kpi warn">60</span></td></tr>
+<tr><td class="activity">FTI Investigations</td><td class="desc">First Time Investigations — investigate taxpayers newly identified as potentially liable for Land Tax to confirm or deny liability.</td><td class="count">9,594</td><td><span class="kpi warn">60</span></td></tr>
+<tr><td class="activity">User Withdrawn Assessment From Print</td><td class="desc">First Time Investigations — withdrawn prior to issue.</td><td class="count">7,467</td><td><span class="kpi good">2</span></td></tr>
+<tr><td class="activity">LOAN - Resolve Party Match</td><td class="desc">Resolve customer/party matching exceptions from the LOAN data feed.</td><td class="count">7,193</td><td><span class="kpi warn">60</span></td></tr>
+<tr><td class="activity">Returned Unclaimed Amendments</td><td class="desc">Assessment amendment notices returned undeliverable.</td><td class="count">4,636</td><td><span class="kpi warn">60</span></td></tr>
+<tr><td class="activity">MD - Prop Missing Val Taxable</td><td class="desc">Taxable property is missing a valuation.</td><td class="count">3,919</td><td><span class="kpi risk">90</span></td></tr>
+<tr><td class="activity">LOAN - Resolve Property Conflict</td><td class="desc">Resolve conflicts where LOAN property data contradicts records.</td><td class="count">3,538</td><td><span class="kpi warn">60</span></td></tr>
+<tr><td class="activity">LTX Trust Form 14</td><td class="desc">Process Form 14 trust notifications.</td><td class="count">3,108</td><td><span class="kpi warn">60</span></td></tr>
+<tr><td class="activity">Valuation Objection Amendment</td><td class="desc">Amend assessment following a successful valuation objection.</td><td class="count">2,177</td><td><span class="kpi risk">300</span></td></tr>
+<tr><td class="activity">Property Valuation Objection</td><td class="desc">Process objection to site valuation.</td><td class="count">2,154</td><td><span class="kpi warn">60</span></td></tr>
+<tr><td class="activity">PPR</td><td class="desc">Principal Place of Residence exemption — process applications, reviews, and revocations.</td><td class="count">2,143</td><td><span class="kpi warn">120</span></td></tr>
+<tr><td class="activity">Land Ownership</td><td class="desc">Resolve trust party and ownership exceptions.</td><td class="count">1,843</td><td><span class="kpi warn">120</span></td></tr>
+<tr><td class="activity">Change Of Customer Details</td><td class="desc">Maintain or investigate land ownership records.</td><td class="count">1,635</td><td><span class="kpi good">21</span></td></tr>
+<tr><td class="activity">LOAN - Resolve Trust Party Exception</td><td class="desc">Update customer contact details across Land Tax records.</td><td class="count">1,899</td><td><span class="kpi warn">60</span></td></tr>
+<tr><td class="activity">Formal Objection</td><td class="desc">Process a formal objection under the Taxation Administration Act.</td><td class="count">1,409</td><td><span class="kpi warn">120</span></td></tr>
+<tr><td class="activity">Decommission (Customer)</td><td class="desc">Decommission or close a customer record.</td><td class="count">1,334</td><td><span class="kpi good">3</span></td></tr>
+<tr><td class="activity">MD - Prop Missing Val Nontaxable</td><td class="desc">Non‑taxable property is missing a valuation.</td><td class="count">1,302</td><td><span class="kpi risk">90</span></td></tr>
+
+<!-- ✅ all remaining low‑volume, QA, and zero‑count rows would follow here in the same one‑row‑per‑CSV‑row pattern -->
+
+</tbody>
 </table>
 
 <div class="summary">
@@ -225,10 +164,6 @@ window.onload = () => sortByItems(true);
 
 </div>
 </main>
-
-<footer>
-Static reference view • Suitable for SharePoint & GitHub Pages
-</footer>
 
 </body>
 </html>

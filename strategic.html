@@ -1,1 +1,480 @@
 
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategic Initiative: Single Customer Portal v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f0f4f8;color:#1e2d3d;font-family:Inter,Helvetica,Arial,sans-serif;min-height:100vh}
+
+.page-header{background:#1a3a5c;padding:32px 32px 28px;color:#fff}
+.page-header__eyebrow{font-family:‘Roboto Mono’,monospace;font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:8px}
+.page-header__title{font-size:clamp(22px,3.5vw,30px);font-weight:700;line-height:1.2;margin-bottom:6px}
+.page-header__sub{font-size:14px;color:rgba(255,255,255,.75);line-height:1.5;max-width:720px}
+.page-header__version{font-family:‘Roboto Mono’,monospace;font-size:9px;color:rgba(255,255,255,.35);margin-top:10px;letter-spacing:0.08em}
+
+.shell{max-width:1100px;padding:24px 32px 48px}
+
+.section{background:#fff;border:1px solid #dce6ef;border-radius:8px;padding:24px 28px;margin-bottom:16px}
+.section__eyebrow{font-family:‘Roboto Mono’,monospace;font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#7a8ea0;margin-bottom:6px}
+.section__title{font-size:17px;font-weight:700;color:#1e2d3d;margin-bottom:10px}
+.section p,.section li{font-size:13px;color:#4a5f72;line-height:1.6}
+.section ul{padding-left:18px;margin-top:6px}
+.section li{margin-bottom:5px}
+.section li strong{color:#1e2d3d}
+
+/* Highlight box */
+.highlight-box{border-radius:8px;padding:16px 20px;margin-top:14px;font-size:12px;line-height:1.6}
+.highlight-blue{background:rgba(45,90,142,.06);border:1px solid rgba(45,90,142,.2);color:#2d5a8e}
+.highlight-amber{background:#fffbec;border:1px solid #e8d87a;color:#8a6500}
+.highlight-red{background:#fde8e8;border:1px solid #f5c2c2;color:#b53030}
+.highlight-green{background:#f3faf3;border:1px solid #b5ddb9;color:#2a7a3b}
+.highlight-box strong{color:#1e2d3d}
+
+/* Evidence cards */
+.evidence-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-top:14px}
+.ev-card{border-radius:8px;padding:14px 16px;border:1px solid}
+.ev-card__vol{font-family:‘Roboto Mono’,monospace;font-size:22px;font-weight:700}
+.ev-card__label{font-size:11px;font-weight:600;color:#1e2d3d;margin-top:4px}
+.ev-card__note{font-size:10px;color:#7a8ea0;margin-top:2px}
+.ev-red{background:#fde8e8;border-color:#f5c2c2}.ev-red .ev-card__vol{color:#b53030}
+.ev-orange{background:#fff5d6;border-color:#e8d87a}.ev-orange .ev-card__vol{color:#8a6500}
+.ev-yellow{background:#eae6f4;border-color:#cdc4e6}.ev-yellow .ev-card__vol{color:#5a3fa0}
+.ev-green{background:#dff0e0;border-color:#b5ddb9}.ev-green .ev-card__vol{color:#2a7a3b}
+.ev-accent{background:rgba(45,90,142,.06);border-color:rgba(45,90,142,.2)}.ev-accent .ev-card__vol{color:#2d5a8e}
+
+/* Flow diagram */
+.flow{display:flex;align-items:stretch;gap:0;margin-top:16px;overflow-x:auto}
+.flow-step{flex:1;min-width:160px;position:relative;padding:16px 18px 16px 22px;background:#fff;border:1px solid #dce6ef;display:flex;flex-direction:column;justify-content:center}
+.flow-step:first-child{border-radius:8px 0 0 8px}
+.flow-step:last-child{border-radius:0 8px 8px 0}
+.flow-step::after{content:’’;position:absolute;right:-12px;top:50%;transform:translateY(-50%);width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-left:12px solid #dce6ef;z-index:1}
+.flow-step:last-child::after{display:none}
+.flow-step__num{font-family:‘Roboto Mono’,monospace;font-size:9px;font-weight:700;color:#7a8ea0;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.flow-step__title{font-size:11px;font-weight:700;color:#1e2d3d;line-height:1.3}
+.flow-step__desc{font-size:10px;color:#4a5f72;margin-top:4px;line-height:1.4}
+.flow-step–active{background:#1a3a5c;border-color:#1a3a5c}
+.flow-step–active .flow-step__num{color:rgba(255,255,255,.5)}
+.flow-step–active .flow-step__title{color:#fff}
+.flow-step–active .flow-step__desc{color:rgba(255,255,255,.7)}
+.flow-step–active::after{border-left-color:#1a3a5c}
+
+/* Principle cards */
+.principle-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:14px}
+.principle{border-radius:8px;padding:16px 18px;border:1px solid #dce6ef;background:#fff}
+.principle__num{font-family:‘Roboto Mono’,monospace;font-size:22px;font-weight:700;color:#dce6ef;float:right;margin-left:8px;line-height:1}
+.principle__title{font-size:13px;font-weight:700;color:#1e2d3d;margin-bottom:4px}
+.principle__body{font-size:11px;color:#4a5f72;line-height:1.5}
+
+/* Dual track */
+.dual-track{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.track{border-radius:8px;padding:20px;border:1px solid}
+.track–primary{background:#fff;border-color:#1a3a5c}
+.track–parallel{background:#fff;border-color:#dce6ef}
+.track__label{font-family:‘Roboto Mono’,monospace;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
+.track__label–primary{color:#1a3a5c}
+.track__label–parallel{color:#7a8ea0}
+.track__title{font-size:15px;font-weight:700;color:#1e2d3d;margin-bottom:8px}
+.track__body{font-size:12px;color:#4a5f72;line-height:1.6}
+.track__phases{margin-top:12px}
+.track-phase{border-left:3px solid;padding:10px 0 10px 14px;margin-bottom:8px}
+.track-phase:last-child{margin-bottom:0}
+.track-phase–1{border-color:#b53030}
+.track-phase–2{border-color:#8a6500}
+.track-phase–3{border-color:#2d5a8e}
+.track-phase–4{border-color:#2a7a3b}
+.track-phase__when{font-family:‘Roboto Mono’,monospace;font-size:9px;font-weight:500;color:#7a8ea0;text-transform:uppercase;letter-spacing:0.06em}
+.track-phase__title{font-size:12px;font-weight:700;color:#1e2d3d;margin-top:2px}
+.track-phase__body{font-size:11px;color:#4a5f72;margin-top:4px;line-height:1.5}
+.track-phase__caps{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.tl-cap{font-size:10px;font-weight:500;padding:2px 8px;border-radius:4px;background:#f0f4f8;border:1px solid #dce6ef;color:#4a5f72}
+.track-phase__impact{margin-top:8px;font-size:11px;font-weight:600;color:#1e2d3d;padding:6px 10px;border-radius:6px;background:#f0f4f8;border:1px solid #dce6ef}
+.track-phase__impact span{font-family:‘Roboto Mono’,monospace}
+
+/* Value grid */
+.val-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.val-card{background:#f0f4f8;border:1px solid #dce6ef;border-radius:8px;padding:14px 16px}
+.val-card__title{font-size:12px;font-weight:700;color:#1e2d3d;margin-bottom:4px}
+.val-card__body{font-size:11px;color:#4a5f72;line-height:1.5}
+
+/* Measures table */
+.mtbl{width:100%;border-collapse:collapse;margin-top:12px;font-size:12px}
+.mtbl th{text-align:left;padding:8px 12px;font-weight:600;color:#4a5f72;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;border-bottom:2px solid #dce6ef;background:#f0f4f8}
+.mtbl td{padding:8px 12px;border-bottom:1px solid #f0f4f8;color:#1e2d3d}
+.mtbl tr:hover td{background:#f8fafc}
+.mono{font-family:‘Roboto Mono’,monospace;font-weight:500}
+.tag{font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;text-transform:uppercase;letter-spacing:0.04em}
+.tag-red{background:#fde8e8;color:#b53030}
+.tag-orange{background:#fff5d6;color:#8a6500}
+.tag-blue{background:rgba(45,90,142,.1);color:#2d5a8e}
+.tag-green{background:#dff0e0;color:#2a7a3b}
+.tag-grey{background:#f0f4f8;color:#7a8ea0}
+
+/* Dark section */
+.section–dark{background:#1a3a5c;color:#fff;border-color:#1a3a5c}
+.section–dark .section__eyebrow{color:rgba(255,255,255,.4)}
+.section–dark .section__title{color:#fff}
+.section–dark p{color:rgba(255,255,255,.75)}
+.section–dark strong{color:#fff}
+
+@media(max-width:768px){
+.shell,.page-header{padding-left:16px;padding-right:16px}
+.dual-track,.val-grid{grid-template-columns:1fr}
+.evidence-grid{grid-template-columns:repeat(2,1fr)}
+.flow{flex-direction:column}
+.flow-step::after{display:none}
+.flow-step{border-radius:8px !important;margin-bottom:4px}
+}
+</style>
+
+</head>
+<body>
+
+<div class="page-header">
+  <div class="page-header__eyebrow">SRO Transformation Architecture</div>
+  <div class="page-header__title">Strategic Initiative: Single Customer Portal</div>
+  <div class="page-header__sub">The portal is not a service channel built on top of clean data. The portal <em>is</em> the mechanism that creates clean data — by establishing a verified digital relationship with customers before they become liable.</div>
+  <div class="page-header__version">v3.0 — April 2026</div>
+</div>
+
+<div class="shell">
+
+  <!-- Core insight -->
+
+  <div class="highlight-box highlight-blue" style="margin-bottom:16px">
+    <strong>Core strategic shift:</strong> The previous framing positioned the portal as a downstream service channel that depended on back-end data cleansing as a prerequisite. This version inverts that logic. The portal is the <strong>primary intervention</strong> — a mandatory registration point that captures verified customer identity before the Notice of Acquisition arrives. The customer becomes the data quality mechanism. Back-end legacy cleanup runs in parallel, not as a gate.
+  </div>
+
+  <!-- 1. Problem -->
+
+  <div class="section">
+    <div class="section__eyebrow">01</div>
+    <div class="section__title">Problem Statement</div>
+    <p>The SRO does not have a digital relationship with land tax customers. First contact typically occurs <em>after</em> a Notice of Acquisition is received from Land Use Victoria — at which point the system must identify, match, and verify the customer under time pressure, using incomplete or conflicting data.</p>
+    <p style="margin-top:8px">This reactive model generates the single largest category of operational exceptions in Land Tax. The Pareto analysis of 93,000+ work items shows:</p>
+    <div class="evidence-grid">
+      <div class="ev-card ev-red">
+        <div class="ev-card__vol">23,648</div>
+        <div class="ev-card__label">Suspense Items</div>
+        <div class="ev-card__note">Unmatched payments and records</div>
+      </div>
+      <div class="ev-card ev-red">
+        <div class="ev-card__vol">9,594</div>
+        <div class="ev-card__label">FTI Investigations</div>
+        <div class="ev-card__note">Unknown customers post-liability</div>
+      </div>
+      <div class="ev-card ev-orange">
+        <div class="ev-card__vol">7,467</div>
+        <div class="ev-card__label">Withdrawn Assessments</div>
+        <div class="ev-card__note">Issued then pulled back — rework</div>
+      </div>
+      <div class="ev-card ev-orange">
+        <div class="ev-card__vol">15,147</div>
+        <div class="ev-card__label">LOAN Exceptions</div>
+        <div class="ev-card__note">Party/property match failures</div>
+      </div>
+      <div class="ev-card ev-orange">
+        <div class="ev-card__vol">4,636</div>
+        <div class="ev-card__label">Returned Unclaimed</div>
+        <div class="ev-card__note">Mail never reached customer</div>
+      </div>
+      <div class="ev-card ev-accent">
+        <div class="ev-card__vol">~60,500</div>
+        <div class="ev-card__label">Total Addressable</div>
+        <div class="ev-card__note">65% of entire Land Tax backlog</div>
+      </div>
+    </div>
+    <div class="highlight-box highlight-amber" style="margin-top:14px">
+      <strong>Root cause:</strong> The SRO discovers who the customer is <em>after</em> the obligation exists. If the customer were already known, verified, and digitally contactable before the NOA, the majority of these exceptions would not occur.
+    </div>
+  </div>
+
+  <!-- 2. Strategic Intent -->
+
+  <div class="section">
+    <div class="section__eyebrow">02</div>
+    <div class="section__title">Strategic Intent</div>
+    <p>Establish a mandatory digital registration portal that captures verified customer identity, contact details, communication preferences, and property/trust relationships <strong>before the Notice of Acquisition triggers the Land Tax lifecycle</strong>.</p>
+    <p style="margin-top:8px">When the NOA arrives from Land Use Victoria, the system matches it against an already-verified customer record — eliminating party match exceptions, reducing FTI investigations, and ensuring assessments issue to the right person at the right address on the first attempt.</p>
+
+```
+<div class="flow">
+  <div class="flow-step flow-step--active">
+    <div class="flow-step__num">Step 1</div>
+    <div class="flow-step__title">Customer Registers on Portal</div>
+    <div class="flow-step__desc">Self-service identity verification. Matches or creates SRO record.</div>
+  </div>
+  <div class="flow-step flow-step--active">
+    <div class="flow-step__num">Step 2</div>
+    <div class="flow-step__title">Customer Confirms Details</div>
+    <div class="flow-step__desc">Address, contact, communication preference, trust/joint ownership declared.</div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-step__num">Step 3</div>
+    <div class="flow-step__title">NOA Received from LUV</div>
+    <div class="flow-step__desc">System matches NOA to verified portal record. Clean match = no exception.</div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-step__num">Step 4</div>
+    <div class="flow-step__title">Assessment Issues Cleanly</div>
+    <div class="flow-step__desc">Right person, right address, digital delivery. No withdrawal, no return.</div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- 3. Design Principles -->
+
+  <div class="section">
+    <div class="section__eyebrow">03</div>
+    <div class="section__title">Design Principles</div>
+    <div class="principle-grid">
+      <div class="principle">
+        <div class="principle__num">01</div>
+        <div class="principle__title">Mandatory Registration at Ownership</div>
+        <div class="principle__body">Portal registration is required during the land ownership notification phase. This is the policy lever that ensures every future liable customer has a verified digital record before assessment.</div>
+      </div>
+      <div class="principle">
+        <div class="principle__num">02</div>
+        <div class="principle__title">Customer as Data Quality Mechanism</div>
+        <div class="principle__body">The customer verifies their own identity, confirms their details, and declares their ownership/trust structures. This replaces back-office investigation with self-service capture at source.</div>
+      </div>
+      <div class="principle">
+        <div class="principle__num">03</div>
+        <div class="principle__title">Match Before Liability</div>
+        <div class="principle__body">The portal record must be matchable to incoming NOA data. If the match is clean, no exception is generated. The goal is zero-touch for the majority of new land acquisitions.</div>
+      </div>
+      <div class="principle">
+        <div class="principle__num">04</div>
+        <div class="principle__title">Digital-First Communication</div>
+        <div class="principle__body">Portal registration captures electronic consent. All subsequent communication defaults to digital. Paper is the exception, not the default. This eliminates returned mail at source.</div>
+      </div>
+      <div class="principle">
+        <div class="principle__num">05</div>
+        <div class="principle__title">Progressive Value — Not Big Bang</div>
+        <div class="principle__body">Each phase delivers measurable backlog reduction independently. The portal doesn't wait for perfection — it starts reducing exceptions from the first registration.</div>
+      </div>
+      <div class="principle">
+        <div class="principle__num">06</div>
+        <div class="principle__title">Legacy Cleanup in Parallel</div>
+        <div class="principle__body">Existing data quality issues are addressed through a parallel remediation track. The portal stops the bleeding; the cleanup heals the wound. Neither waits for the other.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Dual Track -->
+
+  <div class="section">
+    <div class="section__eyebrow">04</div>
+    <div class="section__title">Delivery Model — Dual Track</div>
+    <p>The portal (Track A) is the primary intervention. Legacy data remediation (Track B) runs in parallel. Both deliver value independently. Together they close the gap from both ends.</p>
+
+```
+<div class="dual-track">
+  <!-- Track A -->
+  <div class="track track--primary">
+    <div class="track__label track__label--primary">Track A — Portal (Primary)</div>
+    <div class="track__title">Build the Front Door</div>
+    <div class="track__body">Every new customer creates a clean record. Exceptions prevented at source. Backlog stops growing.</div>
+    <div class="track__phases">
+      <div class="track-phase track-phase--1">
+        <div class="track-phase__when">Phase A1 — Months 1–5</div>
+        <div class="track-phase__title">Identity Verification & Registration</div>
+        <div class="track-phase__body">Build the portal registration flow. Customer self-identifies, verifies against authoritative sources, and creates or matches to an SRO record. Mandate registration for all new land ownership notifications.</div>
+        <div class="track-phase__caps">
+          <span class="tl-cap">Customer Identity Verification</span>
+          <span class="tl-cap">Customer Data Matching</span>
+          <span class="tl-cap">Automated Customer Creation</span>
+          <span class="tl-cap">External User Access Management</span>
+        </div>
+        <div class="track-phase__impact">Prevents: new FTI investigations (<span>9,594</span>), new party match exceptions (<span>7,193</span>)</div>
+      </div>
+      <div class="track-phase track-phase--2">
+        <div class="track-phase__when">Phase A2 — Months 4–8</div>
+        <div class="track-phase__title">Self-Service Details & Entity Declaration</div>
+        <div class="track-phase__body">Customers maintain their own address, contact details, and communication preferences. Declare trust structures, joint ownership, and property relationships. Eliminates manual detail changes and reduces entity association exceptions.</div>
+        <div class="track-phase__caps">
+          <span class="tl-cap">Customer Detail Amendment</span>
+          <span class="tl-cap">Electronic Communication Consent</span>
+          <span class="tl-cap">Entity Association</span>
+          <span class="tl-cap">Trust Relationship Declaration</span>
+        </div>
+        <div class="track-phase__impact">Prevents: detail change items (<span>1,635</span>), trust exceptions (<span>3,108</span>), property conflicts (<span>3,538</span>)</div>
+      </div>
+      <div class="track-phase track-phase--3">
+        <div class="track-phase__when">Phase A3 — Months 7–11</div>
+        <div class="track-phase__title">Digital Communication & Case Visibility</div>
+        <div class="track-phase__body">Digital delivery of all notices and correspondence. Case/request tracking with reference numbers. Status visibility for assessments, objections, and refunds. Eliminates returned mail and repeat calls.</div>
+        <div class="track-phase__caps">
+          <span class="tl-cap">Digital Communication</span>
+          <span class="tl-cap">Service of Notice Management</span>
+          <span class="tl-cap">Case Creation & Tracking</span>
+          <span class="tl-cap">Customer Notifications</span>
+        </div>
+        <div class="track-phase__impact">Prevents: returned unclaimed (<span>4,636</span>), penalty drift (<span>555</span>), repeat contact</div>
+      </div>
+      <div class="track-phase track-phase--4">
+        <div class="track-phase__when">Phase A4 — Months 10–14</div>
+        <div class="track-phase__title">Full Single Customer View</div>
+        <div class="track-phase__body">Complete portal with property/trust view, assessment history, payment status, objection tracking, and certificate requests. Built on verified registrations — not on legacy data.</div>
+        <div class="track-phase__caps">
+          <span class="tl-cap">Aggregated View Management</span>
+          <span class="tl-cap">Assessment History</span>
+          <span class="tl-cap">Payment Status</span>
+          <span class="tl-cap">Certificate Requests</span>
+        </div>
+        <div class="track-phase__impact">Target: <span>50%+ reduction</span> in inbound phone contact via self-service</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Track B -->
+  <div class="track track--parallel">
+    <div class="track__label track__label--parallel">Track B — Legacy Cleanup (Parallel)</div>
+    <div class="track__title">Heal the Back Book</div>
+    <div class="track__body">Existing customer records are deduplicated, matched, and verified. This reduces the current backlog while the portal prevents new exceptions.</div>
+    <div class="track__phases">
+      <div class="track-phase" style="border-color:#7a8ea0">
+        <div class="track-phase__when">Ongoing — Months 1–12</div>
+        <div class="track-phase__title">Customer Data Deduplication</div>
+        <div class="track-phase__body">Systematic deduplication of existing customer records. Resolve known duplicates. Merge or link related records. Progressively clean the existing base.</div>
+        <div class="track-phase__caps">
+          <span class="tl-cap">Duplicate Handling</span>
+          <span class="tl-cap">Customer Data Matching</span>
+        </div>
+      </div>
+      <div class="track-phase" style="border-color:#7a8ea0">
+        <div class="track-phase__when">Ongoing — Months 1–12</div>
+        <div class="track-phase__title">LOAN Exception Remediation</div>
+        <div class="track-phase__body">Work through the existing 15,147 LOAN party/property match exceptions. Resolve trust party exceptions and multi-property conflicts. Reduces current backlog while portal prevents new ones.</div>
+        <div class="track-phase__caps">
+          <span class="tl-cap">Entity Association</span>
+          <span class="tl-cap">Property-Customer Linkage</span>
+        </div>
+      </div>
+      <div class="track-phase" style="border-color:#7a8ea0">
+        <div class="track-phase__when">Ongoing — Months 1–12</div>
+        <div class="track-phase__title">Existing Customer Portal Migration</div>
+        <div class="track-phase__body">Campaign to migrate existing customers onto the portal. Identity verification + digital consent. Progressively converts paper-dependent customers to digital.</div>
+        <div class="track-phase__caps">
+          <span class="tl-cap">Customer Identity Verification</span>
+          <span class="tl-cap">Electronic Consent</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- 5. Why This Works -->
+
+  <div class="section">
+    <div class="section__eyebrow">05</div>
+    <div class="section__title">Why This Model Works</div>
+    <ul>
+      <li><strong>Stops the bleeding immediately.</strong> Every new registration creates a clean record. You don't need to fix all existing data before the portal delivers value — you just need to stop creating new exceptions.</li>
+      <li><strong>Uses the customer as the data source.</strong> Instead of back-office staff investigating who a customer is, the customer self-identifies. This is faster, cheaper, and more accurate than any data cleansing program.</li>
+      <li><strong>FTI investigations become preventable.</strong> The 9,594-item FTI queue exists because customer identity is unknown after liability. Mandated registration before ownership means identity is already confirmed when the NOA arrives.</li>
+      <li><strong>LOAN exceptions reduce structurally.</strong> Party match and property conflict exceptions (15,147 items) occur because the system tries to match incoming NOA data against incomplete records. A pre-verified portal record gives the system a clean match target.</li>
+      <li><strong>No dependency gate.</strong> The portal is not waiting for a back-end project to finish. It delivers value from the first registration. Legacy cleanup runs alongside — not before.</li>
+      <li><strong>Scales beyond Land Tax.</strong> The portal and registration model is a platform capability. Once proven for Land Tax, it extends to Payroll Tax, Land Transfer Duty, and other revenue lines.</li>
+    </ul>
+  </div>
+
+  <!-- 6. Strategic Outcomes -->
+
+  <div class="section">
+    <div class="section__eyebrow">06</div>
+    <div class="section__title">Strategic Outcomes</div>
+    <div class="val-grid">
+      <div class="val-card">
+        <div class="val-card__title">Customer</div>
+        <div class="val-card__body">Verified before liable. Self-service from day one. Digital communication by default. Full visibility of property, assessments, and requests. No repeat calls.</div>
+      </div>
+      <div class="val-card">
+        <div class="val-card__title">Operations</div>
+        <div class="val-card__body">60,500+ addressable backlog items. Exceptions prevented at source rather than cleaned up after. Capacity freed for complex work. FTI and LOAN queues structurally reduced.</div>
+      </div>
+      <div class="val-card">
+        <div class="val-card__title">Architecture</div>
+        <div class="val-card__body">Portal-as-platform — reusable across revenue lines. Customer data quality driven by self-service, not batch cleansing. Common capabilities lifted by use, not by project.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Success Measures -->
+
+  <div class="section">
+    <div class="section__eyebrow">07</div>
+    <div class="section__title">Success Measures — Linked to Operational Evidence</div>
+    <table class="mtbl">
+      <thead>
+        <tr><th>Measure</th><th>Current</th><th>12-Month Target</th><th>Source Queue</th><th>Track</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>New FTI investigations (per cycle)</td><td class="mono">9,594</td><td class="mono">< 2,000</td><td>FTI Investigations</td><td><span class="tag tag-blue">A1</span></td></tr>
+        <tr><td>LOAN party/property exceptions</td><td class="mono">15,147</td><td class="mono">< 5,000</td><td>LOAN queues (8 types)</td><td><span class="tag tag-blue">A1</span> <span class="tag tag-grey">B</span></td></tr>
+        <tr><td>Suspense items</td><td class="mono">23,648</td><td class="mono">< 8,000</td><td>Suspense - LTX</td><td><span class="tag tag-blue">A1–A2</span> <span class="tag tag-grey">B</span></td></tr>
+        <tr><td>Withdrawn assessments</td><td class="mono">7,467</td><td class="mono">< 1,500</td><td>User Withdrawn Assessment</td><td><span class="tag tag-blue">A2</span></td></tr>
+        <tr><td>Customer detail change items</td><td class="mono">1,635</td><td class="mono">< 200</td><td>Change Of Customer Details</td><td><span class="tag tag-blue">A2</span></td></tr>
+        <tr><td>Returned unclaimed amendments</td><td class="mono">4,636</td><td class="mono">< 500</td><td>Returned Unclaimed Amendments</td><td><span class="tag tag-blue">A3</span></td></tr>
+        <tr><td>Digital communication adoption</td><td class="mono">TBD</td><td class="mono">> 70%</td><td>Electronic Consent records</td><td><span class="tag tag-blue">A2–A3</span></td></tr>
+        <tr><td>Portal registration rate (new owners)</td><td class="mono">0%</td><td class="mono">> 90%</td><td>Portal registrations vs NOAs received</td><td><span class="tag tag-blue">A1</span></td></tr>
+        <tr><td>Inbound phone contact</td><td class="mono">TBD</td><td class="mono">50% reduction</td><td>Call centre volumes</td><td><span class="tag tag-blue">A4</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 8. Capability Alignment -->
+
+  <div class="section">
+    <div class="section__eyebrow">08</div>
+    <div class="section__title">Capability Alignment</div>
+    <p>Mapped to the SRO Land Tax capability architecture.</p>
+    <table class="mtbl">
+      <thead>
+        <tr><th>Capability Group</th><th>L2 / L3</th><th>Layer</th><th>Phase</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Customer Management</td><td>Customer Identity Verification</td><td>Common</td><td><span class="tag tag-blue">A1</span></td></tr>
+        <tr><td>Customer Management</td><td>Customer Data Matching</td><td>Common</td><td><span class="tag tag-blue">A1</span> <span class="tag tag-grey">B</span></td></tr>
+        <tr><td>Customer Management</td><td>Automated Customer Creation</td><td>Common</td><td><span class="tag tag-blue">A1</span></td></tr>
+        <tr><td>Customer Management</td><td>Customer Detail Amendment</td><td>Common</td><td><span class="tag tag-blue">A2</span></td></tr>
+        <tr><td>Property & Data Management</td><td>Entity Association</td><td>Common</td><td><span class="tag tag-blue">A2</span> <span class="tag tag-grey">B</span></td></tr>
+        <tr><td>Property & Ownership</td><td>Ownership Maintenance</td><td>VS1</td><td><span class="tag tag-blue">A1–A2</span></td></tr>
+        <tr><td>Customer Communication</td><td>Electronic Communication Consent</td><td>Common</td><td><span class="tag tag-blue">A2</span></td></tr>
+        <tr><td>Customer Communication</td><td>Digital Communication</td><td>Common</td><td><span class="tag tag-blue">A3</span></td></tr>
+        <tr><td>Assessment Management</td><td>Service of Notice Management</td><td>Common</td><td><span class="tag tag-blue">A3</span></td></tr>
+        <tr><td>Case & Compliance</td><td>Case Creation & Tracking</td><td>VS5</td><td><span class="tag tag-blue">A3</span></td></tr>
+        <tr><td>System Design</td><td>Aggregated View Management</td><td>Supporting</td><td><span class="tag tag-blue">A4</span></td></tr>
+        <tr><td>Security Management</td><td>External User Access Management</td><td>Supporting</td><td><span class="tag tag-blue">A1</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 9. Executive Decision -->
+
+  <div class="section section--dark">
+    <div class="section__eyebrow">09</div>
+    <div class="section__title">Executive Decision</div>
+    <p>This initiative inverts the traditional approach. Instead of cleansing data first and building the portal later, it uses the portal as the data capture mechanism — mandating customer registration at the point of land ownership so verified records exist before liability.</p>
+    <p style="margin-top:10px"><strong>What changes:</strong></p>
+    <p style="margin-top:6px">• FTI investigations (9,594 items) become <strong>preventable</strong> — customer identity is known before liability triggers<br>
+    • LOAN party match exceptions (15,147 items) become <strong>structurally reduced</strong> — the system has a clean record to match against<br>
+    • Withdrawn assessments (7,467 items) become <strong>avoidable</strong> — verified address and contact details before issue<br>
+    • Returned mail (4,636 items) becomes <strong>eliminated</strong> — digital communication by default from registration</p>
+    <p style="margin-top:12px"><strong>Total addressable backlog: ~60,500 items — 65% of all Land Tax work items.</strong></p>
+    <p style="margin-top:12px">Legacy data cleanup runs in parallel and heals the existing back book. But the portal is the intervention that stops creating new exceptions — and it starts delivering value from the first registration, not after a multi-year data remediation programme completes.</p>
+    <p style="margin-top:12px">The portal is not the destination. It is the mechanism.</p>
+  </div>
+
+</div>
+</body>
+</html>

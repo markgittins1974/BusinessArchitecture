@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Capability Architecture Portal – Land Tax</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg-start: #0f2b64;
+      --bg-end: #4b2c5e;
+      --card-bg: rgba(255, 255, 255, 0.08);
+      --card-border: rgba(255, 255, 255, 0.16);
+      --text-primary: #ffffff;
+      --text-secondary: #d4d8e5;
+
+      --exec: #f5c04e;
+      --manager: #6dd3fb;
+      --team: #c3b6ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    main.container {
+      max-width: 1200px;
+      padding: 48px 32px;
+      width: 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .section {
+      margin-top: 48px;
+    }
+
+    .section-title {
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      opacity: 0.85;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+    }
+
+    .section-title.exec { color: var(--exec); }
+    .section-title.manager { color: var(--manager); }
+    .section-title.team { color: var(--team); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    a.card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 22px;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    a.card:hover {
+      transform: translateY(-4px);
+      background: rgba(255,255,255,0.12);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.3);
+    }
+
+    a.card:focus-visible {
+      outline: 3px solid var(--exec);
+      outline-offset: 3px;
+    }
+
+    .icon {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .card h3 {
+      margin: 4px 0 8px;
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: .95rem;
+      line-height: 1.4;
+      color: var(--text-secondary);
+    }
+
+    footer {
+      margin-top: 56px;
+      text-align: center;
+      font-size: .8rem;
+      color: var(--text-secondary);
+      opacity: .8;
+    }
+  </style>
+</head>
+
+<body>
+<main class="container">
+
+  <header>
+    <h1>Explore Your Capability Architecture</h1>
+    <div class="subtitle">
+      Role‑based entry points into the Land Tax capability architecture.
+    </div>
+  </header>
+
+  <!-- STRATEGIC -->
+  <section class="section">
+    <div class="section-title exec">Strategic View</div>
+    <div class="grid">
+
+      <a class="card" href="./Land_Tax_Level_0_View.html">
+        <span class="icon">📊</span>
+        <h3>Level 0 Value Stream Map</h3>
+        <p>End‑to‑end view of Land Tax outcomes across the full lifecycle.</p>
+      </a>
+
+      <a class="card" href="./LandTax_HeatMap.html">
+        <span class="icon">📈</span>
+        <h3>Capability Heat Map</h3>
+        <p>Maturity and gaps across capabilities to support investment and prioritisation.</p>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- MANAGEMENT -->
+  <section class="section">
+    <div class="section-title manager">Management View</div>
+    <div class="grid">
+
+      <a class="card" href="./value_stream_map.html">
+        <span class="icon">🧭</span>
+        <h3>Level 1 Value Stream Map</h3>
+        <p>Capabilities organised by value stage to support ownership and coordination.</p>
+      </a>
+
+      <a class="card" href="./pain_point.html">
+        <span class="icon">🔥</span>
+        <h3>Capability Pain Points</h3>
+        <p>Operational issues mapped directly to impacted capabilities.</p>
+      </a>
+
+      <a class="card" href="./dashboard.html">
+        <span class="icon">📌</span>
+        <h3>Dashboard</h3>
+        <p>Track delivery progress and improvement over time.</p>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- OPERATIONAL -->
+  <section class="section">
+    <div class="section-title team">Operational View</div>
+    <div class="grid">
+
+      <a class="card" href="./Land_Tax_Processes.html">
+        <span class="icon">📚</span>
+        <h3>LTX Process Catalogue</h3>
+        <p>Detailed process descriptions that explain how work is executed.</p>
+      </a>
+
+    </div>
+  </section>
+
+  <footer>
+    Capability Architecture • Land Tax Transformation Program
+  </footer>
+
+</main>
+</body>
+</html>
+``

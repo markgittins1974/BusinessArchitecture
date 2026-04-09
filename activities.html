@@ -1,170 +1,547 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Land Tax (LTX) – Activities on Hand</title>
-
+<meta charset="UTF-8" />
+<title>LTX Work Activities – Items On Hand</title>
 <style>
-:root{
-  --surface:#ffffff;
-  --border:#e5e7eb;
-  --text:#0f172a;
-  --muted:#475569;
-  --good:#15803d;
-  --warn:#c2410c;
-  --risk:#b91c1c;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:"Segoe UI",Arial,sans-serif;
-  background:#f8fafc;
-  color:var(--text)
-}
-header{
-  padding:28px 40px;
-  border-bottom:1px solid var(--border);
-  background:#fff
-}
-main{padding:32px 40px}
-.card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:24px
-}
-input{
-  width:320px;
-  padding:10px 14px;
-  border:1px solid var(--border);
-  border-radius:8px;
-  margin-bottom:14px
-}
-table{width:100%;border-collapse:collapse}
-th,td{
-  padding:12px 14px;
-  border-bottom:1px solid var(--border);
-  vertical-align:top
-}
-th{
-  background:#f1f5f9;
-  text-align:left;
-  position:sticky;
-  top:0;
-  font-weight:600
-}
-th.sortable{text-align:right;cursor:pointer}
-td.activity{font-weight:600;white-space:nowrap}
-td.desc{color:var(--muted)}
-td.count{text-align:right}
-.kpi{
-  display:inline-block;
-  padding:4px 8px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:600
-}
-.kpi.good{background:#dcfce7;color:var(--good)}
-.kpi.warn{background:#ffedd5;color:var(--warn)}
-.kpi.risk{background:#fee2e2;color:var(--risk)}
-.summary{
-  display:flex;
-  justify-content:space-between;
-  padding:10px 14px;
-  background:#f8fafc;
-  font-size:13px;
-  color:var(--muted)
-}
-tbody tr[hidden]{display:none}
+  body { font-family: Segoe UI, Arial, sans-serif; background:#f5f7fa; margin:20px; }
+  h1 { margin-bottom:5px; }
+  .summary { margin-bottom:20px; color:#333; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fill,minmax(420px,1fr)); gap:14px; }
+  .card { background:#fff; border-left:6px solid #0078d4; padding:14px; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
+  .title { font-weight:600; font-size:1.05em; margin-bottom:6px; }
+  .desc { font-size:0.9em; color:#444; margin-bottom:10px; }
+  .meta { display:flex; justify-content:space-between; font-size:0.85em; color:#222; }
 </style>
-
-<script>
-let sortDesc=true;
-function num(v){return Number(v.replace(/,/g,''))||0}
-function sortByItems(initial=false){
-  const body=document.querySelector("tbody");
-  const rows=[...body.rows];
-  rows.sort((a,b)=>{
-    const av=num(a.querySelector(".count").innerText);
-    const bv=num(b.querySelector(".count").innerText);
-    return sortDesc ? bv-av : av-bv;
-  });
-  rows.forEach(r=>body.appendChild(r));
-  if(!initial) sortDesc=!sortDesc;
-  updateSummary();
-}
-function filterTable(){
-  const q=document.getElementById("search").value.toLowerCase();
-  document.querySelectorAll("tbody tr")
-    .forEach(r=>r.hidden=!r.innerText.toLowerCase().includes(q));
-  updateSummary();
-}
-function updateSummary(){
-  const rows=[...document.querySelectorAll("tbody tr")].filter(r=>!r.hidden);
-  let total=0;
-  rows.forEach(r=>total+=num(r.querySelector(".count").innerText));
-  document.getElementById("rowCount").innerText=`${rows.length} activities shown`;
-  document.getElementById("itemTotal").innerText=`Total items on hand: ${total.toLocaleString()}`;
-}
-window.onload=()=>sortByItems(true);
-</script>
 </head>
-
 <body>
-
-<header>
-  <h1>Land Tax (LTX) – Activities on Hand</h1>
-  <p>Operational workload snapshot (March 2025–26)</p>
-</header>
-
-<main>
-<div class="card">
-
-<input id="search" placeholder="Search activities…" onkeyup="filterTable()">
-
-<table>
-<thead>
-<tr>
-  <th>Activity</th>
-  <th>Description</th>
-  <th class="sortable" onclick="sortByItems()">Items on hand ▲▼</th>
-  <th>KPI</th>
-</tr>
-</thead>
-
-<tbody>
-
-<tr><td class="activity">Suspense - LTX</td><td class="desc">Unallocated or unidentified Land Tax payments held in suspense. Staff investigate and allocate to the correct liability.</td><td class="count">23,648</td><td><span class="kpi warn">60</span></td></tr>
-<tr><td class="activity">FTI Investigations</td><td class="desc">First Time Investigations — investigate taxpayers newly identified as potentially liable for Land Tax to confirm or deny liability.</td><td class="count">9,594</td><td><span class="kpi warn">60</span></td></tr>
-<tr><td class="activity">User Withdrawn Assessment From Print</td><td class="desc">First Time Investigations — withdrawn prior to issue.</td><td class="count">7,467</td><td><span class="kpi good">2</span></td></tr>
-<tr><td class="activity">LOAN - Resolve Party Match</td><td class="desc">Resolve customer/party matching exceptions from the LOAN data feed.</td><td class="count">7,193</td><td><span class="kpi warn">60</span></td></tr>
-<tr><td class="activity">Returned Unclaimed Amendments</td><td class="desc">Assessment amendment notices returned undeliverable.</td><td class="count">4,636</td><td><span class="kpi warn">60</span></td></tr>
-<tr><td class="activity">MD - Prop Missing Val Taxable</td><td class="desc">Taxable property is missing a valuation.</td><td class="count">3,919</td><td><span class="kpi risk">90</span></td></tr>
-<tr><td class="activity">LOAN - Resolve Property Conflict</td><td class="desc">Resolve conflicts where LOAN property data contradicts records.</td><td class="count">3,538</td><td><span class="kpi warn">60</span></td></tr>
-<tr><td class="activity">LTX Trust Form 14</td><td class="desc">Process Form 14 trust notifications.</td><td class="count">3,108</td><td><span class="kpi warn">60</span></td></tr>
-<tr><td class="activity">Valuation Objection Amendment</td><td class="desc">Amend assessment following a successful valuation objection.</td><td class="count">2,177</td><td><span class="kpi risk">300</span></td></tr>
-<tr><td class="activity">Property Valuation Objection</td><td class="desc">Process objection to site valuation.</td><td class="count">2,154</td><td><span class="kpi warn">60</span></td></tr>
-<tr><td class="activity">PPR</td><td class="desc">Principal Place of Residence exemption — process applications, reviews, and revocations.</td><td class="count">2,143</td><td><span class="kpi warn">120</span></td></tr>
-<tr><td class="activity">Land Ownership</td><td class="desc">Resolve trust party and ownership exceptions.</td><td class="count">1,843</td><td><span class="kpi warn">120</span></td></tr>
-<tr><td class="activity">Change Of Customer Details</td><td class="desc">Maintain or investigate land ownership records.</td><td class="count">1,635</td><td><span class="kpi good">21</span></td></tr>
-<tr><td class="activity">LOAN - Resolve Trust Party Exception</td><td class="desc">Update customer contact details across Land Tax records.</td><td class="count">1,899</td><td><span class="kpi warn">60</span></td></tr>
-<tr><td class="activity">Formal Objection</td><td class="desc">Process a formal objection under the Taxation Administration Act.</td><td class="count">1,409</td><td><span class="kpi warn">120</span></td></tr>
-<tr><td class="activity">Decommission (Customer)</td><td class="desc">Decommission or close a customer record.</td><td class="count">1,334</td><td><span class="kpi good">3</span></td></tr>
-<tr><td class="activity">MD - Prop Missing Val Nontaxable</td><td class="desc">Non‑taxable property is missing a valuation.</td><td class="count">1,302</td><td><span class="kpi risk">90</span></td></tr>
-
-<!-- ✅ all remaining low‑volume, QA, and zero‑count rows would follow here in the same one‑row‑per‑CSV‑row pattern -->
-
-</tbody>
-</table>
-
-<div class="summary">
-  <span id="rowCount"></span>
-  <span id="itemTotal"></span>
+<h1>LTX Work Activities</h1>
+<div class="summary">Data as at April 2026 · Source: Balanced Scorecard</div>
+<div class="summary">Sorted by highest → lowest items on hand · Total activities: 58</div>
+<div class="grid">
+    <div class="card">
+      <div class="title">Suspense - LTX</div>
+      <div class="desc">Unallocated or unidentified Land Tax payments held in suspense. Staff investigate and allocate to the correct liability.</div>
+      <div class="meta">
+        <span><strong>23,648</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">FTI Investigations</div>
+      <div class="desc">First Time Investigations — investigate taxpayers newly identified as potentially liable for Land Tax to confirm or deny liability.
 </div>
-
-</div>
-</main>
-
+      <div class="meta">
+        <span><strong>9,594</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">User Withdrawn Assessment From Print</div>
+      <div class="desc">First Time Investigations — investigate taxpayers newly identified as potentially liable for Land Tax to confirm or deny liability.</div>
+      <div class="meta">
+        <span><strong>7,467</strong> on hand</span>
+        <span>KPI: 2 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">LOAN - Resolve Party Match</div>
+      <div class="desc">Resolve customer/party matching exceptions from the Land Ownership & Acquisition Notice (LOAN) data feed. Staff manually confirm or reject proposed party matches.</div>
+      <div class="meta">
+        <span><strong>7,193</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Returned Unclaimed Amendments</div>
+      <div class="desc">Assessment amendment notices returned undeliverable — staff investigate correct address and re-issue.</div>
+      <div class="meta">
+        <span><strong>4,636</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">MD - Prop Missing Val Taxable</div>
+      <div class="desc">Taxable property is missing a valuation — blocks assessment. Staff investigate with Valuer-General or apply manual valuation.</div>
+      <div class="meta">
+        <span><strong>3,919</strong> on hand</span>
+        <span>KPI: 90 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">LOAN - Resolve Property Conflict</div>
+      <div class="desc">Resolve conflicts where incoming LOAN property data contradicts existing property records — e.g. different address or parcel attributes.</div>
+      <div class="meta">
+        <span><strong>3,538</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">LTX Trust Form 14</div>
+      <div class="desc">Process Form 14 trust notifications — register new trusts or update existing trust arrangements for Land Tax.</div>
+      <div class="meta">
+        <span><strong>3,108</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Valuation Objection Amendment</div>
+      <div class="desc">Amend an assessment following a successful valuation objection — recalculate liability using revised valuation.</div>
+      <div class="meta">
+        <span><strong>2,177</strong> on hand</span>
+        <span>KPI: 300 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Property Valuation Objection</div>
+      <div class="desc">Process an objection to the site valuation applied to a property — liaise with Valuer-General.</div>
+      <div class="meta">
+        <span><strong>2,154</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">PPR</div>
+      <div class="desc">Principal Place of Residence exemption — process applications, reviews, and revocations of PPR exemptions.</div>
+      <div class="meta">
+        <span><strong>2,143</strong> on hand</span>
+        <span>KPI: 120 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">LOAN - Resolve Trust Party Exception</div>
+      <div class="desc">Update customer contact details — name, address, phone, email — across Land Tax records. High volume suggests a dedicated capability.</div>
+      <div class="meta">
+        <span><strong>1,899</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Land Ownership</div>
+      <div class="desc">Resolve exceptions where trust party data from the LOAN feed cannot be automatically matched to an existing trust/trustee record.</div>
+      <div class="meta">
+        <span><strong>1,843</strong> on hand</span>
+        <span>KPI: 120 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Change Of Customer Details</div>
+      <div class="desc">Maintain or investigate land ownership records including changes of ownership, deceased estates, and ownership disputes.</div>
+      <div class="meta">
+        <span><strong>1,635</strong> on hand</span>
+        <span>KPI: 21 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Formal Objection</div>
+      <div class="desc">Process a formal objection to a Land Tax assessment or decision under the Taxation Administration Act.</div>
+      <div class="meta">
+        <span><strong>1,409</strong> on hand</span>
+        <span>KPI: 120 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Decommission (Customer)</div>
+      <div class="desc">Decommission/close a customer record when all land is sold and no outstanding liabilities remain. No matching capability exists.</div>
+      <div class="meta">
+        <span><strong>1,334</strong> on hand</span>
+        <span>KPI: 3 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">MD - Prop Missing Val Nontaxable</div>
+      <div class="desc">Non-taxable property is missing a valuation — needs investigation to confirm non-taxable status or obtain valuation.</div>
+      <div class="meta">
+        <span><strong>1,302</strong> on hand</span>
+        <span>KPI: 90 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">LOAN - Resolve Property Match</div>
+      <div class="desc">Resolve cases where incoming LOAN property data partially matches existing records — staff confirm correct association.</div>
+      <div class="meta">
+        <span><strong>1,082</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Section 105 - Online</div>
+      <div class="desc">Process online submissions under s105 TAA — taxpayer self-reporting information or voluntary disclosure.</div>
+      <div class="meta">
+        <span><strong>1,057</strong> on hand</span>
+        <span>KPI: 14 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">LTX Refund Approval Required</div>
+      <div class="desc">Land Tax refund requiring manual approval — typically above a delegation threshold or arising from complex reassessment.</div>
+      <div class="meta">
+        <span><strong>987</strong> on hand</span>
+        <span>KPI: 5 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">LOAN - Resolve Excluded Party</div>
+      <div class="desc">Resolve cases where an ownership party has been excluded from automatic LOAN processing due to data quality rules.</div>
+      <div class="meta">
+        <span><strong>895</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Private Rulings</div>
+      <div class="desc">Process applications for private rulings on how Land Tax law applies to a taxpayer's specific circumstances.</div>
+      <div class="meta">
+        <span><strong>624</strong> on hand</span>
+        <span>KPI: 120 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Automated Land Sold</div>
+      <div class="desc">Automatically process land sold events — update ownership records, close liability, trigger reassessment if needed.</div>
+      <div class="meta">
+        <span><strong>587</strong> on hand</span>
+        <span>KPI: 21 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Owner Unknown Prop Data Invest</div>
+      <div class="desc">Investigate properties where the liable owner cannot be identified — flag and research to establish ownership.</div>
+      <div class="meta">
+        <span><strong>565</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">LTX Penalty Notification Drift</div>
+      <div class="desc">Penalty notifications that have drifted past expected processing dates — staff follow up to issue or resolve.</div>
+      <div class="meta">
+        <span><strong>555</strong> on hand</span>
+        <span>KPI: 14 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">PPL</div>
+      <div class="desc">Primary Production Land concession — process applications and reviews for PPL concession eligibility.</div>
+      <div class="meta">
+        <span><strong>479</strong> on hand</span>
+        <span>KPI: 120 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">MD - Prop No Match NMetro</div>
+      <div class="desc">Matching discrepancy — non-metropolitan property from data feed has no match in existing records. May need new property creation.</div>
+      <div class="meta">
+        <span><strong>359</strong> on hand</span>
+        <span>KPI: 90 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">MD - Prop No Match Metro</div>
+      <div class="desc">Matching discrepancy — metropolitan property from data feed has no match in existing records.</div>
+      <div class="meta">
+        <span><strong>341</strong> on hand</span>
+        <span>KPI: 90 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">MD - Prop Match Error NMetro</div>
+      <div class="desc">Matching discrepancy — non-metro property match produced a data error needing manual resolution.</div>
+      <div class="meta">
+        <span><strong>334</strong> on hand</span>
+        <span>KPI: 90 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">LOAN - Resolve Multi Property Conflict</div>
+      <div class="desc">Matching discrepancy — metro property match produced a data error needing manual resolution.</div>
+      <div class="meta">
+        <span><strong>298</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">MD - Prop Match Error Metro</div>
+      <div class="desc">Resolve conflicts where a single LOAN ownership record maps to multiple existing property records.</div>
+      <div class="meta">
+        <span><strong>279</strong> on hand</span>
+        <span>KPI: 90 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">LOAN - Resolve Multi Property Match</div>
+      <div class="desc">Resolve ambiguous matches where one LOAN record could match several properties — determine correct link.</div>
+      <div class="meta">
+        <span><strong>164</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Vg Objection Property Error</div>
+      <div class="desc">Manage Land Tax obligations for insolvent customers — lodge proofs of debt, monitor administrator outcomes.</div>
+      <div class="meta">
+        <span><strong>161</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">LTX Insolvency</div>
+      <div class="desc">Amend existing trust arrangements — changes to trustees, beneficiaries, trust type, or trust structure.</div>
+      <div class="meta">
+        <span><strong>137</strong> on hand</span>
+        <span>KPI: 90 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Trust Amendments</div>
+      <div class="desc">nan</div>
+      <div class="meta">
+        <span><strong>117</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Valuation Objection</div>
+      <div class="desc">Initial receipt and registration of a new valuation objection — triage, validate, and assign.</div>
+      <div class="meta">
+        <span><strong>105</strong> on hand</span>
+        <span>KPI: 10 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Related Party Automation</div>
+      <div class="desc">Automated grouping of related-party ownership for Land Tax aggregation. When automation fails, staff resolve.</div>
+      <div class="meta">
+        <span><strong>97</strong> on hand</span>
+        <span>KPI: 21 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Customer Data Maintenance</div>
+      <div class="desc">General maintenance of customer data — corrections, merges, deduplication.</div>
+      <div class="meta">
+        <span><strong>89</strong> on hand</span>
+        <span>KPI: 90 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Plans</div>
+      <div class="desc">Process plan of subdivision lodgements — update property records when new plans are registered at Land Registry.</div>
+      <div class="meta">
+        <span><strong>89</strong> on hand</span>
+        <span>KPI: 90 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Manual Land Sold LTX</div>
+      <div class="desc">Manually process a land sold event where the automated workflow could not complete — e.g. complex ownership.</div>
+      <div class="meta">
+        <span><strong>80</strong> on hand</span>
+        <span>KPI: 21 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">LOAN - Review Unsupported NoA</div>
+      <div class="desc">Review Notice of Acquisition records that could not be automatically supported — missing data or format issues.</div>
+      <div class="meta">
+        <span><strong>78</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Absentee Owner</div>
+      <div class="desc">Identify and process absentee owners subject to the absentee owner surcharge under the Land Tax Act.</div>
+      <div class="meta">
+        <span><strong>74</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Multiple Amendments</div>
+      <div class="desc">Process multiple concurrent amendments to a taxpayer's assessment — e.g. exemption change + valuation change together.</div>
+      <div class="meta">
+        <span><strong>41</strong> on hand</span>
+        <span>KPI: 120 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">General Correspondence</div>
+      <div class="desc">Handle general inbound customer correspondence — enquiries, requests, notifications not covered by specific work types.</div>
+      <div class="meta">
+        <span><strong>39</strong> on hand</span>
+        <span>KPI: 21 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">SV Requests</div>
+      <div class="desc">Request special or supplementary valuations from the Valuer-General for specific properties.</div>
+      <div class="meta">
+        <span><strong>38</strong> on hand</span>
+        <span>KPI: 90 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Complex Correspondence</div>
+      <div class="desc">Handle complex inbound correspondence requiring specialist knowledge, research, or multi-team coordination.</div>
+      <div class="meta">
+        <span><strong>31</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Refund Application</div>
+      <div class="desc">Process a customer-initiated refund application — verify overpayment and process refund.</div>
+      <div class="meta">
+        <span><strong>30</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Quality Checking VAL</div>
+      <div class="desc">Quality assurance sampling and review of valuation-related decisions and work items.</div>
+      <div class="meta">
+        <span><strong>13</strong> on hand</span>
+        <span>KPI: 0 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Vg Objection Error</div>
+      <div class="desc">Error in processing a VG objection record — data quality issue requiring manual correction.</div>
+      <div class="meta">
+        <span><strong>2</strong> on hand</span>
+        <span>KPI: 60 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Vals Supps Format Test</div>
+      <div class="desc">nan</div>
+      <div class="meta">
+        <span><strong>1</strong> on hand</span>
+        <span>KPI: 21 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Cust Delivery Address Change</div>
+      <div class="desc">nan</div>
+      <div class="meta">
+        <span><strong>1</strong> on hand</span>
+        <span>KPI: 14 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">QA - WGT Salesforce</div>
+      <div class="desc">QA checks on Salesforce-based work items — cross-platform quality assurance.</div>
+      <div class="meta">
+        <span><strong>1</strong> on hand</span>
+        <span>KPI: 1 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">QA - LTX Work Item</div>
+      <div class="desc">Quality assurance review of Land Tax assessment work items.</div>
+      <div class="meta">
+        <span><strong>0</strong> on hand</span>
+        <span>KPI: 3 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">QA - LOAN Work Item</div>
+      <div class="desc">Quality assurance review of LOAN data processing work items.</div>
+      <div class="meta">
+        <span><strong>0</strong> on hand</span>
+        <span>KPI: 3 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Quality Checking LTX</div>
+      <div class="desc">Quality assurance checks on Land Tax assessment decisions — sampling for accuracy.</div>
+      <div class="meta">
+        <span><strong>0</strong> on hand</span>
+        <span>KPI: 10 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Property Data Maintenance</div>
+      <div class="desc">Maintain and correct property data records — address, parcel identifiers, attributes.</div>
+      <div class="meta">
+        <span><strong>0</strong> on hand</span>
+        <span>KPI: 90 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Valuation Objection Decision</div>
+      <div class="desc">Record the final determination on a valuation objection and trigger any consequential assessment amendment.</div>
+      <div class="meta">
+        <span><strong>0</strong> on hand</span>
+        <span>KPI: 28 days</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="title">Pending Special Tax</div>
+      <div class="desc">Items pending determination of special tax treatment — e.g. Build-to-Rent, vacant land categories.</div>
+      <div class="meta">
+        <span><strong>0</strong> on hand</span>
+        <span>KPI: 10 days</span>
+      </div>
+    </div>
+    </div>
 </body>
 </html>
-``

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Explore Your Capability Architecture</title>
+  <title>Capability Architecture Portal – Land Tax</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
@@ -30,18 +30,18 @@
       background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
       color: var(--text-primary);
       display: flex;
-      justify-content: center;
-      align-items: center;
+      justify-content: centre;
+      align-items: centre;
     }
 
-    .container {
+    main.container {
       max-width: 1200px;
       padding: 48px 32px;
       width: 100%;
     }
 
     header {
-      text-align: center;
+      text-align: centre;
       margin-bottom: 48px;
     }
 
@@ -53,7 +53,9 @@
 
     .subtitle {
       font-size: 1.1rem;
-      color: var(--text-secondary);
+      colour: var(--text-secondary);
+      max-width: 760px;
+      margin: 0 auto;
     }
 
     .section {
@@ -66,6 +68,7 @@
       text-transform: uppercase;
       margin-bottom: 20px;
       opacity: 0.85;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.35);
     }
 
     .section-title.exec { color: var(--exec); }
@@ -84,7 +87,7 @@
       border-radius: 14px;
       padding: 22px;
       text-decoration: none;
-      color: inherit;
+      colour: inherit;
       transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
       display: block;
     }
@@ -93,6 +96,11 @@
       transform: translateY(-4px);
       background: rgba(255, 255, 255, 0.12);
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+    }
+
+    a.card:focus-visible {
+      outline: 3px solid var(--exec);
+      outline-offset: 3px;
     }
 
     .icon {
@@ -111,86 +119,94 @@
       margin: 0;
       font-size: 0.95rem;
       line-height: 1.4;
-      color: var(--text-secondary);
+      colour: var(--text-secondary);
     }
 
     footer {
       margin-top: 56px;
-      text-align: center;
+      text-align: centre;
       font-size: 0.8rem;
-      color: var(--text-secondary);
+      colour: var(--text-secondary);
       opacity: 0.8;
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
+  <main class="container">
+
     <header>
       <h1>Explore Your Capability Architecture</h1>
       <div class="subtitle">
-        Three tools, one vision. Understand your Land Tax operation at every level of detail.
+        Role‑based entry points into the Land Tax capability architecture.
       </div>
     </header>
 
-    <!-- STRATEGIC -->
+    <!-- STRATEGIC VIEW -->
     <section class="section">
       <div class="section-title exec">Strategic View</div>
       <div class="grid">
-        <a class="card" href="executive/level-0-value-stream.html">
+
+        <a class="card" href="./Land_Tax_Level_0_View.html">
           <span class="icon">📊</span>
           <h3>Level 0 Value Stream Map</h3>
           <p>End‑to‑end view of Land Tax outcomes across the full lifecycle.</p>
         </a>
 
-        <a class="card" href="executive/capability-heatmap.html">
+        <a class="card" href="./LandTax_HeatMap.html">
           <span class="icon">📈</span>
           <h3>Capability Heat Map</h3>
           <p>Maturity and gaps across capabilities to support investment and prioritisation.</p>
         </a>
+
       </div>
     </section>
 
-    <!-- MANAGEMENT -->
+    <!-- MANAGEMENT VIEW -->
     <section class="section">
       <div class="section-title manager">Management View</div>
       <div class="grid">
-        <a class="card" href="management/level-1-value-stream.html">
+
+        <a class="card" href="./value_stream_map.html">
           <span class="icon">🧭</span>
           <h3>Level 1 Value Stream Map</h3>
           <p>Capabilities organised by value stage to support ownership and coordination.</p>
         </a>
 
-        <a class="card" href="management/capability-pain-points.html">
+        <a class="card" href="./pain_point.html">
           <span class="icon">🔥</span>
           <h3>Capability Pain Points</h3>
           <p>Operational issues mapped directly to impacted capabilities.</p>
         </a>
 
-        <a class="card" href="management/dashboard.html">
+        <a class="card" href="./dashboard.html">
           <span class="icon">📌</span>
           <h3>Dashboard</h3>
           <p>Track delivery progress and improvement over time.</p>
         </a>
+
       </div>
     </section>
 
-    <!-- OPERATIONAL -->
+    <!-- OPERATIONAL VIEW -->
     <section class="section">
       <div class="section-title team">Operational View</div>
       <div class="grid">
-        <a class="card" href="operations/ltx-process-catalogue.html">
+
+        <a class="card" href="./Land_Tax_Processes.html">
           <span class="icon">📚</span>
           <h3>LTX Process Catalogue</h3>
           <p>Detailed process descriptions that explain how work is executed.</p>
         </a>
+
       </div>
     </section>
 
     <footer>
       Capability Architecture • Land Tax Transformation Program
     </footer>
-  </div>
+
+  </main>
 </body>
 </html>
 ``

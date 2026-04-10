@@ -1,1 +1,431 @@
 
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Land Tax — Heat Maps v1.2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--l1-header-bg:#1a3a5c;--l2-header-bg:#2d5a8e;--surface:#f0f4f8;--surface-raised:#fff;--border-subtle:#dce6ef;--text-dark:#1a2a3a;--text-light:#4a5f72;--accent:#2d5a8e;--mat-high-bg:#dff0e0;--mat-high-text:#2a7a3b;--mat-med-bg:#fff5d6;--mat-med-text:#8a6500;--mat-low-bg:#fde8e8;--mat-low-text:#b53030;--proc-pill-bg:#eef3f8;--proc-pill-text:#2d5a8e;--proc-pill-border:#c5d6e8;--com-badge-bg:#e8eff6;--com-badge-text:#4a6a8a}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--text-dark);padding:20px}
+.shell{max-width:1600px;margin:0 auto}
+.page-super{font-family:'Roboto Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+.page-title{font-size:24px;font-weight:700;margin-bottom:6px}
+.page-sub{font-size:13px;color:var(--text-light);margin-bottom:16px}
+.explainer{margin-bottom:16px}
+.explainer summary{font-size:13px;font-weight:600;cursor:pointer;color:var(--text-dark);padding:6px 0}
+.explain-body{font-size:12px;color:var(--text-light);line-height:1.6;padding:8px 0 4px 0;max-width:800px}
+.explain-body strong{color:var(--text-dark)}
+.tab-bar{display:flex;gap:0;margin-bottom:20px;border-bottom:2px solid var(--border-subtle)}
+.tab-btn{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;padding:10px 20px;background:none;border:none;cursor:pointer;color:var(--text-light);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab-btn.is-active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-btn:hover{color:var(--text-dark)}
+.filter-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.filter-label{font-family:'Roboto Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text-light);margin-right:4px}
+.filter-btn{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;padding:4px 12px;border-radius:12px;border:1.5px solid;cursor:pointer;transition:opacity .15s}
+.filter-btn.is-inactive{opacity:.25}
+.fbtn-all{background:#fff;border-color:var(--border-subtle);color:var(--text-light)}
+.fbtn-high{background:var(--mat-high-bg);border-color:var(--mat-high-text);color:var(--mat-high-text)}
+.fbtn-med{background:var(--mat-med-bg);border-color:var(--mat-med-text);color:var(--mat-med-text)}
+.fbtn-low{background:var(--mat-low-bg);border-color:var(--mat-low-text);color:var(--mat-low-text)}
+.hm-view{display:none}.hm-view.is-active{display:block}
+.hm-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:start}
+.hm-col-header{background:var(--l1-header-bg);border-radius:8px 8px 0 0;padding:10px 10px 12px;text-align:center}
+.hm-col-header__vs{font-family:'Roboto Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.hm-col-header__title{font-size:11px;font-weight:700;color:#fff;line-height:1.3;margin-top:2px}
+.hm-col-body{display:flex;flex-direction:column;gap:6px;padding-top:6px}
+.hm-section-header{font-family:'Roboto Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text-light);margin-top:8px;padding:4px 0 2px;border-top:1px solid var(--border-subtle)}
+.hm-cell{border:1px solid var(--border-subtle);border-radius:6px;padding:8px 10px;transition:opacity .2s ease;cursor:pointer}
+.hm-cell:hover{box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.hm-cell[data-maturity="high"]{background:var(--mat-high-bg)}
+.hm-cell[data-maturity="med"]{background:var(--mat-med-bg)}
+.hm-cell[data-maturity="low"]{background:var(--mat-low-bg)}
+.hm-cell.is-highlighted{box-shadow:0 0 0 2px var(--accent)}
+.hm-cell.is-faded{opacity:.12}
+.hm-cell__name{font-size:11px;font-weight:600;color:var(--text-dark);line-height:1.35;margin-bottom:5px}
+.hm-cell__badge{font-family:'Roboto Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.06em;padding:2px 7px;border-radius:3px;text-transform:uppercase;display:inline-block;margin-bottom:4px}
+.badge-high{background:var(--mat-high-bg);color:var(--mat-high-text)}
+.badge-med{background:var(--mat-med-bg);color:var(--mat-med-text)}
+.badge-low{background:var(--mat-low-bg);color:var(--mat-low-text)}
+.com-tag{font-family:'Roboto Mono',monospace;font-size:8px;font-weight:500;letter-spacing:.06em;padding:1px 5px;border-radius:3px;text-transform:uppercase;background:var(--com-badge-bg);color:var(--com-badge-text);margin-left:4px;vertical-align:middle}
+.proc-pills{display:flex;flex-wrap:wrap;gap:3px;margin-top:2px}
+.hide-procs .proc-pills{display:none}
+.proc-pill{font-size:9px;font-weight:500;color:var(--proc-pill-text);background:var(--proc-pill-bg);border:1px solid var(--proc-pill-border);border-radius:3px;padding:2px 6px;line-height:1.3}
+.proc-card{background:var(--surface-raised);border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden;margin-bottom:6px}
+.proc-card:last-child{margin-bottom:0}
+.proc-card__header{background:var(--l2-header-bg);padding:8px 12px;font-size:11px;font-weight:700;color:#fff;line-height:1.3}
+.proc-card__caps{padding:6px 8px;display:flex;flex-direction:column;gap:4px}
+.proc-cap{display:flex;align-items:flex-start;gap:6px;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;cursor:pointer}
+.proc-cap:hover{box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.proc-cap[data-maturity="high"]{background:var(--mat-high-bg)}
+.proc-cap[data-maturity="med"]{background:var(--mat-med-bg)}
+.proc-cap[data-maturity="low"]{background:var(--mat-low-bg)}
+.proc-cap__name{font-size:10px;font-weight:500;color:var(--text-dark);flex:1;line-height:1.35}
+.proc-cap__badge{font-family:'Roboto Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.06em;padding:2px 7px;border-radius:3px;text-transform:uppercase;flex-shrink:0}
+.view-label{font-family:'Roboto Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text-light);margin-bottom:12px}
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:1000;justify-content:center;align-items:center}
+.modal-overlay.is-open{display:flex}
+.modal{background:#fff;border-radius:10px;max-width:520px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);padding:24px 28px}
+.modal__close{float:right;background:none;border:none;font-size:18px;cursor:pointer;color:var(--text-light);padding:0 0 0 12px;line-height:1}
+.modal__close:hover{color:var(--text-dark)}
+.modal__name{font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:8px;padding-right:24px}
+.modal__badge{font-family:'Roboto Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.06em;padding:3px 9px;border-radius:3px;text-transform:uppercase;display:inline-block;margin-bottom:12px}
+.modal__section{margin-bottom:14px}
+.modal__label{font-family:'Roboto Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:4px}
+.modal__desc{font-size:13px;color:var(--text-dark);line-height:1.5}
+.modal__proc-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.modal__proc{font-size:11px;font-weight:500;color:var(--proc-pill-text);background:var(--proc-pill-bg);border:1px solid var(--proc-pill-border);border-radius:4px;padding:3px 8px}
+.modal__wi{font-size:12px;color:var(--text-dark);line-height:1.5;padding:4px 0;border-bottom:1px solid var(--surface)}
+.modal__wi:last-child{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="shell">
+<div class="page-super">SRO Transformation Architecture</div>
+<h1 class="page-title">Land Tax &#8212; Heat Maps</h1>
+<p class="page-sub">Capability and process maturity views across all six value stages &#8212; including Common capabilities.</p>
+<details class="explainer"><summary>&#9654; What am I looking at?</summary>
+<div class="explain-body">
+<p><strong>Capability Heat Map</strong> shows every L3 capability placed in its value stage column. Each card shows a maturity badge and any related procedures as pills.</p>
+<p style="margin-top:6px"><strong>Process Heat Map</strong> groups capabilities under the process that executes them. Work items are shown with name, KPI days, and items on hand where linked.</p>
+<p style="margin-top:6px"><strong>Maturity</strong> represents <em>documentation completeness</em> only:<br>
+<strong>HIGH</strong> &#8212; Process and procedures documented.<br>
+<strong>MEDIUM</strong> &#8212; Process mapped but no procedures, or procedures exist but no process mapped.<br>
+<strong>LOW</strong> &#8212; No process or procedures documented.</p>
+</div></details>
+<div class="tab-bar">
+<button class="tab-btn is-active" id="tabCap" onclick="switchTab('cap')">Capability Heat Map</button>
+<button class="tab-btn" id="tabProc" onclick="switchTab('proc')">Process Heat Map</button>
+</div>
+<div id="capView" class="hm-view is-active">
+<div class="filter-bar">
+<span class="filter-label">Maturity</span>
+<button class="filter-btn fbtn-all" data-f="all" onclick="setFilter('all')">ALL</button>
+<button class="filter-btn fbtn-high is-inactive" data-f="high" onclick="setFilter('high')">HIGH</button>
+<button class="filter-btn fbtn-med is-inactive" data-f="med" onclick="setFilter('med')">MEDIUM</button>
+<button class="filter-btn fbtn-low is-inactive" data-f="low" onclick="setFilter('low')">LOW</button>
+<span style="margin-left:12px;border-left:1px solid #dce6ef;padding-left:12px"></span>
+<button class="filter-btn fbtn-all" id="procToggle" onclick="toggleProcs()">Procedures &#10003;</button>
+</div>
+<div class="hm-grid" id="capGrid"></div>
+</div>
+<div id="procView" class="hm-view">
+<div class="view-label">Process Heat Map</div>
+<div class="hm-grid" id="procGrid"></div>
+</div>
+</div>
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+<div class="modal">
+<button class="modal__close" onclick="closeModal()">&#10005;</button>
+<div id="modalContent"></div>
+</div>
+</div>
+<script>
+var DESC={"Taxable Land Maintenance":"Maintain records of land that is subject to Land Tax, ensuring only qualifying land is included in assessments.","Subdivisions & Consolidations":"Manage changes to land parcels resulting from subdivision or consolidation, and update taxable land records accordingly.","Title to Property Relationship":"Maintain the relationship between legal land titles and property records, ensuring title changes are reflected in the system.","Ownership Maintenance":"Maintain ownership details and ownership changes over time so the correct party is held liable.","Joint Ownership":"Manage land owned by more than one party, including proportional interests and lead-owner assignment.","Land Held on Trust":"Manage land ownership where land is held under trust arrangements, capturing trustee and beneficiary relationships.","Unknown Customer":"Manage land or ownership records where the liable party is not yet identified, flagging for investigation.","Determine Land Tax Liability":"Determine whether Land Tax applies to specific land and how liability is calculated, including thresholds and exemptions.","Exemption Creation Management":"Defining and configuring exemption types available under the Land Tax Act, including eligibility criteria and duration.","Automated Exemption Application":"System-driven application of an exemption based on configured business rules and data triggers.","Manual Exemption Application":"Processing a customer-submitted application for an exemption by a staff member.","Concession Application":"Receiving and processing applications for land tax concessions including eligibility assessment and approval.","Tax/Entitlement Rate Management":"Managing the land tax rates applicable to different taxpayer types and ownership categories.","Tax Free Threshold Management":"Managing the tax-free threshold below which no land tax is payable.","Absentee Owner Management":"Managing the identification and assessment of absentee owners who are subject to additional land tax surcharge.","Build to Rent Management":"Managing the registration and assessment of build-to-rent properties subject to specific land tax treatment.","Usage Management":"Managing information about how a property is occupied and used, which affects land tax exemption and concession eligibility.","Valuations Maintenance":"Maintain valuation data used for Land Tax assessment, including updates from the Valuer-General.","General Valuations":"Apply standard Valuer-General valuation data for the annual Land Tax assessment cycle.","Supplementary Valuations":"Apply updated valuations when land circumstances change between general valuation cycles.","SRO Requested Valuations":"Manage valuations specifically requested by SRO to support assessment decisions.","Single Valuation for Multiple Properties":"Apply a single valuation across related properties where appropriate under the Land Tax Act.","Generate Land Tax Assessments":"Generate Land Tax assessment outcomes using validated liability calculations and valuation data.","Issue Land Tax Assessments":"Issue formal Land Tax assessments to customers, giving legal effect to the tax obligation.","Issue Cycle Schedule Management":"Scheduling and managing the timing of the annual land tax issue cycle.","First Time Liability Management":"Managing the identification and assessment of taxpayers newly liable for land tax.","Automated Liability/Entitlement Calculation":"System-driven automated calculation of land tax liability during the issue cycle.","Manual Liability/Entitlement Calculation":"Performing a manual land tax calculation in response to specific circumstances or amendments.","Trust Deduction Management":"Managing the trust deduction available to certain trust structures under the Land Tax Act.","Minimum Liability Threshold Management":"Managing the minimum liability amount below which no assessment is issued.","Payment Management":"Receive and manage Land Tax payments from customers across all payment channels.","Payment Allocation Management":"Allocate payments to the correct Land Tax liabilities at customer and property levels.","Instalment Management":"Manage instalment arrangements for paying Land Tax, including schedule setup and monitoring.","Refund Management":"Process refunds arising from overpayment or reassessment of Land Tax.","Adjustment Management":"Apply financial adjustments to Land Tax liabilities following reassessment, amendment, or correction.","Property Liability Allocation":"Allocating payments against liabilities at the property level.","Objection Management":"Manage formal objections to Land Tax decisions, including receipt, review and determination.","Valuation Objection Management":"Manage objections relating specifically to land valuations used in Land Tax assessments.","Dispute Resolution Management":"Resolve disputes arising from Land Tax matters, including VCAT referrals and settlements.","Case Management":"Manage Land Tax cases across their full lifecycle including creation, tracking and closure.","Compliance Management":"Monitor and address non-compliance with Land Tax obligations, including proactive and reactive activities.","Audit Management":"Conduct audit activities to validate correctness and compliance with land tax obligations.","Risk Management":"Identify and manage risks associated with Land Tax administration.","Quality Assurance Management":"Ensure accuracy and consistency of Land Tax decisions through sampling and review activities.","Private Ruling Management":"Managing applications for private rulings on land tax obligations.","Issue Land Tax Certificates":"Issue certificates confirming Land Tax status for land, used in property settlement and conveyancing.","Certificate Evidence & Record Management":"Maintain records and evidence supporting issued certificates, including liability outstanding at issue.","Customer Data Matching":"Comparing incoming customer data against existing records to identify potential matches and prevent duplicates.","Customer Identity Verification":"Confirming a customer's identity against authoritative sources before granting access or making changes to their account.","Duplicate Customer Detection":"Automated and manual processes to identify customer records that may represent the same real-world entity.","Automated Customer Creation":"System-initiated creation of customer records based on data received from third-party sources such as land registries.","Manual Customer Creation":"Creating a new customer record through direct staff data entry, typically in response to a customer contact or application.","Trustee Management":"Recording and maintaining trustee details and their relationship to trust accounts.","Customer Detail Amendment Management":"Update customer contact details across Land Tax records.","Joint Ownership Member Management":"Managing all customers who share ownership of a property, including their proportional interests.","Customer Decommission Management":"Decommission or close a customer record when all land is sold and no outstanding liabilities remain.","Customer Self-Registration":"Customer-initiated account creation via the portal.","Self-Service Identity Verification":"Customer verifies their identity against authoritative sources without staff intervention.","Self-Service Customer Record Matching":"Customer confirms or disambiguates matches to existing SRO customer records during onboarding.","Entity Relationship Declaration":"Customer declares trusts, joint ownership arrangements, and relevant property or entity linkages as part of onboarding.","Digital Communication Consent Capture":"Consent for digital communications is obtained during onboarding and recorded as a prerequisite for digital engagement.","Address Validation Management":"Validating addresses against authoritative sources such as GNAF to ensure they are accurate and deliverable.","Property Creation":"Creating new property records in the system from data received via third-party feeds or manual staff entry.","Property Data Validation":"Applying business rules to confirm property data meets mandatory format and integrity requirements.","Ownership Management":"Managing the link between properties and their registered owners within the revenue system.","Subdivision/Consolidation Management":"Managing property record changes arising from subdivision or consolidation events.","Automatic Revenue Line Registration Creation":"System-triggered creation of land tax registrations based on data events such as property ownership changes.","Assessment Cancellation Management":"Managing the cancellation of assessment notices that have been issued in error or superseded.","Assessment Generation Management":"Managing the process of generating assessment notices from calculated liabilities.","Assessment Withdrawal Management":"Managing the formal withdrawal of issued assessment notices.","Service of Notice Management":"Managing the formal service of assessment notices to customers, including electronic and postal channels.","Valuation Data Acquisition":"Receiving and ingesting valuation data from the Valuer-General and other authoritative sources.","Valuation Data Management":"Maintaining the accuracy and completeness of valuation records used in assessment calculations.","Automated Communication Management":"Managing system-generated outbound communications triggered by assessment events.","Electronic Communication Consent Management":"Managing customer consent to receive official communications electronically.","Customer Communication Record Management":"Recording and maintaining a history of all communications with customers.","Interest Management":"Managing interest charges applied to overdue Land Tax liabilities.","Penalty Management":"Managing penalties applied for late lodgement or payment of Land Tax.","Write Off Management":"Managing the write-off of Land Tax debts deemed irrecoverable.","Customer Liability Allocation":"Allocating payments against liabilities at the customer level.","Suspense Management":"Managing unallocated or unidentified payments held in suspense pending correct allocation.","Refund Data Management":"Maintaining records of refund transactions and supporting documentation.","Objection Creation Management":"Creating new objection records in response to a customer disputing a land tax assessment.","Case Creation":"Creating new cases to track complex land tax matters, private rulings and referrals.","Formal Objection Management":"Managing the referral and tracking of formal objections through to determination.","Self Reporting Management":"Managing the receipt and processing of self-reported information from taxpayers.","Tip Offs and Voluntary Disclosure Management":"Managing anonymous and named tip-offs from third parties regarding suspected non-compliance.","Potential Investigation Cases (PICs)":"Identifying and managing cases where a taxpayer may not be meeting their land tax obligations.","Insolvency Relationship Management":"Managing land tax obligations and debt recovery for customers who are subject to insolvency proceedings."};
+
+var S=[
+{vs:“VS1”,title:“Maintain Land & Ownership Records”,caps:[
+{n:“Taxable Land Maintenance”,m:“high”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[“Property Address Update”,“Land Ownership Procedure”],w:[{n:“Property Data Maintenance”,k:90,o:0}]},
+{n:“Subdivisions & Consolidations”,m:“high”,p:“Process Subdivision & Consolidation”,pr:[“Downloading And Loading Plans To E-Sys”],w:[{n:“Plans”,k:90,o:89}]},
+{n:“Title to Property Relationship”,m:“high”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[“Land Ownership Procedure”],w:[{n:“LOAN - Review Unsupported NoA”,k:60,o:78}]},
+{n:“Ownership Maintenance”,m:“high”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[“Loan Procedure”,“Land Ownership Procedure”,“Returned Unclaimed Procedure”],w:[{n:“Automated Land Sold”,k:21,o:587},{n:“Land Ownership”,k:120,o:1843},{n:“LOAN - Resolve Excluded Party”,k:60,o:895},{n:“Manual Land Sold LTX”,k:21,o:80}]},
+{n:“Joint Ownership”,m:“high”,p:“Register Joint Ownership”,pr:[“Land Ownership Procedure”],w:[{n:“Related Party Automation”,k:21,o:97}]},
+{n:“Land Held on Trust”,m:“high”,p:“Register Land Held on Trust”,pr:[“Land Tax Trust Amendments Procedure”],w:[{n:“LTX Trust Form 14”,k:60,o:3108},{n:“Trust Amendments”,k:60,o:117}]},
+{n:“Unknown Customer”,m:“high”,p:“Manage Customer Unknown”,pr:[“Change Of Customer Details Procedure For Land Tax”],w:[{n:“Owner Unknown Prop Data Invest”,k:60,o:565}]}
+],com:[
+{g:“Customer Management”,c:[
+{n:“Customer Data Matching”,m:“high”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[“Land Ownership Procedure”,“LOAN Procedure”],w:[{n:“LOAN - Resolve Party Match”,k:60,o:7193}]},
+{n:“Customer Identity Verification”,m:“high”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[],w:[{n:“Change Of Customer Details”,k:21,o:1635}]},
+{n:“Duplicate Customer Detection”,m:“high”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[“Duplicate And Merged Customers Procedure”],w:[{n:“Customer Data Maintenance”,k:90,o:89}]},
+{n:“Automated Customer Creation”,m:“high”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[],w:[]},
+{n:“Manual Customer Creation”,m:“high”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[],w:[]},
+{n:“Trustee Management”,m:“high”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[“Land Tax Trust Amendments Procedure”],w:[{n:“LOAN - Resolve Trust Party Exception”,k:60,o:1899}]},
+{n:“Customer Detail Amendment Management”,m:“med”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[],w:[{n:“Change Of Customer Details”,k:21,o:1635}]},
+{n:“Joint Ownership Member Management”,m:“low”,p:””,pr:[],w:[]},
+{n:“Customer Decommission Management”,m:“low”,p:“Manage Duplicate Customer Records”,pr:[],w:[{n:“Decommission (Customer)”,k:3,o:1334}]},
+{n:“Customer Self-Registration”,m:“low”,p:””,pr:[],w:[]},
+{n:“Self-Service Identity Verification”,m:“low”,p:””,pr:[],w:[]},
+{n:“Self-Service Customer Record Matching”,m:“low”,p:””,pr:[],w:[]},
+{n:“Entity Relationship Declaration”,m:“low”,p:””,pr:[],w:[]},
+{n:“Digital Communication Consent Capture”,m:“low”,p:””,pr:[],w:[]}
+]},
+{g:“Property & Data Management”,c:[
+{n:“Address Validation Management”,m:“high”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[],w:[{n:“Cust Delivery Address Change”,k:14,o:1}]},
+{n:“Property Creation”,m:“high”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[],w:[{n:“MD - Prop No Match NMetro”,k:90,o:359},{n:“MD - Prop No Match Metro”,k:90,o:341}]},
+{n:“Property Data Validation”,m:“high”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[“Duplicate Land Process”,“Property Address Update”,“Downloading And Loading Plans To E-Sys”],w:[{n:“LOAN - Resolve Property Conflict”,k:60,o:3538},{n:“LOAN - Resolve Property Match”,k:60,o:1082},{n:“MD - Prop Match Error NMetro”,k:90,o:334},{n:“LOAN - Resolve Multi Property Conflict”,k:60,o:298},{n:“MD - Prop Match Error Metro”,k:90,o:279},{n:“LOAN - Resolve Multi Property Match”,k:60,o:164}]},
+{n:“Ownership Management”,m:“high”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[],w:[]},
+{n:“Subdivision/Consolidation Management”,m:“low”,p:””,pr:[],w:[]}
+]},
+{g:“Revenue Line Management”,c:[
+{n:“Automatic Revenue Line Registration Creation”,m:“high”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[],w:[]}
+]}
+]},
+{vs:“VS2”,title:“Determine How Land Is Taxed”,caps:[
+{n:“Joint Ownership”,m:“med”,p:“Determine Joint Ownership Tax Treatment”,pr:[],w:[{n:“Related Party Automation”,k:21,o:97}]},
+{n:“Land Held on Trust”,m:“med”,p:“Determine Trust Tax Treatment”,pr:[],w:[{n:“LTX Trust Form 14”,k:60,o:3108},{n:“Trust Amendments”,k:60,o:117}]},
+{n:“Determine Land Tax Liability”,m:“high”,p:“Determine Land Tax Liability”,pr:[“Assessing Quality Procedure”],w:[]},
+{n:“Exemption Creation Management”,m:“med”,p:“Configure Land Tax Exemption Types”,pr:[],w:[]},
+{n:“Automated Exemption Application”,m:“med”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[],w:[]},
+{n:“Manual Exemption Application”,m:“high”,p:“Process Exemption Application”,pr:[“Applying A Principal Place Of Residence Exemption”,“Applying Other Land Tax Exemptions”,“Primary Production Land Exemption Procedure”],w:[{n:“PPR”,k:120,o:2143}]},
+{n:“Concession Application”,m:“high”,p:“Process Concession Application”,pr:[“Applying A Primary Production Land Exemption And Zoning Procedure”],w:[{n:“PPL”,k:120,o:479}]},
+{n:“Tax/Entitlement Rate Management”,m:“med”,p:“Manage Land Tax Rates”,pr:[],w:[]},
+{n:“Tax Free Threshold Management”,m:“med”,p:“Manage Tax Free Threshold”,pr:[],w:[]},
+{n:“Absentee Owner Management”,m:“high”,p:“Manage Absentee Owner Surcharge”,pr:[“Absentee Owner Surcharge Procedure”],w:[{n:“Absentee Owner”,k:60,o:74}]},
+{n:“Build to Rent Management”,m:“high”,p:“Manage Build to Rent Registration”,pr:[“Build To Rent Procedure”],w:[{n:“Pending Special Tax”,k:10,o:0}]},
+{n:“Usage Management”,m:“med”,p:“Record & Assess Property Usage”,pr:[],w:[]}
+],com:[]},
+{vs:“VS3”,title:“Assess & Issue Land Tax”,caps:[
+{n:“Valuations Maintenance”,m:“high”,p:“Maintain Land Valuations”,pr:[“Administrative Procedures - General & Supplementary Valuations”],w:[]},
+{n:“General Valuations”,m:“high”,p:“Apply General Valuation Cycle”,pr:[“Formatting And Testing Of Valuations Data”],w:[]},
+{n:“Supplementary Valuations”,m:“high”,p:“Apply Supplementary Valuation”,pr:[“Formatting And Testing Of Valuations Data”],w:[]},
+{n:“SRO Requested Valuations”,m:“med”,p:“Request & Apply SRO Valuation”,pr:[],w:[{n:“SV Requests”,k:90,o:38}]},
+{n:“Single Valuation for Multiple Properties”,m:“med”,p:“Apply Single Valuation Across Properties”,pr:[],w:[]},
+{n:“Generate Land Tax Assessments”,m:“high”,p:“Generate Land Tax Assessments”,pr:[“Assessing Quality Procedure”],w:[]},
+{n:“Issue Land Tax Assessments”,m:“med”,p:“Issue Land Tax Assessment Notices”,pr:[],w:[]},
+{n:“Issue Cycle Schedule Management”,m:“med”,p:“Schedule Annual Issue Cycle”,pr:[],w:[]},
+{n:“First Time Liability Management”,m:“high”,p:“Identify & Assess First Time Liability”,pr:[“First Time Liability Process”],w:[{n:“FTI Investigations”,k:60,o:9594}]},
+{n:“Automated Liability/Entitlement Calculation”,m:“med”,p:“Administer Land Ownership and Notice of Acquisition”,pr:[],w:[]},
+{n:“Manual Liability/Entitlement Calculation”,m:“high”,p:“Calculate Land Tax Liability (Manual)”,pr:[“Manual Land Tax Calculation Procedure”],w:[{n:“Multiple Amendments”,k:120,o:41}]},
+{n:“Trust Deduction Management”,m:“med”,p:“Apply Trust Deduction”,pr:[],w:[]},
+{n:“Minimum Liability Threshold Management”,m:“med”,p:“Apply Minimum Liability Threshold”,pr:[],w:[]}
+],com:[
+{g:“Assessment Management”,c:[
+{n:“Assessment Cancellation Management”,m:“low”,p:“Manage Land Tax Assessments”,pr:[],w:[{n:“User Withdrawn Assessment From Print”,k:2,o:7467}]},
+{n:“Assessment Generation Management”,m:“low”,p:””,pr:[],w:[]},
+{n:“Assessment Withdrawal Management”,m:“low”,p:””,pr:[],w:[]},
+{n:“Service of Notice Management”,m:“low”,p:“Manage Land Tax Assessment”,pr:[],w:[{n:“Returned Unclaimed Amendments”,k:60,o:4636}]}
+]},
+{g:“Valuation Management”,c:[
+{n:“Valuation Data Acquisition”,m:“low”,p:“Manage Land Tax Valuations”,pr:[],w:[{n:“MD - Prop Missing Val Taxable”,k:90,o:3919},{n:“Vals Supps Format Test”,k:21,o:1}]},
+{n:“Valuation Data Management”,m:“low”,p:“Manage Land Tax Valuations”,pr:[],w:[{n:“MD - Prop Missing Val Nontaxable”,k:90,o:1302}]}
+]},
+{g:“Customer Communication Management”,c:[
+{n:“Automated Communication Management”,m:“low”,p:””,pr:[],w:[]},
+{n:“Electronic Communication Consent Management”,m:“low”,p:””,pr:[],w:[]},
+{n:“Customer Communication Record Management”,m:“low”,p:“Manage Customer Correspondence”,pr:[],w:[{n:“General Correspondence”,k:21,o:39},{n:“Complex Correspondence”,k:60,o:31}]}
+]}
+]},
+{vs:“VS4”,title:“Manage Payments & Adjustments”,caps:[
+{n:“Payment Management”,m:“high”,p:“Receive & Record Payment”,pr:[“Suspense Management And Refund Procedure”],w:[]},
+{n:“Payment Allocation Management”,m:“med”,p:“Allocate Payment to Liability”,pr:[],w:[]},
+{n:“Instalment Management”,m:“med”,p:“Manage Payment Instalment Arrangement”,pr:[],w:[]},
+{n:“Refund Management”,m:“high”,p:“Process Land Tax Refund”,pr:[“Suspense Management And Refund Procedure”],w:[{n:“LTX Refund Approval Required”,k:5,o:987},{n:“Refund Application”,k:60,o:30}]},
+{n:“Adjustment Management”,m:“high”,p:“Apply Financial Adjustment”,pr:[“Suspense Management And Refund Procedure”],w:[]},
+{n:“Property Liability Allocation”,m:“med”,p:“Allocate Payment to Property Liability”,pr:[],w:[]}
+],com:[
+{g:“Financial Obligations Management”,c:[
+{n:“Interest Management”,m:“low”,p:””,pr:[],w:[]},
+{n:“Penalty Management”,m:“low”,p:“Manage Land Tax Penalty”,pr:[],w:[{n:“LTX Penalty Notification Drift”,k:14,o:555}]},
+{n:“Write Off Management”,m:“low”,p:””,pr:[],w:[]}
+]},
+{g:“Payment & Financial Management”,c:[
+{n:“Customer Liability Allocation”,m:“low”,p:””,pr:[],w:[]},
+{n:“Suspense Management”,m:“low”,p:“Manage Suspense Payments”,pr:[],w:[{n:“Suspense - LTX”,k:60,o:23648}]},
+{n:“Refund Data Management”,m:“low”,p:””,pr:[],w:[]}
+]}
+]},
+{vs:“VS5”,title:“Resolve Issues & Enforce Compliance”,caps:[
+{n:“Objection Management”,m:“high”,p:“Manage Land Tax Objection”,pr:[“Formal Objection Procedure”],w:[{n:“Formal Objection”,k:120,o:1409}]},
+{n:“Valuation Objection Management”,m:“high”,p:“Manage Valuation Objection”,pr:[“Complying With Valuation Objection VCAT Orders”],w:[{n:“Property Valuation Objection”,k:60,o:2154},{n:“Valuation Objection Amendment”,k:300,o:2177},{n:“Valuation Objection”,k:10,o:105},{n:“Vg Objection Property Error”,k:60,o:161},{n:“Vg Objection Error”,k:60,o:2},{n:“Valuation Objection Decision”,k:28,o:0}]},
+{n:“Dispute Resolution Management”,m:“high”,p:“Resolve Land Tax Dispute”,pr:[“Complying With Valuation Objection VCAT Orders”],w:[]},
+{n:“Case Management”,m:“high”,p:“Manage Land Tax Case”,pr:[“Assessing Quality Procedure”],w:[]},
+{n:“Compliance Management”,m:“high”,p:“Monitor & Enforce Compliance”,pr:[“Land Tax Insolvency Procedure”],w:[]},
+{n:“Audit Management”,m:“med”,p:“Conduct Land Tax Audit”,pr:[],w:[]},
+{n:“Risk Management”,m:“med”,p:“Identify & Manage Compliance Risk”,pr:[],w:[]},
+{n:“Quality Assurance Management”,m:“med”,p:“Perform Quality Assurance Review”,pr:[],w:[]},
+{n:“Private Ruling Management”,m:“high”,p:“Process Private Ruling Application”,pr:[“Technical Advice & Review Branch (TARB) Referrals and Determinations Procedure”],w:[{n:“Private Rulings”,k:120,o:624}]}
+],com:[
+{g:“Case & Compliance Management”,c:[
+{n:“Objection Creation Management”,m:“low”,p:””,pr:[],w:[]},
+{n:“Case Creation”,m:“low”,p:””,pr:[],w:[]},
+{n:“Formal Objection Management”,m:“low”,p:””,pr:[],w:[]},
+{n:“Self Reporting Management”,m:“high”,p:“Manage Section 105 Applications”,pr:[“Section 105 Applications Procedure”],w:[{n:“Section 105 - Online”,k:14,o:1057}]},
+{n:“Tip Offs and Voluntary Disclosure Management”,m:“low”,p:””,pr:[],w:[]},
+{n:“Potential Investigation Cases (PICs)”,m:“low”,p:””,pr:[],w:[]},
+{n:“Insolvency Relationship Management”,m:“low”,p:“Manage Land Tax Insolvencies”,pr:[],w:[{n:“LTX Insolvency”,k:90,o:137}]}
+]}
+]},
+{vs:“VS6”,title:“Provide Certificates & Assurance”,caps:[
+{n:“Issue Land Tax Certificates”,m:“high”,p:“Issue Land Tax Certificate”,pr:[“Property Clearance Certificates”],w:[]},
+{n:“Certificate Evidence & Record Management”,m:“med”,p:“Maintain Certificate Evidence & Records”,pr:[],w:[]}
+],com:[
+{g:“Assessment Management”,c:[
+{n:“Assessment Cancellation Management”,m:“low”,p:“Manage Land Tax Assessments”,pr:[],w:[{n:“User Withdrawn Assessment From Print”,k:2,o:7467}]},
+{n:“Assessment Generation Management”,m:“low”,p:””,pr:[],w:[]},
+{n:“Assessment Withdrawal Management”,m:“low”,p:””,pr:[],w:[]},
+{n:“Service of Notice Management”,m:“low”,p:“Manage Land Tax Assessment”,pr:[],w:[{n:“Returned Unclaimed Amendments”,k:60,o:4636}]}
+]},
+{g:“Customer Communication Management”,c:[
+{n:“Customer Communication Record Management”,m:“low”,p:“Manage Customer Correspondence”,pr:[],w:[{n:“General Correspondence”,k:21,o:39},{n:“Complex Correspondence”,k:60,o:31}]}
+]}
+]}
+];
+
+var capBuilt=false,procBuilt=false,procsVisible=true;
+
+function bc(m){return”badge-”+m;}
+function bl(m){return{high:“HIGH”,med:“MEDIUM”,low:“LOW”}[m]||m.toUpperCase();}
+
+function showModal(cap){
+var desc=DESC[cap.n]||“No description available.”;
+var h=”<div class='modal__name'>”+cap.n+”</div>”;
+h+=”<span class='modal__badge "+bc(cap.m)+"'>”+bl(cap.m)+”</span>”;
+h+=”<div class='modal__section'><div class='modal__label'>Description</div><div class='modal__desc'>”+desc+”</div></div>”;
+if(cap.p){h+=”<div class='modal__section'><div class='modal__label'>Process</div><div class='modal__desc'>”+cap.p+”</div></div>”;}
+if(cap.pr&&cap.pr.length){h+=”<div class='modal__section'><div class='modal__label'>Related Procedures</div><div class='modal__proc-list'>”;for(var i=0;i<cap.pr.length;i++){h+=”<span class='modal__proc'>”+cap.pr[i]+”</span>”;}h+=”</div></div>”;}
+if(cap.w&&cap.w.length){h+=”<div class='modal__section'><div class='modal__label'>Work Items</div>”;for(var i=0;i<cap.w.length;i++){var wi=cap.w[i];h+=”<div class='modal__wi'><strong>”+wi.n+”</strong> — “+wi.k+“d KPI · “+wi.o.toLocaleString()+” on hand</div>”;}h+=”</div>”;}
+document.getElementById(“modalContent”).innerHTML=h;
+document.getElementById(“modal”).classList.add(“is-open”);
+}
+function closeModal(){document.getElementById(“modal”).classList.remove(“is-open”);}
+document.addEventListener(“keydown”,function(e){if(e.key===“Escape”)closeModal();});
+
+function toggleProcs(){
+procsVisible=!procsVisible;
+var grid=document.getElementById(“capGrid”);
+if(procsVisible){grid.classList.remove(“hide-procs”);}else{grid.classList.add(“hide-procs”);}
+var btn=document.getElementById(“procToggle”);
+btn.textContent=procsVisible?“Procedures \u2713”:“Procedures”;
+if(procsVisible){btn.classList.remove(“is-inactive”);}else{btn.classList.add(“is-inactive”);}
+}
+
+function switchTab(t){
+var tabCap=document.getElementById(“tabCap”);
+var tabProc=document.getElementById(“tabProc”);
+var capView=document.getElementById(“capView”);
+var procView=document.getElementById(“procView”);
+if(t===“cap”){tabCap.classList.add(“is-active”);tabProc.classList.remove(“is-active”);capView.classList.add(“is-active”);procView.classList.remove(“is-active”);}
+else{tabProc.classList.add(“is-active”);tabCap.classList.remove(“is-active”);procView.classList.add(“is-active”);capView.classList.remove(“is-active”);}
+if(t===“cap”&&!capBuilt)buildCap();
+if(t===“proc”&&!procBuilt)buildProc();
+}
+
+function mkCell(cap,isCom){
+var d=document.createElement(“div”);
+d.className=“hm-cell”;
+d.setAttribute(“data-maturity”,cap.m);
+d.onclick=function(){showModal(cap);};
+var h=”<div class='hm-cell__name'>”+cap.n+(isCom?”<span class='com-tag'>COM</span>”:””)+”</div>”;
+h+=”<span class='hm-cell__badge "+bc(cap.m)+"'>”+bl(cap.m)+”</span>”;
+if(cap.pr&&cap.pr.length){
+h+=”<div class='proc-pills'>”;
+for(var i=0;i<cap.pr.length;i++){h+=”<span class='proc-pill'>”+cap.pr[i]+”</span>”;}
+h+=”</div>”;
+}
+d.innerHTML=h;
+return d;
+}
+
+function buildCap(){
+var grid=document.getElementById(“capGrid”);
+grid.innerHTML=””;
+for(var si=0;si<S.length;si++){
+var s=S[si];
+var col=document.createElement(“div”);
+col.innerHTML=”<div class='hm-col-header'><div class='hm-col-header__vs'>”+s.vs+”</div><div class='hm-col-header__title'>”+s.title+”</div></div>”;
+var body=document.createElement(“div”);
+body.className=“hm-col-body”;
+for(var ci=0;ci<s.caps.length;ci++){
+body.appendChild(mkCell(s.caps[ci],false));
+}
+if(s.com&&s.com.length){
+for(var gi=0;gi<s.com.length;gi++){
+var grp=s.com[gi];
+var hdr=document.createElement(“div”);
+hdr.className=“hm-section-header”;
+hdr.textContent=grp.g;
+body.appendChild(hdr);
+for(var ci2=0;ci2<grp.c.length;ci2++){
+body.appendChild(mkCell(grp.c[ci2],true));
+}
+}
+}
+col.appendChild(body);
+grid.appendChild(col);
+}
+capBuilt=true;
+}
+
+function setFilter(lv){
+var btns=document.querySelectorAll(”.filter-btn”);
+var cells=document.querySelectorAll(”.hm-cell”);
+for(var i=0;i<btns.length;i++){
+var b=btns[i];
+if(lv===“all”){b.classList.remove(“is-inactive”);}
+else{
+var f=b.getAttribute(“data-f”);
+if(f===lv){b.classList.remove(“is-inactive”);}
+else if(f){b.classList.add(“is-inactive”);}
+}
+}
+for(var i=0;i<cells.length;i++){
+var c=cells[i];
+if(lv===“all”){c.classList.remove(“is-faded”);c.classList.remove(“is-highlighted”);}
+else if(c.getAttribute(“data-maturity”)===lv){c.classList.remove(“is-faded”);c.classList.add(“is-highlighted”);}
+else{c.classList.add(“is-faded”);c.classList.remove(“is-highlighted”);}
+}
+}
+
+function buildProc(){
+var grid=document.getElementById(“procGrid”);
+grid.innerHTML=””;
+for(var si=0;si<S.length;si++){
+var s=S[si];
+var col=document.createElement(“div”);
+col.innerHTML=”<div class='hm-col-header'><div class='hm-col-header__vs'>”+s.vs+”</div><div class='hm-col-header__title'>”+s.title+”</div></div>”;
+var body=document.createElement(“div”);
+body.className=“hm-col-body”;
+var all=[];
+for(var ci=0;ci<s.caps.length;ci++){all.push({cap:s.caps[ci],isCom:false});}
+if(s.com){for(var gi=0;gi<s.com.length;gi++){var grp=s.com[gi];for(var ci2=0;ci2<grp.c.length;ci2++){all.push({cap:grp.c[ci2],isCom:true});}}}
+var groups={};var order=[];
+for(var i=0;i<all.length;i++){
+var key=all[i].cap.p||“TBA”;
+if(!groups[key]){groups[key]=[];order.push(key);}
+groups[key].push(all[i]);
+}
+for(var pi=0;pi<order.length;pi++){
+var proc=order[pi];
+var card=document.createElement(“div”);
+card.className=“proc-card”;
+var h=”<div class='proc-card__header'>”+proc+”</div><div class='proc-card__caps'>”;
+var items=groups[proc];
+for(var ii=0;ii<items.length;ii++){
+var it=items[ii];
+var c=it.cap;
+h+=”<div class='proc-cap' data-maturity='"+c.m+"' data-idx='"+si+"-"+pi+"-"+ii+"'>”;
+h+=”<span class='proc-cap__name'>”+c.n+(it.isCom?”<span class='com-tag'>COM</span>”:””);
+if(c.w&&c.w.length){
+for(var wi=0;wi<c.w.length;wi++){
+var w=c.w[wi];
+h+=”<br><span style='font-size:9px;color:#2d5a8e'>▪ “+w.n+”</span> <span style='font-size:8px;color:#8a6500'>”+w.k+“d KPI</span> <span style='font-size:8px;color:#4a5f72'>”+w.o.toLocaleString()+” on hand</span>”;
+}
+}
+h+=”</span><span class='proc-cap__badge "+bc(c.m)+"'>”+bl(c.m)+”</span></div>”;
+}
+h+=”</div>”;
+card.innerHTML=h;
+// Attach click handlers
+var pcaps=card.querySelectorAll(”.proc-cap”);
+for(var pi2=0;pi2<pcaps.length;pi2++){
+(function(idx){
+var parts=pcaps[idx].getAttribute(“data-idx”).split(”-”);
+pcaps[idx].onclick=function(){showModal(items[parseInt(parts[2])].cap);};
+})(pi2);
+}
+body.appendChild(card);
+}
+col.appendChild(body);
+grid.appendChild(col);
+}
+procBuilt=true;
+}
+
+buildCap();
+</script>
+
+</body>
+</html>

@@ -1,1 +1,584 @@
-html>
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Absentee Owner Surcharge (AOS)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Mermaid -->
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <style>
+    body { margin:0; font-family:Segoe UI, Arial, sans-serif; background:#f5f7fa; color:#1f2937; }
+    header { background:#003a8f; color:#fff; padding:28px 36px; }
+    header h1 { margin:0; font-size:32px; }
+    header p { margin-top:8px; font-weight:600; }
+
+    .layout { display:flex; gap:28px; padding:28px; }
+
+    .sidebar {
+      width:260px; background:#fff; border-radius:10px; padding:16px;
+      box-shadow:0 2px 6px rgba(0,0,0,.08); position:sticky; top:24px;
+    }
+    .sidebar a {
+      display:block; text-decoration:none; color:#003a8f;
+      font-size:14px; margin-bottom:8px;
+    }
+
+    .content { max-width:1250px; width:100%; }
+
+    .toggle { display:flex; gap:12px; margin-bottom:24px; }
+    .toggle button {
+      border:1px solid #ccc; border-radius:22px; padding:8px 18px;
+      cursor:pointer; background:#fff;
+    }
+    .toggle button.active { background:#003a8f; color:#fff; }
+
+    section {
+      background:#fff; border-radius:10px;
+      box-shadow:0 2px 6px rgba(0,0,0,.08);
+      padding:24px; margin-bottom:28px;
+    }
+
+    h2 { margin-top:0; font-size:22px; }
+    ul { margin-left:22px; }
+
+    .staff, .architect { display:none; }
+
+    .arch {
+      background:#f9fafb; border-left:5px solid #003a8f;
+      padding:16px; margin-top:14px; font-size:14px;
+    }
+
+    .block { margin-bottom:14px; }
+
+    .stop {
+      background:#fef2f2; border-left:5px solid #b91c1c;
+      padding:12px; margin-top:12px; font-weight:600;
+    }
+
+    .ref {
+      background:#eef2f7; border-left:5px solid #6366f1;
+      padding:12px; margin-top:12px; font-size:13px;
+    }
+
+    .systemsOnly { display:none; }
+
+    .mermaid {
+      background:#f9fafb; border:1px solid #d1d5db;
+      border-radius:8px; padding:18px;
+    }
+  </style>
+
+</head>
+
+<body>
+
+<header>
+  <h1>Absentee Owner Surcharge (AOS)</h1>
+  <p>Absentee Owner Surcharge (AOS) Procedure • CM10 Ref: DOC/18/509543 • Revised: 13 June 2025</p>
+</header>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <a href="#q1">Q1 Trigger</a>
+    <a href="#q2">Q2 Eligibility</a>
+    <a href="#q3">Q3 Owner Type</a>
+    <a href="#q4">Q4 Existing Registration</a>
+    <a href="#q5">Q5 Absentee Test</a>
+    <a href="#q6">Q6 Partial AOS</a>
+    <a href="#q7">Q7 Exemption</a>
+    <a href="#q8">Q8 Apply / Remove</a>
+    <a href="#q9">Q9 Close Case</a>
+  </aside>
+
+  <main class="content">
+
+```
+<div class="toggle">
+  <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+  <button id="btnArch" onclick="showView('architect')">Architect</button>
+  <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+</div>
+
+<!-- ================= QUESTION FLOW ================= -->
+<div id="questionFlow">
+
+  <!-- Q1 -->
+  <section id="q1">
+    <h2>Q1 – What started this AOS case?</h2>
+    <div class="staff">
+      <ul>
+        <li>Identify trigger source (portal, correspondence, phone, internal action).</li>
+        <li>Confirm customer and land tax account alignment.</li>
+        <li>Record trigger source for audit and correspondence.</li>
+        <li>No eligibility or absentee assessment at this step.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Viewing the AOS amendment request (p.7–10); Before you begin (p.6)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Trigger channel: My Land Tax portal / written correspondence / phone call / internally created action item</li>
+            <li>Customer ID</li>
+            <li>Land tax account ID</li>
+            <li>Declaration or amendment details</li>
+            <li>Written items: CM10 document reference</li>
+            <li>Phone items: Phone Calls &amp; Notes log</li>
+            <li>Internal items: Enquiry and Reference tab notes</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>e‑Sys — action item creation and allocation</li>
+            <li>CM10 — document storage</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: None — intake only.</div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>AOS action item created</li>
+            <li>Allocated to officer's work tray</li>
+            <li>Trigger source recorded on Enquiry tab</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 -->
+  <section id="q2">
+    <h2>Q2 – Am I allowed to proceed?</h2>
+    <div class="staff">
+      <ul>
+        <li>Check investigation status.</li>
+        <li>Check prior TARB determinations or exemptions.</li>
+        <li>Stop and escalate if restricted.</li>
+      </ul>
+      <div class="stop">Do not proceed if eligibility is restricted.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Before you begin (p.6); Requirements for Applying/Removing the Absentee Owner Surcharge (p.16)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Active investigation flag (red exclamation mark on customer)</li>
+            <li>Under Investigation non-issue indicator (IC-prefixed investigation number)</li>
+            <li>Prior TARB decisions (objections or private rulings)</li>
+            <li>Phone call history</li>
+            <li>CM10 history</li>
+            <li>High-risk flag if investigated within last 3 years</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>e‑Sys — flag lookup</li>
+            <li>CM10 — investigation file and TARB decision history</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Eligibility gate — Proceed / Halt / Escalate to Investigator.</div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Active investigation → action item reassigned to investigator</li>
+            <li>Prior TARB denial covers same period → halt and notify customer of previous decision</li>
+            <li>Outside investigation period → proceed with high-risk checks</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q3 -->
+  <section id="q3">
+    <h2>Q3 – What type of owner is this?</h2>
+    <div class="staff">
+      <ul>
+        <li>Identify Individual, Company, or Trust.</li>
+        <li>For joint owners, classify each owner.</li>
+        <li>Owner type controls applicable absentee rules.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> What is an absentee owner? (p.11); Identifying an absentee owner in e‑Sys (p.14); Joint Ownerships (p.13–14)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Ownership classification from e‑Sys: Individual / Corporation / Trust</li>
+            <li>Trusts: trust type (Discretionary / Unit / Fixed)</li>
+            <li>Corporations: ASIC company type (Australian / Foreign Co / Non-Company)</li>
+            <li>Joint ownerships: classification of each individual owner</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>e‑Sys — ownership record</li>
+            <li>ASIC — company type verification for corporations</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Owner persona determination — selects applicable rule path:
+          <ul>
+            <li>Individual → 4-step test</li>
+            <li>Corporation → incorporation &amp; controlling interest test</li>
+            <li>Trust → beneficiary test</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Rule path selected per owner</li>
+            <li>Joint ownerships: each owner classified independently</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q4 -->
+  <section id="q4">
+    <h2>Q4 – Is there already an absentee owner registration?</h2>
+    <div class="staff">
+      <ul>
+        <li>Check current and historical registrations.</li>
+        <li>Validate effective dates and ownership percent.</li>
+        <li>Read‑only validation step.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Viewing an Absentee Owner Registration (p.15)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Current and historical absentee owner registrations in e‑Sys</li>
+            <li>Effective dates</li>
+            <li>Ownership percentage</li>
+            <li>Land taxpayer node presence</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>: e‑Sys — registration lookup.</div>
+        <div class="block"><strong>Decision</strong>: None — read-only validation.</div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Registration status: Exists (with dates &amp; percentage) or Not exists</li>
+            <li>Determines whether Q8 action will be a new registration or a modification/cessation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q5 -->
+  <section id="q5">
+    <h2>Q5 – Is the owner an absentee owner?</h2>
+    <div class="staff">
+      <ul>
+        <li>Apply owner‑specific absentee tests.</li>
+        <li>Review all declarations and evidence.</li>
+        <li>Escalate if evidence is unclear.</li>
+      </ul>
+      <div class="stop">Never assume without evidence.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Absentee Individual &amp; Four Steps Test (p.11); VISA Clarification (p.12); Absentee Corporation &amp; Controlling Interest (p.12); Absentee Trust — Discretionary, Unit, Fixed (p.13)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li><em>Individuals:</em>
+              <ul>
+                <li>Citizenship status (Australian citizen / permanent visa holder / NZ subclass 444 holder)</li>
+                <li>Ordinary residence in Australia</li>
+                <li>Physical presence on 31 December</li>
+                <li>Total absence duration in prior year (6-month threshold)</li>
+                <li>Special rule: NZ 444 holders present in Australia on 26 Feb 2001 = permanent residents</li>
+              </ul>
+            </li>
+            <li><em>Corporations:</em>
+              <ul>
+                <li>Country of incorporation (via ASIC — Foreign Co / Non-Company = not Australian)</li>
+                <li>Absentee person controlling interest</li>
+              </ul>
+            </li>
+            <li><em>Trusts:</em>
+              <ul>
+                <li>Trust type (Discretionary / Unit / Fixed)</li>
+                <li>Beneficiary list and absentee status of each</li>
+                <li>Discretionary: specified beneficiaries named in trust deed</li>
+                <li>Unit: unitholder disclosure status and PPR beneficiary nomination</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>e‑Sys — absentee flag</li>
+            <li>ASIC — corporation verification</li>
+            <li>SRO Absentee Owner Notification Portal — declarations</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: D‑AOS‑01 — Absentee determination per owner type:
+          <ul>
+            <li>Individual → 4-step test</li>
+            <li>Corporation → incorporation &amp; controlling interest</li>
+            <li>Trust → beneficiary analysis</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Absentee flag set (Yes / No) per owner</li>
+            <li>Trusts: absentee proportion calculated based on beneficiary analysis</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q6 -->
+  <section id="q6">
+    <h2>Q6 – Does a partial AOS apply?</h2>
+    <div class="staff">
+      <ul>
+        <li>Confirm absentee vs non‑absentee interests.</li>
+        <li>Apply surcharge proportionally.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Applying a Partial AOS Rate (p.22–23)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Ownership percentages per owner</li>
+            <li>Absentee flag per owner (from Q5)</li>
+            <li>Trust unitholder proportions (where disclosed)</li>
+            <li>Absentee proportion of interests in land (chain of trusts per s46IAA)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>: e‑Sys — partial rate calculation.</div>
+        <div class="block"><strong>Decision</strong>: D‑AOS‑02 — Full surcharge (100% absentee) or partial surcharge (proportional to absentee interest share).</div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Partial AOS rate applied in e‑Sys reflecting absentee ownership proportion</li>
+            <li>Surcharge rates: 4% from 2024 | 2% for 2020–2023 | 1.5% for 2017–2019 | 0.5% for 2016</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q7 -->
+  <section id="q7">
+    <h2>Q7 – Is an exemption requested or required?</h2>
+    <div class="staff">
+      <ul>
+        <li>Identify exemption request.</li>
+        <li>Collect supporting documentation.</li>
+        <li>Refer to TARB.</li>
+      </ul>
+      <div class="stop">Staff must not approve exemptions.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Applying an AOS Exemption (p.20–21)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Exemption application</li>
+            <li>Supporting evidence / documentation</li>
+            <li>Exemption types:
+              <ul>
+                <li>Controlling interest in absentee corporation (s3B)</li>
+                <li>Absentee beneficiary of absentee trust (s3BA, from 2018)</li>
+              </ul>
+            </li>
+            <li>Gazetted guidelines for exemption decisions</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>Staff — collect documentation and refer</li>
+            <li>TARB — determination authority (staff must not approve or deny)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Human — TARB determination only.
+          <ul>
+            <li>If exemption granted for controlling interest: absentee person taken to not hold that interest → corporation ceases to be absentee</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Exemption outcome recorded in e‑Sys (Granted / Denied)</li>
+            <li>If granted: AOS removed or adjusted accordingly</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q8 -->
+  <section id="q8">
+    <h2>Q8 – How do I apply or remove the AOS?</h2>
+    <div class="staff">
+      <ul>
+        <li>Create or cease registration.</li>
+        <li>Confirm dates and ownership.</li>
+        <li>Trigger recalculation.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Create the land taxpayer node (p.16); Creating an Absentee Owner Registration (p.17–18); Removing an AOS Indicator (p.19); Recalculating or creating a liability (p.24–25); Check suspense for payments (p.26–27); Close non-issue (p.28); Check assessments (p.29–31)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Absentee determination results (from Q5)</li>
+            <li>Partial rate (from Q6)</li>
+            <li>Exemption outcome (from Q7)</li>
+            <li>Effective dates (31 December reference date)</li>
+            <li>Land taxpayer node (create if required)</li>
+            <li>Ownership percentage</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>e‑Sys — registration create/cease, liability recalculation</li>
+            <li>Staff — suspense review, payment reallocation, refund initiation</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Execution:
+          <ul>
+            <li>Apply AOS → create registration</li>
+            <li>Remove AOS → cease registration</li>
+            <li>Retrospective period: current year plus four preceding years</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Updated absentee owner registration in e‑Sys</li>
+            <li>Liabilities recalculated across affected tax years</li>
+            <li>Suspense checked for payments requiring reallocation or refund</li>
+            <li>Non-issue indicators applied/removed as needed</li>
+            <li>Assessments withdrawn, reissued, or newly created as applicable</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q9 -->
+  <section id="q9">
+    <h2>Q9 – What must be done before closing the action item?</h2>
+    <div class="staff">
+      <ul>
+        <li>Clear suspense.</li>
+        <li>Validate assessments.</li>
+        <li>Issue correspondence.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Completing the action item (p.32–34); Correspondence (p.35–37)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Final registration state</li>
+            <li>Recalculated assessments</li>
+            <li>Suspense / refund status</li>
+            <li>Refund ID (if applicable)</li>
+            <li>Transferred customer number and amount (if applicable)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>Staff — action item completion, root cause selection, comments entry, correspondence</li>
+            <li>e‑Sys — action item status update, checklist, reference tab</li>
+            <li>CM10 — letter storage</li>
+            <li>Communications Manager / Assisted Digital — digital correspondence</li>
+            <li>LetterPro — postal correspondence</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: None — procedural closure. Correspondence channel:
+          <ul>
+            <li>My Land Tax response → Assisted Digital</li>
+            <li>Contact Us / Smart Form → Assisted Digital</li>
+            <li>Postal letter → only when no digital channel available</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Action item status set to Completed</li>
+            <li>Root cause recorded</li>
+            <li>Comments entered (actions taken, result, money transferred/refunded, assessment effect, correspondence method, user ID, date)</li>
+            <li>Refund ID recorded in Reference tab (if applicable)</li>
+            <li>Assessments issued via digital delivery (MLT/BPay View) or extracted for print</li>
+            <li>Correspondence sent to customer confirming AOS outcome</li>
+            <li>Case closed</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION -->
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction (Q1–Q9)</h2>
+    <div class="mermaid">
+```
+
+sequenceDiagram
+actor Staff
+participant Portal as AOS Portal
+participant eSys as e‑Sys
+participant Evidence
+participant TARB
+Portal->>eSys: Submit declaration
+Staff->>eSys: Open AOS case
+Staff->>eSys: Eligibility & owner checks
+eSys->>Evidence: Request evidence
+Evidence–>>eSys: Evidence returned
+Staff->>eSys: Apply / remove AOS
+eSys->>eSys: Recalculate liabilities
+Staff->>eSys: Close case
+</div>
+</section>
+</div>
+
+  </main>
+</div>
+
+<script>
+mermaid.initialize({ startOnLoad: false });
+
+function showView(view){
+  document.getElementById('questionFlow').style.display = 'block';
+  document.querySelector('.systemsOnly').style.display = 'none';
+
+  document.querySelectorAll('.staff, .architect').forEach(e => e.style.display = 'none');
+
+  btnStaff.classList.remove('active');
+  btnArch.classList.remove('active');
+  btnSys.classList.remove('active');
+
+  if(view === 'staff'){
+    document.querySelectorAll('.staff').forEach(e => e.style.display = 'block');
+    btnStaff.classList.add('active');
+  }
+
+  if(view === 'architect'){
+    document.querySelectorAll('.architect').forEach(e => e.style.display = 'block');
+    btnArch.classList.add('active');
+  }
+
+  if(view === 'systems'){
+    document.getElementById('questionFlow').style.display = 'none';
+    document.querySelector('.systemsOnly').style.display = 'block';
+    btnSys.classList.add('active');
+    mermaid.init();
+  }
+}
+
+showView('staff');
+</script>
+
+</body>
+</html>

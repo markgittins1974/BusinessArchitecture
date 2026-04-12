@@ -1,224 +1,737 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Capability Architecture Portal – Land Tax</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --bg-start: #0f2b64;
       --bg-end: #4b2c5e;
-      --card-bg: rgba(255, 255, 255, 0.08);
-      --card-border: rgba(255, 255, 255, 0.16);
       --text-primary: #ffffff;
-      --text-secondary: #d4d8e5;
-
+      --text-secondary: #c8cde0;
       --exec: #f5c04e;
       --manager: #6dd3fb;
       --team: #c3b6ff;
+
+      /* ── Glass Panel Tokens ── */
+      --glass-bg: rgba(255,255,255,0.07);
+      --glass-bg-hover: rgba(255,255,255,0.12);
+      --glass-bg-active: rgba(255,255,255,0.16);
+      --glass-blur: 20px;
+
+      /* Chamfer bevel – light source: upper-left */
+      --bevel-light: rgba(255,255,255,0.3);
+      --bevel-mid: rgba(255,255,255,0.12);
+      --bevel-shadow: rgba(0,0,0,0.25);
+      --bevel-deep: rgba(0,0,0,0.12);
+
+      /* Inner glow */
+      --glow-center: rgba(180,200,255,0.06);
+      --glow-center-hover: rgba(180,200,255,0.1);
     }
 
-    * {
+    *, *::before, *::after {
       box-sizing: border-box;
-      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
+      font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
       min-height: 100vh;
-      background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+      background: var(--bg-start);
       color: var(--text-primary);
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      overflow-x: hidden;
     }
 
+    /* ── Grain texture ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.022;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 9999;
+    }
+
+    /* ═══════════════════════════════════════════════
+       FLOATING SHAPES
+    ═══════════════════════════════════════════════ */
+    .shape {
+      position: absolute;
+      border-radius: 9999px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transform: translateY(-80px) rotate(var(--rot-start));
+      animation: shapeEnter 2.4s cubic-bezier(0.23, 0.86, 0.39, 0.96) forwards,
+                 shapeFloat 14s ease-in-out infinite;
+    }
+    .shape-inner {
+      width: 100%; height: 100%;
+      border-radius: 9999px;
+      border: 2px solid rgba(255,255,255,0.12);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15), inset 0 0 60px rgba(255,255,255,0.05);
+      position: relative; overflow: hidden;
+    }
+    .shape-inner::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: 9999px;
+      background: radial-gradient(circle at 40% 40%, rgba(255,255,255,0.18), transparent 65%);
+    }
+    @keyframes shapeEnter {
+      to { opacity: 1; transform: translateY(0) rotate(var(--rot-end)); }
+    }
+    @keyframes shapeFloat {
+      0%, 100% { transform: translateY(0) rotate(var(--rot-end)); }
+      50% { transform: translateY(18px) rotate(var(--rot-end)); }
+    }
+    .shape-1 { width:520px;height:120px;left:-6%;top:12%;--rot-start:-3deg;--rot-end:12deg;animation-delay:0.3s,0.3s }
+    .shape-1 .shape-inner { background:linear-gradient(to right,rgba(99,102,241,0.18),transparent) }
+    .shape-2 { width:440px;height:100px;right:-4%;top:68%;--rot-start:-28deg;--rot-end:-15deg;animation-delay:0.5s,0.5s }
+    .shape-2 .shape-inner { background:linear-gradient(to right,rgba(244,63,94,0.14),transparent) }
+    .shape-3 { width:280px;height:70px;left:6%;bottom:8%;--rot-start:-20deg;--rot-end:-8deg;animation-delay:0.4s,0.4s }
+    .shape-3 .shape-inner { background:linear-gradient(to right,rgba(139,92,246,0.16),transparent) }
+    .shape-4 { width:180px;height:50px;right:18%;top:8%;--rot-start:5deg;--rot-end:20deg;animation-delay:0.6s,0.6s }
+    .shape-4 .shape-inner { background:linear-gradient(to right,rgba(245,192,78,0.15),transparent) }
+    .shape-5 { width:140px;height:38px;left:22%;top:4%;--rot-start:-38deg;--rot-end:-25deg;animation-delay:0.7s,0.7s }
+    .shape-5 .shape-inner { background:linear-gradient(to right,rgba(109,211,251,0.15),transparent) }
+    .shape-6 { width:320px;height:80px;right:8%;bottom:22%;--rot-start:8deg;--rot-end:18deg;animation-delay:0.9s,0.9s }
+    .shape-6 .shape-inner { background:linear-gradient(to right,rgba(195,182,255,0.12),transparent) }
+
+    /* ═══════════════════════════════════════════════
+       AMBIENT GLOWS – JS-animated floating blobs
+    ═══════════════════════════════════════════════ */
+    .page-wrap {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .blob-1 {
+      width: 55vmax; height: 55vmax;
+      top: -15%; left: -12%;
+      background: radial-gradient(circle at center, rgba(99,102,241,0.35), rgba(99,102,241,0.12) 45%, transparent 70%);
+    }
+    .blob-2 {
+      width: 50vmax; height: 50vmax;
+      bottom: -18%; right: -10%;
+      background: radial-gradient(circle at center, rgba(195,182,255,0.3), rgba(195,182,255,0.1) 45%, transparent 70%);
+    }
+    .blob-3 {
+      width: 40vmax; height: 40vmax;
+      top: 35%; left: 40%;
+      background: radial-gradient(circle at center, rgba(245,192,78,0.22), rgba(245,192,78,0.06) 45%, transparent 70%);
+    }
+    .blob-4 {
+      width: 35vmax; height: 35vmax;
+      top: 5%; right: -5%;
+      background: radial-gradient(circle at center, rgba(109,211,251,0.2), rgba(109,211,251,0.05) 45%, transparent 70%);
+    }
+
+    .vignette {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background: linear-gradient(to bottom,rgba(15,43,100,0.5) 0%,transparent 15%,transparent 85%,rgba(75,44,94,0.6) 100%);
+    }
+
+    /* ═══════════════════════════════════════════════
+       LAYOUT
+    ═══════════════════════════════════════════════ */
     main.container {
+      position: relative;
+      z-index: 1;
       max-width: 1200px;
-      padding: 48px 32px;
+      margin: 0 auto;
+      padding: 56px 32px;
       width: 100%;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 48px;
+    /* ═══════════════════════════════════════════════
+       HEADER
+    ═══════════════════════════════════════════════ */
+    header { text-align: center; margin-bottom: 56px; }
+
+    header .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 22px;
+      border-radius: 9999px;
+      background: var(--glass-bg);
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      backdrop-filter: blur(var(--glass-blur));
+      /* Chamfer bevel */
+      border-top: 1px solid var(--bevel-light);
+      border-left: 1px solid var(--bevel-mid);
+      border-right: 1px solid var(--bevel-deep);
+      border-bottom: 1px solid var(--bevel-shadow);
+      box-shadow:
+        inset 0 1px 2px rgba(255,255,255,0.2),
+        inset 0 -1px 2px rgba(0,0,0,0.15),
+        inset 0 0 20px var(--glow-center),
+        0 2px 8px rgba(0,0,0,0.2);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 1s 0.5s ease-out forwards;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    header .badge:hover {
+      background: var(--glass-bg-hover);
+      box-shadow:
+        inset 0 1px 3px rgba(255,255,255,0.25),
+        inset 0 -1px 2px rgba(0,0,0,0.18),
+        inset 0 0 28px var(--glow-center-hover),
+        0 4px 14px rgba(0,0,0,0.25);
+    }
+    header .badge-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--exec);
+      box-shadow: 0 0 8px var(--exec), 0 0 20px rgba(245,192,78,0.3);
+    }
+    header .badge span {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.04em;
+      font-weight: 500;
     }
 
     h1 {
-      font-size: 2.6rem;
-      font-weight: 700;
-      margin-bottom: 8px;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+      opacity: 0;
+      animation: fadeUp 1s 0.7s ease-out forwards;
     }
-
+    h1 .line1 {
+      background: linear-gradient(to bottom, #ffffff, rgba(255,255,255,0.85));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    h1 .line2 {
+      background: linear-gradient(to right, var(--manager), rgba(255,255,255,0.9), var(--team));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
     .subtitle {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: var(--text-secondary);
-      max-width: 760px;
+      max-width: 560px;
       margin: 0 auto;
+      line-height: 1.6;
+      font-weight: 300;
+      opacity: 0;
+      animation: fadeUp 1s 0.9s ease-out forwards;
     }
 
+    /* ═══════════════════════════════════════════════
+       SECTIONS
+    ═══════════════════════════════════════════════ */
     .section {
-      margin-top: 48px;
+      margin-top: 52px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease-out forwards;
     }
+    .section:nth-child(2) { animation-delay: 1.0s; }
+    .section:nth-child(3) { animation-delay: 1.2s; }
+    .section:nth-child(4) { animation-delay: 1.4s; }
 
     .section-title {
-      font-size: 0.85rem;
-      letter-spacing: 0.12em;
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       margin-bottom: 20px;
-      opacity: 0.85;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+      font-weight: 700;
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 8px;
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
     }
-
-    .section-title.exec { color: var(--exec); }
-    .section-title.manager { color: var(--manager); }
-    .section-title.team { color: var(--team); }
+    .section-title.exec {
+      color: var(--exec);
+      background: rgba(245,192,78,0.08);
+      border-top: 1px solid rgba(245,192,78,0.35);
+      border-left: 1px solid rgba(245,192,78,0.2);
+      border-right: 1px solid rgba(245,192,78,0.06);
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      box-shadow: inset 0 1px 0 rgba(245,192,78,0.18), inset 0 0 14px rgba(245,192,78,0.05), 1px 2px 6px rgba(0,0,0,0.12);
+    }
+    .section-title.manager {
+      color: var(--manager);
+      background: rgba(109,211,251,0.08);
+      border-top: 1px solid rgba(109,211,251,0.35);
+      border-left: 1px solid rgba(109,211,251,0.2);
+      border-right: 1px solid rgba(109,211,251,0.06);
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      box-shadow: inset 0 1px 0 rgba(109,211,251,0.18), inset 0 0 14px rgba(109,211,251,0.05), 1px 2px 6px rgba(0,0,0,0.12);
+    }
+    .section-title.team {
+      color: var(--team);
+      background: rgba(195,182,255,0.08);
+      border-top: 1px solid rgba(195,182,255,0.35);
+      border-left: 1px solid rgba(195,182,255,0.2);
+      border-right: 1px solid rgba(195,182,255,0.06);
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      box-shadow: inset 0 1px 0 rgba(195,182,255,0.18), inset 0 0 14px rgba(195,182,255,0.05), 1px 2px 6px rgba(0,0,0,0.12);
+    }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
     }
 
+    /* ═══════════════════════════════════════════════
+       GLASS PANEL CARDS — Premium Beveled Glass
+
+       7 visual layers create the illusion:
+       ┌────────────────────────────────────────┐
+       │ ::after   specular edge highlights     │
+       │ ::before  refraction + reflection      │
+       │ ┌────────────────────────────────┐     │
+       │ │  Frosted interior              │     │
+       │ │  ┌────────────────────────┐    │     │
+       │ │  │  Internal radial glow  │    │     │  ← inset shadows
+       │ │  └────────────────────────┘    │     │
+       │ └────────────────────────────────┘     │
+       │  Chamfer borders (4-edge directional)  │
+       │  9-layer box-shadow depth stack        │
+       └────────────────────────────────────────┘
+    ═══════════════════════════════════════════════ */
     a.card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 22px;
+      /* Frosted glass — heavier blur + saturation + brightness lift */
+      background: rgba(255,255,255,0.1);
+      -webkit-backdrop-filter: blur(28px) saturate(1.4) brightness(1.1);
+      backdrop-filter: blur(28px) saturate(1.4) brightness(1.1);
+      border-radius: 18px;
+      padding: 28px;
       text-decoration: none;
       color: inherit;
       display: block;
-      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+      position: relative;
+      overflow: hidden;
+
+      /* ── 3D Chamfer Borders ──
+         Thick enough to see the bevel edge.
+         Light source: upper-left at ~45° */
+      border-top: 2px solid rgba(255,255,255,0.45);
+      border-left: 2px solid rgba(255,255,255,0.2);
+      border-right: 2px solid rgba(0,0,0,0.15);
+      border-bottom: 2px solid rgba(0,0,0,0.3);
+
+      /* ── 9-Layer Shadow Stack ──
+         Creates chamfer depth + floating glass illusion */
+      box-shadow:
+        /* 1. Outer top-left light catch */
+        -3px -3px 8px rgba(255,255,255,0.06),
+        /* 2. Outer bottom-right primary shadow */
+        5px 8px 20px rgba(0,0,0,0.35),
+        /* 3. Far ambient shadow (depth) */
+        10px 18px 50px rgba(0,0,0,0.2),
+        /* 4. Inner top bevel — bright chamfer face */
+        inset 0 3px 5px rgba(255,255,255,0.3),
+        /* 5. Inner left bevel — secondary light */
+        inset 3px 0 5px rgba(255,255,255,0.1),
+        /* 6. Inner bottom bevel — deep shadow face */
+        inset 0 -3px 6px rgba(0,0,0,0.3),
+        /* 7. Inner right bevel — soft shadow */
+        inset -3px 0 5px rgba(0,0,0,0.15),
+        /* 8. Soft inner glow (frosted warmth) */
+        inset 0 0 50px rgba(180,200,255,0.07),
+        /* 9. Tight center glow */
+        inset 0 0 16px rgba(255,255,255,0.04);
+
+      transition:
+        transform 0.35s cubic-bezier(0.23, 0.86, 0.39, 0.96),
+        box-shadow 0.4s ease,
+        background 0.35s ease,
+        border-color 0.35s ease;
     }
 
+    /* ── Refraction + reflection stripe ──
+       Diagonal gradient simulates light bending through glass,
+       plus a bright reflection band like a window glare */
+    a.card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      background:
+        /* Reflection stripe — bright diagonal band */
+        linear-gradient(
+          115deg,
+          transparent 30%,
+          rgba(255,255,255,0.06) 38%,
+          rgba(255,255,255,0.12) 42%,
+          rgba(255,255,255,0.06) 46%,
+          transparent 54%
+        ),
+        /* Base refraction — light-to-dark diagonal */
+        linear-gradient(
+          135deg,
+          rgba(255,255,255,0.18) 0%,
+          rgba(255,255,255,0.1) 15%,
+          rgba(255,255,255,0.03) 35%,
+          transparent 50%,
+          rgba(0,0,0,0.04) 70%,
+          rgba(0,0,0,0.08) 100%
+        );
+      pointer-events: none;
+      transition: background 0.35s;
+    }
+
+    /* ── Specular edge highlights ──
+       Top edge + left edge light reflections
+       like light hitting the flat chamfer faces */
+    a.card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      pointer-events: none;
+      /* Top edge specular */
+      background:
+        linear-gradient(to bottom,
+          rgba(255,255,255,0) 0px,
+          rgba(255,255,255,0) 0px
+        ),
+        /* Re-create as border-image workaround:
+           bright line at top, bright line at left */
+        linear-gradient(180deg,
+          rgba(255,255,255,0.5) 0px,
+          rgba(255,255,255,0.15) 2px,
+          transparent 4px
+        ),
+        linear-gradient(90deg,
+          rgba(255,255,255,0.25) 0px,
+          rgba(255,255,255,0.08) 2px,
+          transparent 4px
+        );
+      background-size: 100% 100%;
+      transition: opacity 0.35s;
+    }
+
+    /* ── Hover: glass lifts, everything intensifies ── */
     a.card:hover {
-      transform: translateY(-4px);
-      background: rgba(255,255,255,0.12);
-      box-shadow: 0 10px 28px rgba(0,0,0,0.3);
+      transform: translateY(-7px) scale(1.008);
+      background: rgba(255,255,255,0.15);
+      border-top-color: rgba(255,255,255,0.55);
+      border-left-color: rgba(255,255,255,0.3);
+      border-right-color: rgba(0,0,0,0.2);
+      border-bottom-color: rgba(0,0,0,0.38);
+      box-shadow:
+        -4px -4px 12px rgba(255,255,255,0.08),
+         8px 12px 28px rgba(0,0,0,0.4),
+        14px 24px 64px rgba(0,0,0,0.24),
+        inset 0 3px 6px rgba(255,255,255,0.35),
+        inset 3px 0 6px rgba(255,255,255,0.12),
+        inset 0 -3px 8px rgba(0,0,0,0.35),
+        inset -3px 0 6px rgba(0,0,0,0.18),
+        inset 0 0 60px rgba(180,200,255,0.1),
+        inset 0 0 20px rgba(255,255,255,0.06);
+    }
+    a.card:hover::before {
+      background:
+        linear-gradient(
+          115deg,
+          transparent 28%,
+          rgba(255,255,255,0.08) 36%,
+          rgba(255,255,255,0.16) 42%,
+          rgba(255,255,255,0.08) 48%,
+          transparent 56%
+        ),
+        linear-gradient(
+          135deg,
+          rgba(255,255,255,0.24) 0%,
+          rgba(255,255,255,0.14) 15%,
+          rgba(255,255,255,0.04) 35%,
+          transparent 50%,
+          rgba(0,0,0,0.05) 70%,
+          rgba(0,0,0,0.1) 100%
+        );
+    }
+
+    /* ── Active/press: bevel flattens, glass sinks ── */
+    a.card:active {
+      transform: translateY(-1px) scale(0.997);
+      background: rgba(255,255,255,0.18);
+      border-top-color: rgba(255,255,255,0.35);
+      border-bottom-color: rgba(0,0,0,0.2);
+      box-shadow:
+        -1px -1px 3px rgba(255,255,255,0.03),
+         2px 3px 8px rgba(0,0,0,0.3),
+        inset 0 4px 8px rgba(0,0,0,0.2),
+        inset 0 -1px 2px rgba(255,255,255,0.18),
+        inset 0 0 30px rgba(180,200,255,0.06);
     }
 
     a.card:focus-visible {
       outline: 3px solid var(--exec);
-      outline-offset: 3px;
+      outline-offset: 4px;
     }
 
+    /* Card section color accents – left chamfer tint */
+    .section:nth-child(2) a.card { border-left: 2px solid rgba(245,192,78,0.4); }
+    .section:nth-child(3) a.card { border-left: 2px solid rgba(109,211,251,0.4); }
+    .section:nth-child(4) a.card { border-left: 2px solid rgba(195,182,255,0.4); }
+
+    .section:nth-child(2) a.card:hover { border-left-color: rgba(245,192,78,0.65); }
+    .section:nth-child(3) a.card:hover { border-left-color: rgba(109,211,251,0.65); }
+    .section:nth-child(4) a.card:hover { border-left-color: rgba(195,182,255,0.65); }
+
+    /* ═══════════════════════════════════════════════
+       CARD CONTENT
+    ═══════════════════════════════════════════════ */
     .icon {
-      font-size: 1.5rem;
-      margin-bottom: 8px;
-      display: block;
+      font-size: 1.3rem;
+      margin-bottom: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      position: relative;
+      /* Strong mini glass bevel */
+      background: rgba(255,255,255,0.1);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border-top: 2px solid rgba(255,255,255,0.35);
+      border-left: 2px solid rgba(255,255,255,0.18);
+      border-right: 2px solid rgba(0,0,0,0.1);
+      border-bottom: 2px solid rgba(0,0,0,0.18);
+      box-shadow:
+        inset 0 2px 3px rgba(255,255,255,0.2),
+        inset 0 -2px 3px rgba(0,0,0,0.15),
+        inset 0 0 14px rgba(180,200,255,0.06),
+        2px 3px 8px rgba(0,0,0,0.2);
     }
-
     .card h3 {
-      margin: 4px 0 8px;
-      font-size: 1.15rem;
-      font-weight: 600;
+      margin: 4px 0 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      position: relative;
     }
-
     .card p {
       margin: 0;
-      font-size: .95rem;
-      line-height: 1.4;
+      font-size: 0.9rem;
+      line-height: 1.55;
       color: var(--text-secondary);
+      font-weight: 300;
+      position: relative;
     }
 
+    /* ═══════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════ */
     footer {
-      margin-top: 56px;
+      margin-top: 64px;
       text-align: center;
-      font-size: .8rem;
+      font-size: 0.78rem;
       color: var(--text-secondary);
-      opacity: .8;
+      opacity: 0;
+      animation: fadeUp 0.8s 1.6s ease-out forwards;
+      letter-spacing: 0.02em;
+    }
+    footer .footer-inner {
+      display: inline-block;
+      padding: 10px 26px;
+      border-radius: 9999px;
+      background: rgba(255,255,255,0.05);
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      backdrop-filter: blur(var(--glass-blur));
+      border-top: 1px solid rgba(255,255,255,0.22);
+      border-left: 1px solid rgba(255,255,255,0.1);
+      border-right: 1px solid rgba(0,0,0,0.06);
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,0.12),
+        inset 0 -1px 1px rgba(0,0,0,0.08),
+        inset 0 0 16px rgba(180,200,255,0.03),
+        2px 3px 8px rgba(0,0,0,0.12);
+    }
+
+    /* ═══════════════════════════════════════════════
+       ANIMATIONS
+    ═══════════════════════════════════════════════ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ═══════════════════════════════════════════════
+       MOBILE
+    ═══════════════════════════════════════════════ */
+    @media (max-width: 640px) {
+      main.container { padding: 32px 16px; }
+      .shape { display: none; }
+      h1 { font-size: 1.8rem; }
+      a.card { padding: 20px; border-radius: 14px; }
     }
   </style>
+
 </head>
 
 <body>
+
+<div class="page-wrap">
+
+<!-- Floating ambient blobs -->
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+<div class="blob blob-4"></div>
+
+<!-- Floating geometric shapes -->
+
+<div class="shape shape-1"><div class="shape-inner"></div></div>
+<div class="shape shape-2"><div class="shape-inner"></div></div>
+<div class="shape shape-3"><div class="shape-inner"></div></div>
+<div class="shape shape-4"><div class="shape-inner"></div></div>
+<div class="shape shape-5"><div class="shape-inner"></div></div>
+<div class="shape shape-6"><div class="shape-inner"></div></div>
+
+<!-- Vignette -->
+
+<div class="vignette"></div>
+
 <main class="container">
 
   <header>
-    <h1>Explore LXT Business Capability Architecture</h1>
+    <div class="badge">
+      <div class="badge-dot"></div>
+      <span>Capability Architecture</span>
+    </div>
+    <h1>
+      <span class="line1">Explore LXT Business</span><br>
+      <span class="line2">Capability Architecture</span>
+    </h1>
     <div class="subtitle">
       Role‑based entry points into the Land Tax capability architecture.
     </div>
   </header>
-  
+
   <!-- STRATEGIC -->
+
   <section class="section">
     <div class="section-title exec">Strategic View</div>
     <div class="grid">
-
       <a class="card" href="./level0.html">
         <span class="icon">📊</span>
         <h3>Level 0 Value Stream Map</h3>
         <p>End‑to‑end view of Land Tax outcomes across the full lifecycle.</p>
       </a>
-
       <a class="card" href="./strategic.html">
         <span class="icon">📊</span>
         <h3>Strategic Initiatives</h3>
         <p>View of inflight strategic initiatives.</p>
       </a>
-
       <a class="card" href="./heat.html">
         <span class="icon">📈</span>
         <h3>Capability Heat Map</h3>
         <p>Maturity and gaps across capabilities to support investment and prioritisation.</p>
       </a>
-
     </div>
   </section>
 
   <!-- MANAGEMENT -->
+
   <section class="section">
     <div class="section-title manager">Management View</div>
     <div class="grid">
-
       <a class="card" href="./vstream.html">
         <span class="icon">🧭</span>
         <h3>Level 1 Value Stream Map</h3>
         <p>Capabilities organised by value stage to support ownership and coordination.</p>
       </a>
-
       <a class="card" href="./pain.html">
         <span class="icon">🔥</span>
         <h3>Capability Pain Points</h3>
         <p>Operational issues mapped directly to impacted capabilities.</p>
       </a>
-
       <a class="card" href="./dashboard.html">
         <span class="icon">📌</span>
         <h3>Dashboard</h3>
         <p>Track delivery progress and improvement over time.</p>
       </a>
-
     </div>
   </section>
 
   <!-- OPERATIONAL -->
+
   <section class="section">
     <div class="section-title team">Operational View</div>
     <div class="grid">
-
       <a class="card" href="./processes.html">
         <span class="icon">📚</span>
         <h3>LTX Process Catalogue</h3>
         <p>Detailed process descriptions that explain how work is executed.</p>
       </a>
-
       <a class="card" href="./activities.html">
         <span class="icon">📚</span>
         <h3>LTX Work Item Catalogue</h3>
         <p>Catalogue of work items on hand and KPI.</p>
       </a>
-
     </div>
   </section>
 
   <footer>
-    Capability Architecture • Land Tax Transformation Program
+    <div class="footer-inner">Capability Architecture · Land Tax Transformation Program</div>
   </footer>
 
 </main>
+
+</div><!-- /page-wrap -->
+
+<script>
+// Animate each blob with unique orbital paths
+document.querySelectorAll('.blob').forEach((blob, i) => {
+  const config = [
+    { xAmp: 60, yAmp: 45, xSpeed: 0.0003, ySpeed: 0.00045, sAmp: 0.06, sSpeed: 0.0004 },
+    { xAmp: 50, yAmp: 55, xSpeed: 0.00025, ySpeed: 0.00035, sAmp: 0.05, sSpeed: 0.00035 },
+    { xAmp: 70, yAmp: 40, xSpeed: 0.00035, ySpeed: 0.0005, sAmp: 0.07, sSpeed: 0.00045 },
+    { xAmp: 45, yAmp: 60, xSpeed: 0.0004, ySpeed: 0.0003, sAmp: 0.04, sSpeed: 0.0003 },
+  ][i];
+
+  const offset = i * 1500;
+
+  function animate(t) {
+    t += offset;
+    const x = Math.sin(t * config.xSpeed) * config.xAmp;
+    const y = Math.cos(t * config.ySpeed) * config.yAmp;
+    const s = 1 + Math.sin(t * config.sSpeed) * config.sAmp;
+    blob.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+});
+</script>
+
 </body>
 </html>
-``

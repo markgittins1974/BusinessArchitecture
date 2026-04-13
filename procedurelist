@@ -1,1 +1,350 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Procedure Library</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --royal-blue: #1e3a8a;
+      --royal-blue-dark: #0f2347;
+      --gold: #d4a574;
+      --text-dark: #0f172a;
+      --text-mid: #334155;
+      --text-light: #64748b;
+      --surface: #fafbfc;
+      --surface-raised: #ffffff;
+      --border-subtle: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--surface); color: var(--text-dark); min-height: 100vh; }
+
+    .banner { background: linear-gradient(135deg, var(--royal-blue-dark) 0%, var(--royal-blue) 100%); padding: 28px 48px; box-shadow: 0 4px 20px rgba(30, 58, 138, 0.15); }
+    .banner-title { color: white; font-size: 24px; font-weight: 900; margin-bottom: 20px; }
+    
+    .search-container { position: relative; max-width: 500px; }
+    .search-input { width: 100%; padding: 12px 16px 12px 40px; border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 8px; font-size: 15px; background: rgba(255, 255, 255, 0.1); color: white; font-family: inherit; }
+    .search-input::placeholder { color: rgba(255, 255, 255, 0.6); }
+    .search-input:focus { outline: none; border-color: var(--gold); background: rgba(255, 255, 255, 0.15); }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 16px; }
+
+    .dropdown-list { position: absolute; top: calc(100% + 8px); left: 0; width: 100%; background: var(--surface-raised); border: 1px solid var(--border-subtle); border-radius: 8px; max-height: 400px; overflow-y: auto; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); display: none; z-index: 1000; }
+    .dropdown-list.show { display: block; }
+    .dropdown-item { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); cursor: pointer; background: var(--surface-raised); border: none; text-align: left; font-family: inherit; width: 100%; }
+    .dropdown-item:hover { background: var(--surface); }
+    .dropdown-name { font-weight: 700; font-size: 14px; color: var(--text-dark); margin-bottom: 4px; }
+    .dropdown-meta { font-size: 12px; color: var(--text-light); }
+
+    .main-content { padding: 48px; min-height: calc(100vh - 140px); }
+    .empty-state { text-align: center; display: flex; align-items: center; justify-content: center; height: 100%; }
+    .empty-state-icon { font-size: 72px; margin-bottom: 20px; }
+    .empty-state h2 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+
+    /* AOS Styles */
+    .aos-layout { display: flex; gap: 28px; }
+    .aos-sidebar { width: 260px; background: #fff; border-radius: 10px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,.08); }
+    .aos-sidebar a { display: block; text-decoration: none; color: #003a8f; font-size: 14px; margin-bottom: 8px; }
+    .aos-content { max-width: 1250px; width: 100%; }
+    .aos-toggle { display: flex; gap: 12px; margin-bottom: 24px; }
+    .aos-toggle button { border: 1px solid #ccc; border-radius: 22px; padding: 8px 18px; cursor: pointer; background: #fff; font-family: inherit; }
+    .aos-toggle button.active { background: #003a8f; color: #fff; }
+    .aos-section { background: #fff; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,.08); padding: 24px; margin-bottom: 28px; }
+    .aos-section h2 { margin-top: 0; font-size: 22px; }
+    .aos-section ul { margin-left: 22px; }
+    .staff, .architect { display: none; }
+    .arch { background: #f9fafb; border-left: 5px solid #003a8f; padding: 16px; margin-top: 14px; font-size: 14px; }
+    .block { margin-bottom: 14px; }
+    .stop { background: #fef2f2; border-left: 5px solid #b91c1c; padding: 12px; margin-top: 12px; font-weight: 600; }
+    .ref { background: #eef2f7; border-left: 5px solid #6366f1; padding: 12px; margin-top: 12px; font-size: 13px; }
+    .systemsOnly { display: none; }
+    .mermaid { background: #f9fafb; border: 1px solid #d1d5db; border-radius: 8px; padding: 18px; }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    <h1 class="banner-title">Procedure Library</h1>
+    <div class="search-container">
+      <div class="search-icon">🔍</div>
+      <input type="text" class="search-input" id="searchInput" placeholder="Search procedures..." autocomplete="off" />
+      <div class="dropdown-list" id="dropdownList"></div>
+    </div>
+  </div>
+
+  <div class="main-content" id="mainContent">
+    <div class="empty-state">
+      <div style="text-align: center;">
+        <div class="empty-state-icon">👇</div>
+        <h2>Select a Procedure</h2>
+        <p>Search above to find a procedure.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    mermaid.initialize({ startOnLoad: false });
+
+    const procedures = [
+      { name: 'Absentee Owner Surcharge (AOS)', category: 'Land Tax', docRef: 'DOC/18/509543', isAOS: true },
+      { name: 'Annual Valuation Review', category: 'Valuation', docRef: 'DOC/21/600112' },
+      { name: 'Exemption Applications', category: 'Exemptions', docRef: 'DOC/20/550089' }
+    ];
+
+    const searchInput = document.getElementById('searchInput');
+    const dropdownList = document.getElementById('dropdownList');
+    const mainContent = document.getElementById('mainContent');
+
+    searchInput.addEventListener('focus', () => renderDropdown(procedures));
+    searchInput.addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      const filtered = term ? procedures.filter(p => p.name.toLowerCase().includes(term) || p.category.toLowerCase().includes(term)) : procedures;
+      renderDropdown(filtered);
+    });
+    searchInput.addEventListener('blur', () => setTimeout(() => dropdownList.classList.remove('show'), 100));
+
+    function renderDropdown(list) {
+      dropdownList.innerHTML = '';
+      dropdownList.classList.add('show');
+      list.forEach(p => {
+        const btn = document.createElement('button');
+        btn.className = 'dropdown-item';
+        btn.innerHTML = `<div class="dropdown-name">${p.name}</div><div class="dropdown-meta">${p.category} • ${p.docRef}</div>`;
+        btn.onclick = () => { if (p.isAOS) showAOS(); searchInput.value = p.name; dropdownList.classList.remove('show'); };
+        dropdownList.appendChild(btn);
+      });
+    }
+
+    function showAOS() {
+      mainContent.innerHTML = `
+        <div class="aos-layout">
+          <aside class="aos-sidebar">
+            <a href="#q1">Q1 Trigger</a>
+            <a href="#q2">Q2 Eligibility</a>
+            <a href="#q3">Q3 Owner Type</a>
+            <a href="#q4">Q4 Registration</a>
+            <a href="#q5">Q5 Absentee Test</a>
+            <a href="#q6">Q6 Partial AOS</a>
+            <a href="#q7">Q7 Exemption</a>
+            <a href="#q8">Q8 Apply/Remove</a>
+            <a href="#q9">Q9 Close Case</a>
+          </aside>
+
+          <main class="aos-content">
+            <div class="aos-toggle">
+              <button id="staffBtn" class="active">Staff</button>
+              <button id="archBtn">Architect</button>
+              <button id="sysBtn">System</button>
+            </div>
+
+            <div id="questionFlow">
+              <section id="q1" class="aos-section">
+                <h2>Q1 – What started this AOS case?</h2>
+                <div class="staff">
+                  <ul>
+                    <li>Identify trigger source (portal, correspondence, phone, internal action).</li>
+                    <li>Confirm customer and land tax account alignment.</li>
+                    <li>Record trigger source for audit and correspondence.</li>
+                  </ul>
+                </div>
+                <div class="architect">
+                  <div class="arch">
+                    <div class="block"><strong>Input data</strong>: Trigger channel, Customer ID, Land tax account ID, Declaration details, CM10 ref, Phone notes, Enquiry notes</div>
+                    <div class="block"><strong>Processing</strong>: e‑Sys action item creation; CM10 document storage</div>
+                    <div class="block"><strong>Output</strong>: AOS action created, allocated to tray, trigger source recorded</div>
+                  </div>
+                </div>
+              </section>
+
+              <section id="q2" class="aos-section">
+                <h2>Q2 – Am I allowed to proceed?</h2>
+                <div class="staff">
+                  <ul>
+                    <li>Check investigation status.</li>
+                    <li>Check prior TARB determinations.</li>
+                    <li>Stop if restricted.</li>
+                  </ul>
+                  <div class="stop">Do not proceed if eligibility is restricted.</div>
+                </div>
+                <div class="architect">
+                  <div class="arch">
+                    <div class="block"><strong>Input data</strong>: Investigation flag, TARB decisions, Phone/CM10 history, High-risk flag</div>
+                    <div class="block"><strong>Decision</strong>: Eligibility gate — Proceed / Halt / Escalate</div>
+                    <div class="block"><strong>Output</strong>: Action reassigned or proceed with checks</div>
+                  </div>
+                </div>
+              </section>
+
+              <section id="q3" class="aos-section">
+                <h2>Q3 – What type of owner is this?</h2>
+                <div class="staff">
+                  <ul>
+                    <li>Identify Individual, Company, or Trust.</li>
+                    <li>For joint owners, classify each.</li>
+                  </ul>
+                </div>
+                <div class="architect">
+                  <div class="arch">
+                    <div class="block"><strong>Input</strong>: Ownership classification, Trust type, Corporation type</div>
+                    <div class="block"><strong>Output</strong>: Rule path selected (Individual/Corporation/Trust)</div>
+                  </div>
+                </div>
+              </section>
+
+              <section id="q4" class="aos-section">
+                <h2>Q4 – Is there an existing registration?</h2>
+                <div class="staff">
+                  <ul>
+                    <li>Check current and historical registrations.</li>
+                    <li>Validate dates and ownership percent.</li>
+                  </ul>
+                </div>
+                <div class="architect">
+                  <div class="arch">
+                    <div class="block"><strong>Input</strong>: Current/historical registrations, Effective dates, Ownership %</div>
+                    <div class="block"><strong>Output</strong>: Registration status determines Q8 action</div>
+                  </div>
+                </div>
+              </section>
+
+              <section id="q5" class="aos-section">
+                <h2>Q5 – Is the owner an absentee owner?</h2>
+                <div class="staff">
+                  <ul>
+                    <li>Apply owner-specific absentee tests.</li>
+                    <li>Review declarations and evidence.</li>
+                  </ul>
+                  <div class="stop">Never assume without evidence.</div>
+                </div>
+                <div class="architect">
+                  <div class="arch">
+                    <div class="block"><strong>Input</strong>: Citizenship, Residence status, Physical presence, Absence duration, Trust/Beneficiary details</div>
+                    <div class="block"><strong>Decision</strong>: D‑AOS‑01 — Absentee determination per owner type</div>
+                    <div class="block"><strong>Output</strong>: Absentee flag set; Trust proportion calculated</div>
+                  </div>
+                </div>
+              </section>
+
+              <section id="q6" class="aos-section">
+                <h2>Q6 – Does a partial AOS apply?</h2>
+                <div class="staff">
+                  <ul>
+                    <li>Confirm absentee vs non-absentee interests.</li>
+                    <li>Apply surcharge proportionally.</li>
+                  </ul>
+                </div>
+                <div class="architect">
+                  <div class="arch">
+                    <div class="block"><strong>Decision</strong>: Full or partial surcharge</div>
+                    <div class="block"><strong>Output</strong>: 4% from 2024 | 2% 2020-23 | 1.5% 2017-19 | 0.5% 2016</div>
+                  </div>
+                </div>
+              </section>
+
+              <section id="q7" class="aos-section">
+                <h2>Q7 – Is an exemption requested?</h2>
+                <div class="staff">
+                  <ul>
+                    <li>Identify exemption request.</li>
+                    <li>Collect documentation.</li>
+                    <li>Refer to TARB.</li>
+                  </ul>
+                  <div class="stop">Staff must not approve exemptions.</div>
+                </div>
+                <div class="architect">
+                  <div class="arch">
+                    <div class="block"><strong>Decision</strong>: TARB determination only</div>
+                    <div class="block"><strong>Output</strong>: Outcome recorded; AOS adjusted if granted</div>
+                  </div>
+                </div>
+              </section>
+
+              <section id="q8" class="aos-section">
+                <h2>Q8 – Apply or remove the AOS?</h2>
+                <div class="staff">
+                  <ul>
+                    <li>Create or cease registration.</li>
+                    <li>Confirm dates and ownership.</li>
+                    <li>Trigger recalculation.</li>
+                  </ul>
+                </div>
+                <div class="architect">
+                  <div class="arch">
+                    <div class="block"><strong>Decision</strong>: Create registration or cease</div>
+                    <div class="block"><strong>Output</strong>: Updated registration; Liabilities recalculated</div>
+                  </div>
+                </div>
+              </section>
+
+              <section id="q9" class="aos-section">
+                <h2>Q9 – Close the action item</h2>
+                <div class="staff">
+                  <ul>
+                    <li>Clear suspense.</li>
+                    <li>Validate assessments.</li>
+                    <li>Issue correspondence.</li>
+                  </ul>
+                </div>
+                <div class="architect">
+                  <div class="arch">
+                    <div class="block"><strong>Output</strong>: Action completed; Assessments issued; Correspondence sent</div>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <div class="systemsOnly">
+              <section class="aos-section">
+                <h2>System Interaction</h2>
+                <div class="mermaid">
+sequenceDiagram
+participant Staff
+participant Portal
+participant eSys
+participant TARB
+Portal->>eSys: Submit declaration
+Staff->>eSys: Open AOS case
+eSys->>eSys: Eligibility checks
+Staff->>TARB: Refer if exemption
+Staff->>eSys: Apply/Remove AOS
+eSys->>eSys: Recalculate
+Staff->>eSys: Close case
+                </div>
+              </section>
+            </div>
+          </main>
+        </div>
+      `;
+
+      setTimeout(() => {
+        document.getElementById('staffBtn').onclick = () => toggleAOS('staff');
+        document.getElementById('archBtn').onclick = () => toggleAOS('architect');
+        document.getElementById('sysBtn').onclick = () => toggleAOS('systems');
+        toggleAOS('staff');
+      }, 0);
+    }
+
+    function toggleAOS(view) {
+      document.querySelectorAll('.staff, .architect').forEach(e => e.style.display = 'none');
+      document.querySelectorAll('#staffBtn, #archBtn, #sysBtn').forEach(b => b.classList.remove('active'));
+      document.getElementById('questionFlow').style.display = 'block';
+      document.querySelector('.systemsOnly').style.display = 'none';
+
+      if (view === 'staff') {
+        document.querySelectorAll('.staff').forEach(e => e.style.display = 'block');
+        document.getElementById('staffBtn').classList.add('active');
+      } else if (view === 'architect') {
+        document.querySelectorAll('.architect').forEach(e => e.style.display = 'block');
+        document.getElementById('archBtn').classList.add('active');
+      } else if (view === 'systems') {
+        document.getElementById('questionFlow').style.display = 'none';
+        document.querySelector('.systemsOnly').style.display = 'block';
+        document.getElementById('sysBtn').classList.add('active');
+        mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,1 +1,573 @@
 
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TARB Referrals and Determinations for LRA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body { margin:0; font-family:Segoe UI, Arial, sans-serif; background:#f5f7fa; color:#1f2937; }
+    header { background:#003a8f; color:#fff; padding:28px 36px; }
+    header h1 { margin:0; font-size:32px; }
+    header p { margin-top:8px; font-weight:600; }
+    .layout { display:flex; gap:28px; padding:28px; }
+    .sidebar { width:260px; background:#fff; border-radius:10px; padding:16px; box-shadow:0 2px 6px rgba(0,0,0,.08); position:sticky; top:24px; }
+    .sidebar a { display:block; text-decoration:none; color:#003a8f; font-size:14px; margin-bottom:8px; }
+    .content { max-width:1250px; width:100%; }
+    .toggle { display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap; }
+    .toggle button { border:1px solid #ccc; border-radius:22px; padding:8px 18px; cursor:pointer; background:#fff; }
+    .toggle button.active { background:#003a8f; color:#fff; }
+    section { background:#fff; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,.08); padding:24px; margin-bottom:28px; }
+    h2 { margin-top:0; font-size:22px; }
+    ul { margin-left:22px; }
+    .staff, .architect { display:none; }
+    .arch { background:#f9fafb; border-left:5px solid #003a8f; padding:16px; margin-top:14px; font-size:14px; }
+    .block { margin-bottom:14px; }
+    .stop { background:#fef2f2; border-left:5px solid #b91c1c; padding:12px; margin-top:12px; font-weight:600; }
+    .ref { background:#eef2f7; border-left:5px solid #6366f1; padding:12px; margin-top:12px; font-size:13px; }
+    .systemsOnly { display:none; }
+    .specOnly { display:none; }
+    .summary-section { background:#fff; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,.08); padding:24px; margin-bottom:28px; }
+    .summary-section h3 { color:#003a8f; margin-top:16px; margin-bottom:8px; font-size:17px; }
+    .limitations { background:#fffbeb; border-left:5px solid #f59e0b; padding:12px 16px; margin:12px 0; font-size:14px; }
+    .score { background:#f0fdf4; border-left:5px solid #22c55e; padding:12px 16px; margin:12px 0; font-size:14px; }
+    .mermaid { background:#f9fafb; border:1px solid #d1d5db; border-radius:8px; padding:18px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>TARB Referrals &amp; Determinations for LRA</h1>
+  <p>Tax Advisory &amp; Review Branch (TARB) Referrals and Determinations for Land Revenue Administration (LRA) &bull; Revised: 26 November 2025</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <a href="#q1">Q1 Consultation &amp; Approval</a>
+    <a href="#q2">Q2 Matter Classification</a>
+    <a href="#q3">Q3 Hardship Relief</a>
+    <a href="#q4">Q4 Referral to TARB</a>
+    <a href="#q5">Q5 TARB Determination</a>
+    <a href="#q6">Q6 Post-Amendment &amp; Close</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary &amp; Review</button>
+    </div>
+
+```
+<div id="questionFlow">
+
+  <!-- Q1 -->
+  <section id="q1">
+    <h2>Q1 – Has consultation and approval been obtained prior to referring the matter to TARB?</h2>
+    <div class="staff">
+      <ul>
+        <li>Consult with a Branch Technical Officer (BTO) within LRA.</li>
+        <li>If BTO is unavailable, consult with an experienced Senior Customer Service Officer, a TARB Liaison Officer, and/or the Team Leader.</li>
+        <li>Obtain approval to proceed with referral.</li>
+        <li>Confirm whether action item type needs changing to Formal Objection or Private Ruling — if so, the TARB Referral Officer must action the change.</li>
+        <li>This process covers both LTX and VRLT revenue lines.</li>
+      </ul>
+      <div class="stop">Do not proceed with referral without approval from a TARB Referral Officer.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Introduction, background &amp; how to refer to TARB</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Customer correspondence</li>
+            <li>Referral context (nature of matter, relevant tax years, customer details)</li>
+            <li>Revenue line (LTX or VRLT)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>LRA staff — initiate consultation</li>
+            <li>BTO / Senior CSO / TARB Liaison Officer / Team Leader — approve or reject referral</li>
+            <li>TARB Referral Officer — change action item type if required</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Referral gate:
+          <ul>
+            <li>Approved → proceed to Q2 for classification</li>
+            <li>Not approved → matter retained by LRA for standard processing</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Referral approved and proceeds to classification</li>
+            <li>Or matter retained by LRA</li>
+            <li>Action item type updated to Formal Objection or Private Ruling (if required by TARB Referral Officer)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 -->
+  <section id="q2">
+    <h2>Q2 – How should the matter be classified?</h2>
+    <div class="staff">
+      <ul>
+        <li>Assess correspondence and submitted forms to determine the matter type.</li>
+        <li>Factors indicating <strong>Amendment Request</strong> (handled by LRS): submitted via My Land Tax or LTX Amendment Form; no supporting documentation; no written reasons; SRO does not dispute; simple error or oversight.</li>
+        <li>Factors indicating <strong>Formal Objection</strong> (handled by Review): Land Tax Objection Form used; written correspondence challenges the legal basis of the assessment; SRO has previously advised disagreement. All three factors must be present: in writing, grounds stated fully and in detail, challenges the legal basis.</li>
+        <li>Factors indicating <strong>Private Ruling</strong> (handled by Tax Advisory): amendment/exemption request requiring interpretation of law but does not meet conditions of a Valid Formal Objection; objections to Special Land Tax assessments (disputes rate of tax, not Commissioner's discretion).</li>
+        <li>Some Formal Objections stay with LRA or LGA Team:
+          <ul>
+            <li>Valuation objections → forward to LGA Team.</li>
+            <li>Straightforward allow cases with no legal/complex issues → handled by LRA.</li>
+          </ul>
+        </li>
+        <li>Out-of-time objections (lodged outside 60-day statutory period) — still referred to Review provided factors are met and reasons for late lodgement are stated.</li>
+        <li>If classification is unclear, seek confirmation from TARB.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> What is an Objection / Amendment?; What do Land Revenue, Review and TAB and some other Policy &amp; Legislation Branches do?; Identifying Formal Objections and Private Rulings</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Customer correspondence (written / MLT / objection form / amendment form)</li>
+            <li>Submitted forms and supporting documentation</li>
+            <li>Prior SRO correspondence or disagreement history</li>
+            <li>Date of lodgement (for out-of-time assessment)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>LRA staff — assess and classify</li>
+            <li>TARB — confirmation if classification is ambiguous</li>
+            <li>e&#8209;Sys — action item creation and routing</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Matter classification — determines routing:
+          <ul>
+            <li>Amendment request → LRS processes</li>
+            <li>Formal Objection → Review Team (via e&#8209;Sys objections module)</li>
+            <li>Formal Objection (valuation) → LGA Team</li>
+            <li>Formal Objection (straightforward allow) → LRA retains</li>
+            <li>Private Ruling → Tax Advisory Team</li>
+            <li>Special Land Tax objection → Tax Advisory Team (not a valid formal objection)</li>
+            <li>Out-of-time objection → Review Team (with late lodgement reasons)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Correct action item type assigned (Amendment / Formal Objection / Private Ruling)</li>
+            <li>Routed to appropriate team queue</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q3 -->
+  <section id="q3">
+    <h2>Q3 – Does the correspondence constitute a hardship relief application?</h2>
+    <div class="staff">
+      <ul>
+        <li>Confirm whether customer intent to apply for hardship relief is clearly evident in the correspondence.</li>
+        <li>Forward confirmed hardship relief applications to LTX Capture/SRO via email, specifying the Customer ID and requesting a "hardship action item" be created in e&#8209;Sys.</li>
+        <li>The matter will then be recorded via the e&#8209;Sys private rulings module.</li>
+        <li>Do not treat casual hardship mentions (e.g. "paying land tax will cause hardship") as hardship relief applications unless the customer shows clear intent to apply.</li>
+        <li>If unsure, contact TARB for confirmation before forwarding.</li>
+      </ul>
+      <div class="stop">Do not treat hardship mentions without clear intent as hardship relief applications.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Reviewing applications for hardship relief</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Customer correspondence (assessed for explicit hardship relief intent)</li>
+            <li>Customer ID</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>LRA staff — assess intent and forward if confirmed</li>
+            <li>TARB — confirmation if intent is ambiguous</li>
+            <li>LTX Capture / SRO — hardship action item creation in e&#8209;Sys</li>
+            <li>e&#8209;Sys private rulings module — record the matter</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Hardship relief gate:
+          <ul>
+            <li>Confirmed hardship application → email LTX Capture/SRO with CID and request</li>
+            <li>Ambiguous → contact TARB for confirmation</li>
+            <li>Not a hardship application → standard processing continues</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Hardship action item created in e&#8209;Sys (if confirmed)</li>
+            <li>Matter recorded via private rulings module</li>
+            <li>Or standard processing continues</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q4 -->
+  <section id="q4">
+    <h2>Q4 – How do I refer the matter to TARB in e&#8209;Sys?</h2>
+    <div class="staff">
+      <ul>
+        <li>Change the Action Item type to "Private Rulings" (for Tax Advisory) or "Formal Objection" (for Review). Alternatively, create a new Action Item.</li>
+        <li>Change "Allocate To" to "LTX Amendment Referrals".</li>
+        <li>Ensure "Reason 1" is accurate and covers all relevant assessment years.</li>
+        <li>Add comments noting the action item has been referred to TARB as either a Private Ruling or Formal Objection, and include the legislative basis for the request.</li>
+        <li>Change status to "Referred to TAB" (Private Rulings) or "Referred to Review" (Objections).</li>
+        <li>Click the "Create Priv Ruling" or "Create Objection" button that becomes active. Click OK on the information box, then OK to close the action item.</li>
+        <li>The Private Ruling / Objection will appear under the "Objections &amp; Private Rulings" node.</li>
+        <li>If flipping an amendment A/I to a Formal Objection aged &gt;3 months (not previously triaged by TARB), email the Review inbox (<strong>review@sro.vic.gov.au</strong>) so TARBLOs can prioritise triaging.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Referring a matter to TARB</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Classification result from Q2 (Formal Objection / Private Ruling)</li>
+            <li>Relevant assessment years</li>
+            <li>Legislative basis for the request</li>
+            <li>Action item age (for aged amendment flip notification)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>LRA staff — update action item fields and trigger referral in e&#8209;Sys</li>
+            <li>e&#8209;Sys — action item type change, allocation, status update, OC/PR creation</li>
+            <li>Review inbox (review@sro.vic.gov.au) — notification for aged flipped objections</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Referral execution:
+          <ul>
+            <li>Private Ruling → status "Referred to TAB" → Create Priv Ruling</li>
+            <li>Formal Objection → status "Referred to Review" → Create Objection</li>
+            <li>Aged flip (&gt;3 months) → additional email to Review inbox</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Action item updated: type, allocation, Reason 1, comments, status</li>
+            <li>Private Ruling or Objection created in e&#8209;Sys</li>
+            <li>Appears under "Objections &amp; Private Rulings" node</li>
+            <li>Email notification sent for aged flips (if applicable)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q5 -->
+  <section id="q5">
+    <h2>Q5 – Has TARB issued a determination requiring processing?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Private Rulings:</strong> "Private Ruling Complete" workflow items are created by TARB Officers. Double-click the work item to launch the PR. Right-click on the "Resolve" Action Type and select "View Action" to view TARB Officer instructions.</li>
+        <li><strong>Objections:</strong> Emails are sent to the Assessing inbox with instructions on amendments required once the determination is made and customer notified.</li>
+        <li>If instructions are unclear, refer to the Private Ruling File Report/Memo or Objection File Report/Memo in CM10. These detail the decision including exemption types and relevant sections of the <em>Land Tax Act 2005</em>.</li>
+        <li>If still unclear after reviewing CM10, clarify with the TARB Officer directly.</li>
+        <li>Make any necessary amendments: remove non-issues, create refunds, reissue assessments.</li>
+        <li><strong>Interest on refunds:</strong> Interest generally applies on refunds resulting from objections but not on refunds resulting from private rulings. Check TARB instructions — if assessment was unpaid at determination but subsequently paid, interest may now apply.</li>
+        <li>Correspondence is generally only needed if a refund requires EFT details (TARB has already notified the customer of the outcome). Use the One Note template for NOD correspondence.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Processing completed TARB matters; Reviewing decision and amendments required</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li><em>Private Rulings:</em>
+              <ul>
+                <li>"Private Ruling Complete" workflow item</li>
+                <li>"Resolve" Action Type instructions from TARB Officer</li>
+                <li>CM10 Private Ruling File Report/Memo (if instructions unclear)</li>
+              </ul>
+            </li>
+            <li><em>Objections:</em>
+              <ul>
+                <li>Email to Assessing inbox with amendment instructions</li>
+                <li>CM10 Objection File Report/Memo (if instructions unclear)</li>
+              </ul>
+            </li>
+            <li>Payment status of assessment (for interest determination)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>LRA staff — review instructions, process amendments, create refunds, reissue assessments</li>
+            <li>e&#8209;Sys — assessment amendments, liability recalculation, non-issue removal</li>
+            <li>CM10 — determination report/memo retrieval</li>
+            <li>TARB Officer — clarification if instructions unclear</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Post-determination action:
+          <ul>
+            <li>Amendment required → process changes, refunds, reissued assessments</li>
+            <li>No amendment required → proceed to close</li>
+            <li>Interest on refund: applies for objections (generally); does not apply for private rulings (generally)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Assessments amended in e&#8209;Sys</li>
+            <li>Non-issues removed (if applicable)</li>
+            <li>Refunds created (with or without interest per determination type)</li>
+            <li>Assessments reissued</li>
+            <li>EFT details requested from customer (if refund required)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q6 -->
+  <section id="q6">
+    <h2>Q6 – What must be done before closing the matter?</h2>
+    <div class="staff">
+      <ul>
+        <li>If no action item exists, create one (Formal Objection or Private Ruling as applicable) to record notes.</li>
+        <li><strong>Objections — complete the Objection Module:</strong> The OC status will be "Resolved". Click the "Action" tab → Edit → right-click → New → select "Complete" from the Action Type LOV → OK → Save.</li>
+        <li><strong>Private Rulings:</strong> PRs are generally already in "Completed" status — this step is typically not required.</li>
+        <li>Check and complete any related Workflow items.</li>
+        <li><strong>Formal Objections flipped to Amendments:</strong> If TARB flipped a Formal Objection to an amendment A/I for LRA processing and the matter is too complex:
+          <ul>
+            <li>Contact a TARBLO / TL / Gr6 to discuss.</li>
+            <li>If agreed to revert, create an Objection (not Private Ruling) in e&#8209;Sys and create the OC shell.</li>
+            <li>Do not contact the customer or representative directly.</li>
+            <li>If lodgement date &gt;6 months, email Review inbox (review@sro.vic.gov.au) for prioritised allocation.</li>
+          </ul>
+        </li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Post-amendment steps; Formal Objections flipped to Amendments: Flipping back to TARB</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Completed amendments from Q5</li>
+            <li>Objection Module status (for OCs)</li>
+            <li>Private Ruling status (for PRs)</li>
+            <li>Related Workflow items</li>
+            <li>Flipped objection complexity assessment (if applicable)</li>
+            <li>Original lodgement date (for aged flip-back notification)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>LRA staff — complete modules, close workflow items, create action items if missing</li>
+            <li>e&#8209;Sys — Objection Module status update, workflow item completion</li>
+            <li>TARBLO / TL / Gr6 — consultation for flip-back decisions</li>
+            <li>Review inbox (review@sro.vic.gov.au) — notification for aged flip-backs (&gt;6 months)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Closure path:
+          <ul>
+            <li>Objection → change OC status from "Resolved" to "Completed"</li>
+            <li>Private Ruling → generally already "Completed" (no action)</li>
+            <li>Flipped objection too complex → revert to TARB (create OC shell, notify Review if &gt;6 months)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Objection Module set to "Completed" (for OCs)</li>
+            <li>Action item created with notes (if none existed)</li>
+            <li>All related Workflow items completed</li>
+            <li>Matter closed</li>
+            <li>Or: OC shell created and matter reverted to TARB (for complex flip-backs)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION -->
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction (Q1–Q6)</h2>
+    <div class="mermaid">
+```
+
+sequenceDiagram
+actor Staff as LRA Staff
+participant eSys as e-Sys
+participant TARB
+participant CM10
+participant Review as Review Inbox
+participant Capture as LTX Capture/SRO
+Staff->>Staff: Q1 Consult BTO / referral officer
+Staff->>eSys: Q2 Classify matter & assign action item type
+Staff->>Capture: Q3 Forward hardship application (if applicable)
+Capture–>>eSys: Create hardship action item
+Staff->>eSys: Q4 Update A/I, set status, create OC/PR
+eSys–>>TARB: Referral routed to Review or Tax Advisory
+Staff->>Review: Q4 Notify aged flips (if >3 months)
+TARB->>CM10: Store determination report/memo
+TARB–>>Staff: Q5 Issue determination (workflow item or email)
+Staff->>eSys: Q5 Process amendments, refunds, reissue assessments
+Staff->>eSys: Q6 Complete OC module & close workflow items
+</div>
+</section>
+</div>
+
+```
+<!-- SUMMARY & REVIEW -->
+<div class="specOnly">
+
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul>
+      <li>Defines the process used by LRA staff to assess and refer land tax matters to TARB for determination.</li>
+      <li>Covers classification of matters as amendment requests, formal objections, private rulings, or hardship relief applications.</li>
+      <li>Describes consultation, referral, determination, and post-determination amendment processing activities.</li>
+      <li>Identifies decision points relating to matter classification, referral suitability, and determination handling.</li>
+      <li>Specifies closure activities following determinations issued by TARB.</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul>
+      <li><strong>Division:</strong> Land Revenue Services</li>
+      <li><strong>Branch:</strong> Land Revenue Administration</li>
+      <li><strong>Original creation date:</strong> 3 March 2006</li>
+      <li><strong>Latest revision date:</strong> 26 November 2025</li>
+      <li><strong>System of record:</strong> Lotus Notes Policies and Procedures Database</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Team Routing Reference</h2>
+    <ul>
+      <li><strong>Land Revenue Services (LRS):</strong> Factual inaccuracies, general enquiries, simple amendments, information updates</li>
+      <li><strong>Review Team:</strong> Formal Objections on legal basis, out-of-time objections, hardship relief, penalty objections, investigation decision objections</li>
+      <li><strong>Tax Advisory Team:</strong> Private Rulings, amendment/exemption requests requiring legal interpretation, Special Land Tax objections</li>
+      <li><strong>LGA Team:</strong> Valuation objections</li>
+      <li><strong>Legal Services:</strong> VCAT / Supreme Court referrals (via memo to Branch Manager, Legal Services)</li>
+      <li><strong>Branch Manager:</strong> Ombudsman queries</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Key Processing Time Standards</h2>
+    <ul>
+      <li><strong>Formal Objections:</strong> 90 days</li>
+      <li><strong>Private Rulings:</strong> 90 days</li>
+      <li><strong>Amendment Requests:</strong> 60 days</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Key Email Addresses</h2>
+    <ul>
+      <li><strong>Review inbox:</strong> review@sro.vic.gov.au — for aged objection flips, appeals against Review determinations</li>
+      <li><strong>Tax Advisory inbox:</strong> tax.advisory@sro.vic.gov.au — for Special Land Tax objections, appeals against Tax Advisory determinations</li>
+      <li><strong>LTX Capture/SRO:</strong> hardship action item creation requests</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Structural Limitations &amp; Ambiguities</h2>
+    <div class="limitations">
+      <strong>Matter classification:</strong> Relies on qualitative assessment of correspondence rather than explicit binary decision rules — may warrant human review.
+    </div>
+    <div class="limitations">
+      <strong>Sequencing of referral and processing:</strong> Order of activities is implied rather than explicitly mandated within the procedure text.
+    </div>
+  </section>
+
+  <section class="summary-section">
+    <h2>DCPR Procedural Alignment Score</h2>
+    <div class="score">
+      <strong>Score: 8 / 10</strong><br>
+      Deductions reflect reliance on narrative judgement and implied sequencing.
+    </div>
+  </section>
+
+  <section class="summary-section">
+    <h2>Definitions</h2>
+    <ul>
+      <li><strong>TARB</strong> — Tax Advisory &amp; Review Branch</li>
+      <li><strong>Review</strong> — Review Team</li>
+      <li><strong>TAB</strong> — Tax Advisory Team</li>
+      <li><strong>LRS</strong> — Land Revenue Services</li>
+      <li><strong>LRA</strong> — Land Revenue Administration</li>
+      <li><strong>LGAT</strong> — Local Government Administration Team</li>
+      <li><strong>LTX</strong> — Land Tax</li>
+      <li><strong>LTA</strong> — Land Tax Act 2005</li>
+      <li><strong>NOD</strong> — Notice of Determination</li>
+      <li><strong>TAA</strong> — Taxation Administration Act 1997</li>
+      <li><strong>VRLT</strong> — Vacant Residential Land Tax</li>
+      <li><strong>PPR</strong> — Principal Place of Residence</li>
+      <li><strong>PPL</strong> — Primary Production Land</li>
+      <li><strong>A/I</strong> — Action Item</li>
+      <li><strong>OC</strong> — Objection</li>
+      <li><strong>PR</strong> — Private Ruling</li>
+      <li><strong>BTO</strong> — Branch Technical Officer</li>
+      <li><strong>TARBLO</strong> — TARB Liaison Officer</li>
+    </ul>
+  </section>
+
+</div>
+```
+
+  </main>
+</div>
+
+<script>
+mermaid.initialize({ startOnLoad: false });
+
+function showView(view){
+  document.getElementById('questionFlow').style.display = 'block';
+  document.querySelector('.systemsOnly').style.display = 'none';
+  document.querySelector('.specOnly').style.display = 'none';
+
+  document.querySelectorAll('.staff, .architect').forEach(e => e.style.display = 'none');
+
+  btnStaff.classList.remove('active');
+  btnArch.classList.remove('active');
+  btnSys.classList.remove('active');
+  btnSpec.classList.remove('active');
+
+  if(view === 'staff'){
+    document.querySelectorAll('.staff').forEach(e => e.style.display = 'block');
+    btnStaff.classList.add('active');
+  }
+
+  if(view === 'architect'){
+    document.querySelectorAll('.architect').forEach(e => e.style.display = 'block');
+    btnArch.classList.add('active');
+  }
+
+  if(view === 'systems'){
+    document.getElementById('questionFlow').style.display = 'none';
+    document.querySelector('.systemsOnly').style.display = 'block';
+    btnSys.classList.add('active');
+    mermaid.init();
+  }
+
+  if(view === 'spec'){
+    document.getElementById('questionFlow').style.display = 'none';
+    document.querySelector('.specOnly').style.display = 'block';
+    btnSpec.classList.add('active');
+  }
+}
+
+showView('staff');
+</script>
+
+</body>
+</html>

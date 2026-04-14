@@ -1,0 +1,711 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Land Tax Insolvency Procedure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body { margin:0; font-family:Segoe UI, Arial, sans-serif; background:#f5f7fa; color:#1f2937; }
+    header { background:#003a8f; color:#fff; padding:28px 36px; }
+    header h1 { margin:0; font-size:32px; }
+    header p { margin-top:8px; font-weight:600; }
+    .layout { display:flex; gap:28px; padding:28px; }
+    .sidebar { width:260px; background:#fff; border-radius:10px; padding:16px; box-shadow:0 2px 6px rgba(0,0,0,.08); position:sticky; top:24px; }
+    .sidebar a { display:block; text-decoration:none; color:#003a8f; font-size:14px; margin-bottom:8px; }
+    .content { max-width:1250px; width:100%; }
+    .toggle { display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap; }
+    .toggle button { border:1px solid #ccc; border-radius:22px; padding:8px 18px; cursor:pointer; background:#fff; font-family:inherit; }
+    .toggle button.active { background:#003a8f; color:#fff; }
+    section { background:#fff; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,.08); padding:24px; margin-bottom:28px; }
+    h2 { margin-top:0; font-size:22px; }
+    ul, ol { margin-left:22px; }
+    .staff, .architect { display:none; }
+    .arch { background:#f9fafb; border-left:5px solid #003a8f; padding:16px; margin-top:14px; font-size:14px; }
+    .block { margin-bottom:14px; }
+    .stop { background:#fef2f2; border-left:5px solid #b91c1c; padding:12px; margin-top:12px; font-weight:600; }
+    .ref { background:#eef2f7; border-left:5px solid #6366f1; padding:12px; margin-top:12px; font-size:13px; }
+    .privacy { background:#faf5ff; border-left:5px solid #7c3aed; padding:12px; margin-top:12px; font-size:13px; }
+    .systemsOnly { display:none; }
+    .specOnly { display:none; }
+    .summary-section { background:#fff; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,.08); padding:24px; margin-bottom:28px; }
+    .limitations { background:#fffbeb; border-left:5px solid #f59e0b; padding:12px 16px; margin:12px 0; font-size:14px; }
+    .score { background:#f0fdf4; border-left:5px solid #22c55e; padding:12px 16px; margin:12px 0; font-size:14px; }
+    .constraint { background:#faf5ff; border-left:5px solid #8b5cf6; padding:12px; margin-top:12px; font-size:13px; }
+    .node { padding:14px 20px; border-radius:10px; font-size:13px; font-weight:600; text-align:center; min-width:180px; max-width:280px; box-shadow:0 2px 8px rgba(0,0,0,0.06); display:inline-block; margin:4px; }
+    .n-blue { background:#dbeafe; border:2px solid #1e3a8a; color:#1e3a8a; }
+    .n-red { background:#fee2e2; border:2px dashed #dc2626; color:#991b1b; }
+    .n-gray { background:#f3f4f6; border:2px solid #6b7280; color:#374151; }
+    .n-amber { background:#fef3c7; border:2px solid #d97706; color:#92400e; }
+    .flow { display:flex; flex-direction:column; align-items:center; max-width:900px; margin:0 auto; }
+    .flow-title { font-size:20px; font-weight:800; margin-bottom:24px; text-align:center; }
+    .arr { width:2px; height:24px; background:#94a3b8; margin:0 auto; position:relative; }
+    .arr::after { content:''; position:absolute; bottom:-5px; left:-4px; border-left:5px solid transparent; border-right:5px solid transparent; border-top:6px solid #94a3b8; }
+    .branch { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+    .branch-item { display:flex; flex-direction:column; align-items:center; }
+    .lbl { font-size:11px; color:#475569; font-weight:600; background:white; padding:2px 8px; border-radius:4px; text-align:center; }
+    .legend { display:flex; gap:20px; flex-wrap:wrap; margin-top:24px; justify-content:center; }
+    .legend-item { display:flex; align-items:center; gap:6px; font-size:12px; color:#475569; }
+    .legend-dot { width:12px; height:12px; border-radius:3px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Land Tax Insolvency Procedure</h1>
+  <p>Land Tax Insolvency Procedure &bull; Division: Land Revenue Services &bull; Branch: Land Revenue Administration &bull; Revised: 1 July 2024</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <a href="#q1">Q1 IP Correspondence</a>
+    <a href="#q2">Q2 Customer Registration</a>
+    <a href="#q3">Q3 Ownership and Debt</a>
+    <a href="#q4">Q4 Appointment Type</a>
+    <a href="#q5">Q5 Pre/Post Debt</a>
+    <a href="#q6">Q6 Correspondence</a>
+    <a href="#q7">Q7 Finalise</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary &amp; Review</button>
+    </div>
+
+```
+<div id="questionFlow">
+
+  <!-- Q1 -->
+  <section id="q1">
+    <h2>Q1 - Has valid insolvency correspondence been received?</h2>
+    <div class="staff">
+      <ul>
+        <li>Open insolvency action item from work tray (filter: Work Item Description = Insolvency, Revenue Line = Land Tax) and review IP correspondence from CM10.</li>
+        <li>If no action item exists and correspondence received directly from SRO DMS/Legal Team, create action item and save to CM10.</li>
+        <li>Check relevancy: if IP documentation is older than 6 months, verify customer is still insolvent via ASIC lookup or Equifax/VEDA check.</li>
+        <li>Determine whether IP request relates to Land Tax, Payroll Tax, or both:
+          <ul>
+            <li>Land Tax only: follow this procedure.</li>
+            <li>Payroll Tax only: refer to PTX procedures (Initial Checks, Payroll Tax Node instructions).</li>
+            <li>Both: complete LTX part and email ptx.capture@sro.vic.gov.au advising customer number and PTX insolvency.</li>
+          </ul>
+        </li>
+        <li>If IP document lists multiple entities/properties: review each entity/property one at a time, send separate correspondence for each, complete separate action items for each.</li>
+        <li>Allocate action item to your name immediately. Change status from PENDING ACTION to IN PROGRESS.</li>
+      </ul>
+      <div class="stop">Do not proceed if correspondence is not current or relevant.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Reviewing IP Correspondence (p.7, 11-13); Before you begin (p.6); IP Notes for Consideration (p.12-13)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>IP correspondence (from CM10 or direct email from DMS/Legal)</li>
+            <li>Entity name (Individual / Company / Trust/Trustee)</li>
+            <li>IP name and representative persons</li>
+            <li>Appointment type and date</li>
+            <li>Properties listed / referenced</li>
+            <li>Contact details of IP</li>
+            <li>Advice on sale of any land</li>
+            <li>Age of IP documentation (6-month relevancy threshold)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>LRA staff - review correspondence, create/allocate action item</li>
+            <li>e-Sys - action item creation, work tray management</li>
+            <li>CM10 - correspondence storage</li>
+            <li>ASIC / Equifax VEDA - insolvency currency verification</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Intake routing:
+          <ul>
+            <li>LTX only - proceed to Q2</li>
+            <li>PTX only - refer to PTX procedures</li>
+            <li>Both LTX and PTX - complete LTX, email ptx.capture@sro.vic.gov.au</li>
+            <li>Not current/relevant - update and complete action item</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Action item created/allocated and set to IN PROGRESS</li>
+            <li>IP correspondence reviewed and validated</li>
+            <li>Revenue line routing determined</li>
+          </ul>
+        </div>
+        <div class="constraint"><strong>Iteration constraint:</strong> Multiple entities/properties in one IP document must be processed one at a time with separate correspondence and action items for each.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 -->
+  <section id="q2">
+    <h2>Q2 - Is the customer registered in e-Sys?</h2>
+    <div class="staff">
+      <ul>
+        <li>Search for customer using identifiers from IP correspondence.</li>
+        <li>If not found, escalate search:
+          <ul>
+            <li>Check IP correspondence for correct entity, confirm Name and/or ACN/ABN.</li>
+            <li>Complete ABN Lookup (if relevant).</li>
+            <li>Complete ASIC search.</li>
+            <li>Complete Equifax / IQ Connect (VEDA) search.</li>
+          </ul>
+        </li>
+        <li>If still cannot find customer: send clearance correspondence using template "LTX - NOT REGISTERED IN E-SYS - CLEARANCE CORRESPONDENCE".</li>
+        <li>Save incoming and outgoing correspondence to CM10 folder VF/24/41 under current year with naming conventions:
+          <ul>
+            <li>Individual: Surname - Insolvency with no Associated Customer - Received/Sent - Date</li>
+            <li>Company: ACN/ABN (no spaces) - Insolvency with no Associated Customer - Received/Sent - Date</li>
+          </ul>
+        </li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Customer Not Registered in E-Sys (p.7); Customer Is Registered in E-Sys (p.8)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Customer identifiers from IP correspondence (name, ACN, ABN)</li>
+            <li>e-Sys search results</li>
+            <li>ABN Lookup results</li>
+            <li>ASIC search results</li>
+            <li>Equifax/VEDA search results</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>LRA staff - search escalation</li>
+            <li>e-Sys - customer lookup</li>
+            <li>ABN Lookup / ASIC / Equifax VEDA - external verification</li>
+            <li>CM10 - correspondence filing (folder VF/24/41)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Registration status:
+          <ul>
+            <li>Registered - proceed to Q3</li>
+            <li>Not registered (after 4-step search) - issue clearance correspondence, close</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Customer confirmed in e-Sys - proceed</li>
+            <li>Or clearance correspondence issued and filed to CM10</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q3 -->
+  <section id="q3">
+    <h2>Q3 - Does the customer own land or have outstanding land tax debt?</h2>
+    <div class="staff">
+      <ul>
+        <li>Review customer tree for: Investigation Node, Payroll Tax Node, IP Manager Node, Land Owner node.</li>
+        <li>If customer is a trustee: check if the trust owns properties or if there are multiple trusts. Load associated Trustee/Trust accounts into Customer Tree. Use ASIC/COI/LTO reports to identify land ownership.</li>
+        <li>Check Land Owner node for current property ownership (MC322 screen).</li>
+        <li>If property listed: note property and continue.</li>
+        <li>If no property listed: check for outstanding debt. If outstanding debt exists, POD will need to be created.</li>
+        <li>If no outstanding debt and no land ownership: use correspondence "LTX REGISTERED - WAS A LANDOWNER / HAS NO DEBT".</li>
+        <li>Check insolvency application via Content Manager (TRIM): search by customer number, view correspondence in LTX folder.</li>
+      </ul>
+      <div class="privacy"><strong>Privacy - CRITICAL:</strong> Only release information directly related to the IP request. If IP-provided information conflicts with e-Sys (names, DOB, addresses, property ownership especially around Trustees and Trusts), send only relevant correspondence. Mortgagee in Possession: only release property-specific information.</div>
+      <div class="stop">Do not issue a Proof of Debt where land is currently owned - SRO is a secured creditor.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Initial Insolvent Customer Check (p.9-11); Privacy Checks (p.13); Checking Insolvency Application via CM/TRIM (p.11)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Customer tree nodes: Investigation, Payroll Tax, IP Manager, Land Owner</li>
+            <li>Land ownership data (MC322 - Properties Owned by Customer)</li>
+            <li>Outstanding liabilities</li>
+            <li>Trust/Trustee account relationships (multiple possible)</li>
+            <li>ASIC / COI / LTO reports (for ownership verification)</li>
+            <li>TRIM/CM10 records (IP correspondence)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>LRA staff - tree review, ownership assessment, privacy checks</li>
+            <li>e-Sys - customer tree, MC322 screen</li>
+            <li>TRIM/CM10 - correspondence retrieval</li>
+            <li>ASIC / COI / LTO - ownership verification</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Ownership and debt status (four binary variables):
+          <ul>
+            <li>Currently owns land: Yes / No</li>
+            <li>Has outstanding debt: Yes / No</li>
+            <li>Bankrupt Estate: Yes / No</li>
+            <li>Customer no longer insolvent: Yes / No</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Ownership and debt status determined - feeds Q5 and Q6 correspondence selection</li>
+            <li>Trust/Trustee relationships mapped</li>
+            <li>If no longer insolvent: add cessation date, remove IP names, revert mailing protocols, check ASIC for current address</li>
+          </ul>
+        </div>
+        <div class="constraint"><strong>Trust complexity:</strong> Trust account can have multiple Trustee accounts AND a Trustee can have multiple Trust accounts. Land ownership must be confirmed for each Trustee and Trust account separately.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q4 -->
+  <section id="q4">
+    <h2>Q4 - What insolvency appointment type applies?</h2>
+    <div class="staff">
+      <ul>
+        <li>Identify IP appointment type from correspondence. Seven types:
+          <ul>
+            <li>Receiver and Manager</li>
+            <li>Controller</li>
+            <li>Administrator</li>
+            <li>Liquidator</li>
+            <li>Deed Administrator (Deed of Arrangement)</li>
+            <li>Bankruptcy</li>
+            <li>Mortgagee of Possession - NOT an insolvency. IP is not added. Only property-specific information released.</li>
+          </ul>
+        </li>
+        <li>Check (IP) Managed Customer Node in customer tree. If listed, double-click to view IP Managers window - check relationship and effective dates.</li>
+        <li>If IP matches correspondence: proceed to Update Land Taxpayer Mailing Protocols.</li>
+        <li>If IP does not match: go to Adding an IP Insolvency Type instructions.</li>
+        <li>If no (IP) Managed Customer Node: look up IP in Insolvency Practitioner Spreadsheet (One Note Templates, Insolvency TAB). Copy CID, search in e-Sys, add to tree.</li>
+        <li>If IP not in spreadsheet: search e-Sys by name/ACN/ABN. If still not found, create new IP customer (refer First Time Liability instructions, BTO if needed). Add new IP to spreadsheet.</li>
+        <li>Adding IP type is a two-part process: adds IP type to IP Customer Node AND adds IP to Insolvent Customer.</li>
+        <li>For trustee insolvencies: IP appointment must be added to both Trustee and Trust accounts. Update mailing protocols on both.</li>
+        <li>For joint ownership: update individual Land Taxpayer Mailing Protocol to IP address. For joint ownership accounts, only update if Lead customer is the insolvent.</li>
+        <li>Update mailing protocols: Land Taxpayer node, Contact tab, Protocols tab (Line 1: Entity Name with Appointment type, Line 2: C/- IP Name, Line 3: ATTN: IP appointed person).</li>
+        <li>For bankrupt estates: manually update customer name with "(Bankrupt Estate)" beside surname.</li>
+        <li>Cessation: cease date = one day prior to next appointment. Exception: Receivers and Managers may continue during additional appointments.</li>
+      </ul>
+      <div class="stop">Do not release information beyond the scope of the appointment. Mortgagee of Possession is NOT an insolvency.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Insolvency Practitioner - IP (p.14-20); Adding an IP Insolvency Type (p.18-19); No IP Managed Customer Node (p.15); Update Land Taxpayer Mailing Protocols (p.21-23); Cessation Date (p.21); Customer No Longer Insolvent (p.20)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>IP appointment type (7 types, Mortgagee of Possession excluded as non-insolvency)</li>
+            <li>Appointment effective date and cessation date</li>
+            <li>(IP) Managed Customer Node in e-Sys</li>
+            <li>IP Listing Spreadsheet (One Note, Insolvency TAB)</li>
+            <li>Trust/Trustee account relationships</li>
+            <li>Joint ownership status (Lead customer identification)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>LRA staff - IP verification, appointment setup, mailing protocol updates</li>
+            <li>e-Sys - IP Customer node, Insolvency Practitioner node, Mailing Protocols (Contact/Protocols tabs), customer name updates</li>
+            <li>IP Listing Spreadsheet - lookup and maintenance</li>
+            <li>BTO - assistance for new IP customer creation if needed</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Appointment classification and IP setup:
+          <ul>
+            <li>IP exists in system and matches - update mailing protocols</li>
+            <li>IP exists but does not match - add new appointment type (two-part process)</li>
+            <li>IP not in system - create new IP customer, add to spreadsheet</li>
+            <li>Mortgagee of Possession - do not add IP, release property-specific info only</li>
+            <li>Multiple concurrent IPs (e.g. R&M + Liquidator) - add all, mailing stays with R&M</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>IP linked to insolvent customer in e-Sys (both IP node and customer node)</li>
+            <li>Mailing protocols updated (Line 1/2/3 format)</li>
+            <li>Customer name updated for Bankrupt Estates</li>
+            <li>IP Listing Spreadsheet updated (if new IP)</li>
+            <li>Trust and Trustee accounts both updated (if applicable)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q5 -->
+  <section id="q5">
+    <h2>Q5 - Is the debt pre-appointment, post-appointment, or both?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Pre-appointment debt:</strong> Any liability outstanding prior to and including the assessment year where debt became payable as at midnight 31 December before the appointment date. Not apportioned for land tax - advised for the full year. POD always matches pre-appointment debt.</li>
+        <li><strong>Post-appointment debt:</strong> Any outstanding assessment on or after 31 December after the appointment date.</li>
+        <li>Example: IP appointed June 2023. Pre-appointment = liabilities up to and including 2023 year (payable as at 31 Dec 2022). Post-appointment = assessments from 31 Dec 2023 onwards.</li>
+        <li>Navigate to Land Taxpayer node, double-click Liabilities. Assessment Year Liability Summary opens - scroll right for Net Liability column. Note date, amount, interest, penalties.</li>
+        <li>For complex calculations: use POD Reconciliation Template (One Note Templates, Insolvency TAB).</li>
+        <li>Check suspense: Land Taxpayer node, Allocations, tick Suspense, click Apply. Allocate suspense to outstanding liabilities. If further suspense exists, contact IP for banking details.</li>
+      </ul>
+      <div class="stop">Ensure all assessments for pre and post-appointment debt have been issued before sending correspondence.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Determining Pre-Appointment and Post-Appointment Debt (p.26-28); Suspense Money (p.28-29)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>IP appointment date (from Q4)</li>
+            <li>Assessment Year Liability Summary (Net Liability, interest, penalties per year)</li>
+            <li>Assessment issuance status (all must be issued before correspondence)</li>
+            <li>Suspense/allocation records</li>
+            <li>POD Reconciliation Template (for complex calculations)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>LRA staff - debt classification, suspense review</li>
+            <li>e-Sys - Liabilities node, Allocations screen</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Debt timing classification:
+          <ul>
+            <li>Pre-appointment debt only</li>
+            <li>Post-appointment debt only</li>
+            <li>Both pre and post-appointment debt</li>
+            <li>No debt</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Debt classified by timing relative to appointment date</li>
+            <li>Amounts noted (liability, interest, penalties per year)</li>
+            <li>Suspense allocated to outstanding liabilities</li>
+            <li>All assessments confirmed as issued</li>
+            <li>Feeds Q6 correspondence template selection</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q6 -->
+  <section id="q6">
+    <h2>Q6 - What correspondence must be issued based on ownership and debt status?</h2>
+    <div class="staff">
+      <ul>
+        <li>Select the correct correspondence template from One Note Templates (Insolvency TAB). Template selection is driven by four factors: registered status, land ownership, debt status, and bankrupt estate status.</li>
+        <li><strong>12 correspondence templates:</strong>
+          <ol>
+            <li>Not Registered in E-Sys - Clearance</li>
+            <li>Registered - Information Does Not Match</li>
+            <li>Registered - Was a Landowner, No Debt</li>
+            <li>Registered - Landowner, No Debt</li>
+            <li>Registered - Landowner with Pre-appointment Debt Only (+ LTX Charge)</li>
+            <li>Registered - Landowner with Post-appointment Debt Only (+ LTX Charge)</li>
+            <li>Registered - Landowner with Pre and Post-appointment Debt (+ LTX Charge)</li>
+            <li>Registered - No Longer Owns Land, Has Debt - POD</li>
+            <li>Registered - Bankrupt Estate, Was Landowner, No Debt (+ LTX Charge)</li>
+            <li>Registered - Bankrupt Estate, Was Landowner, Has Debt - POD</li>
+            <li>Registered - Bankrupt Estate, Landowner, Has Debt - POD (+ LTX Charge)</li>
+            <li>Registered - Bankrupt Estate, Landowner, No Debt (+ LTX Charge)</li>
+          </ol>
+        </li>
+        <li><strong>Debt letter:</strong> When land is still owned and there is debt, SRO is a secured creditor. Issue debt letter and advise IP to request clearance certificate via LTX Express for further liability details.</li>
+        <li><strong>Land Tax Charge:</strong> Check Recovery Node, PropChg box. If ticked and single property = NFAR. If ticked and multiple properties = continue. If not ticked = create "LTX CHARGE REVIEW REQUIRED" action item with comments (IP type, assessment year, trust/trustee CIDs, property name/LID, what is required).</li>
+        <li><strong>Proof of Debt (POD):</strong> Issued when land already sold and debt remains, OR for Bankrupt Estates. Two templates: Bankruptcy Estate POD (Individual) and General POD (Company/Trusts). Go to One Note Templates, Insolvency tab, select template, click Word-POD, edit, save as PDF, attach to correspondence.</li>
+        <li><strong>Joint ownership POD:</strong> Issued under joint owner showing all owners. If bankrupt person also has individual account debt, complete additional POD for individual account.</li>
+      </ul>
+      <div class="stop">Do not issue POD where land is currently owned and SRO is a secured creditor. Issue a debt letter instead.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Correspondence for IP (p.32-33); Create Proof of Debt (p.30-31); LTX Charge Review (p.29-30); Introduction/Background (p.2-3)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Registration status (from Q2)</li>
+            <li>Land ownership status (from Q3): currently owns / was owner / never owned</li>
+            <li>Debt status (from Q5): pre-appointment / post-appointment / both / none</li>
+            <li>Bankrupt Estate status (from Q4)</li>
+            <li>Recovery Node - PropChg box (ticked/not ticked)</li>
+            <li>Number of properties owned (single vs multiple - affects LTX Charge path)</li>
+            <li>Joint ownership status (affects POD issuance)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>LRA staff - template selection, POD creation, LTX Charge review</li>
+            <li>e-Sys - Recovery Node check, LTX Charge action item creation</li>
+            <li>One Note Templates (Insolvency TAB) - correspondence and POD templates</li>
+            <li>TRIM/CM10 - correspondence storage</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Correspondence type (driven by 4 binary inputs = 12 templates):
+          <ul>
+            <li>Registered (Y/N)</li>
+            <li>Currently owns land (Y/N)</li>
+            <li>Has debt (Y/N) and timing (pre/post/both)</li>
+            <li>Bankrupt Estate (Y/N)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Correct correspondence template selected and issued</li>
+            <li>Debt letter issued (if landowner with debt - SRO secured creditor)</li>
+            <li>POD created and attached (if no land + debt, or Bankrupt Estate)</li>
+            <li>LTX Charge action item created (if PropChg not ticked)</li>
+            <li>Correspondence saved to TRIM/CM10</li>
+          </ul>
+        </div>
+        <div class="constraint"><strong>High-cardinality branching:</strong> 12 distinct correspondence templates driven by 4 binary decision variables. This is the most complex decision point in the procedure.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q7 -->
+  <section id="q7">
+    <h2>Q7 - Can the insolvency action item be completed?</h2>
+    <div class="staff">
+      <ul>
+        <li>Edit action item via Reference tab. Record:
+          <ul>
+            <li>Name and Type of IP</li>
+            <li>IP appointed and effective date</li>
+            <li>Landowner / Debt status</li>
+            <li>Refund (if any)</li>
+            <li>Pre-appointment / Post-appointment debt breakdown</li>
+            <li>POD issued (if applicable)</li>
+            <li>Assessments issued / reissued</li>
+            <li>LTX Charge Review created (if applicable)</li>
+            <li>Type of correspondence sent</li>
+            <li>Any other relevant information</li>
+          </ul>
+        </li>
+        <li>Enquiry tab: add date if required.</li>
+        <li>Main tab: update status to COMPLETED.</li>
+        <li>Creditors Report: if received after completing action item, review and forward to DMS Team Leader (John Cahir) if asked to vote on proposal.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Finalising Action Item (p.34-35)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>All outcomes from Q1-Q6</li>
+            <li>Correspondence sent</li>
+            <li>POD issued (if applicable)</li>
+            <li>LTX Charge action item (if created)</li>
+            <li>Creditors Report (if received post-completion)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>LRA staff - action item completion, notes entry</li>
+            <li>e-Sys - action item status update (Reference tab, Enquiry tab, Main tab)</li>
+            <li>DMS Team Leader - Creditors Report voting (if applicable)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: None - procedural closure.</div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Action item status set to COMPLETED</li>
+            <li>Reference tab populated with full case summary</li>
+            <li>Creditors Report forwarded to DMS if voting required</li>
+            <li>Case closed</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION -->
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction (Q1-Q7)</h2>
+    <div class="flow">
+      <div class="flow-title">System Touchpoints</div>
+      <div class="node n-blue">Q1: e-Sys work tray, CM10, ASIC, Equifax VEDA</div>
+      <div class="arr"></div>
+      <div class="node n-red">Q2: e-Sys search, ABN Lookup, ASIC, Equifax</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q3: e-Sys tree (MC322), TRIM/CM10, ASIC, COI, LTO</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Q4: e-Sys IP nodes, IP Spreadsheet, Mailing Protocols</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q5: e-Sys Liabilities, Allocations, POD Template</div>
+      <div class="arr"></div>
+      <div class="node n-red">Q6: One Note Templates, Recovery Node, TRIM/CM10</div>
+      <div class="arr"></div>
+      <div class="node n-gray">Q7: e-Sys action item (Reference/Enquiry/Main tabs)</div>
+
+      <div style="margin-top:24px;"></div>
+      <div class="flow-title" style="font-size:16px;">Systems Involved</div>
+      <div class="branch">
+        <div class="node n-blue" style="font-size:11px">e-Sys</div>
+        <div class="node n-blue" style="font-size:11px">CM10 / TRIM</div>
+        <div class="node n-amber" style="font-size:11px">ASIC</div>
+        <div class="node n-amber" style="font-size:11px">COI</div>
+        <div class="node n-amber" style="font-size:11px">LTO</div>
+      </div>
+      <div class="branch" style="margin-top:8px;">
+        <div class="node n-amber" style="font-size:11px">Equifax / VEDA</div>
+        <div class="node n-amber" style="font-size:11px">ABN Lookup</div>
+        <div class="node n-gray" style="font-size:11px">One Note Templates</div>
+        <div class="node n-gray" style="font-size:11px">IP Spreadsheet</div>
+        <div class="node n-gray" style="font-size:11px">LTX Express</div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> Primary systems</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> Verification systems</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> Templates and tools</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SUMMARY & REVIEW -->
+<div class="specOnly">
+
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul>
+      <li>Covers identification and processing of land tax insolvency matters for registered and unregistered customers.</li>
+      <li>Addresses review of IP correspondence and verification of insolvency status.</li>
+      <li>Determines land ownership status and existence of outstanding land tax liabilities.</li>
+      <li>Distinguishes pre-appointment and post-appointment land tax debt.</li>
+      <li>Specifies issuance of clearance correspondence, debt letters, Proof of Debt documents, and land tax charges.</li>
+      <li>Time standard: 20 minutes per work item.</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul>
+      <li><strong>Division:</strong> Land Revenue Services</li>
+      <li><strong>Branch:</strong> Land Revenue Administration</li>
+      <li><strong>Created:</strong> 4 July 2018</li>
+      <li><strong>Revised:</strong> 1 July 2024</li>
+      <li><strong>System of record:</strong> Lotus Notes Policies and Procedures Database</li>
+      <li><strong>Legislation:</strong> Land Tax Act 2005, Taxation Administration Act 1997, Privacy Act 1988</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Correspondence Template Matrix (12 templates)</h2>
+    <p style="font-size:13px;color:#475569;margin-bottom:12px;">Templates located in One Note Templates - Insolvency TAB. Selection driven by 4 binary variables.</p>
+    <ol style="font-size:13px;">
+      <li>Not Registered - Clearance</li>
+      <li>Registered - Information Does Not Match</li>
+      <li>Registered - Was Landowner, No Debt</li>
+      <li>Registered - Landowner, No Debt</li>
+      <li>Registered - Landowner, Pre-appointment Debt (+ Charge)</li>
+      <li>Registered - Landowner, Post-appointment Debt (+ Charge)</li>
+      <li>Registered - Landowner, Pre + Post Debt (+ Charge)</li>
+      <li>Registered - No Land, Has Debt - POD</li>
+      <li>Bankrupt Estate - Was Landowner, No Debt (+ Charge)</li>
+      <li>Bankrupt Estate - Was Landowner, Has Debt - POD</li>
+      <li>Bankrupt Estate - Landowner, Has Debt - POD (+ Charge)</li>
+      <li>Bankrupt Estate - Landowner, No Debt (+ Charge)</li>
+    </ol>
+  </section>
+
+  <section class="summary-section">
+    <h2>Appointment Types (7)</h2>
+    <ul style="font-size:13px;">
+      <li><strong>Receiver and Manager:</strong> Takes control of company undertaking/property for creditor enforcement</li>
+      <li><strong>Controller:</strong> Controls particular property for charge enforcement</li>
+      <li><strong>Administrator:</strong> Manages business, disposes assets, restructures for creditor returns</li>
+      <li><strong>Liquidator:</strong> Winds up company, collects and distributes assets</li>
+      <li><strong>Deed Administrator:</strong> Manages Deed of Company Arrangement (DOCA)</li>
+      <li><strong>Bankruptcy:</strong> Trustee manages bankrupt estate assets and creditor payments</li>
+      <li><strong>Mortgagee of Possession:</strong> NOT an insolvency - IP acts for mortgagee, property-specific info only</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Structural Limitations and Ambiguities</h2>
+    <div class="limitations"><strong>Correspondence classification:</strong> 12 templates with overlapping conditions driven by 4 binary variables. High decision complexity - may benefit from a decision table or rules engine.</div>
+    <div class="limitations"><strong>Appointment handling:</strong> Multiple concurrent appointment types (e.g. R&M + Liquidator) increase branching. Mailing protocol rules differ by combination.</div>
+    <div class="limitations"><strong>Debt timing:</strong> Dependency on assessment issuance dates relative to appointment date. Pre-appointment debt is not apportioned but advised for the full year.</div>
+    <div class="limitations"><strong>Trust/Trustee complexity:</strong> Many-to-many relationships between trusts and trustees create non-linear branching not easily proceduralised.</div>
+    <div class="limitations"><strong>Privacy constraints:</strong> Information release is scoped to IP appointment authority. Conflicts between IP-provided data and e-Sys records require manual judgement.</div>
+  </section>
+
+  <section class="summary-section">
+    <h2>DCPR Procedural Alignment Score</h2>
+    <div class="score"><strong>Score: 5 / 10</strong><br>Deductions: 12-template correspondence matrix missed (-2), missing architect views for 6 of 7 questions (-1), missing appointment type taxonomy (-0.5), absent trust/trustee branching (-0.5), missing search escalation and CM10 filing conventions (-0.5), missing privacy constraint framework (-0.5).</div>
+  </section>
+
+  <section class="summary-section">
+    <h2>Definitions</h2>
+    <ul style="font-size:13px;">
+      <li><strong>IP</strong> - Insolvency Practitioner</li>
+      <li><strong>POD</strong> - Proof of Debt</li>
+      <li><strong>LTX</strong> - Land Tax</li>
+      <li><strong>PTX</strong> - Payroll Tax</li>
+      <li><strong>DMS</strong> - Debt Management Services</li>
+      <li><strong>DOCA</strong> - Deed of Company Arrangement</li>
+      <li><strong>COI</strong> - Compliance Operation Intelligence warehouse</li>
+      <li><strong>LTO</strong> - Land Titles Office</li>
+      <li><strong>NFAR</strong> - No Further Action Required</li>
+      <li><strong>R&amp;M</strong> - Receiver and Manager</li>
+      <li><strong>BTO</strong> - Branch Technical Officer</li>
+      <li><strong>NOA</strong> - Notice of Acquisition</li>
+      <li><strong>PPR</strong> - Principal Place of Residence</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>BA Follow-Up Checklist</h2>
+    <ol style="font-size:13px;">
+      <li>Procedural boundary confirmation</li>
+      <li>Authoritative sequencing</li>
+      <li>Ownership structure treatment (Trust/Trustee many-to-many)</li>
+      <li>Notification or obligation enforcement mechanics</li>
+      <li>Default or threshold determination (6-month relevancy, debt timing)</li>
+      <li>Judgement locus (privacy checks, IP authority scope)</li>
+      <li>System responsibility boundaries (e-Sys vs TRIM vs external lookups)</li>
+      <li>Correspondence template decision table formalisation</li>
+      <li>Multiple concurrent IP appointment handling</li>
+      <li>Re-Structuring Practitioner urgency handling (creditor voting deadline)</li>
+    </ol>
+  </section>
+
+</div>
+```
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display = 'block';
+  document.querySelector('.systemsOnly').style.display = 'none';
+  document.querySelector('.specOnly').style.display = 'none';
+  document.querySelectorAll('.staff, .architect').forEach(function(e){ e.style.display = 'none'; });
+  btnStaff.classList.remove('active');
+  btnArch.classList.remove('active');
+  btnSys.classList.remove('active');
+  btnSpec.classList.remove('active');
+  if(view === 'staff'){
+    document.querySelectorAll('.staff').forEach(function(e){ e.style.display = 'block'; });
+    btnStaff.classList.add('active');
+  }
+  if(view === 'architect'){
+    document.querySelectorAll('.architect').forEach(function(e){ e.style.display = 'block'; });
+    btnArch.classList.add('active');
+  }
+  if(view === 'systems'){
+    document.getElementById('questionFlow').style.display = 'none';
+    document.querySelector('.systemsOnly').style.display = 'block';
+    btnSys.classList.add('active');
+  }
+  if(view === 'spec'){
+    document.getElementById('questionFlow').style.display = 'none';
+    document.querySelector('.specOnly').style.display = 'block';
+    btnSpec.classList.add('active');
+  }
+}
+showView('staff');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,454 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Build to Rent (BTR) Procedure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body { margin:0; font-family:Segoe UI, Arial, sans-serif; background:#f5f7fa; color:#1f2937; }
+    header { background:#003a8f; color:#fff; padding:28px 36px; }
+    header h1 { margin:0; font-size:32px; }
+    header p { margin-top:8px; font-weight:600; }
+    .layout { display:flex; gap:28px; padding:28px; }
+    .sidebar { width:260px; background:#fff; border-radius:10px; padding:16px; box-shadow:0 2px 6px rgba(0,0,0,.08); position:sticky; top:24px; }
+    .sidebar a { display:block; text-decoration:none; color:#003a8f; font-size:14px; margin-bottom:8px; }
+    .content { max-width:1250px; width:100%; }
+    .toggle { display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap; }
+    .toggle button { border:1px solid #ccc; border-radius:22px; padding:8px 18px; cursor:pointer; background:#fff; font-family:inherit; }
+    .toggle button.active { background:#003a8f; color:#fff; }
+    section { background:#fff; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,.08); padding:24px; margin-bottom:28px; }
+    h2 { margin-top:0; font-size:22px; }
+    ul { margin-left:22px; }
+    .staff, .architect { display:none; }
+    .arch { background:#f9fafb; border-left:5px solid #003a8f; padding:16px; margin-top:14px; font-size:14px; }
+    .block { margin-bottom:14px; }
+    .stop { background:#fef2f2; border-left:5px solid #b91c1c; padding:12px; margin-top:12px; font-weight:600; }
+    .ref { background:#eef2f7; border-left:5px solid #6366f1; padding:12px; margin-top:12px; font-size:13px; }
+    .interim { background:#fffbeb; border-left:5px solid #f59e0b; padding:12px; margin-top:12px; font-size:13px; }
+    .xref { background:#f0fdf4; border-left:5px solid #22c55e; padding:12px; margin-top:12px; font-size:13px; }
+    .constraint { background:#faf5ff; border-left:5px solid #8b5cf6; padding:12px; margin-top:12px; font-size:13px; }
+    .systemsOnly { display:none; }
+    .specOnly { display:none; }
+    .summary-section { background:#fff; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,.08); padding:24px; margin-bottom:28px; }
+    .limitations { background:#fffbeb; border-left:5px solid #f59e0b; padding:12px 16px; margin:12px 0; font-size:14px; }
+    .score { background:#f0fdf4; border-left:5px solid #22c55e; padding:12px 16px; margin:12px 0; font-size:14px; }
+    .mermaid { background:#f9fafb; border:1px solid #d1d5db; border-radius:8px; padding:18px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Build to Rent (BTR) Procedure</h1>
+  <p>Build to Rent Procedure &bull; Division: Operations &bull; Branch: Land Revenue &bull; Created: 15 June 2023</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <a href="#q1">Q1 Eligibility</a>
+    <a href="#q2">Q2 Parcel Creation</a>
+    <a href="#q3">Q3 Concession Application</a>
+    <a href="#q4">Q4 Admin and Close</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary &amp; Review</button>
+    </div>
+
+```
+<div id="questionFlow">
+
+  <!-- Q1 -->
+  <section id="q1">
+    <h2>Q1 – Is the development eligible for BTR benefits?</h2>
+    <div class="staff">
+      <ul>
+        <li>Assess the development against all nine eligibility requirements.</li>
+        <li>Confirm the building is new or substantially renovated and constructed for residential lease dwellings.</li>
+        <li>Confirm minimum 50 self-contained dwellings forming the BTR development.</li>
+        <li>Confirm collectively owned within a unified ownership structure.</li>
+        <li>Confirm managed by a single entity.</li>
+        <li>Confirm occupancy date on or after 1 January 2021 and before 1 January 2032 (evidenced by occupancy permit).</li>
+        <li>Confirm dwellings available for rent to general public under residential rental agreements (Residential Tenancies Act 1997).</li>
+        <li>Confirm minimum 3-year lease offered per dwelling (tenant may choose lesser period).</li>
+        <li>Confirm no rental restrictions except public health/safety or social affordable housing.</li>
+        <li><strong>From 2026:</strong> Confirm genuine 3-year offer made. If lesser term entered, joint signed declaration required from BTR provider and renter. Declaration must be provided to Commissioner upon request.</li>
+      </ul>
+      <div class="stop">Do not proceed if any eligibility requirement is not met.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Determining Eligibility (p.4); Eligibility Requirements (p.2); Quick Reference Guide (p.3)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Development details (address, building description, construction/renovation status)</li>
+            <li>Number of self-contained dwellings (minimum 50 threshold)</li>
+            <li>Ownership structure (collectively owned, unified)</li>
+            <li>Management entity (single entity requirement)</li>
+            <li>Occupancy date / occupancy permit (on or after 1 Jan 2021, before 1 Jan 2032)</li>
+            <li>Rental terms:
+              <ul>
+                <li>Available to general public</li>
+                <li>Residential rental agreements per Residential Tenancies Act 1997</li>
+                <li>Minimum 3-year lease offered</li>
+              </ul>
+            </li>
+            <li>Rental restrictions (none permitted except health/safety or social affordable housing)</li>
+            <li>From 2026: genuine offer evidence, joint signed declaration if lesser term</li>
+            <li>Customer-submitted information and documentation per SRO website requirements</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>SRO assessing staff — eligibility assessment</li>
+            <li>e&#8209;Sys — application recording</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Eligible (all nine criteria satisfied) OR Not Eligible (any criterion fails).</div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Eligibility confirmed → proceed to Q2</li>
+            <li>Ineligibility recorded → application not progressed, customer advised</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 -->
+  <section id="q2">
+    <h2>Q2 – Does the development consist of multiple separately rated properties?</h2>
+    <div class="staff">
+      <ul>
+        <li>Identify whether properties are separately rated.</li>
+        <li>If multiple properties: create a BTR parcel to link all properties in the development.</li>
+        <li>The parcel is for record-keeping only — it has no functional effect on concessions. The concession must still be applied to each property separately (see Q3).</li>
+        <li>Select a lead property. The lead property has no special significance (unlike valuation parcels) — each property remains individually rateable with its own municipal valuation.</li>
+        <li>Load customer and all required properties to the tree. Navigate to parcel node, right-click, select "New BTR Parcel." Enter the start date (= BTR benefits start date). Press "Associate Property" and select all properties, then click "Associate" and save.</li>
+        <li>Properties can be added to an existing parcel without breaking it — press Edit then Associate. Properties must be owned by the same customer.</li>
+        <li>Properties can be added in blocks to reduce e&#8209;Sys load when dealing with large numbers (50+).</li>
+        <li>The parcel screen shows total property count and parcel age per assessing year — this is how SRO monitors the 50-dwelling threshold.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Creating a Parcel (p.5–8)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Property rating data (separately rated or single property)</li>
+            <li>Ownership data (all properties must be same customer)</li>
+            <li>Current parcel status (existing BTR parcel or none)</li>
+            <li>BTR benefits start date</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>: e&#8209;Sys — parcel creation and property association.</div>
+        <div class="block"><strong>Decision</strong>: Single property (no parcel required) OR Multiple separately rated properties (BTR parcel required).</div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Single property → no parcel created, proceed to Q3</li>
+            <li>Multiple properties → BTR parcel created, lead property nominated, all properties associated, total dwelling count and parcel age visible per assessing year</li>
+          </ul>
+        </div>
+        <div class="constraint"><strong>Execution constraints:</strong>
+          <ul>
+            <li>Parcel is record-keeping only — no functional effect on concessions</li>
+            <li>Properties can be appended without breaking the parcel (Edit → Associate)</li>
+            <li>Properties can be added in blocks to manage e&#8209;Sys load</li>
+            <li>Same-customer ownership required for all properties in parcel</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q3 -->
+  <section id="q3">
+    <h2>Q3 – Is the BTR concession to be applied to each eligible property?</h2>
+    <div class="staff">
+      <ul>
+        <li>Apply the BTR concession to each eligible property individually via Property Exemptions screen MC580 (right-click → new exemption).</li>
+        <li>For bulk application: use the "bulk functions" button on MC580 — select all properties, maximum 100 per batch.</li>
+        <li><strong>Warning:</strong> Applying the concession to the lead property does NOT apply it to the entire parcel. Each property must be done individually or via bulk.</li>
+        <li>Where only part of the land is used for eligible BTR development: update the eligible proportion in MC570 under Property Details. Section 22 of the Land Tax Act 2005 applies to determine taxable value of each part.</li>
+        <li>Applying a partial or full BTR concession automatically exempts the property from the Absentee Owner Surcharge (AOS).</li>
+      </ul>
+      <div class="stop">Applying to the lead property does NOT cascade to the parcel. Each property must be done individually or via bulk.</div>
+      <div class="xref"><strong>Cross-procedure link:</strong> BTR concession triggers AOS exemption — see AOS Procedure (DOC/18/509543)</div>
+      <div class="ref"><strong>Procedure reference:</strong> Applying Build to Rent Concession (p.9–10)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Eligible property list (from Q1 and Q2)</li>
+            <li>Land usage proportions (full BTR use or partial)</li>
+            <li>e&#8209;Sys screens: MC580 (Property Exemptions), MC570 (Property Details — partial proportion)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>e&#8209;Sys — concession application (individual via MC580 or bulk)</li>
+            <li>Staff — partial proportion entry in MC570</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Full concession (entire land used for BTR) OR Partial concession (Section 22 apportionment applies).</div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>BTR concession applied to each property (individually or bulk, max 100 per batch)</li>
+            <li>Proportionate concession applied where partial land eligibility (set in MC570)</li>
+            <li>AOS exemption automatically applied to each concession property</li>
+          </ul>
+        </div>
+        <div class="constraint"><strong>Execution constraints:</strong>
+          <ul>
+            <li>Lead property concession does NOT cascade to parcel</li>
+            <li>Bulk application limit: 100 properties per batch</li>
+            <li>Partial proportion set in MC570 under Property Details tab</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q4 -->
+  <section id="q4">
+    <h2>Q4 – Have post-application administrative steps been completed?</h2>
+    <div class="staff">
+      <ul>
+        <li>Restrict automatic Property Clearance Certificate generation: navigate to Land Taxpayer node, tick "Prevent PIA Auto Gen", add comment noting BTR customer.</li>
+        <li>Record application and outcome in the BTR applications spreadsheet at H:\LandTax\Common\Land_tax\LTX Assessing\BTR.</li>
+        <li>Send correspondence to customer advising of outcome. Correspondence must cover BTR obligations and Special Tax implications (cessation within 15 years triggers BTR special land tax).</li>
+        <li>Templates are in the Assisted Digital One Note and the LAT Correspondence Document.</li>
+      </ul>
+      <div class="interim"><strong>Interim measures:</strong> PIA auto-gen prevention and spreadsheet recording are both interim measures pending system updates. These steps may be replaced by system-native controls in future.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Last steps and customer communication (p.11)</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Approved concession records (from Q3)</li>
+            <li>Customer communication requirements (Special Tax obligation disclosure)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>e&#8209;Sys — PIA auto-gen restriction (Land Taxpayer node)</li>
+            <li>Shared H drive — BTR spreadsheet (H:\LandTax\Common\Land_tax\LTX Assessing\BTR)</li>
+            <li>Assisted Digital / LAT Correspondence Document — correspondence templates</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: None — administrative closure.</div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>PIA auto-generation restricted with BTR comment</li>
+            <li>BTR applications spreadsheet updated</li>
+            <li>Customer correspondence issued (outcome, obligations, Special Tax implications)</li>
+          </ul>
+        </div>
+        <div class="interim"><strong>Interim flags:</strong> PIA restriction and spreadsheet recording are both interim measures. Future-state design should anticipate these being replaced by system-native controls.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION -->
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction (Q1–Q4)</h2>
+    <div class="mermaid">
+```
+
+sequenceDiagram
+actor Staff as SRO Staff
+participant eSys as e-Sys
+participant MC580 as MC580 Exemptions
+participant MC570 as MC570 Property Details
+participant Drive as Shared H Drive
+participant Corro as Assisted Digital
+Staff->>eSys: Q1 Assess eligibility
+Staff->>eSys: Q2 Create BTR parcel, associate properties
+Staff->>MC580: Q3 Apply concession (individual or bulk)
+Staff->>MC570: Q3 Set partial proportion (if applicable)
+Staff->>eSys: Q4 Tick Prevent PIA Auto Gen
+Staff->>Drive: Q4 Update BTR spreadsheet
+Staff->>Corro: Q4 Issue customer correspondence
+</div>
+</section>
+</div>
+
+```
+<!-- SUMMARY & REVIEW -->
+<div class="specOnly">
+
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul>
+      <li>Defines the process for determining eligibility for BTR land tax benefits and applying those benefits to qualifying developments.</li>
+      <li>Covers eligibility assessment against nine legislated criteria, parcel creation for multi-property developments, concession application (individual and bulk), and post-decision administration including interim reporting controls.</li>
+      <li>BTR benefits: 50% reduction on taxable land value for up to 30 years, plus AOS exemption. Total entitlement up to 60 years subject to 15 continuous years of eligibility. Cessation within 15 years triggers BTR special land tax.</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul>
+      <li><strong>Division:</strong> Operations</li>
+      <li><strong>Branch:</strong> Land Revenue</li>
+      <li><strong>Original creation date:</strong> 15 June 2023</li>
+      <li><strong>Latest revision date:</strong> Not specified — requires confirmation</li>
+      <li><strong>System of record:</strong> Lotus Notes Policies and Procedures Database</li>
+      <li><strong>Legislation:</strong> Division 2A, Land Tax Act 2005 — Sections 70A through 70O</li>
+      <li><strong>Cross-procedure:</strong> AOS Procedure (DOC/18/509543) — BTR concession triggers AOS exemption</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Eligibility Criteria Summary (9 requirements)</h2>
+    <ol>
+      <li>New or substantially renovated building on land</li>
+      <li>Constructed/renovated for residential lease dwellings</li>
+      <li>Minimum 50 self-contained dwellings</li>
+      <li>Collectively owned, unified ownership structure</li>
+      <li>Single management entity</li>
+      <li>Occupancy date: on or after 1 Jan 2021, before 1 Jan 2032</li>
+      <li>Available for rent to general public (Residential Tenancies Act 1997)</li>
+      <li>Minimum 3-year lease offered per dwelling</li>
+      <li>No rental restrictions (except health/safety or social affordable housing)</li>
+    </ol>
+    <p style="margin-top:12px; font-size:14px; color:#64748b;"><strong>From 2026:</strong> Genuine 3-year offer required. Joint signed declaration if lesser term. Commissioner may disregard uninhabitable periods.</p>
+  </section>
+
+  <section class="summary-section">
+    <h2>Legislation Reference — Division 2A, Land Tax Act 2005</h2>
+    <ul>
+      <li><strong>s70A</strong> — What is a BTR development</li>
+      <li><strong>s70B</strong> — What is an eligible BTR development</li>
+      <li><strong>s70C</strong> — When is a BTR dwelling owned collectively</li>
+      <li><strong>s70D</strong> — What is a single management entity</li>
+      <li><strong>s70E</strong> — When is a dwelling suitable for occupancy</li>
+      <li><strong>s70F</strong> — What are the required rental terms</li>
+      <li><strong>s70G</strong> — Expansion of eligible BTR development</li>
+      <li><strong>s70H</strong> — Application for BTR benefits</li>
+      <li><strong>s70I</strong> — Eligibility for BTR benefits</li>
+      <li><strong>s70J</strong> — BTR benefit: land tax concession</li>
+      <li><strong>s70K</strong> — BTR benefit: AOS exemption for eligible land</li>
+      <li><strong>s70L</strong> — Apportionment between eligible and non-eligible land</li>
+      <li><strong>s70M</strong> — BTR benefits granted in anticipation of compliance</li>
+      <li><strong>s70N</strong> — Notification requirement if land ceases to be eligible</li>
+      <li><strong>s70O</strong> — Division applies despite change in legal description</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Structural Limitations and Ambiguities</h2>
+    <div class="limitations">
+      <strong>Eligibility determination:</strong> Nine criteria are narrative-described rather than expressed as discrete testable conditions. Heavy reliance on supporting documentation assessment.
+    </div>
+    <div class="limitations">
+      <strong>Parcel management:</strong> Iterative property addition (append-only model) is flexible but difficult to express as a single decision. No defined parcel size limit.
+    </div>
+    <div class="limitations">
+      <strong>Interim workarounds:</strong> PIA auto-gen prevention and spreadsheet recording are flagged as interim measures with no timeline or trigger for replacement.
+    </div>
+    <div class="limitations">
+      <strong>Cross-procedure dependency:</strong> BTR concession automatically triggers AOS exemption. The AOS procedure (DOC/18/509543) does not reference BTR as a source of AOS exemption.
+    </div>
+    <div class="limitations">
+      <strong>2026 legislative amendments:</strong> New conditions (genuine offer, joint declaration) apply from 1 January 2026 but procedure revision date is not confirmed.
+    </div>
+  </section>
+
+  <section class="summary-section">
+    <h2>DCPR Procedural Alignment Score</h2>
+    <div class="score">
+      <strong>Score: 7 / 10</strong><br>
+      Deductions: narrative eligibility logic (-1), interim workarounds undocumented as interim (-1), cross-procedure AOS dependency not captured (-0.5), 2026 amendments not integrated (-0.5).
+    </div>
+  </section>
+
+  <section class="summary-section">
+    <h2>BA Follow-Up Confirmation Checklist</h2>
+    <ol>
+      <li>Procedural boundary confirmation</li>
+      <li>Authoritative sequencing of eligibility and concession steps</li>
+      <li>System-applied versus staff-applied controls (PIA, AOS exemption)</li>
+      <li>Treatment of partial land eligibility (Section 22 apportionment)</li>
+      <li>Interim measure transition plan (PIA restriction, spreadsheet)</li>
+      <li>Cross-procedure alignment with AOS procedure</li>
+      <li>2026 amendment integration status</li>
+      <li>Parcel size and batch-add constraints</li>
+      <li>Lead property non-cascade — confirm staff awareness</li>
+    </ol>
+  </section>
+
+  <section class="summary-section">
+    <h2>Definitions</h2>
+    <ul>
+      <li><strong>SRO</strong> — State Revenue Office</li>
+      <li><strong>LTX</strong> — Land Tax</li>
+      <li><strong>BTR</strong> — Build to Rent</li>
+      <li><strong>AOS</strong> — Absentee Owner Surcharge</li>
+      <li><strong>PIA</strong> — Property Information Auto-generation (clearance certificates)</li>
+      <li><strong>MC580</strong> — e-Sys Property Exemptions screen</li>
+      <li><strong>MC570</strong> — e-Sys Property Details screen</li>
+    </ul>
+  </section>
+
+</div>
+```
+
+  </main>
+</div>
+
+<script>
+mermaid.initialize({ startOnLoad: false });
+
+function showView(view){
+  document.getElementById('questionFlow').style.display = 'block';
+  document.querySelector('.systemsOnly').style.display = 'none';
+  document.querySelector('.specOnly').style.display = 'none';
+
+  document.querySelectorAll('.staff, .architect').forEach(e => e.style.display = 'none');
+
+  btnStaff.classList.remove('active');
+  btnArch.classList.remove('active');
+  btnSys.classList.remove('active');
+  btnSpec.classList.remove('active');
+
+  if(view === 'staff'){
+    document.querySelectorAll('.staff').forEach(e => e.style.display = 'block');
+    btnStaff.classList.add('active');
+  }
+
+  if(view === 'architect'){
+    document.querySelectorAll('.architect').forEach(e => e.style.display = 'block');
+    btnArch.classList.add('active');
+  }
+
+  if(view === 'systems'){
+    document.getElementById('questionFlow').style.display = 'none';
+    document.querySelector('.systemsOnly').style.display = 'block';
+    btnSys.classList.add('active');
+    mermaid.init();
+  }
+
+  if(view === 'spec'){
+    document.getElementById('questionFlow').style.display = 'none';
+    document.querySelector('.specOnly').style.display = 'block';
+    btnSpec.classList.add('active');
+  }
+}
+
+showView('staff');
+</script>
+
+</body>
+</html>

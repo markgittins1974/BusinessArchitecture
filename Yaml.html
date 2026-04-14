@@ -1,1 +1,339 @@
 
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LRA Procedure Map — AOS, TARB, BTR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body { margin:0; font-family:Segoe UI, Arial, sans-serif; background:#f5f7fa; color:#1f2937; }
+    header { background:#003a8f; color:#fff; padding:28px 36px; }
+    header h1 { margin:0; font-size:28px; }
+    header p { margin-top:8px; font-weight:600; font-size:14px; opacity:0.85; }
+    .container { max-width:1400px; margin:0 auto; padding:28px; }
+    .toggle { display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap; }
+    .toggle button { border:1px solid #ccc; border-radius:22px; padding:8px 18px; cursor:pointer; background:#fff; font-family:inherit; font-size:14px; }
+    .toggle button.active { background:#003a8f; color:#fff; }
+    .diagram-panel { background:#fff; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,.08); padding:24px; margin-bottom:28px; display:none; }
+    .diagram-panel.active { display:block; }
+    .diagram-panel h2 { margin-top:0; font-size:20px; margin-bottom:16px; }
+    .mermaid { background:#f9fafb; border:1px solid #d1d5db; border-radius:8px; padding:18px; }
+    .legend { display:flex; gap:24px; flex-wrap:wrap; margin-top:16px; font-size:13px; color:#64748b; }
+    .legend-item { display:flex; align-items:center; gap:6px; }
+    .legend-dot { width:14px; height:14px; border-radius:3px; }
+    .crossover-notes { margin-top:16px; font-size:14px; color:#64748b; line-height:1.7; }
+    .crossover-notes strong { color:#1f2937; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>LRA Procedure Map</h1>
+  <p>Land Revenue — AOS, TARB Referrals, Build to Rent Overview</p>
+</header>
+
+<div class="container">
+
+  <div class="toggle">
+    <button class="active" onclick="showDiagram('combined')">Combined Overview</button>
+    <button onclick="showDiagram('aos')">AOS Flow</button>
+    <button onclick="showDiagram('tarb')">TARB Flow</button>
+    <button onclick="showDiagram('btr')">BTR Flow</button>
+    <button onclick="showDiagram('crossover')">Crossover Points</button>
+  </div>
+
+  <!-- COMBINED OVERVIEW -->
+
+  <div id="combined" class="diagram-panel active">
+    <h2>Combined Procedure Overview — All Three Procedures</h2>
+    <div class="mermaid">
+flowchart TB
+  subgraph INTAKE["INTAKE"]
+    direction LR
+    T1["Portal / Phone / Correspondence / Internal"]
+  end
+
+T1 –> CLASSIFY{“Classify Matter”}
+
+CLASSIFY –>|“AOS Amendment”| AOS_START
+CLASSIFY –>|“Objection / Private Ruling”| TARB_START
+CLASSIFY –>|“Hardship Relief”| HARD[“Forward to LTX Capture”]
+CLASSIFY –>|“BTR Application”| BTR_START
+
+subgraph AOS[“AOS PROCEDURE”]
+direction TB
+AOS_START[“Q1 Trigger”]
+AOS_ELIG[“Q2 Eligibility”]
+AOS_OWNER[“Q3 Owner Type”]
+AOS_REG[“Q4 Registration Check”]
+AOS_TEST[“Q5 Absentee Test”]
+AOS_PARTIAL[“Q6 Partial AOS”]
+AOS_EXEMPT[“Q7 Exemption”]
+AOS_APPLY[“Q8 Apply or Remove”]
+AOS_CLOSE[“Q9 Close Case”]
+
+```
+AOS_START --> AOS_ELIG
+AOS_ELIG --> AOS_OWNER
+AOS_OWNER --> AOS_REG
+AOS_REG --> AOS_TEST
+AOS_TEST --> AOS_PARTIAL
+AOS_PARTIAL --> AOS_EXEMPT
+AOS_EXEMPT --> AOS_APPLY
+AOS_APPLY --> AOS_CLOSE
+```
+
+end
+
+subgraph TARB_PROC[“TARB REFERRALS”]
+direction TB
+TARB_START[“Q1 Consultation”]
+TARB_CLASS[“Q2 Classification”]
+TARB_REF[“Q4 Refer to TARB”]
+TARB_DET[“Q5 Determination”]
+TARB_CLOSE[“Q6 Close”]
+
+```
+TARB_START --> TARB_CLASS
+TARB_CLASS --> TARB_REF
+TARB_REF --> TARB_DET
+TARB_DET --> TARB_CLOSE
+```
+
+end
+
+subgraph BTR[“BTR PROCEDURE”]
+direction TB
+BTR_START[“Q1 Eligibility”]
+BTR_PARCEL[“Q2 Parcel Creation”]
+BTR_CONC[“Q3 Concession”]
+BTR_ADMIN[“Q4 Admin and Close”]
+
+```
+BTR_START --> BTR_PARCEL
+BTR_PARCEL --> BTR_CONC
+BTR_CONC --> BTR_ADMIN
+```
+
+end
+
+AOS_EXEMPT –>|“Exemption referral”| TARB_START
+TARB_DET –>|“AOS adjustment”| AOS_APPLY
+BTR_CONC –>|“Auto AOS exemption”| AOS_APPLY
+HARD –> TARB_REF
+
+AOS_CLOSE –> DONE[“Case Closed”]
+TARB_CLOSE –> DONE
+BTR_ADMIN –> DONE
+
+style INTAKE fill:#e0e7ff,stroke:#6366f1,color:#1e1b4b
+style AOS fill:#eff6ff,stroke:#003a8f,color:#1e3a5f
+style TARB_PROC fill:#fef9ee,stroke:#d97706,color:#78350f
+style BTR fill:#f0fdf4,stroke:#16a34a,color:#14532d
+style DONE fill:#f5f5f5,stroke:#6b7280,color:#374151
+</div>
+<div class="legend">
+<div class="legend-item"><div class="legend-dot" style="background:#6366f1"></div> Intake / Classification</div>
+<div class="legend-item"><div class="legend-dot" style="background:#003a8f"></div> AOS Procedure (9 steps)</div>
+<div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> TARB Referrals (6 steps)</div>
+<div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div> BTR Procedure (4 steps)</div>
+</div>
+
+  </div>
+
+  <!-- AOS FLOW -->
+
+  <div id="aos" class="diagram-panel">
+    <h2>AOS Procedure — Q1 to Q9</h2>
+    <div class="mermaid">
+flowchart TD
+  Q1["Q1 Trigger\nPortal / Phone / Written / Internal"]
+  Q2{"Q2 Eligibility\nInvestigation or TARB block?"}
+  Q3["Q3 Owner Type\nIndividual / Corporation / Trust"]
+  Q4["Q4 Existing Registration\nCheck current and historical"]
+  Q5{"Q5 Absentee Test\n4-step or entity test"}
+  Q6["Q6 Partial AOS\nProportional surcharge"]
+  Q7{"Q7 Exemption\nReferred to TARB?"}
+  Q8["Q8 Apply or Remove\nRegistration, recalculate, suspense"]
+  Q9["Q9 Close Case\nCorrespondence, comments, complete"]
+
+Q1 –> Q2
+Q2 –>|“Proceed”| Q3
+Q2 –>|“Halt”| BLOCK[“Reassign to Investigator”]
+Q3 –> Q4
+Q4 –> Q5
+Q5 –>|“Absentee = Yes”| Q6
+Q5 –>|“Absentee = No”| Q8
+Q6 –> Q7
+Q7 –>|“No exemption”| Q8
+Q7 –>|“Exemption requested”| TARB[“Refer to TARB”]
+TARB –>|“Determination returned”| Q8
+BTR_LINK[“BTR concession applied”] -.->|“Auto AOS exemption”| Q8
+Q8 –> Q9
+Q9 –> DONE[“Case Closed”]
+
+style Q2 fill:#fef2f2,stroke:#b91c1c
+style Q5 fill:#fef2f2,stroke:#b91c1c
+style Q7 fill:#fef2f2,stroke:#b91c1c
+style TARB fill:#fef9ee,stroke:#d97706
+style BTR_LINK fill:#f0fdf4,stroke:#16a34a
+style DONE fill:#f5f5f5,stroke:#6b7280
+</div>
+<div class="legend">
+<div class="legend-item"><div class="legend-dot" style="background:#b91c1c"></div> Decision point</div>
+<div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> TARB handoff</div>
+<div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div> BTR dependency</div>
+</div>
+
+  </div>
+
+  <!-- TARB FLOW -->
+
+  <div id="tarb" class="diagram-panel">
+    <h2>TARB Referrals — Q1 to Q6</h2>
+    <div class="mermaid">
+flowchart TD
+  Q1{"Q1 Consultation\nBTO / Senior CSO / TARBLO approves?"}
+  Q2{"Q2 Classification\nAmendment / Objection / Private Ruling?"}
+  Q3{"Q3 Hardship Relief\nCustomer intent evident?"}
+  Q4["Q4 Refer to TARB\nUpdate A/I, set status, create OC/PR"]
+  Q5["Q5 Process Determination\nAmend, refund, reissue"]
+  Q6["Q6 Close\nComplete OC module, workflow items"]
+
+Q1 –>|“Approved”| Q2
+Q1 –>|“Not approved”| RETAIN[“Retained by LRA”]
+Q2 –>|“Amendment”| LRS[“LRS processes”]
+Q2 –>|“Objection”| Q4
+Q2 –>|“Private Ruling”| Q4
+Q2 –>|“Valuation”| LGA[“LGA Team”]
+Q3 –>|“Confirmed”| CAPTURE[“LTX Capture”]
+Q3 –>|“Not hardship”| Q2
+CAPTURE –> Q4
+Q4 –> WAIT[“TARB determines”]
+WAIT –> Q5
+Q5 –> Q6
+Q5 -.->|“AOS adjustment needed”| AOS_LINK[“AOS Q8 Apply or Remove”]
+Q6 –> DONE[“Case Closed”]
+Q6 –>|“Too complex”| FLIP[“Flip back to TARB”]
+
+style Q1 fill:#fef2f2,stroke:#b91c1c
+style Q2 fill:#fef2f2,stroke:#b91c1c
+style Q3 fill:#fef2f2,stroke:#b91c1c
+style WAIT fill:#fef9ee,stroke:#d97706
+style AOS_LINK fill:#eff6ff,stroke:#003a8f
+style DONE fill:#f5f5f5,stroke:#6b7280
+</div>
+<div class="legend">
+<div class="legend-item"><div class="legend-dot" style="background:#b91c1c"></div> Decision point</div>
+<div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> TARB processing</div>
+<div class="legend-item"><div class="legend-dot" style="background:#003a8f"></div> AOS dependency</div>
+</div>
+
+  </div>
+
+  <!-- BTR FLOW -->
+
+  <div id="btr" class="diagram-panel">
+    <h2>Build to Rent — Q1 to Q4</h2>
+    <div class="mermaid">
+flowchart TD
+  Q1{"Q1 Eligibility\n9 criteria assessment"}
+  Q2{"Q2 Parcel\nMultiple properties?"}
+  Q3["Q3 Concession\nApply via MC580"]
+  Q4["Q4 Admin and Close\nPIA, spreadsheet, correspondence"]
+
+Q1 –>|“Eligible”| Q2
+Q1 –>|“Not eligible”| REJECT[“Application not progressed”]
+Q2 –>|“Single property”| Q3
+Q2 –>|“Multiple properties”| PARCEL[“Create BTR parcel”]
+PARCEL –> Q3
+Q3 –>|“Full concession”| Q4
+Q3 –>|“Partial concession”| PARTIAL[“Set proportion in MC570”]
+PARTIAL –> Q4
+Q3 -.->|“Auto AOS exemption”| AOS_LINK[“AOS exemption applied”]
+Q4 –> DONE[“Case Closed”]
+
+subgraph INTERIM[“INTERIM MEASURES”]
+PIA[“Prevent PIA Auto Gen”]
+SHEET[“Update BTR spreadsheet”]
+end
+
+Q4 –> PIA
+Q4 –> SHEET
+
+style Q1 fill:#fef2f2,stroke:#b91c1c
+style Q2 fill:#fef2f2,stroke:#b91c1c
+style AOS_LINK fill:#eff6ff,stroke:#003a8f
+style INTERIM fill:#fffbeb,stroke:#f59e0b
+style DONE fill:#f5f5f5,stroke:#6b7280
+</div>
+<div class="legend">
+<div class="legend-item"><div class="legend-dot" style="background:#b91c1c"></div> Decision point</div>
+<div class="legend-item"><div class="legend-dot" style="background:#003a8f"></div> AOS dependency</div>
+<div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> Interim workaround</div>
+</div>
+
+  </div>
+
+  <!-- CROSSOVER POINTS -->
+
+  <div id="crossover" class="diagram-panel">
+    <h2>Crossover Points — All Three Procedures</h2>
+    <div class="mermaid">
+flowchart LR
+  subgraph AOS["AOS PROCEDURE"]
+    A7["Q7 Exemption"]
+    A8["Q8 Apply or Remove"]
+  end
+
+subgraph TARB[“TARB REFERRALS”]
+T1[“Q1 Consultation”]
+T5[“Q5 Determination”]
+T2[“Q2 Classification”]
+end
+
+subgraph BTR[“BTR PROCEDURE”]
+B3[“Q3 Concession”]
+B1[“Q1 Eligibility”]
+end
+
+A7 –>|“1. AOS exemption\nrefers to TARB”| T1
+T5 –>|“2. TARB determination\nadjusts AOS”| A8
+T2 –>|“3. Reclassified as\nAOS amendment”| A8
+B3 –>|“4. BTR concession\ntriggers AOS exemption”| A8
+B1 -.->|“5. BTR eligibility may\nrequire TARB ruling”| T1
+
+style AOS fill:#eff6ff,stroke:#003a8f
+style TARB fill:#fef9ee,stroke:#d97706
+style BTR fill:#f0fdf4,stroke:#16a34a
+</div>
+<div class="crossover-notes">
+<strong>Crossover 1:</strong> AOS Q7 exemption requests are referred into the TARB procedure for determination.<br>
+<strong>Crossover 2:</strong> TARB determinations that affect AOS registrations flow back to AOS Q8 for system updates.<br>
+<strong>Crossover 3:</strong> Matters initially classified as TARB items may be reclassified as simple AOS amendments handled by LRS.<br>
+<strong>Crossover 4:</strong> BTR concession (Q3) automatically triggers AOS exemption on eligible land — direct system dependency.<br>
+<strong>Crossover 5:</strong> BTR eligibility edge cases (ownership structure, rental terms interpretation) may require a TARB private ruling. This link is implied, not proceduralised.
+</div>
+
+  </div>
+
+</div>
+
+<script>
+mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { fontSize: '14px' } });
+
+function showDiagram(id) {
+  document.querySelectorAll('.diagram-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.toggle button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  var panel = document.getElementById(id);
+  var unrendered = panel.querySelectorAll('.mermaid:not([data-processed])');
+  if (unrendered.length) mermaid.init(undefined, unrendered);
+}
+</script>
+
+</body>
+</html>

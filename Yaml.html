@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Land Tax Prototype – AOS / TARB</title>
+
+  <!-- Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 20px; background: #f5f5f5; }
+    h1 { margin-top: 0; }
+
+    .container { display: flex; gap: 20px; }
+    .left { flex: 1.2; display: flex; flex-direction: column; gap: 20px; }
+    .right { flex: 0.8; display: flex; flex-direction: column; gap: 20px; }
+
+    .card {
+      background: #fff;
+      padding: 16px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: #e1ecff;
+      color: #0747a6;
+      margin-right: 4px;
+    }
+
+    .label { font-weight: 600; margin-top: 12px; }
+    .field { margin: 4px 0 8px; }
+
+    input, select, button {
+      font-size: 14px;
+      padding: 6px 8px;
+    }
+
+    input, select {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    button {
+      cursor: pointer;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      background: #eee;
+    }
+
+    button.primary {
+      background: #0052cc;
+      color: #fff;
+      border-color: #0041a3;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .row { display: flex; gap: 8px; margin-top: 12px; }
+    .row > * { flex: 1; }
+
+    .log-panel {
+      font-size: 13px;
+      background: #0b1020;
+      color: #e0e6ff;
+      padding: 10px;
+      border-radius: 6px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .log-title { font-weight: 600; margin-bottom: 4px; }
+
+    .diagram-card { max-height: 700px; overflow-y: auto; }
+
+    .status { margin-top: 8px; font-size: 13px; color: #555; }
+  </style>
+</head>
+
+<body>
+  <h1>Land Tax Prototype <span class="pill">AOS / TARB</span></h1>
+
+  <div class="container">
+
+    <!-- LEFT SIDE -->
+    <div class="left">
+
+      <!-- Workflow Panel -->
+      <div class="card">
+        <div id="content"></div>
+      </div>
+
+      <!-- Agent Log -->
+      <div class="card log-panel">
+        <div class="log-title">AI Agent Activity</div>
+        <div id="agentLogBody"></div>
+      </div>
+
+      <!-- Mock e‑Sys API Console -->
+      <div class="card log-panel">
+        <div class="log-title">Mock e‑Sys API Console</div>
+        <div id="apiLogBody"></div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="right">
+      <div class="card diagram-card">
+        <h3>Process Diagram</h3>
+        <div id="mermaidContainer" class="mermaid"></div>
+      </div>
+    </div>
+
+  </div>
+  <script>
+  mermaid.initialize({ startOnLoad: false });
+
+  // ------------------------------------------------------------
+  //  MODEL (JS equivalent of YAML)
+  // ------------------------------------------------------------
+  const model = {
+    version: "1.0",
+    procedures: {
+      classification: {
+        start: "CLASS_Q1",
+        steps: {
+          CLASS_Q1: {
+            title: "Classification",
+            description: "Determine whether the matter proceeds via AOS or TARB.",
+            dataInputs: ["propertyId", "ownerId"],
+            agentActions: ["fetchOwnerSummary"],
+            decisions: { AOS: "AOS_Q1", TARB: "TARB_Q1" },
+            type: "system"
+          }
+        }
+      },
+
+      AOS: {
+        start: "AOS_Q1",
+        steps: {
+          AOS_Q1: {
+            title: "Intake",
+            description: "Initial AOS intake and trigger assessment.",
+            dataInputs: ["propertyId", "ownerId"],
+            agentActions: ["fetchOwnerType"],
+            next: "AOS_Q2",
+            type: "system"
+          },
+          AOS_Q2: {
+            title: "Eligibility",
+            description: "Assess eligibility for AOS.",
+            dataInputs: ["ownerType"],
+            agentActions: ["checkEligibility"],
+            decisions: { eligible: "AOS_Q3", notEligible: "AOS_Close" },
+            type: "system"
+          },
+          AOS_Q3: {
+            title: "Owner Type",
+            description: "Identify owner type.",
+            dataInputs: ["ownerType"],
+            decisions: { Individual: "AOS_Q4", Company: "AOS_Q6", Trust: "AOS_Q6" },
+            type: "system"
+          },
+          AOS_Q4: {
+            title: "Existing Registration",
+            description: "Check if AOS already applies.",
+            dataInputs: ["ownerId"],
+            agentActions: ["checkExistingAOS"],
+            next: "AOS_Q5",
+            type: "system"
+          },
+          AOS_Q5: {
+            title: "Absentee Assessment",
+            description: "Assess absentee status.",
+            dataInputs: ["residencyStatus"],
+            decisions: { absentee: "AOS_Q7", notAbsentee: "AOS_Q6" },
+            type: "human"
+          },
+          AOS_Q6: {
+            title: "Partial AOS",
+            description: "Determine if partial AOS applies.",
+            dataInputs: ["ownerType"],
+            decisions: { exemption: "TARB_Q1", noExemption: "AOS_Q8" },
+            type: "human"
+          },
+          AOS_Q7: {
+            title: "Exemption Review",
+            description: "Check if an exemption applies.",
+            dataInputs: ["exemptionType"],
+            decisions: { exemption: "TARB_Q1", noExemption: "AOS_Q8" },
+            type: "human"
+          },
+          AOS_Q8: {
+            title: "Apply AOS",
+            description: "Apply or remove AOS.",
+            dataInputs: ["ownerId", "propertyId"],
+            agentActions: ["applyAOS"],
+            next: "AOS_Q9",
+            type: "system"
+          },
+          AOS_Q9: {
+            title: "Finalise",
+            description: "Close AOS case.",
+            next: "END",
+            type: "system"
+          },
+          AOS_Close: {
+            title: "Ineligible",
+            description: "Case closed – not eligible.",
+            next: "END",
+            type: "system"
+          }
+        }
+      },
+
+      TARB: {
+        start: "TARB_Q1",
+        steps: {
+          TARB_Q1: {
+            title: "TARB Intake",
+            description: "Create TARB referral.",
+            dataInputs: ["propertyId", "ownerId"],
+            agentActions: ["createTARBReferral"],
+            next: "TARB_Q2",
+            type: "system"
+          },
+          TARB_Q2: {
+            title: "TARB Classification",
+            description: "Classify matter for TARB.",
+            dataInputs: ["referralId"],
+            decisions: { adjustmentRequired: "TARB_Q4", noAdjustment: "AOS_Q9" },
+            type: "human"
+          },
+          TARB_Q4: {
+            title: "Submit Referral",
+            description: "Submit referral into e‑Sys.",
+            dataInputs: ["referralId"],
+            agentActions: ["submitTARBReferral"],
+            next: "TARB_Q5",
+            type: "system"
+          },
+          TARB_Q5: {
+            title: "Determination",
+            description: "TARB determination.",
+            dataInputs: ["referralId"],
+            agentActions: ["getTARBDeterimination"],
+            decisions: { adjustmentRequired: "TARB_Q6", noAdjustment: "AOS_Q9" },
+            type: "system"
+          },
+          TARB_Q6: {
+            title: "Apply Adjustment",
+            description: "Apply TARB adjustment and close.",
+            dataInputs: ["referralId"],
+            agentActions: ["applyTARBAdjustment"],
+            next: "AOS_Q9",
+            type: "system"
+          }
+        }
+      }
+    }
+  };
+
+  // ------------------------------------------------------------
+  //  STATE
+  // ------------------------------------------------------------
+  let currentProcedure = "classification";
+  let currentStepId = model.procedures.classification.start;
+
+  const state = {
+    propertyId: "PROP-123",
+    ownerId: "OWN-456",
+    ownerType: "Company",
+    residencyStatus: "Resident",
+    exemptionType: "None",
+    referralId: "TARB-001"
+  };
+
+  const contentEl = document.getElementById("content");
+  const agentLogBody = document.getElementById("agentLogBody");
+  const apiLogBody = document.getElementById("apiLogBody");
+  const mermaidContainer = document.getElementById("mermaidContainer");
+
+  // ------------------------------------------------------------
+  //  LOGGING
+  // ------------------------------------------------------------
+  function logAgent(msg) {
+    const line = document.createElement("div");
+    line.textContent = msg;
+    agentLogBody.appendChild(line);
+    agentLogBody.scrollTop = agentLogBody.scrollHeight;
+  }
+
+  function logApi(endpoint, payload, response) {
+    const block = document.createElement("div");
+    block.innerHTML = `
+      <div>➡️ <strong>${endpoint}</strong></div>
+      <div style="margin-left:10px;">Payload: ${JSON.stringify(payload)}</div>
+      <div style="margin-left:10px;">Response: ${JSON.stringify(response)}</div>
+      <br/>
+    `;
+    apiLogBody.appendChild(block);
+    apiLogBody.scrollTop = apiLogBody.scrollHeight;
+  }
+
+  // ------------------------------------------------------------
+  //  MOCK e‑Sys API
+  // ------------------------------------------------------------
+  function mockEsysApi(action, payload) {
+    let endpoint = "";
+    let response = {};
+
+    switch (action) {
+      case "fetchOwnerSummary":
+        endpoint = `GET /api/owner/${payload.ownerId}`;
+        response = { ownerType: state.ownerType };
+        break;
+
+      case "fetchOwnerType":
+        endpoint = `GET /api/owner/${payload.ownerId}/type`;
+        response = { ownerType: state.ownerType };
+        break;
+
+      case "checkEligibility":
+        endpoint = `GET /api/aos/eligibility/${payload.ownerType}`;
+        response = { eligibility: "eligible" };
+        break;
+
+      case "checkExistingAOS":
+        endpoint = `GET /api/aos/existing/${payload.ownerId}`;
+        response = { existingAOS: false };
+        break;
+
+      case "applyAOS":
+        endpoint = `POST /api/aos/apply`;
+        response = { aosApplied: true };
+        break;
+
+      case "createTARBReferral":
+        endpoint = `POST /api/tarb/referral`;
+        response = { referralId: state.referralId };
+        break;
+
+      case "submitTARBReferral":
+        endpoint = `POST /api/tarb/submit`;
+        response = { submitted: true };
+        break;
+
+      case "getTARBDeterimination":
+        endpoint = `GET /api/tarb/determination/${payload.referralId}`;
+        response = { determination: "adjustmentRequired" };
+        break;
+
+      case "applyTARBAdjustment":
+        endpoint = `POST /api/tarb/adjust`;
+        response = { adjustmentApplied: true };
+        break;
+    }
+
+    logApi(endpoint, payload, response);
+    return response;
+  }
+
+  // ------------------------------------------------------------
+  //  AI AGENT
+  // ------------------------------------------------------------
+  function runAgent(actions, callback) {
+    logAgent(`AI agent triggered: ${actions.join(", ")}`);
+    const statusEl = document.getElementById("status");
+    statusEl.textContent = "AI agent running…";
+
+    const btns = document.querySelectorAll("button");
+    btns.forEach(b => b.disabled = true);
+
+    setTimeout(() => {
+      const result = {};
+
+      actions.forEach(action => {
+        const payload = { ...state };
+        const apiResponse = mockEsysApi(action, payload);
+        Object.assign(result, apiResponse);
+        logAgent(`→ ${action} completed`);
+      });
+
+      Object.assign(state, result);
+      statusEl.textContent = "AI agent completed.";
+      btns.forEach(b => b.disabled = false);
+      callback(result);
+    }, 2000);
+  }
+
+  // ------------------------------------------------------------
+  //  MERMAID DIAGRAM
+  // ------------------------------------------------------------
+  function renderMermaid() {
+    const edges = [];
+
+    function addEdges(procName) {
+      const proc = model.procedures[procName];
+      for (const [id, step] of Object.entries(proc.steps)) {
+        if (step.next) edges.push(`${id} --> ${step.next}`);
+        if (step.decisions) {
+          for (const [label, target] of Object.entries(step.decisions)) {
+            edges.push(`${id} -->|${label}| ${target}`);
+          }
+        }
+      }
+    }
+
+    addEdges("classification");
+    addEdges("AOS");
+    addEdges("TARB");
+
+    const diagram = `
+      flowchart TD
+      ${edges.join("\n")}
+    `;
+
+    mermaidContainer.textContent = diagram;
+    mermaid.init(undefined, mermaidContainer);
+  }
+
+  // ------------------------------------------------------------
+  //  RENDER STEP
+  // ------------------------------------------------------------
+  function renderStep() {
+    renderMermaid();
+
+    const proc = model.procedures[currentProcedure];
+    const step = proc.steps[currentStepId];
+
+    let html = `
+      <div>
+        <span class="pill">${currentProcedure.toUpperCase()}</span>
+        <span class="pill">${currentStepId}</span>
+      </div>
+      <h2>${step.title}</h2>
+      <p>${step.description}</p>
+      <div class="status" id="status">${step.type === "human" ? "Human decision" : "System/Agent task"}</div>
+    `;
+
+    if (step.dataInputs) {
+      html += `<div class="label">Inputs</div>`;
+      step.dataInputs.forEach(key => {
+        const val = state[key] ?? "";
+        html += `
+          <div class="field">
+            <label>${key}</label>
+            <input data-key="${key}" value="${val}" />
+          </div>`;
+      });
+    }
+
+    html += `<div class="row">`;
+
+    if (step.agentActions) {
+      html += `<button class="primary" id="runAgentBtn">Run AI Agent</button>`;
+    }
+
+    if (step.decisions) {
+      for (const label of Object.keys(step.decisions)) {
+        html += `<button data-decision="${label}">${label}</button>`;
+      }
+    } else if (step.next && step.next !== "END") {
+      html += `<button id="nextBtn">Next</button>`;
+    } else if (step.next === "END") {
+      html += `<button id="restartBtn">Restart</button>`;
+    }
+
+    html += `</div>`;
+    contentEl.innerHTML = html;
+
+    // Bind inputs
+    document.querySelectorAll("input").forEach(el => {
+      el.addEventListener("change", () => {
+        state[el.dataset.key] = el.value;
+      });
+    });
+
+    // Bind agent
+    const runAgentBtn = document.getElementById("runAgentBtn");
+    if (runAgentBtn) {
+      runAgentBtn.addEventListener("click", () => {
+        runAgent(step.agentActions, () => {});
+      });
+    }
+
+    // Bind decisions
+    document.querySelectorAll("button[data-decision]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const choice = btn.dataset.decision;
+        const target = step.decisions[choice];
+        navigateTo(target);
+      });
+    });
+
+    // Bind next
+    const nextBtn = document.getElementById("nextBtn");
+    if (nextBtn) nextBtn.addEventListener("click", () => navigateTo(step.next));
+
+    // Bind restart
+    const restartBtn = document.getElementById("restartBtn");
+    if (restartBtn) restartBtn.addEventListener("click", () => {
+      currentProcedure = "classification";
+      currentStepId = model.procedures.classification.start;
+      logAgent("Flow restarted.");
+      renderStep();
+    });
+  }
+
+  function navigateTo(target) {
+    if (target.startsWith("AOS_")) currentProcedure = "AOS";
+    if (target.startsWith("TARB_")) currentProcedure = "TARB";
+    currentStepId = target;
+    renderStep();
+  }
+
+  // ------------------------------------------------------------
+  //  INIT
+  // ------------------------------------------------------------
+  renderStep();
+</script>
+</body>
+</html>
+

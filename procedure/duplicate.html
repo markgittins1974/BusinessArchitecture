@@ -1,0 +1,615 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Duplicate and Merged Customers Procedure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    ul,ol{margin-left:22px}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .constraint{background:#faf5ff;border-left:5px solid #8b5cf6;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .limitations{background:#fffbeb;border-left:5px solid #f59e0b;padding:12px 16px;margin:12px 0;font-size:14px}
+    .score{background:#f0fdf4;border-left:5px solid #22c55e;padding:12px 16px;margin:12px 0;font-size:14px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;-webkit-tap-highlight-color:transparent}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .detail-panel .page-ref{font-size:11px;color:#3b82f6;font-weight:600;margin-top:8px}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .branch{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;justify-content:center}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#475569}
+    .legend-dot{width:12px;height:12px;border-radius:3px}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Duplicate and Merged Customers Procedure</h1>
+  <p>Division: Land Revenue Services &bull; Branch: Land Revenue Administration &bull; Revised: 15 April 2024</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <a href="#q1">Q1 Eligibility</a>
+    <a href="#q2">Q2 Duplicate or Merged</a>
+    <a href="#q3">Q3 Ownership</a>
+    <a href="#q4">Q4 Valid CID</a>
+    <a href="#q5">Q5 Transfers</a>
+    <a href="#q6">Q6 Financial Resolution</a>
+    <a href="#q7">Q7 Assessments and Close</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+```
+<div id="questionFlow">
+
+  <!-- Q1 -->
+  <section id="q1">
+    <h2>Q1 - Is the action item eligible to be worked?</h2>
+    <div class="staff">
+      <ul>
+        <li>Allocate the action item to your name immediately.</li>
+        <li>Check if customer is under investigation (red exclamation mark, Under Investigation NII with IC number).</li>
+        <li>If active investigation: assign to Investigator (determine via CM9) and contact them.</li>
+        <li>If amendment previously denied by investigation or TARB on same property: do not process. Advise customer.</li>
+        <li>Amendments may proceed if they do not affect investigated years AND were submitted after investigation completion.</li>
+        <li>Review phone call history and CM9 for prior investigations, TARB decisions.</li>
+        <li>Check related customers (JOs, Trusts) for investigations.</li>
+        <li>This procedure assumes LTX is the only revenue line. If other revenue lines exist, see Grade 4 first.</li>
+      </ul>
+      <div class="stop">Do not proceed if active investigation exists or amendment was previously denied.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Before you begin</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Before You Begin</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Allocation</h4>
+        <p>Always allocate the action item to your name immediately. This ensures items are recorded as completed by you and avoids two people working the same item simultaneously.</p>
+        <h4>Investigation Check</h4>
+        <p>A customer under investigation is identified by the red exclamation mark next to the customer name and number. There will also be an Under Investigation Non-Issue on the account with the IC-prefixed investigation number in the contents. Assign the Action Item to the Investigator (view investigation file in CM9) and contact them.</p>
+        <h4>Prior Denials</h4>
+        <p>If a customer requests an amendment on a property already denied by investigation or TARB decision, do not process. Reply advising of the previous decision. Requests may be actioned if they will not affect investigated years and were submitted after investigation completion.</p>
+        <h4>History Review</h4>
+        <p>Review phone call history and CM9 history as this may provide further information relevant to the request and confirm previous requests. May highlight previous Investigations or TARB decisions impacting the work item.</p>
+        <h4>Revenue Line Constraint</h4>
+        <p>This procedure assumes land tax is the only revenue line linked to the customer. Where a customer has other revenue lines, see a Grade 4 for further guidance before proceeding.</p>
+        <div class="page-ref">Source: Before you begin</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Action item, investigation status (NII, CM9), phone/CM9 history, related customer status, revenue lines</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff, e-Sys, CM9, Grade 4 (multi-revenue)</div>
+        <div class="block"><strong>Decision</strong>: No investigation and LTX only = proceed. Active investigation = reassign. Prior denial = do not process. Other revenue lines = consult Grade 4.</div>
+        <div class="block"><strong>Output</strong>: Action item progressed or reassigned.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 -->
+  <section id="q2">
+    <h2>Q2 - Does the issue represent a duplicate or merged customer?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Duplicate:</strong> One customer, multiple CIDs. Requires consolidation.</li>
+        <li><strong>Merged:</strong> Multiple customers incorrectly under one CID. Requires separation.</li>
+        <li><strong>Triggers:</strong> Customer-initiated (phone, MLT, writing - property missing or not owned) or internally detected (staff/automated processes).</li>
+        <li><strong>Seven common causes:</strong> Same-name family members, misspellings/anglicised names, surname changes (marriage/divorce), old CIDs missing DOB, incorrect NOA information, incorrect/changed ACN or business names, processing errors.</li>
+        <li>Action item types: land ownership, customer data maintenance, or decommission customer.</li>
+      </ul>
+      <div class="constraint"><strong>System constraint:</strong> AD/MLT cannot process duplicate or merged action items. Must be completed manually through e-Sys.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Duplicate or merged customer overview; Identifying potential duplicate or merged customers</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Classification</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Duplicate Customers</h4>
+        <p>Duplication occurs when the same customer is created one or more times. One customer's land holdings has multiple CIDs and requires consolidation.</p>
+        <h4>Merged Customers</h4>
+        <p>Merged customers occur when the land holdings of two customers with similar or same names are consolidated incorrectly under one owner. One CID contains land holdings that relate to multiple customers and requires separation.</p>
+        <h4>Customer-Identified Triggers</h4>
+        <p>Customer contacts via phone, My Land Tax or in writing advising: a property is not listed in their assessment (possible duplication), or a property listed is not owned by them (possible merge).</p>
+        <h4>Internally-Identified Triggers</h4>
+        <p>An amendment is identified while processing related tasks within e-Sys by SRO staff or internal automated processes. For users without the decommission profile, a Decommission Customer work item is created.</p>
+        <h4>Common Causes</h4>
+        <ul>
+          <li>Two people with the same name (family - father/son, cousins)</li>
+          <li>Misspellings, similar spellings or anglicised version of names</li>
+          <li>Changing of surnames due to marriage/divorce</li>
+          <li>Old CID number does not include a date of birth</li>
+          <li>Incorrect information on a NOA</li>
+          <li>Incorrect ACN listed on a NOA or changes to business names</li>
+          <li>Processing errors</li>
+        </ul>
+        <h4>Penalty Warning</h4>
+        <p>Amendments could result in a LTX Penalty (Notification Dflt) work item being created. Refer to the Penalty Tax in e-Sys for Land Tax Procedure.</p>
+        <div class="page-ref">Source: Duplicate or merged customer overview; Identifying potential duplicate or merged customers</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Customer records, CIDs, land holdings, trigger source</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff via e-Sys (manual only)</div>
+        <div class="block"><strong>Decision</strong>: Duplicate (consolidation path) or Merged (separation path)</div>
+        <div class="block"><strong>Output</strong>: Classification determines Q4 path</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q3 -->
+  <section id="q3">
+    <h2>Q3 - Can land ownership be confirmed for the affected records?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Cross-reference:</strong> DOB, name spelling, land purchase dates vs DOB, postal/residential address (current and historical), date of death, directors/addresses for ACN numbers.</li>
+        <li><strong>Primary verification:</strong> COI (Customer/Property summary and search), DAS records, Landata (NOA, TOL, Title History).</li>
+        <li><strong>Additional sources:</strong> BI/COI, Council records (e-Sys), ASIC (company/director), White/Yellow Pages, Victorian Electoral Role (VEC), VicMaps.</li>
+        <li>Refer to DOC/20/32910 Land Ownership procedure for detailed methods.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Confirm who owns land holdings; Confirmation methods; References</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Ownership Verification</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Cross-Reference Data Points</h4>
+        <ul>
+          <li>Date of birth</li>
+          <li>Name spelling (including variations, anglicised versions)</li>
+          <li>Land purchase dates vs date of birth (sanity check - was buyer alive/old enough?)</li>
+          <li>Postal/residential address - both current and historical</li>
+          <li>Date of death (refer to Deceased Estates procedure)</li>
+          <li>Directors and addresses associated with ACN numbers</li>
+        </ul>
+        <h4>Primary Verification Systems</h4>
+        <ul>
+          <li>COI - Customer summary and Customer search</li>
+          <li>COI - Property summary and Property search</li>
+          <li>DAS records</li>
+          <li>Landata - View NOA, TOL or Title History</li>
+        </ul>
+        <h4>Additional Information Sources</h4>
+        <ul>
+          <li>Business Intelligence / Compliance Operation Intelligence (BI)</li>
+          <li>Council records within e-Sys</li>
+          <li>ASIC records within e-Sys (company and director searches)</li>
+          <li>White Pages / Yellow Pages</li>
+          <li>NOA document (Landata website and/or e-Sys attachments)</li>
+          <li>TOL document (Landata website)</li>
+          <li>Victorian Electoral Role (VEC)</li>
+          <li>VicMaps</li>
+        </ul>
+        <div class="page-ref">Source: Confirm who owns land holdings; Confirmation methods; References</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: DOB, name, addresses, purchase dates, DOD, ACN/directors, COI, DAS, Landata, external sources</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff, e-Sys, COI, DAS, Landata, ASIC, VEC</div>
+        <div class="block"><strong>Decision</strong>: Ownership confirmed = proceed. Cannot confirm = escalate or seek additional sources.</div>
+        <div class="block"><strong>Output</strong>: Ownership validated per CID, feeds Q4.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q4 -->
+  <section id="q4">
+    <h2>Q4 - Which Customer ID should be treated as valid?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>CONSOLIDATION (Duplicate - one customer, multiple CIDs):</strong></li>
+        <li>No prior SRO correspondence:
+          <ul>
+            <li>CID with active MLT or MyGov registration = valid</li>
+            <li>If no current land holdings on any CID: lowest (oldest) CID = valid</li>
+            <li>If no CIDs have LTX liability: CID with most land holdings = valid</li>
+          </ul>
+        </li>
+        <li>With prior correspondence: use CID with MLT/MyGov, then most SRO interactions (calls, amendments, correspondence). Consider other revenue lines affected, and JO/trust links within retrospective period.</li>
+        <li>Create valid/invalid relationship: Valid CID > New Role > "Duplicate Customer - Active role" > From Tree > Save. Creates Valid Duplicate and Invalid Duplicate roles.</li>
+        <li><strong>SEPARATION (Merged - multiple customers, one CID):</strong></li>
+        <li>No prior correspondence: MLT registrant keeps CID. If no MLT: longest ownership history keeps CID.</li>
+        <li>With prior correspondence: consider who received correspondence, who made payments (proof may be needed), JO/trust links within retrospective period. Option: new CIDs for all customers if complex.</li>
+        <li>New customer creation: refer to Trust Form 13 procedure. Select correct type (individual, company, trust).</li>
+        <li><strong>Action item types:</strong> Land transferred = land ownership AI. All other = customer data maintenance AI.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Consolidation of CIDs; Creating valid/invalid relationship; Separation of customers from one CID</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Consolidation and Separation Decision Trees</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Consolidation - No Prior Correspondence</h4>
+        <p>When no correspondence has been sent by the SRO to any CIDs (letters, assessments, section 105 certificates):</p>
+        <ul>
+          <li>The CID that has an active MLT or MyGov registration becomes the valid customer</li>
+          <li>If none of the CIDs have current land holdings, the lowest (oldest) CID number should be flagged as the valid customer</li>
+          <li>If none of the CIDs have a land tax liability, the CID with the most land holdings should be flagged as the valid customer</li>
+        </ul>
+        <h4>Consolidation - With Prior Correspondence</h4>
+        <p>When correspondence has been received by any CID, this will need to be taken into consideration along with any links to an active JO or trust relationship (beneficiary or trustee), within the retrospective period:</p>
+        <ul>
+          <li>Use the CID that has the MLT and/or MyGov account</li>
+          <li>The CID with the most interactions with SRO (phone calls, amendments, correspondence)</li>
+          <li>Are there other revenue lines involved that will be affected?</li>
+        </ul>
+        <h4>Creating Valid/Invalid Relationship (3 steps)</h4>
+        <p>Step 1: Ensure all relevant customers loaded to e-Sys tree. From the valid CID, select New Role.</p>
+        <p>Step 2: Select "Duplicate Customer - Active role." Select OK.</p>
+        <p>Step 3: Select "From Tree." Remove unrelated CIDs if loaded. Select Save. The roles "Valid Duplicate" and "Invalid Duplicate" now appear on the Tree.</p>
+        <h4>Separation - No Prior Correspondence</h4>
+        <ul>
+          <li>Does the CID have an active MLT registration? The customer who registered for MLT keeps the CID number</li>
+          <li>If no MLT, the customer with the longest history of land ownership should keep the CID</li>
+        </ul>
+        <h4>Separation - With Prior Correspondence</h4>
+        <ul>
+          <li>Who received prior/current year correspondence (where were they posted to)?</li>
+          <li>Have payments been received and who paid them? Enquiries and proof of payment may be required to determine if suspense can be transferred or requires refunding</li>
+          <li>Active JO or trust relationship within retrospective period</li>
+          <li>Issue all customers with new CIDs if the merged issue is complex and it would be more suitable or preferred by customer</li>
+        </ul>
+        <p>For new customer creation: refer to Trust Form 13 procedure. Be mindful of selecting the correct customer type (individual, company or trust).</p>
+        <div class="page-ref">Source: Consolidation of CIDs; Creating valid/invalid relationship; Separation of customers from one CID</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Classification (Q2), correspondence history, MLT/MyGov registration, SRO interactions, land holdings, LTX liability, JO/trust links, payment history, other revenue lines</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff, e-Sys (New Role, customer creation)</div>
+        <div class="block"><strong>Decision</strong>: Two decision trees:
+          <ul>
+            <li>Consolidation: MLT/MyGov > oldest CID > most holdings. Correspondence modifies priority.</li>
+            <li>Separation: MLT registrant > longest ownership. Correspondence/payments modify. Complex = all-new CIDs.</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>: Valid/Invalid CIDs determined, roles created in e-Sys, new customers created if separation.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q5 -->
+  <section id="q5">
+    <h2>Q5 - Are land transfers and retrospective amendments required?</h2>
+    <div class="staff">
+      <ul>
+        <li>Transfer lands to correct CID as per DAS/LTO transfer date if within retrospective period (current year + 4 preceding).</li>
+        <li>If retrospective transfer required: use default date 1/12/20YY.</li>
+        <li>Add comment regarding the transfer action.</li>
+        <li><strong>Post-determination checklist:</strong>
+          <ul>
+            <li>Transfer relevant land holdings</li>
+            <li>Amend any CID links for beneficiary or trustee</li>
+            <li>Apply PPR, PPL or other exemptions based on current information and previous SRO decisions</li>
+            <li>Check all CIDs for unfinalised action items, workflow items, and non-issues</li>
+          </ul>
+        </li>
+        <li>Refer to DOC/20/32910 Land Ownership procedure for transfer steps.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Transfer individual and JO lands accordingly; Following customer and CID determination</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Transfers and Checklist</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Transfer Rules</h4>
+        <p>Transfer lands to the relevant CID as per DAS/LTO transfer date if within the retrospective period. If required to transfer retrospectively, use the default date of 1/12/20YY. Ensure to add a comment regarding the action.</p>
+        <h4>Post-Determination Checklist</h4>
+        <ul>
+          <li>Transfer relevant land holdings</li>
+          <li>Amend any CID links for a beneficiary or trustee</li>
+          <li>Apply any PPR, PPL or other exemptions based on current information and previous SRO decisions</li>
+          <li>Check all CIDs involved for unfinalised action items/workflow items and non-issues</li>
+          <li>Recalculate liabilities for all CIDs involved (see Q6)</li>
+        </ul>
+        <p>Refer to DOC/20/32910 Land Ownership procedure for assistance on transferring land.</p>
+        <div class="page-ref">Source: Transfer individual and JO lands accordingly; Following customer and CID determination</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Valid/invalid CIDs (Q4), DAS/LTO dates, retrospective period, JO/trust links, exemptions, open AIs/NIIs</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff, e-Sys</div>
+        <div class="block"><strong>Decision</strong>: Within retrospective = transfer at DAS/LTO date. Retrospective needed = use 1/12/20YY. Outside = no transfer.</div>
+        <div class="block"><strong>Output</strong>: Land transferred, links amended, exemptions applied, open items reviewed.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q6 -->
+  <section id="q6">
+    <h2>Q6 - Have all financial and compliance impacts been resolved?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>1. Recalculate liabilities:</strong> All relevant years, all affected customers (transferor, transferee, associated JOs, related individuals). Do NOT recalculate years outside retrospective period. "Select All" includes years outside retrospective. Note outcomes: amended, withdrawn, or new.</li>
+        <li><strong>2. Suspense handling:</strong>
+          <ul>
+            <li><em>Duplicates:</em> Transfer suspense from invalid to valid CID following ownership type (individual to individual, JO to JO, trust to trust, company to company).</li>
+            <li><em>Merged:</em> Confirm who made payments before transferring or refunding. Verify via assessment mailing address, payment methods, reference numbers. If unable to determine, contact customer for proof.</li>
+          </ul>
+        </li>
+        <li><strong>3. Decommission invalid CID:</strong> If linked to active JO or trust, decommission those first. Recalculate current year liability before decommission (even if no liability - may need to update to land taxpayer). Enter today's date, "Duplicate" as reason. Requires e-Sys profile.</li>
+        <li><strong>4. Close Non-Issue Indicators:</strong> Check all related customers. Cease NIIs the day BEFORE current date (ceasing on current date prevents assessment issue until next business day). NII types: staff-applied, system-generated (related party AIs), investigation (leave), recovery case (cease to recalc, note details to re-apply if no change).</li>
+      </ul>
+      <div class="stop">Do NOT recalculate years outside retrospective period. Cease NIIs day BEFORE current date. Decommission JOs/trusts before individuals.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Recalculating or creating a liability; Check suspense; Decommissioning the invalid CID; Close non-issue indicators</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Financial Resolution (4 sub-processes)</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>1. Recalculate Liabilities</h4>
+        <p>Select Land Taxpayer on tree, select Liabilities, click Recalculate. Screen splits into "Years with Liabilities" and "Years without Liabilities." Select relevant years only - do NOT recalculate years outside retrospective period. Warning: "Select All" selects all years including outside retrospective.</p>
+        <p>Note outcomes: existing liability amended (increased or decreased), existing liability withdrawn (removed), new liability/ies created.</p>
+        <h4>2. Suspense Payments</h4>
+        <p>Check all relevant customers including JOs and individuals. Check Workflow node for suspense, then Allocations node, tick Suspense, click Apply.</p>
+        <p><strong>Duplicates:</strong> Transfer suspense from invalid to valid CIDs following ownership: individual to individual, JO to JO, trust to trust, company to company.</p>
+        <p><strong>Merged:</strong> Confirmation required on who made payments before transferring or refunding. Verify via: assessment mailing address, payment methods, reference numbers used. If unable to determine, contact customer and request proof of payment.</p>
+        <p>To refund or allocate, refer to Land Tax Refund or Reconciling Suspense Payments procedures.</p>
+        <h4>3. Decommission Invalid CID</h4>
+        <p>If the CID is linked to an active JO or trust, those CIDs must be decommissioned first before the individual. e-Sys requires the customer's current year liability to be recalculated prior to decommissioning even if there is no current liability. You may have to update the customer to a land taxpayer to do so.</p>
+        <p>Click "Decommission" button. Enter today's date and "Duplicate" as the reason. Select OK. If e-Sys will not allow decommission, seek assistance from team leader regarding access settings.</p>
+        <h4>4. Close Non-Issue Indicators</h4>
+        <p>NIIs related to your action item and penalty items should automatically complete once related work items are done. Occasions when manual cessation is required:</p>
+        <ul>
+          <li>Staff-applied: to ensure assessments are not issued before account review</li>
+          <li>System-generated: due to related party action items</li>
+          <li>Investigation: leave these and refer to "Before you begin"</li>
+          <li>Recovery case: applied by DMS. Cease to recalculate. Note details in case re-application needed if no liability change.</li>
+        </ul>
+        <p>Go to Non-Issue node under customer. Select LTX Liability Non-issue. Highlight relevant NII, right-click Edit. Enter cease date as the day BEFORE current date. Select OK.</p>
+        <p><strong>Critical:</strong> If you cease NII on the current date, you will not be able to issue the assessment or approve a refund until the following business day.</p>
+        <div class="page-ref">Source: Recalculating or creating a liability; Check suspense; Decommissioning; Close non-issue indicators</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Liability data (all CIDs, all affected years), suspense payments, JO/trust links, NII status, e-Sys decommission profile</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff, e-Sys (recalculation, allocations, decommission, NII cessation), DMS (recovery NIIs)</div>
+        <div class="block"><strong>Decision</strong>: Four sub-decisions:
+          <ul>
+            <li>Recalculation scope (within retrospective only)</li>
+            <li>Suspense: follow ownership (duplicate) or verify payer (merged)</li>
+            <li>Decommission sequencing (JO/trust before individual)</li>
+            <li>NII cessation (day before current date)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>: Liabilities recalculated, suspense allocated/refunded, invalid CIDs decommissioned, NIIs closed.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q7 -->
+  <section id="q7">
+    <h2>Q7 - Have assessments been issued and the action item completed?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Generate assessments:</strong> Check Liabilities node for Net Liability. Withdrawn assessments disappear from list. Generate one year at a time. May need to close NIIs first (see Q6).</li>
+        <li>Digital delivery (MLT/MyGov/BPay View): issue with "External - Return To Requestor" option (not Priority) to prevent duplicate notification. Customer sees only last version exported.</li>
+        <li>Non-digital: issue normally, then email operations@sro.vic.gov.au using LTX Printing Extraction template (CID, Address, Assessment IDs).</li>
+        <li>If assessment was withdrawn in error and you need to put on issued status without posting: use the Return To Requestor method above.</li>
+        <li><strong>Correspondence required when:</strong> Assessments withdrawn from duplicate, new customer with new assessments, suspense created/allocated/refund available, retrospective assessments issued.</li>
+        <li><strong>Channel logic:</strong> MLT request = respond via Communications Manager in AD/MLT. Contact Us/Smart Form = via Communications Manager. Letters via post only when no digital means exist.</li>
+        <li>JO amendments affecting a non-lead individual require separate correspondence for that individual.</li>
+        <li>LetterPro for postal: Program > Correspondence > select type > enter CID > Land Tax > LAND TAX - GENERAL CORRESPONDENCE > Send > draft using One Note templates. Print or save draft.</li>
+        <li><strong>Complete action item:</strong> Record in notes: what was done, where information was verified, result, suspense transferred/refunded, assessment impact (withdrawn/amended/reissued), correspondence sent and method, User ID, current date. Set status to Completed.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Generate assessments; Correspondence; Completing and closing the action item</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Assessments, Correspondence, and Closure</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Generate Assessments</h4>
+        <p>Select Liabilities node (above Assessments) on e-Sys tree. Scroll across to view Net Liability (outstanding balance) and what assessments may be required to be issued/reissued. Withdrawn assessments will have disappeared from the liability list. Select Assessments node, confirm which have been amended and require reissue. Select Liabilities node again, select relevant assessment years one at a time, select Generate Assessment.</p>
+        <h4>Preventing Duplicate Notifications</h4>
+        <p>For digital delivery customers (My Land Tax, myGov, BPay View): issue assessment selecting "External - Return To Requestor." Ensure Priority is NOT selected. This prevents a new notification being sent. The customer will only see details on MLT for the last version exported/issued.</p>
+        <p>For non-digital customers (posted assessments): issue normally but DO NOT select "External - Return to Requestor" or "Priority." Once generated, email operations@sro.vic.gov.au with subject "LTX Printing Extraction" and include CID, address, and assessment IDs.</p>
+        <h4>Correspondence Triggers</h4>
+        <p>Correspondence is required if: assessments were withdrawn from a duplicate customer, a new customer was created with new assessments issued, suspense was created with funds allocated or a refund is available, or retrospective assessments were issued.</p>
+        <h4>Channel Logic</h4>
+        <ul>
+          <li>MLT request: respond via Communications Manager in AD/MLT</li>
+          <li>Contact Us portal or Smart Form: respond via Communications Manager in AD/MLT</li>
+          <li>Letters via post: only when no digital means of contacting the customer</li>
+        </ul>
+        <p>For JO amendments: if an amendment has affected a JO member's individual account and they are not the lead customer, separate correspondence for this individual will be required.</p>
+        <h4>LetterPro Process (4 steps)</h4>
+        <p>Step 1: Select Program > Correspondence > Correspondence Type. Step 2: Enter CID, select Land Tax from Registration Type, select LAND TAX - GENERAL CORRESPONDENCE. Click Send. Step 3: Draft letter using One Note templates. Print or save draft. Step 4: To save to CM9 and printer queue, select Yes. To save draft to e-Sys, select No then Save.</p>
+        <h4>Action Item Completion Notes</h4>
+        <p>Record: what you did, where you verified information, what the result was, any suspense transferred or refunded, effect to assessments (withdrawn/amended/reissued), if correspondence was sent and method (email, letter, MLT/AD), User ID, current date.</p>
+        <h4>Example Notes</h4>
+        <p><strong>Duplicate example:</strong> "(PXD5 02 Jan 2024) Duplicate CIDs xx and xx identified. Confirmed as per matching data LTO, DLS and Muni. Transferred LID xx from JO xx to new JO xx 1 Dec 20xx as per DAS/LTO. Recalc liabilities all CIDs. JO xx 20xx to 20xx ltx w/d. New 20xx to 20xx ltx JO xx. Transferred funds from JO xx to new JO xx to fully pay new 20xx to 20xx ltx. Decommissioned duplicates. Email sent AD."</p>
+        <p><strong>Merged example:</strong> "(PXD5 02 Jan 2024) Merged CIDs identified. [Name, DoB, LID owned, JO details per customer]. Reverted customer xxx back to original CID xx. Transferred LID xx to new JO xxx at date. Re-applied PPR original CID xx. Recalc liabilities. 20xx ltx w/d. No payments made. No refunds. Decommissioned JO xx. Refer also JO xx. Email sent AD."</p>
+        <div class="page-ref">Source: Generate assessments; Correspondence; Completing and closing the action item; Action item note examples</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Recalculated liabilities (Q6), assessment status, correspondence channels, customer digital registration, action item</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff, e-Sys (assessment generation), AD/MLT (Communications Manager), LetterPro, operations@sro.vic.gov.au (print extraction)</div>
+        <div class="block"><strong>Decision</strong>: Assessment generation (one year at a time), channel selection (digital vs postal), correspondence triggers (4 conditions), JO non-lead individual = separate correspondence.</div>
+        <div class="block"><strong>Output</strong>: Assessments issued/reissued, correspondence sent via appropriate channel, action item completed with full notes.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION -->
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction (Q1-Q7)</h2>
+    <div class="flow">
+      <div class="flow-title">System Touchpoints per Step</div>
+      <div class="node n-blue">Q1: e-Sys (action item, NII), CM9 (investigation)</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q2: e-Sys (customer records, CIDs, land holdings)</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Q3: COI, DAS, Landata, ASIC, VEC, VicMaps</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q4: e-Sys (New Role, customer creation), AD/MLT check</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q5: e-Sys (land transfer, exemptions)</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Q6: e-Sys (recalc, allocations, decommission, NII)</div>
+      <div class="arr"></div>
+      <div class="node n-gray">Q7: e-Sys (assessments), AD/MLT, LetterPro, CM9</div>
+      <div style="margin-top:24px;"></div>
+      <div class="flow-title" style="font-size:16px;">All Systems</div>
+      <div class="branch">
+        <div class="node n-blue" style="font-size:11px">e-Sys</div>
+        <div class="node n-blue" style="font-size:11px">CM9</div>
+        <div class="node n-amber" style="font-size:11px">COI</div>
+        <div class="node n-amber" style="font-size:11px">DAS</div>
+        <div class="node n-amber" style="font-size:11px">Landata</div>
+      </div>
+      <div class="branch" style="margin-top:8px;">
+        <div class="node n-amber" style="font-size:11px">ASIC</div>
+        <div class="node n-gray" style="font-size:11px">AD/MLT</div>
+        <div class="node n-gray" style="font-size:11px">LetterPro</div>
+        <div class="node n-gray" style="font-size:11px">VEC</div>
+        <div class="node n-gray" style="font-size:11px">VicMaps</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> Primary systems</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> Verification systems</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> Correspondence / Reference</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SUMMARY -->
+<div class="specOnly">
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul>
+      <li>End-to-end process for identifying and resolving duplicate and merged customer records in e-Sys.</li>
+      <li>Duplicate: same customer, multiple CIDs - consolidation path.</li>
+      <li>Merged: multiple customers, one CID - separation path.</li>
+      <li>Covers initiation (customer or internal), ownership confirmation, valid CID determination, land transfer, liability recalculation, suspense handling, decommission, assessment issuance, correspondence, and closure.</li>
+      <li>Ensures data integrity across JOs, trusts, and related customers.</li>
+      <li>AD/MLT cannot be used - must be completed manually in e-Sys.</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul>
+      <li><strong>Division:</strong> Land Revenue Services</li>
+      <li><strong>Branch:</strong> Land Revenue Administration</li>
+      <li><strong>Created:</strong> 8 November 2019</li>
+      <li><strong>Revised:</strong> 15 April 2024</li>
+      <li><strong>System of record:</strong> Lotus Notes Policies and Procedures Database</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>CID Validity Decision Rules</h2>
+    <p style="font-size:14px;font-weight:700;margin-bottom:8px;">Consolidation (Duplicate)</p>
+    <ol style="font-size:13px;">
+      <li>No correspondence: MLT/MyGov registration > oldest CID > most land holdings</li>
+      <li>With correspondence: MLT/MyGov > most SRO interactions > consider other revenue lines and JO/trust links</li>
+    </ol>
+    <p style="font-size:14px;font-weight:700;margin:12px 0 8px;">Separation (Merged)</p>
+    <ol style="font-size:13px;">
+      <li>No correspondence: MLT registrant keeps CID > longest ownership history</li>
+      <li>With correspondence: who received mail > who paid > JO/trust links > option for all-new CIDs</li>
+    </ol>
+  </section>
+
+  <section class="summary-section">
+    <h2>Structural Limitations and Ambiguities</h2>
+    <div class="limitations"><strong>Dual decision trees:</strong> Consolidation and separation have different rules for the same decision (which CID is valid), with correspondence history as a modifier. Hard to linearise.</div>
+    <div class="limitations"><strong>Sequencing:</strong> Decommission must follow JO/trust before individual. Recalculation must precede decommission. NII cessation must precede assessment generation. Implied but not fully ordered in source.</div>
+    <div class="limitations"><strong>Payment attribution (merged):</strong> Requires staff judgement when payment source cannot be determined from system data. May require customer contact for proof.</div>
+    <div class="limitations"><strong>Iterative JO reassessment:</strong> Changes to one CID may cascade to multiple JOs and related individuals, creating looping recalculation requirements.</div>
+    <div class="limitations"><strong>NII timing:</strong> Cease date must be day before current date. Ceasing on current date blocks assessment issue until next business day - a subtle but critical operational constraint.</div>
+  </section>
+
+  <section class="summary-section">
+    <h2>DCPR Procedural Alignment Score</h2>
+    <div class="score"><strong>Score: 6 / 10</strong><br>Deductions: dual consolidation/separation decision trees with correspondence-dependent logic not decomposed (-1.5), five Q6 sub-processes collapsed into one (-1), suspense transfer rules (duplicate vs merged) missing (-0.5), decommission sequencing constraints absent (-0.5), NII cease-date timing rule missing (-0.25), correspondence channel logic and triggers missing (-0.25).</div>
+  </section>
+
+  <section class="summary-section">
+    <h2>Definitions</h2>
+    <ul style="font-size:13px;">
+      <li><strong>CID</strong> - Customer ID number within e-Sys</li>
+      <li><strong>ACN</strong> - Australian Company Number</li>
+      <li><strong>DOB</strong> - Date of Birth</li>
+      <li><strong>DOD</strong> - Date of Death</li>
+      <li><strong>DOP</strong> - Date of Possession</li>
+      <li><strong>JO</strong> - Joint Ownership</li>
+      <li><strong>NOA</strong> - Notice of Acquisition</li>
+      <li><strong>TOL</strong> - Transfer of Land Document</li>
+      <li><strong>NII</strong> - Non-Issue Indicator</li>
+      <li><strong>PPR</strong> - Principal Place of Residence</li>
+      <li><strong>PPL</strong> - Primary Production Land</li>
+      <li><strong>LTX</strong> - Land Tax</li>
+      <li><strong>MLT</strong> - My Land Tax</li>
+      <li><strong>AD</strong> - Assisted Digital</li>
+      <li><strong>DMS</strong> - Debt Management Services</li>
+      <li><strong>BI</strong> - Business Intelligence</li>
+      <li><strong>COI</strong> - Compliance Operational Intelligence</li>
+      <li><strong>DAS</strong> - Dealing Activity System</li>
+      <li><strong>VEC</strong> - Victorian Electoral Commission</li>
+      <li><strong>ERC</strong> - Estate Review Committee</li>
+      <li><strong>Valid customer</strong> - CID that continues as active</li>
+      <li><strong>Invalid customer</strong> - CID to be decommissioned</li>
+      <li><strong>Retrospective period</strong> - Current year plus 4 preceding assessment years</li>
+    </ul>
+  </section>
+</div>
+```
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(function(e){e.style.display='none'});
+  btnStaff.classList.remove('active');btnArch.classList.remove('active');btnSys.classList.remove('active');btnSpec.classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(function(e){e.style.display='block'});btnStaff.classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(function(e){e.style.display='block'});btnArch.classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';btnSys.classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';btnSpec.classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

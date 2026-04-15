@@ -1,0 +1,863 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Property Clearance Certificate Process</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body { margin:0; font-family:Segoe UI, Arial, sans-serif; background:#f5f7fa; color:#1f2937; }
+    header { background:#003a8f; color:#fff; padding:28px 36px; }
+    header h1 { margin:0; font-size:32px; }
+    header p { margin-top:8px; font-weight:600; }
+    .layout { display:flex; gap:28px; padding:28px; }
+    .sidebar { width:260px; background:#fff; border-radius:10px; padding:16px; box-shadow:0 2px 6px rgba(0,0,0,.08); position:sticky; top:24px; }
+    .sidebar a { display:block; text-decoration:none; color:#003a8f; font-size:14px; margin-bottom:8px; }
+    .content { max-width:1250px; width:100%; }
+    .toggle { display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap; }
+    .toggle button { border:1px solid #ccc; border-radius:22px; padding:8px 18px; cursor:pointer; background:#fff; font-family:inherit; }
+    .toggle button.active { background:#003a8f; color:#fff; }
+    section { background:#fff; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,.08); padding:24px; margin-bottom:28px; }
+    h2 { margin-top:0; font-size:22px; }
+    ul, ol { margin-left:22px; }
+    .staff, .architect { display:none; }
+    .arch { background:#f9fafb; border-left:5px solid #003a8f; padding:16px; margin-top:14px; font-size:14px; }
+    .block { margin-bottom:14px; }
+    .stop { background:#fef2f2; border-left:5px solid #b91c1c; padding:12px; margin-top:12px; font-weight:600; }
+    .ref { background:#eef2f7; border-left:5px solid #6366f1; padding:12px; margin-top:12px; font-size:13px; }
+    .constraint { background:#faf5ff; border-left:5px solid #8b5cf6; padding:12px; margin-top:12px; font-size:13px; }
+    .systemsOnly { display:none; }
+    .specOnly { display:none; }
+    .summary-section { background:#fff; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,.08); padding:24px; margin-bottom:28px; }
+    .limitations { background:#fffbeb; border-left:5px solid #f59e0b; padding:12px 16px; margin:12px 0; font-size:14px; }
+    .score { background:#f0fdf4; border-left:5px solid #22c55e; padding:12px 16px; margin:12px 0; font-size:14px; }
+
+```
+/* Collapsible detail panel */
+.detail-toggle { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:#f0f4ff; border:1px solid #c7d2fe; border-radius:8px; cursor:pointer; margin-top:16px; -webkit-tap-highlight-color:transparent; }
+.detail-toggle-text { font-size:13px; font-weight:700; color:#1e3a8a; }
+.detail-toggle-arrow { font-size:16px; color:#1e3a8a; transition:transform 0.2s; }
+.detail-toggle-arrow.open { transform:rotate(180deg); }
+.detail-panel { display:none; background:#f8faff; border:1px solid #e0e7ff; border-top:none; border-radius:0 0 8px 8px; padding:16px; }
+.detail-panel.open { display:block; }
+.detail-panel h4 { font-size:14px; font-weight:700; color:#1e3a8a; margin:12px 0 6px; }
+.detail-panel h4:first-child { margin-top:0; }
+.detail-panel p { font-size:13px; color:#475569; line-height:1.6; margin-bottom:8px; }
+.detail-panel ul, .detail-panel ol { font-size:13px; color:#475569; line-height:1.6; margin-left:18px; margin-bottom:8px; }
+.detail-panel li { margin-bottom:4px; }
+.detail-panel .page-ref { font-size:11px; color:#3b82f6; font-weight:600; margin-top:8px; }
+
+/* System view nodes */
+.flow { display:flex; flex-direction:column; align-items:center; max-width:900px; margin:0 auto; }
+.flow-title { font-size:20px; font-weight:800; margin-bottom:24px; text-align:center; }
+.node { padding:14px 20px; border-radius:10px; font-size:13px; font-weight:600; text-align:center; min-width:180px; max-width:300px; box-shadow:0 2px 8px rgba(0,0,0,0.06); display:inline-block; margin:4px; }
+.n-blue { background:#dbeafe; border:2px solid #1e3a8a; color:#1e3a8a; }
+.n-amber { background:#fef3c7; border:2px solid #d97706; color:#92400e; }
+.n-gray { background:#f3f4f6; border:2px solid #6b7280; color:#374151; }
+.n-red { background:#fee2e2; border:2px dashed #dc2626; color:#991b1b; }
+.arr { width:2px; height:24px; background:#94a3b8; margin:0 auto; position:relative; }
+.arr::after { content:''; position:absolute; bottom:-5px; left:-4px; border-left:5px solid transparent; border-right:5px solid transparent; border-top:6px solid #94a3b8; }
+.branch { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.legend { display:flex; gap:20px; flex-wrap:wrap; margin-top:24px; justify-content:center; }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:12px; color:#475569; }
+.legend-dot { width:12px; height:12px; border-radius:3px; }
+```
+
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Property Clearance Certificate Process</h1>
+  <p>Property Clearance Certificate Process - Land Tax &bull; Division: Operations &bull; Branch: Land Revenue &bull; Revised: 17 March 2025</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <a href="#q1">Q1 Property and Vendor</a>
+    <a href="#q2">Q2 PIA Warnings</a>
+    <a href="#q3">Q3 Pro Rata</a>
+    <a href="#q4">Q4 Ownership</a>
+    <a href="#q5">Q5 Liabilities and Payments</a>
+    <a href="#q6">Q6 Issue Certificate</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+```
+<div id="questionFlow">
+
+  <!-- Q1 -->
+  <section id="q1">
+    <h2>Q1 - Does the application identify the correct property and vendor?</h2>
+    <div class="staff">
+      <ul>
+        <li>Launch PIA work item. Check Details tab for additional comments/title references.</li>
+        <li><strong>Property search:</strong> Search using all references (Volume/Folio, Lot/Plan, Address, Vendor). If not found in e-Sys, search COI (may have previous references). Check New Plans folder for plans received but not yet processed.</li>
+        <li><strong>Property clarification (p.16):</strong> If property details don't match e-Sys/COI:
+          <ul>
+            <li>First two references match property and owner: issue certificate (only first two appear on cert).</li>
+            <li>Only one of first two matches: contact applicant for clarification.</li>
+            <li>None match: contact applicant for clarification.</li>
+          </ul>
+        </li>
+        <li><strong>Non-rateable property:</strong> In Details tab enter comment that property is not rated by council. Select relevant exemption from dropdown.</li>
+        <li><strong>Associate property:</strong> If correct property is not already associated to PIA, return to property address under PIA node, select edit, associate the correct property.</li>
+        <li><strong>Vendor validation:</strong> Check if the owner of the property is the same as the vendor on the PIA. If no, initiate Vendor Clarification process.</li>
+        <li><strong>Seven acceptable vendor types:</strong> Current registered proprietor on title, Purchaser (with current proprietor name on application), Mortgagee in possession (major bank), Power of Attorney (evidence required), Executor of deceased estate of current registered proprietor, On-seller, Company Director / Crown Legal Interests.</li>
+        <li>If vendor is a lessee (not registered proprietor) of a business or property: redirect PIA to Cancellation Tray.</li>
+        <li><strong>Vendor amendment rules (p.17):</strong> First/last name only = update and issue. Surname not provided = update once confirmed. Company name incomplete = delete "Not provided" and issue. Purchaser/vendor reversed = write comment and issue. Vendor not acceptable = confirm with applicant, amend PIA details.</li>
+      </ul>
+      <div class="stop">Certificate cannot be issued if vendor is listed as a tenant/lessee. Redirect to PIA Cancellation Tray.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Application (p.4); Vendor Clarification (p.9); Property Clarification (p.16); Amending application (p.17)</div>
+
+      <div class="detail-toggle" data-action="toggle_detail">
+        <span class="detail-toggle-text">Procedure Detail: Application and Vendor Clarification</span>
+        <span class="detail-toggle-arrow">&#9660;</span>
+      </div>
+      <div class="detail-panel">
+        <h4>Application Flow (p.4)</h4>
+        <p>Launch PIA work item. Check Details tab for any additional comments or title references. Search for property using all available references: Volume/Folio, Lot/Plan, Address, Vendor. If property cannot be located, search references in COI (COI may have previous property references). Search plan number in New Plans folder (plan may have been received but not processed).</p>
+        <h4>Subdivision Check</h4>
+        <p>If property has been created in the current year or is part of a planned subdivision, go to Pro Rata process (Q3). If not a subdivision, continue with standard processing.</p>
+        <h4>Copy of Plan (p.8)</h4>
+        <p>If a full copy of plan is required: check if property is in e-Sys (property address, U200 screen, description/title tab, right-click plan number, view electronic plan). If temporary folder opens, search New Plans folder. If plan cannot be located, check Dye and Durham website for other applications with same plan number in current year. If plan not in attached documents, check if agency application (send template email) or eBus applicant (phone directly). Place comment on PIA noting request date and user ID.</p>
+        <h4>Vendor Clarification (p.9)</h4>
+        <p>If vendor on e-Sys does not match vendor listed in PIA: For companies, check if vendor is a company on e-Sys/COI and application has vendor as a person. Use ASIC to check directors. If listed as director, place note in details confirming and process PIA.</p>
+        <p>For eBus applications: contact applicant directly to clarify. After multiple attempts, use e-Bus applicant template email. While waiting, note "Vendor Clarification requested" in PIA details tab and place in reserve.</p>
+        <p>For Agency applications: check if vendor provided is valid. Examples of invalid: only first or last name, company name only, TBC/Unknown. If agency entered vendor in acceptable format, process. If not, send email to agency using Vendor Clarification template with application number and User ID.</p>
+        <h4>Acceptable Vendors</h4>
+        <ul>
+          <li>Current Registered Proprietor on title</li>
+          <li>Purchaser (must have current registered proprietor name on application)</li>
+          <li>Mortgagee in possession (e.g. major bank - Westpac, ANZ, Commonwealth etc)</li>
+          <li>Power of Attorney (evidence required)</li>
+          <li>Executor of deceased estate of current registered proprietor on title</li>
+          <li>On-seller</li>
+          <li>Company Director and Crown Legal Interests</li>
+        </ul>
+        <p>If applicant is other than current registered proprietor, comment in application: e.g. "Vendor is current Proprietor"</p>
+        <h4>Vendor Amendment Rules (p.17)</h4>
+        <ul>
+          <li>Only first or last name of individual/s: once confirmed, update and issue (some people only have a first name)</li>
+          <li>Not provided with Surname: once confirmed, update and issue</li>
+          <li>Not provided with First name: once confirmed, update and issue</li>
+          <li>Not provided with Company name: delete "Not provided" and issue</li>
+          <li>Company full name not provided: if enough matches title, issue</li>
+          <li>Not all names on title provided: issue (at least one correct name must be provided)</li>
+          <li>Purchaser and Vendor names reversed: write comment "purchaser and vendor reversed" and issue</li>
+          <li>Vendor does not match and is not acceptable: confirm with applicant, amend PIA details</li>
+          <li>Lessee (not registered proprietor): redirect to PIA Cancellation Tray</li>
+        </ul>
+        <div class="page-ref">Source: Application (p.4); Copy of Plan (p.8); Vendor Clarification (p.9); Property/Vendor Clarification (p.16-17)</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>PIA application details (property references, vendor name, purchaser name)</li>
+            <li>Property search references: Volume/Folio, Lot/Plan, Address, Vendor</li>
+            <li>e-Sys property records</li>
+            <li>COI title information (may have previous references)</li>
+            <li>New Plans folder (H:\LandTax\...\Valuations Team\Plans)</li>
+            <li>ASIC (company director verification)</li>
+            <li>Application source: eBus or Agency (Landata, Dye and Durham, Infotrack)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>CSO - property search, vendor validation, clarification requests</li>
+            <li>Senior CSO - escalation for complex clarifications</li>
+            <li>e-Sys - PIA work item, property association</li>
+            <li>COI - title verification</li>
+            <li>ASIC - company director checks</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Property and vendor validation:
+          <ul>
+            <li>Property found and vendor matches: proceed to Q2</li>
+            <li>Property found, vendor mismatch: Vendor Clarification (7 acceptable types)</li>
+            <li>Property not found: Property Clarification (3-tier reference matching)</li>
+            <li>Vendor is lessee/tenant: redirect to PIA Cancellation Tray</li>
+            <li>Subdivision detected: redirect to Q3 (Pro Rata)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Property validated and associated to PIA</li>
+            <li>Vendor confirmed or clarification requested (PIA placed in reserve)</li>
+            <li>Or PIA cancelled (invalid vendor)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 -->
+  <section id="q2">
+    <h2>Q2 - Can the certificate be issued via automation?</h2>
+    <div class="staff">
+      <ul>
+        <li>e-Sys has automation rules. If all information matches and no warnings, PIA auto-issues within 24 hours.</li>
+        <li>If warnings or errors appear, manual intervention is required. There are <strong>12 distinct warning types</strong>, each with its own resolution path:</li>
+        <li><strong>1. Property Warning (multiple refs):</strong> Check all references for related properties. Process as normal with comment "Verified/Resolved."</li>
+        <li><strong>2. Property Warning (not current year):</strong> Pro rata required on parent property. See Q3.</li>
+        <li><strong>3. Settlement Date Warning:</strong> If settlement is more than 3 months away, confirm with applicant. If correct, leave PIA in tray — auto-issues in January.</li>
+        <li><strong>4. Comment Warning:</strong> Review and record. See Senior CSO.</li>
+        <li><strong>5. Recalc Warning:</strong> Resubmission trigger. See Senior CSO.</li>
+        <li><strong>6. Non-Issue Warning:</strong> Base indicator set for liable party. Check non-issue code and IOs. Can override if non-issue doesn't affect certificate.</li>
+        <li><strong>7. Special Customer Warning (current year):</strong> Special customer impact detected. See Special Customer process.</li>
+        <li><strong>8. Special Customer Warning (previous years):</strong> Override warning and issue certificate.</li>
+        <li><strong>9. Liability Warning (CIPT/LTX):</strong> Certificate impacted by CIPT or land tax not yet assessed. Override, review tolerance. See Senior CSO.</li>
+        <li><strong>10. Valuation Warning:</strong> Missing valuations. Check if property is exempt via exemptions node under property and customer.</li>
+        <li><strong>11. Duplicate Warning:</strong> Duplicate listing detected. See Senior CSO.</li>
+        <li><strong>12. Customer Warning:</strong> Auto-certificate generated previously. Check if single customer. If not, see Senior CSO, redirect to Land Taxpayer PIA Tray.</li>
+        <li><strong>13. Liability Warning (unable to generate):</strong> Unexpected order of events. Customer payment process required.</li>
+      </ul>
+      <div class="stop">Do not issue where unresolved non-issue indicators or blocking errors apply. Escalate to Senior CSO.</div>
+      <div class="ref"><strong>Procedure reference:</strong> PIA Warnings (p.3)</div>
+
+      <div class="detail-toggle" data-action="toggle_detail">
+        <span class="detail-toggle-text">Procedure Detail: PIA Warning Matrix (12 types)</span>
+        <span class="detail-toggle-arrow">&#9660;</span>
+      </div>
+      <div class="detail-panel">
+        <h4>How Automation Works</h4>
+        <p>There are rules set up in e-Sys that allow certificates to go through automation and issue by e-Sys. There are times where the application will require manual intervention. Warnings will need to be resolved before the user can issue the certificate.</p>
+        <h4>Warning 1: Property Warning (multiple references)</h4>
+        <p>Property has multiple references and requires manual matching. Check if all references are related to the same property. Search for additional properties if required. If there are more references to the property, enter them and add relevant comment. Process as normal - include text "Verified" or "Resolved" in comment.</p>
+        <h4>Warning 2: Property Warning (not in current calendar year)</h4>
+        <p>Property is not in the current assessment year. Pro rata is required on parent property. See Pro Rata process (Q3).</p>
+        <h4>Warning 3: Settlement Date Warning</h4>
+        <p>Settlement/certificate date is in a future year. If settlement date is more than 3 months away, confirm with applicant there is no data entry error. If correct, leave PIA in the tray - it will issue automatically on first business day in January.</p>
+        <h4>Warning 4: Comment Warning</h4>
+        <p>Reading/recalculation trigger detected. Review and record comment. See Senior CSO.</p>
+        <h4>Warning 5: Recalc Warning</h4>
+        <p>Resubmission has been triggered. See Senior CSO.</p>
+        <h4>Warning 6: Non-Issue Warning</h4>
+        <p>A base indicator is set for the Property Clearance Certificate on a current assessment year. Check the non-issue code under the customer and any IOs (Investigation Orders) that the customer file may have. Override the warning and issue certificate if the non-issue does not impact the certificate.</p>
+        <h4>Warning 7 and 8: Special Customer Warning</h4>
+        <p>Warning 7: Special customer impact on current year detected. See Special Customer process. Warning 8: Special customer impact on previous years only. Override warning and issue certificate.</p>
+        <h4>Warning 9: Liability Warning</h4>
+        <p>Certificate impacted by CIPT (Commercial and Industrial Property Tax) or land tax not yet assessed. Override warning, review tolerance/relevance. See Senior CSO if unsure.</p>
+        <h4>Warning 10: Valuation Warning</h4>
+        <p>Missing valuations detected. Check if the property is exempted by looking at the exemptions node under the property and customer. If exempt, property should not have a valuation - override.</p>
+        <h4>Warning 11: Duplicate Warning</h4>
+        <p>Duplicate listing of an e-Sys property detected. See Senior CSO.</p>
+        <h4>Warning 12: Customer Warning</h4>
+        <p>Auto-certificate has been generated previously for this customer. Check if the customer is a single customer. If not (e.g. merged/duplicate), see Senior CSO. May need to redirect PIA to Land Taxpayer PIA Tray.</p>
+        <h4>Warning 13: Liability Warning (unable to generate)</h4>
+        <p>Unable to generate due to unexpected order of events. Customer payment process required. See Senior CSO.</p>
+        <div class="page-ref">Source: PIA Warnings flowchart (p.3)</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>PIA warnings and errors (12 distinct types)</li>
+            <li>Non-issue indicators and codes</li>
+            <li>Investigation Orders (IOs)</li>
+            <li>Settlement/certificate date</li>
+            <li>Special customer flags</li>
+            <li>CIPT/LTX assessment status</li>
+            <li>Valuation records</li>
+            <li>Duplicate property flags</li>
+            <li>Prior certificate issuance history</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>e-Sys - automation rules, warning generation</li>
+            <li>CSO - warning resolution for straightforward cases</li>
+            <li>Senior CSO - escalation for warnings 4, 5, 9, 11, 12, 13</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Warning resolution (per warning type):
+          <ul>
+            <li>No warnings: auto-issue within 24 hours</li>
+            <li>Resolvable warning: CSO resolves, override, continue</li>
+            <li>Senior CSO required: escalate (warnings 4, 5, 9, 11, 12, 13)</li>
+            <li>Blocking error: manual processing or cancellation</li>
+            <li>Future settlement: hold in tray for January auto-issue</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Warnings resolved - proceed to certificate generation</li>
+            <li>Or PIA held, escalated, or redirected</li>
+          </ul>
+        </div>
+        <div class="constraint"><strong>High-cardinality branching:</strong> 12+ warning types each with distinct resolution paths. Some require override, some require Senior CSO, some redirect to other trays. This is the most complex decision matrix in the procedure.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q3 -->
+  <section id="q3">
+    <h2>Q3 - Is pro rata calculation required for the property?</h2>
+    <div class="staff">
+      <ul>
+        <li>Determine if property is part of a subdivision or planned development (created in current year).</li>
+        <li>If property is in e-Sys: click Related Properties to identify parent/grandparent. If not in e-Sys: search New Plans folder or request copy from applicant.</li>
+        <li>Load parent property/ies and vendor to tree. Check if vendor has prior year liabilities.</li>
+        <li>If property start date is prior to 31 December of the year before: property cannot be used. Go back to grandparent properties.</li>
+        <li><strong>Area vs Unit Entitlement:</strong> Must use area if available. Search for area or unit entitlement via New Plans folder.</li>
+        <li><strong>Pro rata steps:</strong> Under PIA node, select property address, associate parent property/ies. Select Land ID. Click Edit and Pro Rata. Enter area of child. Select parent properties via tick boxes.</li>
+        <li><strong>60/40 Rule (p.6):</strong> If subdivision has roads or common property, apply Parent Area Discount (tick box). Ensure parent area discount box is unchecked for the child. This ensures land tax on roads/common property is collected when all child properties are sold.</li>
+        <li><strong>When 60/40 does NOT apply:</strong> Large single lots without roads/common property (e.g. single stage lot, broad-acre land split).</li>
+        <li><strong>Unit Entitlement (p.7):</strong> If no child area/unit entitlement, issue certificate on parent property with comment "This certificate has been issued on the parent property." If plan has mixed UE and square meters, issue without pro rata with same parent property comment.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Pro rata - Area of Unit Entitlement (p.5); Different types of Pro rata / 60/40 Rule (p.6-7); Copy of Plan (p.8)</div>
+
+      <div class="detail-toggle" data-action="toggle_detail">
+        <span class="detail-toggle-text">Procedure Detail: Pro Rata and 60/40 Rule</span>
+        <span class="detail-toggle-arrow">&#9660;</span>
+      </div>
+      <div class="detail-panel">
+        <h4>Property Determination</h4>
+        <p>Has the property been created in the current year or is it part of a planned subdivision? If property is created in current year: click Related Properties to identify parent/grandparent property/ies. If property is not located in e-Sys: search New Plans folder or request a copy of the plan from the applicant.</p>
+        <h4>Parent Property Traversal</h4>
+        <p>Search for parent/grandparent properties using references provided on the new plan. Load parent property/ies and vendor to tree. Does the vendor have prior year liabilities? If yes, refer to Senior CSO for Manual Certificate. If no, check: is property start date prior to 31 December of the year before? If yes, property cannot be used - go back to grandparent property/ies. If no (start date is on or after 31 Dec), proceed with pro rata.</p>
+        <h4>Area vs Unit Entitlement</h4>
+        <p>Is there an area or unit entitlement on the property to use for pro rata? Must use area if available. Search for area or unit entitlement via New Plans folder. If area/UE cannot be found for all properties, click on Liability node and enter comment "Certificate has been issued on the parent property." Issue certificate on parent property with comment "This certificate has been issued on the parent property."</p>
+        <h4>Pro Rata Steps in e-Sys</h4>
+        <p>Under PIA node, select property address and associate the parent property/ies. Select Land ID (or 1 of if multiple properties). Click Edit and Pro Rata. Has land area been supplied? If no, check other sources for area (electronic plan, other certs issued under parent property). If yes, enter area of child property. Select area for pro rata basis (must use area if available). Select parent property/ies by checking tick boxes. Enter area of child.</p>
+        <h4>60/40 Rule</h4>
+        <p>If the new plan of subdivision has roads or common property, apply the Parent Area Discount (defaulted with a tick box). This is the 60/40 rule - a calculation that takes into consideration roads or common property, so that when all child properties are sold, the land tax applicable to roads and common property is collected. Make sure parent area discount box is unchecked for the child property. Click OK and continue online PIA process to issue certificate.</p>
+        <p><strong>Note:</strong> Not all pro rata scenarios require the 60/40 rule. Large single lots (e.g. if applicant has applied for a single lot of a large area), broad-acre land splits without roads or common property do NOT require 60/40.</p>
+        <h4>Unit Entitlement</h4>
+        <p>If you do not have a child area/unit entitlement, issue the certificate on the parent property/ies with comment "This certificate has been issued on the parent property." If the plan has some child properties with unit entitlements and other child properties with square meters, issue the certificate without a pro rata with the parent property comment. New Plans folder will contain an Owners Corporation report if UE are required for pro rata.</p>
+        <h4>Manual PIA Pro Rata (p.21)</h4>
+        <p>For inactive parent properties with net liabilities: requires LTX-A_SPWF e-Sys profile. Each pro rata calculation must be done separately. Can associate multiple parent properties. Certificate displays child liability and child's portion of parent/grandparent liabilities separately. Liability fields can be overwritten.</p>
+        <p>Scenario 1: If parent properties have different liability dates, pro rata must be done for each individually. Scenario 2: If multiple parent properties share the same year liability, a single pro rata can cover them, but additional liabilities unique to one parent require a separate pro rata using the manual calculator spreadsheet.</p>
+        <div class="page-ref">Source: Pro rata (p.5-7); Copy of Plan (p.8); Manual PIA (p.21)</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Property creation date (current year or part of planned subdivision)</li>
+            <li>Parent/grandparent property references</li>
+            <li>Area or Unit Entitlement data from plans</li>
+            <li>New Plans folder (electronic plans, Owners Corporation reports)</li>
+            <li>Vendor prior year liabilities on parent properties</li>
+            <li>Roads/common property in subdivision (triggers 60/40)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>CSO - pro rata calculation, plan sourcing</li>
+            <li>Senior CSO - manual certificate for prior year liabilities</li>
+            <li>e-Sys - PIA node, property association, pro rata calculation</li>
+            <li>Dye and Durham - plan sourcing for agency applications</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Pro rata type:
+          <ul>
+            <li>No subdivision: skip to Q4</li>
+            <li>Subdivision with area data: area-based pro rata</li>
+            <li>Subdivision with UE data: unit entitlement pro rata</li>
+            <li>Subdivision with roads/common property: apply 60/40 rule</li>
+            <li>No child area/UE available: issue on parent with comment</li>
+            <li>Mixed UE and square meters: issue without pro rata with parent comment</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Pro rata correctly applied in e-Sys</li>
+            <li>Or certificate issued on parent property with comment</li>
+            <li>Or manual certificate required (Senior CSO)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q4 -->
+  <section id="q4">
+    <h2>Q4 - Is ownership confirmed for the relevant assessment period?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Owner Unknown:</strong> Does vendor on application match e-Sys? If ownership is recorded as "Owner Unknown," certificate cannot be issued. Check if authorised for LO updates. If yes, process from LO PIA tray. If no, leave note "Owner unknown, redirected to LO tray" and redirect.</li>
+        <li><strong>COI Check:</strong> Check COI using Vol/Fol or other title details. Does vendor match registered proprietor in COI? If no, initiate Vendor Clarification (Q1). If yes, check date of possession.</li>
+        <li><strong>Date of possession:</strong> Is vendor the registered proprietor on or before 31 December of current assessment year? If on or after: process PCC as is. If before: check if date impacts prior assessment years. If impacts prior years, check if authorised for LO updates.</li>
+        <li><strong>Deceased Estate (p.11):</strong> Check COI for "transmission application" dealing type. If yes:
+          <ul>
+            <li>Date of death less than 3 years: load deceased customer, enter DOD, add comment with source (Supreme Court, probate websites, SAI Global, LPR etc). Place comment in PIA: "Trust not created. Vendor is exec." Process as normal.</li>
+            <li>Date of death more than 3 years: check if estate is already a Trust customer type. If yes, redirect to Estate tray. If no, redirect to Estate tray for escalation to ERC with note "DOD as per Probate for PIA Number *****."</li>
+          </ul>
+        </li>
+        <li><strong>Determine executors:</strong> Check COI. Search Supreme Court (supremecourt.vic.gov.au), probate records (online.justice.vic.gov.au), Herald Sun tributes. If date not found/known, request clarification via agency or eBus applicant.</li>
+      </ul>
+      <div class="stop">Certificate cannot be issued as "owner unknown." Redirect to LO tray.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Change of Ownership Required (p.10); Deceased Estate (p.11)</div>
+
+      <div class="detail-toggle" data-action="toggle_detail">
+        <span class="detail-toggle-text">Procedure Detail: Ownership and Deceased Estates</span>
+        <span class="detail-toggle-arrow">&#9660;</span>
+      </div>
+      <div class="detail-panel">
+        <h4>Change of Ownership Required (p.10)</h4>
+        <p>These are complex and can take more than the 6-minute certificate time stamp. Processing and management of the Land Ownership tray falls with the PCC BTO.</p>
+        <h4>Owner Unknown Path</h4>
+        <p>Does vendor on the application match e-Sys? If no, is ownership in Owner Unknown? If yes: note that certificate cannot be issued as "owner unknown." Check if you are authorised to complete LO updates. If yes, continue to "Processing from the LO tray." If no, leave note in PIA details tab: "Owner unknown, redirected to LO tray" and redirect to LO tray for BTO to action.</p>
+        <h4>COI Check Path</h4>
+        <p>Check COI using Vol/Fol or other title details. Does vendor match the registered proprietor in COI? If no, send Vendor Clarification (see Q1). If yes, check: is the vendor the registered proprietor on or before 31 December of the current assessment year?</p>
+        <p>If ON the date: process PCC as is. If BEFORE the date: does the date of possession impact prior assessment years? If no, process PCC as is. If yes, check if authorised for LO updates. If yes, continue to "Processing from LO tray." If no, redirect to LO tray for BTO action with note "Land Ownership as per dealing number *****."</p>
+        <h4>Processing from the LO Tray (p.10)</h4>
+        <p>BTO and Grade 3 staff authorised to process basic land transfers. Escalations to Assessing are agreed at all times but particularly during busy periods. Using COI, assess the LO update: does it involve a Trust, retro transfers, or multiple parties or payments? If yes, will the LO update impact the assessment? If yes, escalate to Assessing escalation mail box. If no, process PCC as is. If no complex elements, process the LO Transfer as per LO procedures (CM10 file DOC/25/560508) and issue the cert.</p>
+        <h4>Deceased Estate (p.11)</h4>
+        <p>In COI, does the property have dealing type as "transmission application"? If no, check if there is any other information to indicate an estate. If applicants are on COI with transmission application as dealing type, safe to assume they are executors of estate. If no transmission and no other indicators, process PIA as normal.</p>
+        <p>If estate is detected: determine executors. Check COI. Search Supreme Court (www.supremecourt.vic.gov.au/wills-and-probate), probate records (online.justice.vic.gov.au), Herald Sun tributes (tributes.heraldsun.com.au).</p>
+        <p>Date of death less than 3 years: load deceased customer to tree, click Edit, enter date of death (DOD) in required field. In comments field enter "DOD as per [source: probate website, Infotrack, Landata, SAI global, LPR etc.]" Save. In PIA application place comment "Trust not created. Vendor is exec." Save and process PIA as normal.</p>
+        <p>Date of death more than 3 years: Is the estate already a Trust (customer type)? If no, redirect to Estate tray for escalation to ERC with note "DOD as per Probate for PIA Number *****." If yes, CSO to process and issue certificate. In PIA details tab note: "Date of Death as per... Date of death. User ID and date." Redirect PIA to Estate tray.</p>
+        <div class="page-ref">Source: Change of Ownership Required (p.10); Deceased Estate (p.11)</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>e-Sys ownership records (including Owner Unknown status)</li>
+            <li>COI title information (Vol/Fol, dealing types, registered proprietor)</li>
+            <li>Date of possession relative to 31 December assessment date</li>
+            <li>Deceased estate indicators (transmission application dealing type)</li>
+            <li>Date of death (from Supreme Court, probate, Herald Sun, SAI Global)</li>
+            <li>Trust customer type status</li>
+            <li>LO authorisation level (BTO/Grade 3 vs standard CSO)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>CSO - standard ownership verification via COI</li>
+            <li>BTO / Grade 3 - LO tray processing (basic transfers)</li>
+            <li>Assessing - escalation for trusts, retro transfers, multiple parties</li>
+            <li>Estate tray / ERC - deceased estate processing for DOD over 3 years</li>
+            <li>COI - title verification, dealing type checks</li>
+            <li>Supreme Court / probate websites - date of death confirmation</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Ownership status (four paths):
+          <ul>
+            <li>Owner matches and is current: proceed to Q5</li>
+            <li>Owner Unknown: redirect to LO tray (cannot issue)</li>
+            <li>Owner mismatch: Vendor Clarification or LO update required</li>
+            <li>Deceased estate (DOD under 3 years): enter DOD, process as normal</li>
+            <li>Deceased estate (DOD over 3 years): redirect to Estate tray / ERC</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Ownership confirmed - proceed</li>
+            <li>Or LO update processed (basic transfer)</li>
+            <li>Or redirected to LO tray, Estate tray, or Assessing</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q5 -->
+  <section id="q5">
+    <h2>Q5 - Are liabilities, payments, and action items resolved?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Suspense Payments (p.12):</strong> Launch PIA. Confirm no open action items requiring escalation. Check liability node on all: trust/trustees, LTX group members, all joint ownership members. If suspense payment exists and liability is against same customer: apply to oldest liability first. If different customer: establish source, check if transfer is permitted under SRO guidelines.</li>
+        <li><strong>Payment transfers:</strong> Go to Allocations node, tick Suspense, apply. Select payment/s, click Transfer. On transfer screen click Destination. If payment goes from individual to JO/group member: check Same Customer box. If to different customer: enter customer ID of other customer.</li>
+        <li><strong>PIA Escalation - Open Action Items (p.13):</strong> Check if PIA customer has active action item. If yes, determine if it will amend the customer's liability. Nine types requiring escalation to assessing@sro.vic.gov.au:
+          <ul>
+            <li>Land Ownership</li>
+            <li>LTX Trust Form 13/14</li>
+            <li>PPR</li>
+            <li>PPL</li>
+            <li>Multi Amendments</li>
+            <li>AOS work item</li>
+            <li>Penalty work item</li>
+            <li>Other Amendment</li>
+            <li>Unprocessed NOA (to NOA.Escalation@sro.vic.gov.au)</li>
+          </ul>
+        </li>
+        <li><strong>Note:</strong> General Correspondence, Complex Correspondence, Formal/Private Rulings do NOT need escalation. If property is in correct ownership, issue certificate as is.</li>
+        <li><strong>Pending Write Off (p.14):</strong> Error "A non-issue indicator (Recovery matter specific action) is set for liable party." Check property for liability, then parent, then related properties. If liability ceased before 31 Dec prior year: manual certificate required. If no liabilities on related properties: override error and issue.</li>
+        <li><strong>DMS Recovery Non-Issue (p.15):</strong> Same error pattern as Pending Write Off. Check property, parent, related properties for liabilities. Manual certificate path or override path.</li>
+        <li><strong>Vendor Protected by Prior Certificate (p.18):</strong> When vendor is protected from prior year liabilities by a previously issued PCC. Confirm original certificate and payment. Enter specific comments in PIA details tab.</li>
+        <li><strong>Zero Value on Property (p.19):</strong> Warning that zero-value properties exist. If vendor is statutory body (e.g. Director of Housing): override. If not sure: see Senior CSO. If not statutory: load vendor properties, filter for zero site value, check results.</li>
+      </ul>
+      <div class="stop">Action items that will amend liabilities MUST be escalated before issuing certificate.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Suspense Payments (p.12); PIA Escalation (p.13); Pending Write Off (p.14); DMS Recovery Non-Issue (p.15); Vendor Protected (p.18); Zero Value (p.19)</div>
+
+      <div class="detail-toggle" data-action="toggle_detail">
+        <span class="detail-toggle-text">Procedure Detail: Liabilities, Suspense, Escalations</span>
+        <span class="detail-toggle-arrow">&#9660;</span>
+      </div>
+      <div class="detail-panel">
+        <h4>Suspense Payments (p.12)</h4>
+        <p>Launch PIA work item. Confirm there are no open action items that require escalation. Check liability node on all: trust/trustees, LTX group members, all joint ownership members. Go to Ownership node and load all current owners to the tree including trust/trustees, LTX group members, all joint ownership members. Click on Land Taxpayer node and expand. Click on Allocations and tick Suspense box and click Apply. Did any payments come up? If no, continue on to next customer until suspense payment/s found. If payments found but no outstanding liability, process PIA.</p>
+        <h4>Payment Transfer Process</h4>
+        <p>Is the liability against the same customer with the suspense payment? If same customer: apply suspense payment to oldest liability first. Go to allocations node, tick suspense box and apply. Select payment/s and click Transfer. On transfer payments screen click Destination. Check the Same Customer box. If different customer: was payment actually made by customer with the liability? If yes, apply to oldest liability. If no, establish source of payment. Can payment be transferred to other customer within SRO guidelines? If yes, apply suspense and transfer. If no, send email to relevant staff member to issue certificate.</p>
+        <h4>Transfer Steps in e-Sys</h4>
+        <p>Select the first line of Liability Destination, right-click and select Add. Enter the relevant assessment year into the start and end field. Apply/select fee. Click OK. Liability info will now be populated. In the liability components section tick the box next to the liability. Enter the amount to be used in the transfer amount section. Process PIA.</p>
+        <h4>PIA Escalation - Open Action Items (p.13)</h4>
+        <p>Does PIA customer have an active action item? If no, process PIA as normal. If yes, will the action item amend the customer's liability? Action items to be escalated: Land Ownership, LTX Trust Form 13/14, PPR, PPL, Multi Amendments, Related Party Automation, Other amendment, Penalty work item, AOS work item.</p>
+        <p>Send email to the relevant team's Escalation Inbox requesting escalation of action item. Email subject: PIA (PIA number) - (Action Item type) - (Date received). In body include: Customer number, Action item type, PIA ID. Put note on PIA details tab "Action item to be completed - user ID." Reserve PIA to your tray. When action item is completed an email will be sent to you. Process PIA and issue as per email.</p>
+        <h4>Escalation Email Addresses</h4>
+        <ul>
+          <li>Land Ownership: assessing@sro.vic.gov.au</li>
+          <li>LTX Trust Form 13/14: assessing@sro.vic.gov.au</li>
+          <li>PPR: assessing@sro.vic.gov.au</li>
+          <li>PPL: assessing@sro.vic.gov.au</li>
+          <li>Multi Amendments: assessing@sro.vic.gov.au</li>
+          <li>AOS work item: assessing@sro.vic.gov.au</li>
+          <li>Penalty work item: assessing@sro.vic.gov.au</li>
+          <li>Other Amendment: assessing@sro.vic.gov.au</li>
+          <li>Unprocessed NOA: NOA.Escalation@sro.vic.gov.au</li>
+        </ul>
+        <p><strong>Note:</strong> General Correspondence / Complex Correspondence, Formal, Private Rulings work items do NOT need to be escalated. If property is in correct ownership, issue the certificate as is.</p>
+        <h4>Recovery Non-Issue / Pending Write Off (p.14-15)</h4>
+        <p>Error: "A non-issue indicator (Recovery matter specific action) is set for liable party." The main reason a write-off is requested is where the liability is less than $50 and it is not economically viable to chase the debt. Usually requested by staff in Debt Management or Land Tax Assessing but may also be placed on the customer by e-Sys.</p>
+        <p>Check property for a liability. If no, check parent property for liability. If no liability on parent either, refer to Process Online Application. If yes (liability on property or parent), go to related properties node and load parent and grandparent properties to the tree. Is there outstanding liabilities on related properties? If no, override the error and issue certificate. If yes, manual certificate required. Place comment in details tab "Manual certificate required as LTX outstanding on parent property LID xxxxx." Redirect PIA to Manual Certificate Tray.</p>
+        <h4>Vendor Protected by Prior Certificate (p.18)</h4>
+        <p>There are times when the vendor is protected from prior year liabilities due to the property clearance certificate they requested when they purchased the land. Customer contacts to advise prior certificate liability and payment. Request copy of original certificate and payment details. Was original certificate provided? If no, include prior years and issue. If yes, confirm details on certificate. Was payment received for certificate? If no, include prior years and issue. If yes, in details tab of PIA enter: "(original cert number) issued protects vendor from prior year tax for xxxx year/s. As a result xxxx year/s tax not shown on this certificate." At liability level of PIA untick relevant prior year liabilities. Refer to Process Online Application.</p>
+        <h4>Zero Value on Property (p.19)</h4>
+        <p>Warning: "There is a zero value property owned by vendor." Is vendor a statutory body? (e.g. Director of Housing - they do not pay land tax). If Yes: override warning, refer to Process Online Application. If Not sure: see Senior CSO. If No: load vendor of property (as at 31 Dec) to the tree. Select land owner node. Right-click and select "set filter criteria." Select "exclude exempted" and "show zero site value properties only." Click filter. Any properties displayed? If yes, see Senior CSO. If no, override warning and process.</p>
+        <h4>Parcels (p.20)</h4>
+        <p>A parcel is a folder created where multiple properties are rated under the one Municipality Property Number (MPN). Is property in a parcel? If yes: go to parcel node, double-click to load parcel to tree. Under PIA node, link ONLY the parcel to the PIA application (do NOT link individual properties). Issue certificate - it will show breakdown of each property in the parcel. If not sure: check Ownership node, Land owner node of vendor, Property address level for parcel tick box. If ticked, follow parcel process. If not ticked, refer to Process Online Application.</p>
+        <div class="page-ref">Source: Suspense Payments (p.12); PIA Escalation (p.13); Pending Write Off (p.14); DMS Recovery (p.15); Vendor Protected (p.18); Zero Value (p.19); Parcels (p.20)</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Outstanding liabilities (property, parent, grandparent, related properties)</li>
+            <li>Suspense payments (across trust/trustees, LTX groups, JO members)</li>
+            <li>Active action items (9 types requiring escalation, 3 types exempt)</li>
+            <li>Recovery non-issue indicators</li>
+            <li>Prior certificate issuance history (vendor protection)</li>
+            <li>Zero value property warnings</li>
+            <li>Parcel membership (MPN-based)</li>
+            <li>Statutory body status of vendor</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>CSO - suspense allocation, standard liability checks, override where permitted</li>
+            <li>Senior CSO - zero value escalation, complex payment transfers</li>
+            <li>Assessing (assessing@sro.vic.gov.au) - action item escalation (8 types)</li>
+            <li>NOA Escalation (NOA.Escalation@sro.vic.gov.au) - unprocessed NOAs</li>
+            <li>Manual Certificate Tray - recovery non-issue with parent property liability</li>
+            <li>e-Sys - allocations, transfers, parcel linking</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Liability resolution (multiple sub-decisions):
+          <ul>
+            <li>No liabilities, no suspense, no action items: proceed to Q6</li>
+            <li>Suspense exists: allocate to oldest liability (same customer or transfer)</li>
+            <li>Action item exists (9 escalation types): email Assessing, reserve PIA</li>
+            <li>Action item exists (3 exempt types): issue as is</li>
+            <li>Recovery NII with no related liability: override and issue</li>
+            <li>Recovery NII with related liability: manual certificate required</li>
+            <li>Vendor protected by prior cert: untick prior year liabilities</li>
+            <li>Zero value (statutory body): override</li>
+            <li>Parcel property: link parcel (not individual properties) to PIA</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>All liabilities resolved or correctly reflected</li>
+            <li>Suspense allocated or transferred</li>
+            <li>Action items escalated (PIA reserved)</li>
+            <li>Or PIA redirected to Manual Certificate Tray</li>
+          </ul>
+        </div>
+        <div class="constraint"><strong>Four distinct sub-processes collapsed into one question:</strong> Suspense payments, PIA escalation (9 action item types), Recovery NII (pending write-off and DMS), and Vendor protection by prior certificate. Each has its own decision tree.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q6 -->
+  <section id="q6">
+    <h2>Q6 - Can the certificate be issued?</h2>
+    <div class="staff">
+      <ul>
+        <li>Once all validation and resolution steps are complete (Q1-Q5), generate the certificate.</li>
+        <li>Select the Liabilities node of the PIA and select Edit. Check: are there more than 2 references, pro rata required, or other comments? If yes, handle accordingly. If no, enter additional references and any relevant comment.</li>
+        <li>Click "Generate S97 Certificate" button.</li>
+        <li>If warning or error message appears: see Warning, Error or Additional procedures to resolve (Q2).</li>
+        <li>If no warning: select OK. Certificate is issued.</li>
+        <li><strong>Manual Certificate (p.21):</strong> For inactive parent properties with net liabilities. Requires LTX-A_SPWF e-Sys profile. Only some users have access. Each pro rata must be done separately. Certificate displays child liability and child's portion of parent/grandparent liabilities separately. Liability fields can be overwritten where information needs to differ from e-Sys.</li>
+        <li>Record mandatory comments and notes on the PIA application.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Application - Liability section (p.4); The e-Sys Manual PIA (p.21)</div>
+
+      <div class="detail-toggle" data-action="toggle_detail">
+        <span class="detail-toggle-text">Procedure Detail: Certificate Generation and Manual PIA</span>
+        <span class="detail-toggle-arrow">&#9660;</span>
+      </div>
+      <div class="detail-panel">
+        <h4>Standard Certificate Generation</h4>
+        <p>Select the Liabilities node of the PIA and select Edit. Are there more than 2 references? Is pro rata required? Are there other comments? If yes to any, handle per the relevant procedure. If no, enter additional references and any relevant comment. Click "Generate S97 Certificate" button. If a warning or error message appears, see the PIA Warning procedures (Q2) to resolve. If no warning, select OK and the certificate is issued.</p>
+        <h4>Manual PIA Process (p.21)</h4>
+        <p>The manual process to issue a certificate where there are net liabilities on inactive parent properties is almost exactly the same as processing an ordinary electronic PIA, including issuing electronically in the hourly batches, and being able to apply electronically for updates.</p>
+        <p>However, they will not automate. Manual intervention is required. Only some users will have the required e-Sys profile (LTX-A_SPWF) and each pro rata calculation must be done separately.</p>
+        <p>The user will have the capacity to associate multiple parent properties and perform several pro rata calculations to issue an accurate Certificate. The Certificate will display the child liability and the child's portion of the parent and/or grandparent liabilities separately on the certificate. As is currently the case the liability fields can be overwritten where the information on the certificate needs to be different than e-Sys.</p>
+        <div class="page-ref">Source: Application (p.4); Manual PIA (p.21)</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>:
+          <ul>
+            <li>Validated application state (all Q1-Q5 checks passed)</li>
+            <li>Liability data (current year, prior years, WGT, CIPT, VRLT, deferral interest)</li>
+            <li>Pro rata calculations (if applicable)</li>
+            <li>Manual PIA profile (LTX-A_SPWF) if manual issuance required</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Processing responsibility</strong>:
+          <ul>
+            <li>CSO - standard certificate generation via "Generate S97 Certificate"</li>
+            <li>Authorised users (LTX-A_SPWF profile) - manual certificate issuance</li>
+            <li>e-Sys - certificate generation, hourly batch issuance</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Decision</strong>: Issuance path:
+          <ul>
+            <li>Standard: generate via S97 button, no warnings = issued</li>
+            <li>Warnings at generation: resolve per Q2 matrix</li>
+            <li>Manual: required for inactive parent properties with net liabilities</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>:
+          <ul>
+            <li>Property Clearance Certificate issued (electronic or manual)</li>
+            <li>Certificate shows: land tax liability for current year and prior years, any WGT, CIPT, VRLT, penalty tax, deferral interest</li>
+            <li>Unlimited reissues available for 90 days</li>
+            <li>Comments recorded on PIA application</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION -->
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction (Q1-Q6)</h2>
+    <div class="flow">
+      <div class="flow-title">System Touchpoints per Step</div>
+      <div class="node n-blue">Q1: e-Sys (PIA), COI, ASIC, New Plans folder</div>
+      <div class="arr"></div>
+      <div class="node n-red">Q2: e-Sys warnings (12 types), Senior CSO escalation</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q3: e-Sys pro rata, New Plans, Dye and Durham, Manual Calculator</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Q4: COI, Supreme Court, Probate, LO Tray, Estate Tray</div>
+      <div class="arr"></div>
+      <div class="node n-red">Q5: e-Sys allocations, Assessing inbox, NOA inbox, Manual Cert Tray</div>
+      <div class="arr"></div>
+      <div class="node n-gray">Q6: e-Sys S97 generation, Manual PIA (LTX-A_SPWF profile)</div>
+      <div style="margin-top:24px;"></div>
+      <div class="flow-title" style="font-size:16px;">All Systems Referenced</div>
+      <div class="branch">
+        <div class="node n-blue" style="font-size:11px">e-Sys</div>
+        <div class="node n-blue" style="font-size:11px">COI</div>
+        <div class="node n-amber" style="font-size:11px">ASIC</div>
+        <div class="node n-amber" style="font-size:11px">Landata</div>
+        <div class="node n-amber" style="font-size:11px">Dye and Durham</div>
+      </div>
+      <div class="branch" style="margin-top:8px;">
+        <div class="node n-amber" style="font-size:11px">DLS</div>
+        <div class="node n-amber" style="font-size:11px">Supreme Court</div>
+        <div class="node n-gray" style="font-size:11px">Herald Sun Tributes</div>
+        <div class="node n-gray" style="font-size:11px">SAI Global / LPR</div>
+        <div class="node n-gray" style="font-size:11px">Council Returns</div>
+      </div>
+      <div class="branch" style="margin-top:8px;">
+        <div class="node n-gray" style="font-size:11px">New Plans folder</div>
+        <div class="node n-gray" style="font-size:11px">Lassi</div>
+        <div class="node n-gray" style="font-size:11px">TaxNet</div>
+        <div class="node n-gray" style="font-size:11px">DAS Bundle</div>
+      </div>
+      <div style="margin-top:16px;"></div>
+      <div class="flow-title" style="font-size:16px;">Processing Trays</div>
+      <div class="branch">
+        <div class="node n-amber" style="font-size:11px">LO PIA Tray</div>
+        <div class="node n-amber" style="font-size:11px">Estate Tray</div>
+        <div class="node n-amber" style="font-size:11px">Manual Certificate Tray</div>
+        <div class="node n-amber" style="font-size:11px">PIA Cancellation Tray</div>
+        <div class="node n-amber" style="font-size:11px">Land Taxpayer PIA Tray</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> Primary systems</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> Verification / Trays</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> Reference tools</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SUMMARY -->
+<div class="specOnly">
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul>
+      <li>The PCC details the amount of tax secured by a charge on the land, including current year, prior years, WGT, CIPT, VRLT penalty tax, and deferral interest.</li>
+      <li>Approximately 300,000 applications received per year via e-Business system.</li>
+      <li>Applicants: owner, purchaser, or mortgagee of land. Sellers required to obtain PCC as part of Section 32 statement.</li>
+      <li>Fee: $18.90 (increases at 1.16 fee units on 1 July each year).</li>
+      <li>Turnaround: 10 working days. Auto-issues within 24 hours if no warnings.</li>
+      <li>Unlimited reissues for 90 days post-issuance.</li>
+      <li>Time standard: 6 minutes per work item.</li>
+      <li>Key principle: certificate reflects "right person / right property."</li>
+      <li>A PCC is NOT a Land Tax Assessment - it is a snapshot of liabilities at time of issue.</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul>
+      <li><strong>Division:</strong> Operations</li>
+      <li><strong>Branch:</strong> Land Revenue</li>
+      <li><strong>Created:</strong> 28 August 2019</li>
+      <li><strong>Revised:</strong> 17 March 2025</li>
+      <li><strong>Legislation:</strong> Land Tax Act 2005, Taxation Administration Act 1997, Privacy Act 1988</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>PIA Warning Types (12+)</h2>
+    <ol style="font-size:13px;">
+      <li>Property Warning (multiple references)</li>
+      <li>Property Warning (not in current year)</li>
+      <li>Settlement Date Warning (future year)</li>
+      <li>Comment Warning</li>
+      <li>Recalc Warning</li>
+      <li>Non-Issue Warning</li>
+      <li>Special Customer Warning (current year)</li>
+      <li>Special Customer Warning (previous years)</li>
+      <li>Liability Warning (CIPT/LTX)</li>
+      <li>Valuation Warning</li>
+      <li>Duplicate Warning</li>
+      <li>Customer Warning (auto-cert previously generated)</li>
+      <li>Liability Warning (unable to generate)</li>
+    </ol>
+  </section>
+
+  <section class="summary-section">
+    <h2>Escalation Action Item Types (9)</h2>
+    <ul style="font-size:13px;">
+      <li>Land Ownership &rarr; assessing@sro.vic.gov.au</li>
+      <li>LTX Trust Form 13/14 &rarr; assessing@sro.vic.gov.au</li>
+      <li>PPR &rarr; assessing@sro.vic.gov.au</li>
+      <li>PPL &rarr; assessing@sro.vic.gov.au</li>
+      <li>Multi Amendments &rarr; assessing@sro.vic.gov.au</li>
+      <li>AOS work item &rarr; assessing@sro.vic.gov.au</li>
+      <li>Penalty work item &rarr; assessing@sro.vic.gov.au</li>
+      <li>Other Amendment &rarr; assessing@sro.vic.gov.au</li>
+      <li>Unprocessed NOA &rarr; NOA.Escalation@sro.vic.gov.au</li>
+    </ul>
+    <p style="font-size:13px;color:#475569;margin-top:8px;">General Correspondence, Complex Correspondence, Formal/Private Rulings do NOT require escalation.</p>
+  </section>
+
+  <section class="summary-section">
+    <h2>Structural Limitations and Ambiguities</h2>
+    <div class="limitations"><strong>Warning matrix complexity:</strong> 12+ warning types each with distinct resolution flowcharts. Some CSO-resolvable, some require Senior CSO, some redirect to other trays. Decision tree is the most complex in any LRA procedure.</div>
+    <div class="limitations"><strong>Pro rata variants:</strong> Area, Unit Entitlement, and 60/40 rule each have conditional triggers and cannot be expressed as simple binary decisions.</div>
+    <div class="limitations"><strong>Ownership and estate handling:</strong> Four distinct paths (Owner Unknown, COI mismatch, date-based, deceased estate) with different tray routing and authorisation requirements.</div>
+    <div class="limitations"><strong>Liability sub-processes:</strong> Four distinct sub-processes (suspense, escalation, recovery NII, vendor protection) collapsed into one procedural step.</div>
+    <div class="limitations"><strong>Tray routing:</strong> Five different processing trays (LO, Estate, Manual Certificate, Cancellation, Land Taxpayer PIA) with different ownership and authorisation rules.</div>
+  </section>
+
+  <section class="summary-section">
+    <h2>DCPR Procedural Alignment Score</h2>
+    <div class="score"><strong>Score: 4 / 10</strong><br>Deductions: 12-warning matrix absent (-2), vendor clarification taxonomy and amendment rules missing (-1), pro rata 60/40 rule and parent traversal logic missing (-1), deceased estate handling absent (-0.5), 9-type escalation matrix missing (-0.5), suspense payment transfer process missing (-0.5), five processing trays not mapped (-0.5).</div>
+  </section>
+
+  <section class="summary-section">
+    <h2>Definitions</h2>
+    <ul style="font-size:13px;">
+      <li><strong>PIA</strong> - Property Inquiry Application</li>
+      <li><strong>PCC</strong> - Property Clearance Certificate</li>
+      <li><strong>FYP</strong> - Future Year PIA</li>
+      <li><strong>COI</strong> - Compliance Operational Intelligence</li>
+      <li><strong>CSO</strong> - Customer Service Officer</li>
+      <li><strong>BTO</strong> - Branch Technical Officer</li>
+      <li><strong>MPN</strong> - Municipal Property Number</li>
+      <li><strong>UE</strong> - Unit Entitlements</li>
+      <li><strong>LID</strong> - Land Identification number</li>
+      <li><strong>SVR</strong> - Site Value Request</li>
+      <li><strong>NII</strong> - Non-Issue Indicator</li>
+      <li><strong>WGT</strong> - Windfall Gains Tax</li>
+      <li><strong>CIPT</strong> - Commercial and Industrial Property Tax</li>
+      <li><strong>VRLT</strong> - Vacant Residential Land Tax</li>
+      <li><strong>NOA</strong> - Notice of Acquisition</li>
+      <li><strong>DMS</strong> - Debt Management Services</li>
+      <li><strong>LO</strong> - Land Ownership</li>
+      <li><strong>ERC</strong> - Estate Review Committee</li>
+      <li><strong>JO</strong> - Joint Ownership</li>
+    </ul>
+  </section>
+</div>
+```
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display = 'block';
+  document.querySelector('.systemsOnly').style.display = 'none';
+  document.querySelector('.specOnly').style.display = 'none';
+  document.querySelectorAll('.staff, .architect').forEach(function(e){ e.style.display = 'none'; });
+  btnStaff.classList.remove('active');
+  btnArch.classList.remove('active');
+  btnSys.classList.remove('active');
+  btnSpec.classList.remove('active');
+  if(view === 'staff'){
+    document.querySelectorAll('.staff').forEach(function(e){ e.style.display = 'block'; });
+    btnStaff.classList.add('active');
+  }
+  if(view === 'architect'){
+    document.querySelectorAll('.architect').forEach(function(e){ e.style.display = 'block'; });
+    btnArch.classList.add('active');
+  }
+  if(view === 'systems'){
+    document.getElementById('questionFlow').style.display = 'none';
+    document.querySelector('.systemsOnly').style.display = 'block';
+    btnSys.classList.add('active');
+  }
+  if(view === 'spec'){
+    document.getElementById('questionFlow').style.display = 'none';
+    document.querySelector('.specOnly').style.display = 'block';
+    btnSpec.classList.add('active');
+  }
+}
+
+document.addEventListener('click', function(e){
+  var toggle = e.target.closest('.detail-toggle');
+  if(toggle){
+    var panel = toggle.nextElementSibling;
+    var arrow = toggle.querySelector('.detail-toggle-arrow');
+    if(panel) panel.classList.toggle('open');
+    if(arrow) arrow.classList.toggle('open');
+  }
+});
+
+showView('staff');
+</script>
+
+</body>
+</html>

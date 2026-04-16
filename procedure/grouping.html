@@ -1,1 +1,510 @@
 
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Land Tax Grouping Procedure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    ul,ol{margin-left:22px}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .constraint{background:#faf5ff;border-left:5px solid #8b5cf6;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .limitations{background:#fffbeb;border-left:5px solid #f59e0b;padding:12px 16px;margin:12px 0;font-size:14px}
+    .score{background:#f0fdf4;border-left:5px solid #22c55e;padding:12px 16px;margin:12px 0;font-size:14px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;-webkit-tap-highlight-color:transparent}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .detail-panel .page-ref{font-size:11px;color:#3b82f6;font-weight:600;margin-top:8px}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .branch{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;justify-content:center}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#475569}
+    .legend-dot{width:12px;height:12px;border-radius:3px}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Land Tax Grouping Procedure for eSys</h1>
+  <p>Division: Land Revenue Services &bull; Branch: Land Revenue Administration &bull; Revised: 19 February 2024</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <a href="#q1">Q1 Identification</a>
+    <a href="#q2">Q2 Legislative Test</a>
+    <a href="#q3">Q3 Eligibility</a>
+    <a href="#q4">Q4 Create Group</a>
+    <a href="#q5">Q5 Nominated Member</a>
+    <a href="#q6">Q6 Member Maintenance</a>
+    <a href="#q7">Q7 Cease Group</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+```
+<div id="questionFlow">
+
+  <!-- Q1 -->
+  <section id="q1">
+    <h2>Q1 - Have potentially related corporations been identified for land tax purposes?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Client notification:</strong> Related corporations can notify SRO by letter, phone, email or online via the contact us portal on the SRO website.</li>
+        <li><strong>Operations staff identification:</strong> Staff may identify potential LTX Groups by using the ASIC database to view company directors and share holdings. An Investigation Report (IR) should be raised by Operations staff for Investigations to review suspected related corporations.</li>
+        <li><strong>Investigations identification:</strong> LTX Groups may also be identified by Investigations staff as part of a land tax grouping project.</li>
+        <li>Conduct ASIC database search to verify shareholders and directors.</li>
+        <li>If companies found to be related: proceed to Q2 (legislative test).</li>
+        <li>If companies not related: no grouping possible - assess as normal taxpayers.</li>
+      </ul>
+      <div class="constraint"><strong>System constraint:</strong> LTX Groups and their members are not currently supported to lodge amendments via My Land Tax (MLT) system.</div>
+      <div class="ref"><strong>Procedure reference:</strong> How are Land Tax Groups Identified (p.4); Process map (p.3)</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Identification Sources</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Client Notification</h4>
+        <p>Related corporations can notify the SRO that they should be grouped for land tax purposes by letter, phone, email or online via the contact us portal on the SRO website. LTX Groups and their members are not currently supported to lodge amendments via the My Land Tax (MLT) system.</p>
+        <h4>Operations Staff Identification</h4>
+        <p>Operations staff may identify potential LTX Groups by using the ASIC database to view company directors and share holdings. An Investigation Report (IR) should be raised by Operations staff for Investigations to review suspected related corporations.</p>
+        <h4>Investigations Identification</h4>
+        <p>LTX Groups may also be identified by Investigations staff as part of a land tax grouping project.</p>
+        <h4>ASIC Verification</h4>
+        <p>Conduct a company search through the ASIC database to verify shareholders and directors. Were companies found to be related? If yes, proceed to legislative test (Q2). If no, no grouping possible - assess as normal taxpayers.</p>
+        <div class="page-ref">Source: How are Land Tax Groups Identified (p.4); Process map flowchart (p.3)</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Client notification (letter, phone, email, portal), corporate identifiers, ASIC shareholding and director data</div>
+        <div class="block"><strong>Processing responsibility</strong>: Operations staff (identification, IR), Investigations (review), ASIC (verification), e-Sys</div>
+        <div class="block"><strong>Decision</strong>: Related corporations identified (proceed to Q2) or not identified (assess as normal taxpayers)</div>
+        <div class="block"><strong>Output</strong>: Investigation Report raised for Investigations review, or no grouping action</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 -->
+  <section id="q2">
+    <h2>Q2 - Are the corporations related under sections 47-50 of the Land Tax Act 2005?</h2>
+    <div class="staff">
+      <ul>
+        <li>Assess verified corporate relationships against the grouping provisions of the Act (sections 47-50).</li>
+        <li>Grouped related corporations are treated as a single entity and assessed on the aggregate taxable value of all Victorian land owned by each group member.</li>
+        <li>A single land tax assessment is issued to the LTX Group, for which all group members are jointly and severally liable.</li>
+        <li>If corporations do not fall within sections 47-50: no grouping possible - assess as normal taxpayers.</li>
+        <li>For further information on how corporations may be considered related, refer to TaxNet and the Act.</li>
+      </ul>
+      <div class="stop">Do not proceed with grouping where corporations do not satisfy legislative provisions.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Introduction and Background (p.2); Process map (p.3)</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Legislative Framework</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Grouping Provisions</h4>
+        <p>Sections 47-50 of the Land Tax Act 2005 (the Act) provide for the grouping of related corporations for land tax purposes. The procedure does not define the specific relationship tests — these are contained in TaxNet and the Act itself. Staff must apply the legislative criteria to determine whether corporations meet the relatedness test.</p>
+        <h4>Effect of Grouping</h4>
+        <p>Grouped related corporations are treated as a single entity and assessed on the aggregate taxable value of all Victorian land owned by each group member. A single land tax assessment is issued to the LTX Group, for which all group members are jointly and severally liable.</p>
+        <h4>Process Map Sequence (p.3)</h4>
+        <p>The source procedure shows a clear four-step post-creation sequence: (1) Create Land Tax Group in e-Sys, (2) Calculate liabilities, (3) Transfer payments if applicable, (4) Generate assessments and letter to relevant taxpayers.</p>
+        <div class="page-ref">Source: Introduction and Background (p.2); Process map (p.3); Land Tax Act 2005 ss 47-50</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Verified corporate ownership and control details from ASIC</div>
+        <div class="block"><strong>Processing responsibility</strong>: Operations/Investigations staff (legislative assessment)</div>
+        <div class="block"><strong>Decision</strong>: Legislative grouping criteria met (proceed) or not met (assess as normal taxpayers)</div>
+        <div class="block"><strong>Output</strong>: Grouping continues to Q3 or corporations assessed individually</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q3 -->
+  <section id="q3">
+    <h2>Q3 - Are the corporations eligible to be grouped in eSys?</h2>
+    <div class="staff">
+      <ul>
+        <li>Confirm that customers are corporations (company customer type).</li>
+        <li><strong>Trust exclusion:</strong> Land held on trust is excluded from the grouping provisions under the Act. Trust customers in e-Sys cannot be included in a LTX Group. This is a legislative boundary, not just a system limitation.</li>
+        <li>Exclude any ineligible customers from grouping consideration.</li>
+        <li>If all eligible: proceed to group creation (Q4).</li>
+      </ul>
+      <div class="stop">Trust customers cannot be included in a Land Tax Group. This is a legislative exclusion under the Act.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Introduction and Background (p.2)</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Eligibility Rules</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Trust Exclusion</h4>
+        <p>Sections 47-50 of the Land Tax Act 2005 provide for the grouping of related corporations for land tax purposes. Land held on trust is excluded from the grouping provisions under the Act, and trust customers in e-Sys cannot be included in a LTX Group.</p>
+        <p>This is a legislative boundary (the Act excludes trust-held land) that is also enforced as a system rule (e-Sys will not allow trust customer types in a group). Staff should confirm customer type before attempting group creation.</p>
+        <div class="page-ref">Source: Introduction and Background (p.2)</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Customer type and registration details in e-Sys</div>
+        <div class="block"><strong>Processing responsibility</strong>: e-Sys (customer type validation)</div>
+        <div class="block"><strong>Decision</strong>: Eligible (corporation, not trust) or ineligible (trust customer excluded)</div>
+        <div class="block"><strong>Output</strong>: Group processing proceeds to Q4 or exclusion applied</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q4 -->
+  <section id="q4">
+    <h2>Q4 - Should a Land Tax Group be created or maintained in eSys?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Create group:</strong> Load relevant customers to e-Sys tree. Select Program > Customers > Create LTX Group.</li>
+        <li>Enter the Start Date for the group.</li>
+        <li>Load relevant customers from tree. Enter the Rel Start (Relationship Start) date for each member.</li>
+        <li>Select the nominated member (Nom Mbr checkbox) — this is the lead customer who receives assessments.</li>
+        <li>Check mailing protocol and contact details in the Contact and Mailing tabs. Save.</li>
+        <li><strong>Post-creation sequence (critical):</strong>
+          <ol>
+            <li>Recalculate LTX Group liabilities for relevant assessment years.</li>
+            <li>Check suspense payments under each individual group member. Ensure all suspense allocated to corresponding LTX Group liabilities.</li>
+            <li>Issue LTX Group assessment and explanatory correspondence to lead customer.</li>
+          </ol>
+        </li>
+        <li><strong>Assessment rule:</strong> Only ONE LTX Group assessment is issued to the nominated member for all land owned by companies in the group. Other group members receive a letter advising the assessment has been issued.</li>
+        <li>Any JO assessments for group members are issued separately to the JO lead customer.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Creating a Land Tax Group (p.4-5); Process map (p.3)</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Group Creation Steps</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Create LTX Group in e-Sys</h4>
+        <p>Load the relevant customers to the e-Sys tree. Select Program > Customers > Create LTX Group. This opens the Maintain Land Tax Group [MC301] screen.</p>
+        <h4>Enter Details</h4>
+        <p>Enter the Start Date. Load the relevant customers from the e-Sys tree, then enter the Rel Start (Relationship Start) date for each member.</p>
+        <h4>Select Nominated Member</h4>
+        <p>Select the lead customer of the LTX Group (who will receive the land tax assessments) by checking the relevant Nom Mbr (Nominated Member) box. Check the mailing protocol and contact details in the Contact and Mailing tabs, then select Save.</p>
+        <h4>Post-Creation Sequence</h4>
+        <p>This four-step sequence must be followed after group creation:</p>
+        <ol>
+          <li>Recalculate the LTX Group liabilities for the relevant assessment years</li>
+          <li>Check for suspense payments under each individual group member</li>
+          <li>Ensure all suspense payments under individual members are allocated to the corresponding LTX Group liabilities</li>
+          <li>Issue the LTX Group assessment/s and explanatory correspondence to the lead customer of the LTX Group</li>
+        </ol>
+        <h4>Assessment and Correspondence Rules</h4>
+        <p>Only one LTX Group land tax assessment will be issued to the nominated member for all land owned by the companies within the LTX Group. Other group members will be issued a letter advising that the LTX Group assessment has been issued.</p>
+        <p>Any joint ownership assessments for group members will be issued separately to the lead customer of the joint ownership.</p>
+        <div class="page-ref">Source: Creating a Land Tax Group (p.4-5); Process map (p.3)</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Eligible customer records, relationship start dates, nominated member selection, mailing/contact details</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff, e-Sys (MC301 screen - Create LTX Group)</div>
+        <div class="block"><strong>Decision</strong>: Create new group or maintain existing group</div>
+        <div class="block"><strong>Output</strong>: LTX Group record created with members, liabilities recalculated, suspense allocated, assessment issued to nominated member, letters to other members</div>
+        <div class="constraint"><strong>Post-creation sequence:</strong> Recalculate > Allocate suspense > Issue assessment. This sequence is mandatory and must not be reordered.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q5 -->
+  <section id="q5">
+    <h2>Q5 - Has a nominated group member been assigned and recorded?</h2>
+    <div class="staff">
+      <ul>
+        <li>The nominated member is the lead customer who receives the LTX Group assessment.</li>
+        <li>Assigned during group creation via the Nom Mbr checkbox on MC301 screen.</li>
+        <li><strong>To change the nominated member:</strong>
+          <ol>
+            <li>Load LTX Group, Edit on MC301 screen.</li>
+            <li>Select current Nominated Member, right-click, select "Nominated Member Periods."</li>
+            <li>Enter End Date for current nominated member, select OK.</li>
+            <li>Select new company for nomination, right-click, select "Nominated Member Periods."</li>
+            <li>Enter Start Date for new nominated member, select OK.</li>
+            <li>Check mailing protocol and contact details reflect the new nominated member.</li>
+            <li>Save.</li>
+          </ol>
+        </li>
+        <li><strong>Trigger:</strong> If a ceased group member was the Nominated Member, you must update the nomination as part of the cessation process.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Creating a Land Tax Group (p.5); Changing the Nominated Group Member (p.8-10)</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Nominated Member Change Process</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Initial Assignment</h4>
+        <p>During group creation, select the lead customer by checking the Nom Mbr (Nominated Member) box on the MC301 screen. Check mailing protocol and contact details in Contact and Mailing tabs.</p>
+        <h4>Changing the Nominated Member (p.8-10)</h4>
+        <p>Step 1: Load the LTX Group to the e-Sys tree and select Edit on the Maintain Land Tax Group [MC301] screen.</p>
+        <p>Step 2: In the Members section, select the current Nominated Member, right-click and select "Nominated Member Periods."</p>
+        <p>Step 3: Enter the End Date for the nominated member and select OK.</p>
+        <p>Step 4: Select the company you wish to make the new nominated member for the LTX Group, right-click and select "Nominated Member Periods."</p>
+        <p>Step 5: Enter the Start Date for the new nominated member and select OK.</p>
+        <p>Step 6: Check the mailing protocol and contact details reflect the new nominated member, then select Save.</p>
+        <h4>Cessation Trigger</h4>
+        <p>If the ceased group member was the Nominated Member, you will need to update the Nominated Member as per the change process above. This is a sequencing dependency: cessation of a nominated member triggers a mandatory nomination change.</p>
+        <div class="page-ref">Source: Creating a Land Tax Group (p.5); Changing the Nominated Group Member (p.8-10)</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Group member list, current nominated member, mailing/contact details</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff, e-Sys (MC301 - Nominated Member Periods)</div>
+        <div class="block"><strong>Decision</strong>: Nominated member assigned (creation) or changed (cessation trigger or correction)</div>
+        <div class="block"><strong>Output</strong>: Assessment recipient updated, mailing protocol reflects new nomination</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q6 -->
+  <section id="q6">
+    <h2>Q6 - Should group membership be added, removed, or ceased?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Add a Group Member (p.6):</strong> Load LTX Group, Edit on MC301. Right-click in Members section, select "Add Member." Enter Customer ID and Rel Start date. Save.</li>
+        <li><strong>Remove a Group Member (p.6-7):</strong> Load LTX Group, Edit on MC301. Select member, right-click, select "Remove Membership." Confirmation dialog UCM0337 appears ("Are you sure you want to delete the selected member?"). Select Yes, then Save. <em>Use ONLY when member was added in error — this permanently removes and erases history.</em></li>
+        <li><strong>Cease a Group Member (p.7):</strong> Load LTX Group, Edit on MC301. Select member, enter Rel End (Relationship End) date. Save. <em>Use when relationship genuinely ends — this preserves history with an end date.</em></li>
+        <li>If the ceased member was the Nominated Member: update the nomination (see Q5).</li>
+      </ul>
+      <div class="stop">Remove permanently deletes member history (error correction only). Cease preserves history with an end date (genuine relationship change). Use the correct operation.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Adding / Removing a Group Member (p.6-7); Ceasing a Group Member (p.7)</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Add, Remove, and Cease Operations</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Add a Group Member</h4>
+        <p>Load the LTX Group to the e-Sys tree and select Edit on the Maintain Land Tax Group [MC301] screen. Right-click in the Members section and select "Add Member." Enter the Customer ID and the Rel Start date, then select Save.</p>
+        <h4>Remove a Group Member</h4>
+        <p>Load the LTX Group to the e-Sys tree and select Edit on the Maintain Land Tax Group [MC301] screen. In the Members section, select the group member you wish to remove, right-click and select "Remove Membership." A confirmation message (UCM0337: "Are you sure you want to delete the selected member?") will be displayed. Select Yes to proceed, then select Save.</p>
+        <p><strong>Important:</strong> Remove permanently deletes the member from the group, erasing history. Use this ONLY when a member was added in error. For genuine relationship ends, use Cease instead.</p>
+        <h4>Cease a Group Member</h4>
+        <p>Load the LTX Group to the e-Sys tree and select Edit on the Maintain Land Tax Group [MC301] screen. In the Members section, select the group member you wish to cease and enter the Rel End (Relationship End) date, then select Save.</p>
+        <p>This preserves the member's history in the group with an end date. Use this when the corporate relationship genuinely ends.</p>
+        <h4>Nomination Dependency</h4>
+        <p>If the ceased group member was the Nominated Member, you will need to update the Nominated Member as per the Changing the Nominated Group Member process (Q5).</p>
+        <div class="page-ref">Source: Adding / Removing a Group Member (p.6-7); Ceasing a Group Member or Land Tax Group (p.7)</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Group membership events, relationship dates, member status</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff, e-Sys (MC301)</div>
+        <div class="block"><strong>Decision</strong>: Three distinct operations:
+          <ul>
+            <li>Add: new eligible relationship commences</li>
+            <li>Remove: member added in error (permanent deletion)</li>
+            <li>Cease: relationship genuinely ends (preserves history)</li>
+          </ul>
+        </div>
+        <div class="block"><strong>Output</strong>: Group membership updated. If ceased member was nominated member, triggers Q5 change process.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q7 -->
+  <section id="q7">
+    <h2>Q7 - Should the Land Tax Group be ceased?</h2>
+    <div class="staff">
+      <ul>
+        <li>When ceasing members results in fewer than two active members, e-Sys displays message <strong>AIM0341: "There are now fewer than two active members in this group."</strong></li>
+        <li>This is the trigger for group cessation.</li>
+        <li><strong>To cease the LTX Group:</strong> Load LTX Group, Edit on MC301. Enter the Rel End date for ALL remaining group members. Select OK on the AIM0341 message. Save.</li>
+        <li>Do not proceed with group maintenance when cessation criteria are met.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Ceasing a Group Member or Land Tax Group (p.7-8)</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Group Cessation</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Cessation Trigger</h4>
+        <p>When ceasing a group member results in fewer than two active members remaining in the group, e-Sys will display the message AIM0341: "There are now fewer than two active members in this group." This is the system trigger indicating the group must be ceased.</p>
+        <h4>Cessation Process</h4>
+        <p>Load the LTX Group to the e-Sys tree and select Edit on the Maintain Land Tax Group [MC301] screen. In the Members section, enter the Rel End date for all group members. The AIM0341 message will be displayed. Select OK to proceed, then select Save.</p>
+        <p>The group is ceased by ceasing all remaining members — there is no separate "delete group" function. The group record is preserved with end dates on all members.</p>
+        <div class="page-ref">Source: To Cease a Land Tax Group (p.8)</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Active group membership count, AIM0341 system message</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff, e-Sys (MC301)</div>
+        <div class="block"><strong>Decision</strong>: Fewer than two active members = group must cease. Two or more = group continues.</div>
+        <div class="block"><strong>Output</strong>: LTX Group ceased (all members given Rel End dates) or group retained</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION -->
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction (Q1-Q7)</h2>
+    <div class="flow">
+      <div class="flow-title">Process Flow</div>
+      <div class="branch">
+        <div class="node n-amber">Client notifies SRO</div>
+        <div class="node n-amber">Staff identifies via ASIC</div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">ASIC: Verify shareholders and directors</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Legislative test: ss 47-50 Land Tax Act 2005</div>
+      <div class="arr"></div>
+      <div class="node n-blue">e-Sys: Create LTX Group (MC301)</div>
+      <div class="arr"></div>
+      <div class="node n-blue">e-Sys: Recalculate group liabilities</div>
+      <div class="arr"></div>
+      <div class="node n-amber">e-Sys: Transfer suspense payments</div>
+      <div class="arr"></div>
+      <div class="node n-gray">e-Sys: Issue assessment to nominated member, letters to others</div>
+      <div style="margin-top:24px;"></div>
+      <div class="flow-title" style="font-size:16px;">Systems</div>
+      <div class="branch">
+        <div class="node n-blue" style="font-size:11px">e-Sys (MC301)</div>
+        <div class="node n-amber" style="font-size:11px">ASIC</div>
+        <div class="node n-gray" style="font-size:11px">TaxNet</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> Primary</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> Verification</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> Reference</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SUMMARY -->
+<div class="specOnly">
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul>
+      <li>Describes how related corporations are identified, grouped, maintained, and ceased for land tax purposes in e-Sys.</li>
+      <li>Based on sections 47-50 of the Land Tax Act 2005 (grouping of related corporations).</li>
+      <li>Land held on trust is excluded from grouping provisions.</li>
+      <li>Grouped corporations treated as single entity, assessed on aggregate taxable value of all Victorian land.</li>
+      <li>Single assessment issued to nominated member; all members jointly and severally liable.</li>
+      <li>LTX Groups not supported for amendments via My Land Tax (MLT).</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul>
+      <li><strong>Division:</strong> Land Revenue Services</li>
+      <li><strong>Branch:</strong> Land Revenue Administration</li>
+      <li><strong>Created:</strong> 25 October 2019</li>
+      <li><strong>Revised:</strong> 19 February 2024</li>
+      <li><strong>Legislation:</strong> Land Tax Act 2005, sections 47-50 (Division 3 - Grouping of Related Corporations)</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Post-Creation Sequence (Mandatory)</h2>
+    <ol style="font-size:13px;">
+      <li>Create LTX Group in e-Sys (MC301)</li>
+      <li>Recalculate group liabilities</li>
+      <li>Check and transfer suspense payments from individual members</li>
+      <li>Issue group assessment to nominated member</li>
+      <li>Issue explanatory letter to other group members</li>
+      <li>Issue JO assessments separately to JO lead customers</li>
+    </ol>
+  </section>
+
+  <section class="summary-section">
+    <h2>Key Operations on MC301</h2>
+    <ul style="font-size:13px;">
+      <li><strong>Add Member:</strong> Right-click Members > Add Member > CID + Rel Start > Save</li>
+      <li><strong>Remove Member:</strong> Select member > Remove Membership > UCM0337 confirm > Save (error correction only, deletes history)</li>
+      <li><strong>Cease Member:</strong> Select member > enter Rel End date > Save (preserves history)</li>
+      <li><strong>Change Nominated Member:</strong> Current member > Nominated Member Periods > End Date. New member > Nominated Member Periods > Start Date. Check mailing > Save</li>
+      <li><strong>Cease Group:</strong> Enter Rel End for ALL members > AIM0341 message > OK > Save</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Structural Limitations and Ambiguities</h2>
+    <div class="limitations"><strong>Identification relies on judgement:</strong> Corporate relationship verification via ASIC requires staff interpretation of shareholding and director structures against legislative criteria.</div>
+    <div class="limitations"><strong>Post-creation sequencing:</strong> Recalculation, payment transfer, and assessment issuance sequence is shown in process map but not formally enforced in the procedure text.</div>
+    <div class="limitations"><strong>Nomination change trigger:</strong> Cessation of nominated member requires nomination change — this dependency is embedded in operational steps rather than expressed as an explicit decision rule.</div>
+    <div class="limitations"><strong>Remove vs Cease:</strong> Two operations with different consequences (permanent deletion vs historical end date) that staff must select correctly. No system guard against incorrect choice.</div>
+  </section>
+
+  <section class="summary-section">
+    <h2>DCPR Procedural Alignment Score</h2>
+    <div class="score"><strong>Score: 7 / 10</strong><br>Best-aligned DCPR in the set. Deductions: post-creation sequence (suspense, payment transfer, dual assessment/correspondence rule) missing (-1), Remove vs Cease distinction absent (-0.5), MLT system constraint missing (-0.25), nomination change trigger missing (-0.25), AIM0341 system alert not captured (-0.25).</div>
+  </section>
+
+  <section class="summary-section">
+    <h2>Definitions</h2>
+    <ul style="font-size:13px;">
+      <li><strong>ASIC</strong> - Australian Securities and Investments Commission</li>
+      <li><strong>LTX</strong> - Land Tax</li>
+      <li><strong>MLT</strong> - My Land Tax</li>
+      <li><strong>SRO</strong> - State Revenue Office</li>
+      <li><strong>MC301</strong> - Maintain Land Tax Group screen in e-Sys</li>
+      <li><strong>Nom Mbr</strong> - Nominated Member (receives group assessment)</li>
+      <li><strong>Rel Start</strong> - Relationship Start date</li>
+      <li><strong>Rel End</strong> - Relationship End date</li>
+      <li><strong>IR</strong> - Investigation Report</li>
+      <li><strong>JO</strong> - Joint Ownership</li>
+      <li><strong>AIM0341</strong> - e-Sys message when fewer than two active group members</li>
+      <li><strong>UCM0337</strong> - e-Sys confirmation dialog for member removal</li>
+    </ul>
+  </section>
+</div>
+```
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(function(e){e.style.display='none'});
+  btnStaff.classList.remove('active');btnArch.classList.remove('active');btnSys.classList.remove('active');btnSpec.classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(function(e){e.style.display='block'});btnStaff.classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(function(e){e.style.display='block'});btnArch.classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';btnSys.classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';btnSpec.classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,575 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Duplicate Land Process Procedure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    ul,ol{margin-left:22px}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .constraint{background:#faf5ff;border-left:5px solid #8b5cf6;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .limitations{background:#fffbeb;border-left:5px solid #f59e0b;padding:12px 16px;margin:12px 0;font-size:14px}
+    .score{background:#f0fdf4;border-left:5px solid #22c55e;padding:12px 16px;margin:12px 0;font-size:14px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;-webkit-tap-highlight-color:transparent}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .detail-panel .page-ref{font-size:11px;color:#3b82f6;font-weight:600;margin-top:8px}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .branch{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;justify-content:center}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#475569}
+    .legend-dot{width:12px;height:12px;border-radius:3px}
+    .table-responsive{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Duplicate Land Process for e-Sys</h1>
+  <p>Division: Operations &bull; Branch: Land Revenue &bull; Created: 7 March 2022</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Questions</strong>
+    <a href="#q1">Q1 Duplicate Flagged?</a>
+    <a href="#q2">Q2 Reject Request?</a>
+    <a href="#q3">Q3 Decommission?</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#case-studies" onclick="showView('spec');setTimeout(function(){document.location.hash='case-studies'},100);">Case Studies</a>
+    <a href="#error-handling" onclick="showView('spec');setTimeout(function(){document.location.hash='error-handling'},100);">Error Handling</a>
+    <a href="#gaps" onclick="showView('spec');setTimeout(function(){document.location.hash='gaps'},100);">Critical Gaps</a>
+    <a href="#faq" onclick="showView('spec');setTimeout(function(){document.location.hash='faq'},100);">FAQs</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+```
+<div id="questionFlow">
+
+  <!-- Q1 -->
+  <section id="q1">
+    <h2>Q1 - Has the property been correctly flagged as a duplicate?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Receive Request:</strong> LGAT receives a Decommission Property Request work item flagging a property as a potential duplicate.</li>
+        <li><strong>Identify Valid Property:</strong> Usually, the property with the most history and earlier taxable date is retained as the valid property.</li>
+        <li><strong>Validate References:</strong> Confirm references match the valid property using COI, Land Channel (Lassi), and Municipal Revaluation Files.</li>
+        <li><strong>Decision:</strong> Is the property correctly flagged as a duplicate?</li>
+      </ul>
+      <div class="stop">Do NOT proceed with decommissioning if the property is not a true duplicate. Escalate if uncertain.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Process; Duplicate Identification Triggers</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Validation Method</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Duplicate vs Unrelated Property</h4>
+        <p><strong>Duplicate indicators:</strong> Same lot and plan number, same address (or minor variations), overlapping valuation dates, same MPN, same Torrens title.</p>
+        <p><strong>Unrelated indicators:</strong> Different lot/plan numbers, completely different addresses, non-overlapping valuation periods, different corporate owners, different municipality.</p>
+        <h4>Validation Sources</h4>
+        <p><strong>COI (Compliance Operational Intelligence):</strong> Check corporate ownership and relationships. Do the two flagged properties have the same owner/structure?</p>
+        <p><strong>Land Channel (Lassi):</strong> Verify property address and lot/plan numbers. Do references match?</p>
+        <p><strong>Municipal Revaluation Files:</strong> Access in e-Sys Tools tab. Check council valuation data for the property.</p>
+        <h4>Decision Rule (GAP)</h4>
+        <p><strong>CRITICAL GAP:</strong> Neither document defines what constitutes a "match" or how to handle conflicting validation sources. Escalate if uncertain.</p>
+        <div class="page-ref">Source: Duplicate Identification Triggers and Validation Sources</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Property record, Decommission Property Request work item, property references</div>
+        <div class="block"><strong>Processing responsibility</strong>: Assessor (validation), e-Sys (property lookup), COI (corporate data), Land Channel (property data)</div>
+        <div class="block"><strong>Decision</strong>: Property correctly flagged as duplicate (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Proceed to Q2 validation, or escalate for investigation</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 -->
+  <section id="q2">
+    <h2>Q2 - Should the Decommission Property Request be rejected?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Assess Request:</strong> Determine whether the flagged property should be decommissioned or if the request should be rejected.</li>
+        <li><strong>Reject If:</strong> References do NOT match the valid property, property is unrelated, or you cannot validate references.</li>
+        <li><strong>Record Rejection:</strong> Document why the request is being rejected in the Rejection Comments field.</li>
+        <li><strong>Unlink Property:</strong> Uncheck the decommission flag in e-Sys.</li>
+        <li><strong>Close Work Item:</strong> Submit rejection — work item automatically closes.</li>
+      </ul>
+      <div class="stop">If rejecting: Record detailed comments explaining why property is not a duplicate. Work item closes but property remains active in e-Sys.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Process; Request Rejection Procedures</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Rejection vs Acceptance</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>When to REJECT</h4>
+        <ul>
+          <li>References do not match the valid property</li>
+          <li>Property is unrelated (added in error, not a duplicate)</li>
+          <li>Cannot validate references due to missing or conflicting data</li>
+          <li>Property has active liabilities or recent transactions</li>
+        </ul>
+        <h4>When to ACCEPT (Proceed to Q3)</h4>
+        <ul>
+          <li>References clearly match the valid property</li>
+          <li>External validation (COI, Lassi, Revaluation) confirms duplicate</li>
+          <li>No active liabilities or recent transactions</li>
+          <li>Assessment cycle allows decommissioning</li>
+        </ul>
+        <h4>Rejection Comment Examples</h4>
+        <ul>
+          <li>"References do not match - different lot/plan numbers"</li>
+          <li>"Property has active liabilities as of current assessment year"</li>
+          <li>"COI shows different corporate owner - unrelated property"</li>
+        </ul>
+        <div class="page-ref">Source: Request Rejection Procedures</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Reference validation results from Q1, property relationship details</div>
+        <div class="block"><strong>Processing responsibility</strong>: Assessor (decision), e-Sys (flag management)</div>
+        <div class="block"><strong>Decision</strong>: Reject request (YES) or proceed to decommission (NO)</div>
+        <div class="block"><strong>Output</strong>: Request rejected with comments recorded, OR request retained and proceeds to Q3</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q3 -->
+  <section id="q3">
+    <h2>Q3 - Can the duplicate property be decommissioned?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Check Authorization:</strong> You must have appropriate e-Sys profile to decommission properties. If not, escalate to senior officer.</li>
+        <li><strong>Clear Information:</strong> Remove all identifying information from the duplicate property (address, title, municipal, planning, area fields).</li>
+        <li><strong>Add End Date:</strong> In the "Other" tab, enter End Date: <strong>29/01/[current year]</strong></li>
+        <li><strong>Record Comments:</strong> Document why the property is being decommissioned (e.g., "Duplicate of LOT 100 PS 123456").</li>
+        <li><strong>Save Changes:</strong> Click Save to commit decommission. Work item automatically completes.</li>
+      </ul>
+      <div class="stop">Only Grade 3 and above can decommission. If you lack permission, contact senior officer immediately.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Decommission Process; Field Clearing Requirements</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Fields to Clear</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Complete List of Fields to Clear/Blank</h4>
+        <table style="width:100%;border-collapse:collapse;margin-top:10px;">
+          <tr style="background:#f3f4f6;">
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Category</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Fields</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Address</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Street Number, Street Name, Street Type, Suburb, Postcode</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Title/Description</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Plan References, Torrens Title, Crown References</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Municipal</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">MPN, Rateability, Property Classifications</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Planning/Zone</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Planning Zones, SPI</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Other</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Area, Land Value, End Date (ADD), Comments (ADD)</td>
+          </tr>
+        </table>
+        <h4 style="margin-top:16px;">End Date Guidance (GAP)</h4>
+        <p><strong>CRITICAL GAP:</strong> LGA example shows "29/01/xx" but does not explain why this date is used. Is it assessment year end? Discovery date? Use decommission date or assessment year end, and document your choice in comments.</p>
+        <div class="page-ref">Source: Field Clearing Requirements; End Date Determination</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Confirmed duplicate property record, user security profile</div>
+        <div class="block"><strong>Processing responsibility</strong>: e-Sys (field clearing, end dating), LGAT staff (senior officer if authorization required)</div>
+        <div class="block"><strong>Decision</strong>: User authorized to decommission (YES) or escalate to senior officer (NO)</div>
+        <div class="block"><strong>Output</strong>: Duplicate property decommissioned (fields cleared, end date added, comments recorded), work item completed</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION -->
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction (Q1-Q3)</h2>
+    <div class="flow">
+      <div class="flow-title">Process Flow</div>
+      <div class="node n-amber">Work Item Received (Decommission Request)</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q1: Validate References (COI, Lassi, Revaluation)</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Duplicate Confirmed?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div>
+          <div class="node n-gray" style="min-width:140px;">NO: Escalate</div>
+        </div>
+        <div>
+          <div class="node n-blue" style="min-width:140px;">YES: Proceed</div>
+        </div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q2: Reject or Accept Request?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div>
+          <div class="node n-amber" style="min-width:140px;">REJECT</div>
+          <div class="node n-gray" style="min-width:140px;margin-top:8px;">Work Item Closes</div>
+        </div>
+        <div>
+          <div class="node n-blue" style="min-width:140px;">ACCEPT</div>
+        </div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q3: Decommission Property</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Clear Fields & Add End Date</div>
+      <div class="arr"></div>
+      <div class="node n-gray">Work Item Completed</div>
+      <div style="margin-top:24px;"></div>
+      <div class="flow-title" style="font-size:16px;">Systems Involved</div>
+      <div class="branch">
+        <div class="node n-blue" style="font-size:11px">e-Sys</div>
+        <div class="node n-amber" style="font-size:11px">COI</div>
+        <div class="node n-amber" style="font-size:11px">Land Channel (Lassi)</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> Primary System</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> Verification Source</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> Process Step</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SUMMARY -->
+<div class="specOnly">
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul>
+      <li>Identifies and manages duplicate land property records in e-Sys.</li>
+      <li>Establishes how staff determine whether a property is a true duplicate or unrelated property.</li>
+      <li>Covers validation of property references using COI, Land Channel, and Municipal Revaluation Files.</li>
+      <li>Defines procedures to reject requests for unrelated properties or decommission confirmed duplicates.</li>
+      <li>Concludes when work item is rejected or decommission is completed.</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul>
+      <li><strong>Division:</strong> Operations</li>
+      <li><strong>Branch:</strong> Land Revenue</li>
+      <li><strong>Created:</strong> 7 March 2022</li>
+      <li><strong>Revised:</strong> Not specified (requires confirmation)</li>
+      <li><strong>System of Record:</strong> Lotus Notes Policies and Procedures Database</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Decision Framework</h2>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>Decision Point</th>
+            <th>Yes Path</th>
+            <th>No Path</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Q1</strong></td>
+            <td>Duplicate correctly flagged?</td>
+            <td>References match → Proceed to Q2</td>
+            <td>References don't match → Escalate</td>
+          </tr>
+          <tr>
+            <td><strong>Q2</strong></td>
+            <td>Reject request?</td>
+            <td>Confirmed duplicate → Accept and proceed to Q3</td>
+            <td>Unrelated property → Reject request, work item closes</td>
+          </tr>
+          <tr>
+            <td><strong>Q3</strong></td>
+            <td>Can decommission?</td>
+            <td>Authorized user → Clear fields, add end date, save</td>
+            <td>Not authorized → Escalate to senior officer</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="summary-section">
+    <h2>Validation Hierarchy (Q1)</h2>
+    <ol>
+      <li><strong>COI (Compliance Operational Intelligence):</strong> Verify corporate ownership and relationships match</li>
+      <li><strong>Land Channel (Lassi):</strong> Verify property address and lot/plan references match</li>
+      <li><strong>Municipal Revaluation Files:</strong> Verify council valuation data matches</li>
+      <li><strong>If Conflicting:</strong> Escalate to Grade 3 for decision</li>
+    </ol>
+  </section>
+
+  <section class="summary-section" id="case-studies">
+    <h2>Case Studies</h2>
+
+    <h3 style="font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px;">Case Study 1: Clear Duplicate (Accepted & Decommissioned)</h3>
+    <p><strong>Scenario:</strong> Work item received flagging LOT 100 PS 123456 as duplicate of same lot number.</p>
+    <ul>
+      <li><strong>Q1:</strong> Validate references → COI: Same owner, Lassi: Same address, Revaluation: Same data → ✓ Confirmed as duplicate</li>
+      <li><strong>Q2:</strong> No active liabilities, references match → Accept for decommissioning</li>
+      <li><strong>Q3:</strong> Clear all fields, add end date 29/01/2024, record comments, save</li>
+      <li><strong>Outcome:</strong> ✓ Duplicate decommissioned successfully</li>
+    </ul>
+
+    <h3 style="font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px;">Case Study 2: Unrelated Property (Request Rejected)</h3>
+    <p><strong>Scenario:</strong> Work item flags LOT 101 PS 123456 as duplicate of LOT 100 PS 123456.</p>
+    <ul>
+      <li><strong>Q1:</strong> Validate references → Different lot/plan, different address, different owner → ✗ NOT a duplicate</li>
+      <li><strong>Q2:</strong> References don't match → Reject request</li>
+      <li><strong>Action:</strong> Record comments: "Different lot number and owner - unrelated property" → Work item closes</li>
+      <li><strong>Outcome:</strong> ✓ Request rejected, property remains active for investigation</li>
+    </ul>
+
+    <h3 style="font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px;">Case Study 3: Ambiguous References (Escalation Required)</h3>
+    <p><strong>Scenario:</strong> Work item flags property with address "99 Main Street" vs "99 Main Street Unit 5" (subdivision?).</p>
+    <ul>
+      <li><strong>Q1:</strong> Validate references → Same lot/plan, Lassi shows Unit 5, Revaluation shows no unit → Conflicting data</li>
+      <li><strong>Q2:</strong> Data is ambiguous → Cannot definitively confirm duplicate</li>
+      <li><strong>Action:</strong> Escalate to Grade 3 for investigation into subdivision history and confirmation of valid address</li>
+      <li><strong>Outcome:</strong> ✓ Appropriate escalation pending supervisor review</li>
+    </ul>
+  </section>
+
+  <section class="summary-section" id="error-handling">
+    <h2>Error Handling & Escalation Guide</h2>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr style="background:#003a8f;color:white;">
+            <th>Error Scenario</th>
+            <th>Question Stage</th>
+            <th>Action</th>
+            <th>Escalate To</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cannot access COI system</td>
+            <td>Q1</td>
+            <td>Use alternate sources (Lassi, Revaluation). If all unavailable, escalate.</td>
+            <td>Grade 3 + IT Support</td>
+          </tr>
+          <tr>
+            <td>Conflicting reference data (sources disagree)</td>
+            <td>Q1</td>
+            <td>Document conflict. Cannot determine if duplicate. Escalate for judgment call.</td>
+            <td>Grade 3 or 4</td>
+          </tr>
+          <tr>
+            <td>Property has active liabilities/assessments</td>
+            <td>Q2</td>
+            <td>Do not decommission. Reject request. Document reason.</td>
+            <td>Grade 3</td>
+          </tr>
+          <tr>
+            <td>User lacks decommission authorization</td>
+            <td>Q3</td>
+            <td>Contact senior officer. Request completion. Work item remains open.</td>
+            <td>Grade 3 or 4</td>
+          </tr>
+          <tr>
+            <td>Decommission fails (e-Sys error)</td>
+            <td>Q3</td>
+            <td>Capture error message. Retry. If persists, contact IT. Escalate work item.</td>
+            <td>IT Support + Grade 3</td>
+          </tr>
+          <tr>
+            <td>Customer objects to decommission</td>
+            <td>Q2/Q3</td>
+            <td>Pause work item. Document objection. Investigate claim. Escalate.</td>
+            <td>Grade 3 or 4</td>
+          </tr>
+          <tr>
+            <td>Assessment cycle changed during processing</td>
+            <td>Q2/Q3</td>
+            <td>Confirm decommission is still appropriate for new cycle. Escalate if uncertain.</td>
+            <td>Grade 3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="summary-section" id="gaps">
+    <h2>Critical Gaps Identified</h2>
+
+    <div class="limitations"><strong>GAP 1 (HIGH):</strong> Duplicate vs Unrelated Property — No clear decision rule to distinguish. Staff may incorrectly decommission valid properties. Implement decision matrix with duplicate/unrelated indicators.</div>
+
+    <div class="limitations"><strong>GAP 2 (HIGH):</strong> Valid Property Selection Criteria — Rule "property with most history and earliest taxable date is retained" is mentioned but not formalized. No fallback rule if dates are equal. Create formal decision hierarchy.</div>
+
+    <div class="limitations"><strong>GAP 3 (HIGH):</strong> Reference Validation Methodology — No guidance on HOW to use COI, Lassi, and Revaluation Files. What constitutes a "match"? What if sources conflict? Validation is subjective. Create validation protocol.</div>
+
+    <div class="limitations"><strong>GAP 4 (MEDIUM):</strong> End Date Determination — LGA shows "29/01/xx" but does not explain why. Is it assessment year end? Discovery date? Clarify end date rule.</div>
+
+    <div class="limitations"><strong>GAP 5 (MEDIUM):</strong> Authorization & Escalation — No clear path if assessor lacks decommission authority. Define authorization matrix (who can reject, who can decommission, who is senior officer).</div>
+
+    <div class="limitations"><strong>GAP 6 (MEDIUM):</strong> Work Item Lifecycle — No intermediate states or suspension procedures documented. Define states: received → validating → awaiting auth → rejected/decommissioned.</div>
+
+    <div class="limitations"><strong>GAP 7 (MEDIUM):</strong> Request Rejection vs Property Decommission — Terminology is ambiguous. Clarify: Rejection closes work item; Decommission removes property. Are they separate outcomes?</div>
+
+    <div class="limitations"><strong>GAP 8 (MEDIUM):</strong> LGA Document Incomplete — Purpose section has template placeholders ("Click or tap..."). Revision date not filled in. Complete the document.</div>
+  </section>
+
+  <section class="summary-section">
+    <h2>DCPR Procedural Alignment Score</h2>
+    <div class="score"><strong>DCPR Score: 7 / 10</strong><br>Deductions: Judgement-based decisions (-1.5), Authority sequencing unclear (-0.8), Incomplete revision info (-0.7)</div>
+    <div class="score"><strong>LGA Score: 5 / 10</strong><br>Deductions: Incomplete document (-1.5), No decision rules (-1.5), Terminology confusion (-1), No error handling (-1)</div>
+    <div class="score" style="background:#fef2f2;border-left-color:#b91c1c;"><strong>Combined Assessment: MODERATE-HIGH RISK</strong><br>Requires significant enhancement before use as production procedure. Critical gaps must be addressed.</div>
+  </section>
+
+  <section class="summary-section" id="faq">
+    <h2>Frequently Asked Questions</h2>
+
+    <h3 style="font-size:14px;margin-top:16px;color:#003a8f;"><strong>Q: What's the difference between a duplicate property and an unrelated property?</strong></h3>
+    <p style="font-size:13px;color:#475569;margin-top:8px;">A: A duplicate is the same property recorded twice (same lot/plan, same address). An unrelated property is a completely different property added in error. Use COI, Lassi, and Revaluation data to distinguish. <strong>GAP:</strong> No formal decision criteria provided.</p>
+
+    <h3 style="font-size:14px;margin-top:16px;color:#003a8f;"><strong>Q: Which property do I keep if both have the same creation date?</strong></h3>
+    <p style="font-size:13px;color:#475569;margin-top:8px;">A: The procedure mentions "most history and earlier taxable date" but this needs clarification. If dates and history are equal, escalate to Grade 3 for decision. <strong>GAP:</strong> Fallback rule missing.</p>
+
+    <h3 style="font-size:14px;margin-top:16px;color:#003a8f;"><strong>Q: What if COI and Lassi show different information?</strong></h3>
+    <p style="font-size:13px;color:#475569;margin-top:8px;">A: Document the conflict and escalate to Grade 3 for decision. Do not proceed without resolution. <strong>GAP:</strong> Conflict resolution procedure missing.</p>
+
+    <h3 style="font-size:14px;margin-top:16px;color:#003a8f;"><strong>Q: Can I decommission a property with active liabilities?</strong></h3>
+    <p style="font-size:13px;color:#475569;margin-top:8px;">A: No. If the property has open assessments, recent transactions, or unpaid liabilities, reject the request and escalate to Grade 3.</p>
+
+    <h3 style="font-size:14px;margin-top:16px;color:#003a8f;"><strong>Q: What happens if I reject the request?</strong></h3>
+    <p style="font-size:13px;color:#475569;margin-top:8px;">A: The work item closes, but the flagged property remains in e-Sys active. It is not deleted; it remains for further investigation.</p>
+
+    <h3 style="font-size:14px;margin-top:16px;color:#003a8f;"><strong>Q: What if I don't have authorization to decommission?</strong></h3>
+    <p style="font-size:13px;color:#475569;margin-top:8px;">A: Contact your Grade 3 supervisor or senior officer. Request they complete the decommissioning. Work item will remain open until they complete it. <strong>GAP:</strong> Escalation SLA not defined.</p>
+
+    <h3 style="font-size:14px;margin-top:16px;color:#003a8f;"><strong>Q: What end date should I use?</strong></h3>
+    <p style="font-size:13px;color:#475569;margin-top:8px;">A: LGA example shows "29/01/xx" but significance is unclear. Use decommission discovery date or assessment year end, and document your choice in comments. <strong>GAP:</strong> End date rule undefined.</p>
+
+    <h3 style="font-size:14px;margin-top:16px;color:#003a8f;"><strong>Q: Can I undo a decommission?</strong></h3>
+    <p style="font-size:13px;color:#475569;margin-top:8px;">A: Procedure does not cover reverting changes. If you made an error, contact Grade 3 or 4 immediately. Do not attempt to modify without approval.</p>
+  </section>
+
+  <section class="summary-section">
+    <h2>Recommended Improvements</h2>
+    <h3>Priority 1: Critical Decisions</h3>
+    <ul style="font-size:13px;">
+      <li>Define duplicate vs unrelated property decision rule with clear indicators</li>
+      <li>Formalize valid property selection criteria (create decision hierarchy)</li>
+      <li>Create reference validation methodology (how to use COI/Lassi/Revaluation)</li>
+      <li>Establish conflict resolution (what if sources disagree)</li>
+    </ul>
+    <h3>Priority 2: Operational Procedures</h3>
+    <ul style="font-size:13px;">
+      <li>Clarify end date determination rule</li>
+      <li>Create authorization matrix (who can reject, who can decommission)</li>
+      <li>Define work item lifecycle (states and transitions)</li>
+      <li>Formalize escalation triggers and SLAs</li>
+    </ul>
+    <h3>Priority 3: Document Quality</h3>
+    <ul style="font-size:13px;">
+      <li>Complete LGA document (fill purpose statements, record revision date)</li>
+      <li>Update DCPR revision date and approval authority</li>
+      <li>Add error handling procedures</li>
+      <li>Clarify request rejection vs property decommission terminology</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Definitions</h2>
+    <ul style="font-size:13px;">
+      <li><strong>SRO</strong> - State Revenue Office</li>
+      <li><strong>LGAT</strong> - Local Government Administration Team</li>
+      <li><strong>COI</strong> - Compliance Operational Intelligence (corporate ownership data)</li>
+      <li><strong>Lassi</strong> - Land Channel System (council property and address data)</li>
+      <li><strong>MPN</strong> - Municipal Property Number</li>
+      <li><strong>Duplicate Property</strong> - More than one representation of the same property in e-Sys</li>
+      <li><strong>Decommission</strong> - Clear property identifying information and add end date to remove from active assessment</li>
+      <li><strong>Lot and Plan</strong> - Unique identifiers for Victorian land parcels (e.g., LOT 100 PS 123456)</li>
+    </ul>
+  </section>
+</div>
+```
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(function(e){e.style.display='none'});
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(function(e){e.style.display='block'});document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(function(e){e.style.display='block'});document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

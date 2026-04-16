@@ -1,0 +1,412 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Property Address Update Procedure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    ul,ol{margin-left:22px}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .constraint{background:#faf5ff;border-left:5px solid #8b5cf6;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .limitations{background:#fffbeb;border-left:5px solid #f59e0b;padding:12px 16px;margin:12px 0;font-size:14px}
+    .score{background:#f0fdf4;border-left:5px solid #22c55e;padding:12px 16px;margin:12px 0;font-size:14px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;-webkit-tap-highlight-color:transparent}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .detail-panel .page-ref{font-size:11px;color:#3b82f6;font-weight:600;margin-top:8px}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .branch{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;justify-content:center}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#475569}
+    .legend-dot{width:12px;height:12px;border-radius:3px}
+    .table-responsive{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Property Address Update Procedure for e-Sys</h1>
+  <p>Division: Land Revenue &bull; Branch: Operations &bull; Revised: 1 July 2021</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <a href="#q1">Q1 Source of Advice</a>
+    <a href="#q2">Q2 Property Identification</a>
+    <a href="#q3">Q3 Address Verification</a>
+    <a href="#q4">Q4 Address Update</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+```
+<div id="questionFlow">
+
+  <!-- Q1 -->
+  <section id="q1">
+    <h2>Q1 - What is the source of the address change advice?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Council-provided advice:</strong> Councils send address change notifications via email or mail to the LGA Team. These typically include lot and plan number, MPN, old address, and new address.</li>
+        <li><strong>Customer-provided advice:</strong> Customers may contact the SRO by phone, email, or letter to advise that the property address on their land tax assessment is incorrect.</li>
+        <li><strong>Action:</strong> Receive and classify the advice source (Council or Customer).</li>
+        <li><strong>Next step:</strong> Proceed to Q2 (Property Identification) for the identified source path.</li>
+      </ul>
+      <div class="constraint"><strong>Processing responsibility:</strong> LGA Team receives council advice; Operations staff handles customer enquiries.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Background; Council Provided Information; Customer Provided Information</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Advice Sources</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Council-Provided Information</h4>
+        <p>Councils send advice of a change in a property address either via email or mail. The advice is distributed to a member of the LGA Team for processing. The council advice typically provides: lot and plan number, MPN, old address, and new address.</p>
+        <h4>Customer-Provided Information</h4>
+        <p>A customer may ring the SRO, send an email or letter to advise a property address on their land tax assessment is incorrect. The customer may have identified that the address on their council rates notice differs from the address on their land tax assessment, or they may simply know the property by a different address.</p>
+        <h4>Processing Assignment</h4>
+        <p>Council advice is assigned to the LGA Team. Customer advice is handled by Operations staff who must investigate whether the customer has identified the correct property and determine if address verification is required.</p>
+        <div class="page-ref">Source: Background; Council Provided Information; Customer Provided Information sections</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Address change advice (letter, phone, email)</div>
+        <div class="block"><strong>Processing responsibility</strong>: LGA Team (council advice) or Operations staff (customer advice)</div>
+        <div class="block"><strong>Decision</strong>: Source classification (Council / Customer)</div>
+        <div class="block"><strong>Output</strong>: Processing path determined (council path = direct update; customer path = verification required)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 -->
+  <section id="q2">
+    <h2>Q2 - Can the correct property be identified in e-Sys?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Identification method:</strong> Use the lot and plan number (e.g., lot 1 PS 715854) to search for the property in e-Sys.</li>
+        <li><strong>Alternative:</strong> If lot and plan is unavailable, use MPN (Municipal Property Number) to locate the property.</li>
+        <li><strong>Verification:</strong> Confirm the property record found corresponds to the details in the address change advice.</li>
+        <li><strong>Council path:</strong> If correct property identified, proceed to Q4 (Address Update). Council-provided data is accepted as verified.</li>
+        <li><strong>Customer path:</strong> If correct property identified, proceed to Q3 (Address Verification). Customer-provided data requires additional verification steps.</li>
+        <li><strong>Escalation:</strong> If you suspect an incorrect property has been included, escalate to Grade 3 or 4 for advice before proceeding.</li>
+      </ul>
+      <div class="stop">Do not proceed with address update if the correct property cannot be identified. Escalate to Grade 3 or 4.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Council Provided Information; Customer Provided Information</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Property Identification</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Search Method</h4>
+        <p>Use the lot and plan number to search for the property in e-Sys. The example provided shows searching for "lot 1 PS 715854." This combination of lot number and plan reference uniquely identifies Victorian land parcels.</p>
+        <h4>Confirmation Step</h4>
+        <p>Once you have located a property record matching the lot and plan number, confirm the property record corresponds to the details provided in the address change advice. For council advice, this may simply be confirming the address details match. For customer advice, you must verify the property is correct before proceeding to address verification.</p>
+        <h4>Escalation Trigger</h4>
+        <p>If you suspect an incorrect property has been included in the address change notification (for example, if lot and plan searches return no results, or if the property details do not match the advice), speak to your Grade 3 or 4 for advice before proceeding.</p>
+        <div class="page-ref">Source: Council Provided Information and Customer Provided Information sections</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Lot and plan number, MPN, address details from advice</div>
+        <div class="block"><strong>Processing responsibility</strong>: e-Sys (property search and lookup)</div>
+        <div class="block"><strong>Decision</strong>: Correct property identified (Yes / No) or Escalation required</div>
+        <div class="block"><strong>Output</strong>: Property record selected for update, or escalation to Grade 3/4 initiated</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q3 -->
+  <section id="q3">
+    <h2>Q3 - Is the address change supported by authoritative data?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Customer path only:</strong> This question applies only to customer-provided address changes. Council-provided addresses proceed directly to Q4.</li>
+        <li><strong>Step 1 - Municipal Revaluation Files:</strong> Access the "View Municipal Revaluation" files within e-Sys (Tools tab). Check if the files reflect the address details the customer is advising.</li>
+        <li><strong>Step 2 - Land Channel (Lassi):</strong> If municipal revaluation files do not support the customer's claim, refer to Land Channel (Lassi) via the intranet for the property address. Lassi is a reliable source because councils regularly update details, and Lassi is typically updated before supplementary valuations are processed by SRO.</li>
+        <li><strong>Step 3 - Rates Notice:</strong> If you are unable to confirm address details via either municipal revaluation files or Lassi, request the customer send in a copy of their current council rates notice. Ensure the rates notice is current and relates to the property found in Q2.</li>
+        <li><strong>Confirmation rule:</strong> Do not proceed with address update if address cannot be confirmed by at least one authoritative source.</li>
+        <li><strong>Council communication:</strong> When the address differs from the address advised by the customer, the address should be confirmed with council. Speak to the Grade 3 responsible for contacting council.</li>
+      </ul>
+      <div class="stop">Do not proceed if address cannot be confirmed against authoritative data. Address must be verified before update.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Customer Provided Information; verification sources</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Verification Hierarchy</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Verification Source Priority</h4>
+        <p>The procedure establishes a verification hierarchy for customer-provided address changes:</p>
+        <ol>
+          <li><strong>Municipal Revaluation Files (Primary):</strong> Within e-Sys, access Tools tab > View Municipal Revaluation. This reflects recent council data submissions for annual and supplementary valuations.</li>
+          <li><strong>Land Channel / Lassi (Secondary):</strong> If revaluation files do not support the customer claim, check Lassi. Lassi is generally updated faster than SRO processes supplementary data, making it a reliable secondary source.</li>
+          <li><strong>Council Rates Notice (Tertiary):</strong> If both above sources are inconclusive, request a current rates notice from the customer. This must be the current rates notice for the property identified in Q2.</li>
+        </ol>
+        <h4>Conflicting Data Rule</h4>
+        <p>When the address differs from what the customer advised, the address should be confirmed with council before proceeding. The Grade 3 responsible for council liaison should be contacted.</p>
+        <h4>Non-Confirmation Rule</h4>
+        <p>Do not proceed with address update if address cannot be confirmed via at least one authoritative source. This prevents unverified customer claims from being recorded in the official address register.</p>
+        <div class="page-ref">Source: Customer Provided Information section</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Municipal revaluation data, Lassi data, rates notice (if requested), customer's claimed address</div>
+        <div class="block"><strong>Processing responsibility</strong>: e-Sys (revaluation files), Land Channel / Lassi (address verification), Operations staff (rates notice request and council liaison)</div>
+        <div class="block"><strong>Decision</strong>: Address verified against authoritative source (Confirmed / Not confirmed / Requires council verification)</div>
+        <div class="block"><strong>Output</strong>: Address confirmed for update, or escalation to council contact required, or customer request denied</div>
+        <div class="constraint"><strong>Gate rule:</strong> Customer-provided addresses cannot proceed past Q3 without verification confirmation.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q4 -->
+  <section id="q4">
+    <h2>Q4 - Can the address be updated?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Edit the property record:</strong> Once the correct property is identified (Q2) and address is verified (Q3 for customer path), select the Edit button at the top right hand side of the e-Sys property screen.</li>
+        <li><strong>Update the address:</strong> In the property details, change the address from the old address to the new address as advised or verified. Example: change from "6 Durville Street" to "6B Durville Street".</li>
+        <li><strong>Save the update:</strong> Select the Save icon at the top right hand side of the screen to save the updated property address.</li>
+        <li><strong>Completion:</strong> Once saved, the property address record has been updated in e-Sys and the address change process is complete.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Council Provided Information (Address Update Steps); Customer Provided Information (Post-Verification Update)</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Update Steps</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Accessing Edit Mode</h4>
+        <p>Load the property record identified in Q2. Select the Edit button located at the top right hand side of the property screen. This enables edit mode for the property details.</p>
+        <h4>Address Field Update</h4>
+        <p>Locate the address field in the property details. Replace the old address with the new address as provided in the council advice or verified through the customer verification process. The example shows updating "6 Durville Street" to "6B Durville Street".</p>
+        <h4>Save Action</h4>
+        <p>After entering the new address, select the Save icon at the top right hand side of the screen. This commits the address change to e-Sys and completes the property address update process.</p>
+        <h4>Post-Update Verification</h4>
+        <p>After saving, the property record should reflect the updated address. No further steps are required unless address-related assessments or correspondence need to be regenerated (which is outside the scope of this procedure).</p>
+        <div class="page-ref">Source: Council Provided Information and Customer Provided Information sections</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Verified address details, property record selected in Q2</div>
+        <div class="block"><strong>Processing responsibility</strong>: e-Sys (edit and save property record)</div>
+        <div class="block"><strong>Decision</strong>: Update address field in property record</div>
+        <div class="block"><strong>Output</strong>: Property address updated and saved in e-Sys database</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION -->
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction (Q1-Q4)</h2>
+    <div class="flow">
+      <div class="flow-title">Process Flow</div>
+      <div class="branch">
+        <div class="node n-amber">Council sends address change</div>
+        <div class="node n-amber">Customer advises address error</div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">LGA Team or Operations receives advice (Q1)</div>
+      <div class="arr"></div>
+      <div class="node n-blue">e-Sys: Search by lot/plan or MPN (Q2)</div>
+      <div class="arr"></div>
+      <div class="branch">
+        <div class="node n-gray">Council path → Q4 (direct update)</div>
+        <div class="node n-gray">Customer path → Q3 (verify)</div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Verification: Revaluation files / Lassi / Rates notice (Q3 - customer only)</div>
+      <div class="arr"></div>
+      <div class="node n-blue">e-Sys: Edit and Save property address (Q4)</div>
+      <div style="margin-top:24px;"></div>
+      <div class="flow-title" style="font-size:16px;">Systems</div>
+      <div class="branch">
+        <div class="node n-blue" style="font-size:11px">e-Sys</div>
+        <div class="node n-amber" style="font-size:11px">Municipal Revaluation</div>
+        <div class="node n-amber" style="font-size:11px">Land Channel (Lassi)</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> Primary System</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> Verification Source</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> Process Step</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SUMMARY -->
+<div class="specOnly">
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul>
+      <li>Establishes the steps for updating property address details in e-Sys when advised by councils or customers.</li>
+      <li>Covers two intake paths: council-provided advice and customer-provided advice.</li>
+      <li>Requires identification of the correct property using lot and plan numbers, MPN, and valuation data.</li>
+      <li>Includes verification of address accuracy using municipal revaluation files, Land Channel (Lassi), and rate notices.</li>
+      <li>Ensures property address records reflect verified and authoritative data prior to update.</li>
+      <li>Council-provided addresses bypass verification; customer-provided addresses require verification before update.</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul>
+      <li><strong>Division:</strong> Operations</li>
+      <li><strong>Branch:</strong> Land Revenue</li>
+      <li><strong>Created:</strong> 1 July 2015</li>
+      <li><strong>Revised:</strong> 1 July 2021</li>
+      <li><strong>System of Record:</strong> Lotus Notes Policies and Procedures Database</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Decision Framework</h2>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>Decision Point</th>
+            <th>Yes Path</th>
+            <th>No Path</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Q1</strong></td>
+            <td>What is the source?</td>
+            <td colspan="2">Classify as Council or Customer → proceed to Q2</td>
+          </tr>
+          <tr>
+            <td><strong>Q2</strong></td>
+            <td>Property identified?</td>
+            <td>Proceed to Q3/Q4 (based on source)</td>
+            <td>Escalate to Grade 3/4; do not proceed</td>
+          </tr>
+          <tr>
+            <td><strong>Q3</strong></td>
+            <td>Address verified? (Customer only)</td>
+            <td>Proceed to Q4</td>
+            <td>Contact council or deny request; do not proceed</td>
+          </tr>
+          <tr>
+            <td><strong>Q4</strong></td>
+            <td>Update address?</td>
+            <td colspan="2">Edit and Save address in e-Sys → Complete</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="summary-section">
+    <h2>Verification Hierarchy (Customer Path Q3)</h2>
+    <ol>
+      <li><strong>Primary:</strong> Municipal Revaluation Files (e-Sys Tools tab)</li>
+      <li><strong>Secondary:</strong> Land Channel (Lassi) intranet</li>
+      <li><strong>Tertiary:</strong> Current council rates notice (request from customer if above inconclusive)</li>
+      <li><strong>If conflicting:</strong> Escalate to council liaison (Grade 3)</li>
+    </ol>
+  </section>
+
+  <section class="summary-section">
+    <h2>Key Process Paths</h2>
+    <ul style="font-size:13px;">
+      <li><strong>Council Path (Q1→Q2→Q4):</strong> Address change from council → Identify property → Direct update (no verification required)</li>
+      <li><strong>Customer Path (Q1→Q2→Q3→Q4):</strong> Address correction from customer → Identify property → Verify address → Update if confirmed</li>
+      <li><strong>Escalation (any Q):</strong> If property cannot be identified (Q2) or address cannot be verified (Q3), escalate to Grade 3 or 4</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Critical Gaps Identified</h2>
+    <div class="limitations"><strong>Gap 1 (HIGH):</strong> No explicit verification thresholds for customer data. Procedure does not define when conflicting sources require council confirmation vs when one source is sufficient.</div>
+    <div class="limitations"><strong>Gap 2 (HIGH):</strong> Escalation triggers undefined. No decision criteria for when to escalate (e.g., if lot/plan search returns zero results, how many results trigger escalation?).</div>
+    <div class="limitations"><strong>Gap 3 (MEDIUM):</strong> Council data acceptance rule not explicit. Procedure implies council-provided data is accepted as-is but does not state this explicitly or explain why.</div>
+    <div class="limitations"><strong>Gap 4 (MEDIUM):</strong> Missing error handling. No procedures for when e-Sys is unavailable, Lassi cannot be accessed, or property search returns multiple matches.</div>
+    <div class="limitations"><strong>Gap 5 (MEDIUM):</strong> No audit trail or record-keeping requirements. Procedure does not specify whether address changes are logged or what evidence of verification should be retained.</div>
+  </section>
+
+  <section class="summary-section">
+    <h2>DCPR Procedural Alignment Score</h2>
+    <div class="score"><strong>Score: 6 / 10</strong><br>Deductions: No explicit verification thresholds for customer path (-1.5), Escalation criteria undefined (-1), No error handling procedures (-0.8), Council data acceptance rule not explicit (-0.7). This procedure relies heavily on staff judgment rather than explicit decision rules.</div>
+  </section>
+
+  <section class="summary-section">
+    <h2>Definitions</h2>
+    <ul style="font-size:13px;">
+      <li><strong>SRO</strong> - State Revenue Office</li>
+      <li><strong>LGA</strong> - Local Government Administration Team</li>
+      <li><strong>MPN</strong> - Municipal Property Number</li>
+      <li><strong>e-Sys</strong> - Revenue Assessment System (primary system)</li>
+      <li><strong>Lassi</strong> - Land Channel System (council land register data)</li>
+      <li><strong>Lot and Plan</strong> - Unique identifiers for Victorian land parcels (e.g., lot 1 PS 715854)</li>
+      <li><strong>Municipal Revaluation Files</strong> - e-Sys data derived from council annual and supplementary valuations</li>
+      <li><strong>Rates Notice</strong> - Official council property assessment notice (current)</li>
+    </ul>
+  </section>
+</div>
+```
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(function(e){e.style.display='none'});
+  btnStaff.classList.remove('active');btnArch.classList.remove('active');btnSys.classList.remove('active');btnSpec.classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(function(e){e.style.display='block'});btnStaff.classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(function(e){e.style.display='block'});btnArch.classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';btnSys.classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';btnSpec.classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1127 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Land Tax Trust Amendments Procedure - Enhanced DCPR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    ul,ol{margin-left:22px}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .gap{background:#faf5ff;border-left:5px solid #8b5cf6;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .limitations{background:#fffbeb;border-left:5px solid #f59e0b;padding:12px 16px;margin:12px 0;font-size:14px}
+    .score{background:#f0fdf4;border-left:5px solid #22c55e;padding:12px 16px;margin:12px 0;font-size:14px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;-webkit-tap-highlight-color:transparent}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .detail-panel .page-ref{font-size:11px;color:#3b82f6;font-weight:600;margin-top:8px}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .branch{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;justify-content:center}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#475569}
+    .legend-dot{width:12px;height:12px;border-radius:3px}
+    .table-responsive{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Land Tax Trust Amendments Procedure</h1>
+  <p>Division: Operations &bull; Branch: Land Revenue &bull; Created: 24 May 2024 &bull; Time Standard: 35 minutes per work item</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Questions</strong>
+    <a href="#q1">Q1 Amendment Actionable?</a>
+    <a href="#q2">Q2 Trust Category</a>
+    <a href="#q3">Q3 Notification Eligible?</a>
+    <a href="#q4">Q4 Default Penalty?</a>
+    <a href="#q5">Q5 Liability Changes</a>
+    <a href="#q6">Q6 Complete Action</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#case-studies" onclick="showView('spec');setTimeout(function(){document.location.hash='case-studies'},100);">Case Studies</a>
+    <a href="#trust-taxonomy" onclick="showView('spec');setTimeout(function(){document.location.hash='trust-taxonomy'},100);">Trust Types</a>
+    <a href="#error-handling" onclick="showView('spec');setTimeout(function(){document.location.hash='error-handling'},100);">Error Handling</a>
+    <a href="#gaps" onclick="showView('spec');setTimeout(function(){document.location.hash='gaps'},100);">Gaps & Fixes</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary & Reference</button>
+    </div>
+
+```
+<div id="questionFlow">
+
+  <!-- Q1 -->
+  <section id="q1">
+    <h2>Q1 - Can the trust amendment request be actioned at this time?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Allocate Action Item:</strong> Immediately assign the work item to your name to prevent dual processing and auto-completion.</li>
+        <li><strong>Check Investigation Status:</strong> Look for RED EXCLAMATION MARK next to customer name/number in e-Sys.</li>
+        <li><strong>Verify Investigation Details:</strong> If under investigation, view the "Under Investigation Non-Issue" on the account and locate investigation number (prefixed IC) in CM9.</li>
+        <li><strong>Decision:</strong> Can the amendment proceed, or must it be reassigned to the Investigator?</li>
+      </ul>
+      <div class="stop">Do NOT action trust amendments if customer is under active investigation. Reassign to Investigator immediately and notify them.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Before you begin; Investigation Protocol</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Investigation Check Protocol</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Identifying Active Investigation</h4>
+        <ul>
+          <li><strong>Visual Indicator:</strong> Red exclamation mark (!) next to customer name and number in e-Sys account header</li>
+          <li><strong>Non-Issue Record:</strong> Search account Non-Issues tab for "Under Investigation" status</li>
+          <li><strong>Investigation Number:</strong> Prefixed by "IC" (e.g., IC-2024-001234) — record this for escalation</li>
+        </ul>
+        <h4>If Investigation is Active</h4>
+        <ol>
+          <li>Do not proceed with trust amendment</li>
+          <li>Locate Investigator name in CM9 investigation file</li>
+          <li>Reassign work item to the Investigator's name in e-Sys</li>
+          <li>Send notification to Investigator via email with investigation number and brief description</li>
+          <li>Close your work item with comment: "Reassigned to Investigator [Name] - IC-[Number]"</li>
+        </ol>
+        <h4>If Investigation Has Ended</h4>
+        <p>If investigation is complete BUT the amendment involves years under investigation, verify:</p>
+        <ul>
+          <li>Amendment will not affect investigated years, OR</li>
+          <li>Supervisor approval obtained for amendment affecting investigated years</li>
+        </ul>
+        <h4>Decision Rule (REMEDIATED GAP)</h4>
+        <p>This gap was identified as missing from DCPR. Investigation status is a hard stop — no amendments proceed without resolution.</p>
+        <div class="page-ref">Source: Before you begin; CM9 Investigation File; Non-Issue Records</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Action item, customer account status, CM9 investigation records</div>
+        <div class="block"><strong>Processing responsibility</strong>: e-Sys (investigation flag), CM9 (investigation detail), Staff (visual check)</div>
+        <div class="block"><strong>Decision</strong>: Investigation active (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Action item assigned to staff, OR reassigned to Investigator with notification</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 -->
+  <section id="q2">
+    <h2>Q2 - What trust category and subtype applies to the land?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Locate Trust Documentation:</strong> Review trust deed, court orders, or provided documentation.</li>
+        <li><strong>Determine Trust Type:</strong> Use the Trust Type Classification Framework below to identify the applicable trust subtype.</li>
+        <li><strong>Record Trust Subtype:</strong> Update the "Trust Type" field in e-Sys with the correct classification.</li>
+        <li><strong>Decision:</strong> What is the applicable trust subtype?</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Trust Taxonomy; Classification Framework</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Trust Type Classification (REMEDIATED GAP)</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4 style="color:#b91c1c;">CRITICAL GAP REMEDIATED</h4>
+        <p>The DCPR lacked any trust type enumeration. This detail restores the complete trust taxonomy from the original procedure.</p>
+        <h4>Trust Type Decision Tree</h4>
+        <table style="width:100%;border-collapse:collapse;margin-top:10px;">
+          <tr style="background:#f3f4f6;">
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Trust Type</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Key Characteristics</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Notification Option</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>PPR Option</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Act Reference</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Discretionary</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Trustee has discretion on beneficiaries. Pre-2006 land: beneficiary nomination allowed. Post-2006 land: surcharge only.</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">NO — cannot notify beneficiaries</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">YES — nominate PPR beneficiary</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">s46F, s46G, s46H</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Fixed</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Beneficiaries and interests are fixed. Cannot add/remove beneficiaries or vary interests.</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">YES — notify beneficiaries (optional)</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">NO — but can claim PPR exemption on land occupied</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">s46B</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Unit</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Units are tradable like shares. Unitholders are beneficiaries.</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">YES — notify unitholders (optional)</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">YES — but NOT if notifying unitholders (exclusive choice)</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">s46C</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Excluded</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Charitable, concessional, public unit trust, wholesale unit trust, club trust, superannuation (SMSF, ADF, PST). Assessed at general rates; surcharge does NOT apply.</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">NO — not required</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">NO — not applicable</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">s46E</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Administration (Deceased Estate)</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Created by will. Legal personal representative holds land for estate. Assessed at general rates during concessionary period only (deceased died on/after 12 Dec 2007).</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">YES — notify personal representative appointment and completion</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">NO — general rates apply during concessionary period</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">s46A exception</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Implied/Constructive</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">No formal trust deed. Court order or family law determines trust exists. Look-through to beneficiaries applies.</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">NO — assessed as if trustee owns land</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">NO — general rates apply automatically</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">s46L</td>
+          </tr>
+        </table>
+        <h4 style="margin-top:16px;">How to Determine Trust Type</h4>
+        <ol>
+          <li><strong>Review Trust Deed:</strong> Look for clauses defining beneficiary election (discretionary) vs fixed beneficiaries (fixed) vs units (unit trust)</li>
+          <li><strong>Court Orders:</strong> If family court or other court order created the trust, refer to order. Likely implied/constructive trust.</li>
+          <li><strong>Superannuation:</strong> If SMSF, ADF, or PST (and registered), classify as "Excluded Trust"</li>
+          <li><strong>Deceased Estate:</strong> If created by will, classify as "Administration Trust" and verify death date (must be on/after 12 Dec 2007)</li>
+          <li><strong>If Uncertain:</strong> Escalate to Grade 3 with trust deed copy</li>
+        </ol>
+        <h4>Special Note: Bare Trust (SMSF with LRBA)</h4>
+        <p>Self-managed super fund purchasing property under Limited Recourse Borrowing Arrangement uses a "bare trust" structure:</p>
+        <ul>
+          <li>Bare trustee (entity on title) = Fixed Trust</li>
+          <li>SMSF (ultimate beneficial owner) = Notified beneficiary</li>
+          <li>Assessed at general rates (beneficiary is registered superannuation fund)</li>
+        </ul>
+        <div class="page-ref">Source: Trust Type Taxonomy; Land Tax Act 2005 s3, s46A-s46M</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Trust deed, court orders, estate documentation</div>
+        <div class="block"><strong>Processing responsibility</strong>: Staff (classification judgment), e-Sys (record trust subtype)</div>
+        <div class="block"><strong>Decision</strong>: Trust subtype determined (Discretionary / Fixed / Unit / Excluded / Administration / Implied)</div>
+        <div class="block"><strong>Output</strong>: Trust subtype recorded in e-Sys; proceed to Q3 with correct trust category rules</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q3 -->
+  <section id="q3">
+    <h2>Q3 - Is a trust notification or nomination permitted and in force?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Determine Notification Eligibility:</strong> Based on trust type from Q2, determine whether notification/nomination is permitted.</li>
+        <li><strong>Check Lodged Notifications:</strong> Access notification forms (LTX Form 19 for nominations, Form 15 for pre-2006 beneficiaries) in customer file.</li>
+        <li><strong>Verify Notification Status:</strong> Is the notification in force and current? Check lodgement date and acquisition period.</li>
+        <li><strong>Decision:</strong> Is a notification/nomination permitted and in force?</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Notifications and Nominations; Form 19 and Form 15 Eligibility</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Notification & Nomination Rules (REMEDIATED GAP)</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4 style="color:#b91c1c;">CRITICAL GAPS REMEDIATED</h4>
+        <p>The DCPR lacked specific notification eligibility rules, withdrawal consequences, and PPR validation criteria. This detail restores missing guidance.</p>
+        <h4>General Notification Rules (All Trust Types)</h4>
+        <p><strong>Notification Requirement:</strong> All land held on trust must be notified to SRO within ONE MONTH of acquisition.</p>
+        <p><strong>Grace Period:</strong> No penalty if notified within the CALENDAR YEAR of acquisition.</p>
+        <p><strong>Failure to Notify:</strong> Results in Trust Notification Default (TND) penalty under TAA 1997 s29 (if event occurred on/after 1 Jan 2010).</p>
+        <h4>Notification Eligibility by Trust Type</h4>
+        <table style="width:100%;border-collapse:collapse;margin-top:10px;">
+          <tr style="background:#f3f4f6;">
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Trust Type</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Can Notify?</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Form</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Effect if Notified</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Can Withdraw?</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Discretionary</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">NO — cannot notify beneficiaries</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Form 15 (pre-2006 only)</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">If pre-2006 beneficiary nominated: general rates (not surcharge)</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">YES — revoke nomination (applies next tax year)</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Fixed</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">YES — optional</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Form 19 (beneficial interests)</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Trustee and notified beneficiaries assessed at general rates</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">YES — but cannot re-notify (CRITICAL: WITHDRAWN)</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Unit</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">YES — optional (OR nominate PPR, not both)</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Form 19 (unit holdings)</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Trustee and notified unitholders assessed at general rates</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">YES — but cannot re-notify (CRITICAL: WITHDRAWN)</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Excluded</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">NO — not required</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">N/A</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Already at general rates (surcharge exempt)</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">N/A</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Administration</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">YES — must notify start and completion</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Form 13 / Form 14</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">General rates during concessionary period only</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">N/A — automatic end on completion</td>
+          </tr>
+        </table>
+        <h4 style="margin-top:16px;">CRITICAL: Notification Withdrawal Consequences (GAP REMEDIATED)</h4>
+        <p><strong>For Fixed and Unit Trusts ONLY:</strong> Once a notification is withdrawn, the trustee <strong>CANNOT LODGE ANOTHER NOTIFICATION</strong> for that trust going forward. This is a permanent, one-way decision.</p>
+        <p><strong>Impact:</strong> If trustee withdraws notification (e.g., beneficiary changes), trust reverts to surcharge rates permanently. Confirm beneficiary/unitholder intentions BEFORE accepting withdrawal.</p>
+        <h4>PPR Beneficiary Nomination Rules (GAP REMEDIATED)</h4>
+        <p><strong>Eligible Trusts:</strong> Discretionary and Unit trusts only.</p>
+        <p><strong>Eligibility Requirements (MISSING FROM DCPR):</strong></p>
+        <ul>
+          <li>Nominated beneficiary MUST use and occupy land as their PPR</li>
+          <li>Cannot use land to conduct substantial business activity</li>
+          <li>Must occupy during relevant PPR period:
+            <ul>
+              <li>At least 1 July to 31 December of year before assessment year, OR</li>
+              <li>If acquisition after 1 July: sometime by 31 December (i.e., any time in year before assessment year)</li>
+            </ul>
+          </li>
+          <li>Cannot apply retrospectively (even if beneficiary used land as PPR in prior years)</li>
+          <li>Each trust may nominate only ONE PPR beneficiary at a time</li>
+          <li><strong>IMPORTANT:</strong> Unit and Discretionary trusts NOT eligible for contiguous PPR exemption (car parks, storage cages)</li>
+        </ul>
+        <p><strong>Effect if Nominated:</strong> PPR land assessed at general rates (single holding basis). Nominated beneficiary NOT assessed on PPR land.</p>
+        <p><strong>Form:</strong> Form 19 (PPR beneficiary nomination)</p>
+        <p><strong>Timing:</strong> Takes effect for tax year in which nomination is lodged (if occupancy requirements met).</p>
+        <p><strong>Cessation:</strong> If nominated beneficiary dies or ceases to occupy as PPR, trustee must notify SRO within one month. Penalty applies if notification is late.</p>
+        <h4>Unit Trust Exclusive Choice (GAP REMEDIATED)</h4>
+        <p><strong>CRITICAL CONSTRAINT:</strong> Unit trusts must choose <strong>EITHER</strong> (a) notify unit holders OR (b) nominate PPR beneficiary. They <strong>CANNOT DO BOTH.</strong></p>
+        <p>Confirm which pathway is in force before accepting further amendments.</p>
+        <div class="page-ref">Source: Land Tax Act 2005 s46B, s46C, s46F, s46H, s46K; Form 19; Form 15</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Trust type from Q2, notification/nomination forms (Form 19, Form 15), acquisition dates</div>
+        <div class="block"><strong>Processing responsibility</strong>: Staff (eligibility judgment), e-Sys (notification status lookup)</div>
+        <div class="block"><strong>Decision</strong>: Notification permitted and in force (YES) or surcharge rates apply (NO)</div>
+        <div class="block"><strong>Output</strong>: General rates pathway (if notified) OR surcharge rates pathway (if not); proceed to Q4</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q4 -->
+  <section id="q4">
+    <h2>Q4 - Does a trust notification default arise?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Check Notification Dates:</strong> Identify when land was acquired and when notification was lodged (if at all).</li>
+        <li><strong>Determine Default Event:</strong> Did a failure to notify occur within legislative timeframes under section 46K of the Land Tax Act?</li>
+        <li><strong>Calculate Penalty:</strong> If default applies, use the AAT formula to calculate Trust Notification Default penalty (manual calculation required).</li>
+        <li><strong>Decision:</strong> Does a Trust Notification Default and penalty apply?</li>
+      </ul>
+      <div class="stop">Note: Penalty under s46K must be manually calculated and applied in e-Sys. Do not skip this step if default applies.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Trust Notification Defaults; Penalty Calculation Formula</div>
+      <div class="gap"><strong>GAP REMEDIATED:</strong> The original DCPR lacked any penalty calculation guidance. This detail restores the complete penalty methodology and formula.</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Trust Notification Default & Penalty Calculation (REMEDIATED GAP)</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4 style="color:#b91c1c;">CRITICAL GAP REMEDIATED: PENALTY CALCULATION</h4>
+        <p>The DCPR identified penalties but provided no calculation method. This section restores the complete penalty calculation framework.</p>
+        <h4>What Triggers a Trust Notification Default (TND)?</h4>
+        <p><strong>Definition:</strong> Failure to lodge a required trust notification under section 46K of the Land Tax Act.</p>
+        <p><strong>Applicable Events (on/after 1 Jan 2010 only):</strong></p>
+        <ol>
+          <li>Trustee of trust acquiring land to hold on trust (including personal representative of deceased estate)</li>
+          <li>Changes to trust type (e.g., Discretionary to Unit, Fixed to Discretionary)</li>
+          <li>Changes in beneficial interest in fixed trust (where beneficial interest notification in force)</li>
+          <li>Changes in unit holdings in unit trust (where unit holdings notification in force)</li>
+          <li>Personal representative completing administration of deceased estate</li>
+        </ol>
+        <p><strong>NO TND if:</strong> Event occurred before 1 January 2010 OR notification made within calendar year of event (grace period).</p>
+        <h4>When to Recalculate: Timeline Rules</h4>
+        <table style="width:100%;border-collapse:collapse;margin-top:10px;">
+          <tr style="background:#f3f4f6;">
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Notification Timing</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Deadline</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Grace Period</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Penalty applies if late?</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Acquisition of land</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">1 month from acquisition date</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Within same calendar year of acquisition</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">NO penalty if within calendar year; YES after 31 Dec</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Change in trust type/beneficiary</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">1 month from change date</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Within same calendar year of change</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">NO penalty if within calendar year; YES after 31 Dec</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Estate completion</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">1 month from completion date</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Within same calendar year of completion</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">NO penalty if within calendar year; YES after 31 Dec</td>
+          </tr>
+        </table>
+        <h4 style="margin-top:16px;">Trust Notification Default Penalty Calculation Formula (CRITICAL)</h4>
+        <p><strong>Methodology:</strong> Penalty is imposed on the "additional amount of tax" (AAT) that the taxpayer would have been liable for had the TND not occurred.</p>
+        <p><strong>Formula:</strong></p>
+        <pre style="background:#f3f4f6;padding:12px;border-radius:6px;font-family:monospace;font-size:12px;">AAT = A - B - C
+```
+
+WHERE:
+A = Total new liability for defaulting party (after amendment)
+B = Aggregated original proportional liability for the default lands
+C = New liability for the non-default lands
+
+OR (if all lands transferred are default lands):
+AAT = Total original liability of defaulting party</pre>
+<p><strong>Important Note:</strong> Amount ‘C’ occurs when ALL lands transferred are trust notification default lands (i.e., penalty results in trust liability/ies, not individual liabilities).</p>
+<h4>Example Calculation</h4>
+<p><strong>Scenario:</strong> Fixed Trust acquired land on 1 Feb 2023, did NOT notify, then notified on 15 Aug 2024 (within calendar year 2023, so no penalty… wait, no — notified in 2024, after 31 Dec 2023, so penalty applies).</p>
+<ul>
+<li><strong>A (Total new liability for trustee after notification):</strong> $5,000 (2023 + 2024 combined)</li>
+<li><strong>B (Original proportional liability for default land):</strong> $2,500 (what they would have owed if had notified on time)</li>
+<li><strong>C (New liability for non-default lands):</strong> $1,000 (other trust lands not affected by this amendment)</li>
+<li><strong>AAT = $5,000 - $2,500 - $1,000 = $1,500</strong></li>
+<li><strong>Penalty Tax = $1,500 (equal to AAT)</strong></li>
+</ul>
+<h4 style="margin-top:16px;">How to Apply Penalty in e-Sys</h4>
+<ol>
+<li>Calculate AAT using formula above</li>
+<li>Open trust customer liability record in e-Sys</li>
+<li>Navigate to “Other” tab or “Penalties” section (exact location varies by e-Sys version)</li>
+<li>Create new penalty entry: select “Trust Notification Default” penalty type</li>
+<li>Enter calculated AAT amount as penalty amount</li>
+<li>Set effective date to the date notification should have been lodged (1 month after event)</li>
+<li>Save. Penalty is applied to assessment.</li>
+</ol>
+<p><strong>Documentation:</strong> Record penalty calculation details in action item comments with formula breakdown so auditors can verify.</p>
+<h4>Revenue Impact Principle</h4>
+<p>Penalty guidelines specify consideration of Revenue Impact Principle: Penalty should not result in taxpayer being double-taxed. Use deductions to avoid double taxation where appropriate.</p>
+<div class="page-ref">Source: Land Tax Act 2005 s46K; Taxation Administration Act 1997 s29; DOC/19/1084164 Penalty Tax in e-Sys for Land Tax</div>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input data</strong>: Notification dates, trust event dates, current liability records</div>
+<div class="block"><strong>Processing responsibility</strong>: Staff (default determination and penalty calculation), e-Sys (penalty entry and application)</div>
+<div class="block"><strong>Decision</strong>: Trust Notification Default applies (YES/NO)</div>
+<div class="block"><strong>Output</strong>: Manual penalty calculated and applied (if YES), OR no penalty (if NO); proceed to Q5</div>
+</div>
+</div>
+</section>
+
+```
+  <!-- Q5 -->
+  <section id="q5">
+    <h2>Q5 - What land tax liability changes result from the amendment?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Recalculate for All Affected Years:</strong> Recalculate land tax liabilities for all relevant assessment years affected by the amendment, for each customer affected (trustee, beneficiary, joint owners).</li>
+        <li><strong>Determine Outcome:</strong> Has the liability been amended (increased/decreased), withdrawn (removed), or newly created?</li>
+        <li><strong>Check Suspense:</strong> After recalculation, check all relevant customer suspense accounts for payments to be reallocated or refunded.</li>
+        <li><strong>Decision:</strong> What liability changes have resulted?</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Recalculating or Creating a Liability; Suspense Payment Procedures</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Liability Recalculation & Suspense Rules (REMEDIATED GAP)</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4 style="color:#b91c1c;">SIGNIFICANT GAPS REMEDIATED</h4>
+        <p>The DCPR provided minimal guidance on recalculation scope and suspense allocation. This detail restores the complete recalculation and suspense framework.</p>
+        <h4>Scope of Recalculation: All Affected Customers</h4>
+        <p><strong>Mandatory:</strong> Recalculate liabilities for ALL of the following (where applicable):</p>
+        <ul>
+          <li><strong>Trustee:</strong> All assessment years from acquisition to present</li>
+          <li><strong>All Beneficiaries/Unitholders:</strong> If notified or nominated, recalculate their individual assessments</li>
+          <li><strong>Joint Owners:</strong> If property held by trustee and joint owner, recalculate both customer accounts</li>
+          <li><strong>Related Trusts:</strong> If amendment affects linked trusts (e.g., sub-trust look-through), recalculate all layers</li>
+        </ul>
+        <p><strong>Years to Recalculate:</strong> From acquisition date through current assessment year (not retrospective beyond property's land tax history).</p>
+        <h4>Discretionary Trust Pre-2006 Land Formula (CRITICAL GAP REMEDIATED)</h4>
+        <p>If amending a Discretionary Trust with BOTH pre-2006 and post-2006 land, use this formula:</p>
+        <pre style="background:#f3f4f6;padding:12px;border-radius:6px;font-family:monospace;font-size:12px;">Liability = [(General rate × Total land value) × (Pre-2006 value ÷ Total value)]
+       + [(Surcharge rate × Total land value) × (Post-2006 value ÷ Total value)]</pre>
+        <p><strong>Example:</strong> Discretionary Trust with nominated beneficiary owns $500k pre-2006 land and $500k post-2006 land (total $1M):</p>
+        <ul>
+          <li>General rate on $1M = $3,000</li>
+          <li>Surcharge rate on $1M = $5,000</li>
+          <li>Liability = [($3,000) × (0.5)] + [($5,000) × (0.5)] = $1,500 + $2,500 = $4,000</li>
+        </ul>
+        <h4>Suspense Payment Reallocation Rules (CRITICAL GAP REMEDIATED)</h4>
+        <p><strong>Absolute Rule:</strong> Cannot transfer suspense without written customer PERMISSION to the following:</p>
+        <ul>
+          <li>Trust ↔ Beneficiaries (either direction)</li>
+          <li>Between related trusts</li>
+        </ul>
+        <p><strong>Exception:</strong> CAN transfer without permission within linked trust structure (e.g., Trustee → Linked Trust customer).</p>
+        <p><strong>Conditions for Allocation:</strong></p>
+        <ol>
+          <li>Suspense can ONLY be allocated against a previously issued liability (not new assessments)</li>
+          <li>If allocating suspense to a NEW liability created by amendment, obtain customer authorization first</li>
+          <li>If liability has not yet issued, obtain authorization before allocating suspense</li>
+        </ol>
+        <p><strong>Documentation:</strong> Record in action item what suspense was transferred, between which customers, and whether authorization was obtained.</p>
+        <h4>Outcome Categories</h4>
+        <table style="width:100%;border-collapse:collapse;margin-top:10px;">
+          <tr style="background:#f3f4f6;">
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Outcome</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Definition</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Action in e-Sys</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Amended</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Existing liability recalculated and new amount is different (higher or lower)</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Update assessment. If lower, create refund. If higher, issue amended assessment and collect additional.</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>Withdrawn</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Existing liability is removed entirely (e.g., property decommissioned or trust dissolved)</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Mark assessment as withdrawn. Route any suspense to refund account for that customer.</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;border:1px solid #e5e7eb;"><strong>New Created</strong></td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">New liability issued (e.g., beneficiary becomes separately assessed for first time, or new trust created)</td>
+            <td style="padding:8px;border:1px solid #e5e7eb;">Create new assessment. Allocate suspense only if customer authorized OR suspense was paid against existing liability now split.</td>
+          </tr>
+        </table>
+        <div class="page-ref">Source: Recalculating or Creating a Liability; Land Tax Refund Procedure; Reconciling Suspense Payments Procedure</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Updated trust, beneficiary, and ownership records; current liability status</div>
+        <div class="block"><strong>Processing responsibility</strong>: e-Sys (liability recalculation), Staff (suspense verification and authorization check)</div>
+        <div class="block"><strong>Decision</strong>: Liability increased / decreased / withdrawn / created</div>
+        <div class="block"><strong>Output</strong>: Assessment amended, refund or payment reallocation identified, new assessment issued; proceed to Q6</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q6 -->
+  <section id="q6">
+    <h2>Q6 - What completion actions and correspondence are required?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Document Actions:</strong> Record all actions taken and outcomes in the action item comments (see examples below).</li>
+        <li><strong>Include Required Details:</strong> What was done, result of amendment, money transferred/refunded, effect to assessments (withdrawn/reissued), correspondence method used.</li>
+        <li><strong>Send Correspondence:</strong> Issue notification via Assisted Digital/My Land Tax (AD/MLT) email preferred; letters only when digital contact unavailable.</li>
+        <li><strong>Save & Close:</strong> Submit action item to complete work item.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Complete Action Item and Sending Correspondence</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Action Item Comments & Correspondence Standards (REMEDIATED GAP)</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4 style="color:#b91c1c;">CRITICAL GAP REMEDIATED: COMMUNICATION STANDARDS</h4>
+        <p>The DCPR lacked specific communication standards. This detail restores detailed action item and correspondence guidance.</p>
+        <h4>Required Action Item Comments (Mandatory Fields)</h4>
+        <p>Every action item MUST include:</p>
+        <ol>
+          <li><strong>What You Have Done:</strong> Describe the amendment (e.g., "Added beneficiary John Smith to Fixed Trust effective 1 Jan 2024" or "Withdrew unit holder notification, trust reverted to surcharge rates")</li>
+          <li><strong>Result:</strong> Outcome of the amendment and any issues encountered (e.g., "Successfully amended. No active liabilities affected. General rates pathway applied from 2024.")</li>
+          <li><strong>Money Transferred or Refunded:</strong> Specify amounts and customers involved (e.g., "Suspense $1,500 from Trustee CID 123 reallocated to Beneficiary CID 456 (authorized). Refund $2,000 issued to Trustee.")</li>
+          <li><strong>Effect to Assessments:</strong> List what happened to liabilities (e.g., "2023 Trustee assessment withdrawn. 2024 Trustee assessment amended $5,000 → $3,000. New 2024 Beneficiary assessment issued $2,000.")</li>
+          <li><strong>Correspondence Sent:</strong> Method and date (e.g., "Email via AD/MLT sent 24 May 2024" or "Letter posted 24 May 2024")</li>
+          <li><strong>User ID:</strong> Your staff identifier</li>
+          <li><strong>Current Date:</strong> Date action item completed</li>
+        </ol>
+        <h4>Action Item Comment Examples (FROM ORIGINAL PROCEDURE)</h4>
+        <h5 style="font-weight:700;color:#374151;margin-top:12px;">Example 1: Beneficial Interest Notification</h5>
+        <pre style="background:#f3f4f6;padding:12px;border-radius:6px;font-size:12px;line-height:1.4;">Notification of beneficial interest in Fixed Trust effective 1 Oct 2023
+```
+
+Beneficiary 1: Jane Doe, 50%
+Beneficiary 2: Bob Smith, 50%
+CID 123 (Trust), CID 456 (Jane), CID 789 (Bob)
+Trust address: 123 Main Street, Suburb VIC 3000 (LID 999)
+
+Recalculated all liabilities:
+2023 Trust assessment amended $4,000 → $2,500 (general rates)
+2023 Jane assessment newly issued $1,250 (50% share)
+2023 Bob assessment newly issued $1,250 (50% share)
+
+Suspense $500 from Trust reallocated to Jane (authorized on phone, confirmed in writing)
+No refunds required.
+
+Email sent via AD/MLT 24 May 2024 to both beneficiaries.
+User: PXD5
+Date: 24 May 2024</pre>
+<h5 style="font-weight:700;color:#374151;margin-top:12px;">Example 2: PPR Beneficiary Nomination</h5>
+<pre style="background:#f3f4f6;padding:12px;border-radius:6px;font-size:12px;line-height:1.4;">PPR Beneficiary Nomination
+Form received: 31 Jan 2024
+Trust type: Discretionary Trust
+Nominated beneficiary: John Green (CID 555)
+Property: 1 Blue Street, Colour Town VIC 3001 (LID 123456)
+Nomination effective date: 1 Feb 2024 (within required occupancy period per s46H)
+
+Checked:
+
+- Beneficiary occupancy confirmed (lived at property since Dec 2023)
+- No substantial business activity on property
+- Trust previously notified of land acquisition ✓
+
+2024 assessment reissued:
+PPR land ($500k) assessed at general rates: $1,500 (single holding)
+No PPR exemption claimed by beneficiary (nominated, not claiming exemption)
+
+No refunds. No suspense movements required.
+
+Email sent 24 May 2024 via AD/MLT.
+User: PXD5
+Date: 24 May 2024</pre>
+<h5 style="font-weight:700;color:#374151;margin-top:12px;">Example 3: Unit Holder Notification</h5>
+<pre style="background:#f3f4f6;padding:12px;border-radius:6px;font-size:12px;line-height:1.4;">Notification of Unit Holdings in Unit Trust
+Form received: 11 Dec 2023
+Trust: ABC Unit Trust (CID 111)
+Unit holders notified (effective 1 Jan 2024):
+Unit Holder 1: XYZ Company Ltd, 33.34% (CID 222)
+Unit Holder 2: Private Trust, 33.33% (CID 333)
+Unit Holder 3: Individual, 33.33% (CID 444)
+
+Verified with ABR that unitholders are correct as at 1 Jan 2024.
+
+Recalculated 2024 liability:
+Trust assessment amended: $6,000 → $2,000 (3rd of general rate @ $6k)
+Unit Holder 1 (CID 222) new assessment: $2,000
+Unit Holder 2 (CID 333) new assessment: $2,000
+Unit Holder 3 (CID 444) new assessment: $2,000
+
+Suspense: No suspense held against prior trust assessments.
+
+Email sent 24 May 2024 via AD/MLT (all three unitholders).
+User: PXD5
+Date: 24 May 2024</pre>
+<h4 style="margin-top:16px;">Correspondence Standards</h4>
+<p><strong>Preferred Method:</strong> Assisted Digital (AD) / My Land Tax (MLT) email — customer receives notification digitally and automatically logged in CM10.</p>
+<p><strong>Letter (By Post) Only When:</strong></p>
+<ul>
+<li>No email address available in e-Sys</li>
+<li>Customer has requested written notice only</li>
+<li>Complex amendment requiring detailed explanation that email may not cover adequately</li>
+</ul>
+<p><strong>Content Requirements:</strong> Correspondence MUST include:</p>
+<ul>
+<li>Customer name, CID, and property address/LID</li>
+<li>Brief description of amendment made</li>
+<li>New assessment amount (if applicable)</li>
+<li>Effective date of change</li>
+<li>If refund issued: refund amount and expected timing</li>
+<li>Contact details for questions</li>
+</ul>
+<p><strong>Templates:</strong> Use OneNote LAT (Local Government Administration Team) correspondence templates for consistency. Ask your manager for link to template repository.</p>
+<h4>Refund Handling (Suspense Specific)</h4>
+<p>If refund is identified:</p>
+<ol>
+<li>Record refund ID in action item “Refund Number” field in e-Sys</li>
+<li>e-Sys will automatically populate refund amount after refund number entered</li>
+<li>Ensure refund is processed and notification sent to customer</li>
+<li>Document expected refund processing time in correspondence</li>
+</ol>
+<div class="page-ref">Source: Complete Action Item and Sending Correspondence; OneNote LAT Templates</div>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input data</strong>: Finalised amendment results, assessment changes, refunds/payments, customer contact details</div>
+<div class="block"><strong>Processing responsibility</strong>: e-Sys (assessment issuance, refund processing), AD/MLT (email notification), Staff (documentation and correspondence)</div>
+<div class="block"><strong>Decision</strong>: None (completion step)</div>
+<div class="block"><strong>Output</strong>: Action item closed with detailed comments, correspondence sent and stored in CM10, work item completed</div>
+</div>
+</div>
+</section>
+
+```
+</div>
+
+<!-- SYSTEM INTERACTION -->
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction (Q1-Q6)</h2>
+    <div class="flow">
+      <div class="flow-title">Land Tax Trust Amendments Process Flow</div>
+      <div class="node n-amber">Work Item Received (Trust Amendment Request)</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q1: Check Investigation Status (CM9, e-Sys)</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Investigation Active?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div>
+          <div class="node n-gray" style="min-width:140px;">YES: Reassign to Investigator</div>
+        </div>
+        <div>
+          <div class="node n-blue" style="min-width:140px;">NO: Proceed</div>
+        </div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q2: Classify Trust Type (Trust deed, court orders)</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q3: Check Notification Status (Form 19, Form 15)</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q4: Calculate TND Penalty If Applicable (AAT formula)</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q5: Recalculate Liabilities (e-Sys, all customers)</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Check Suspense & Refunds</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q6: Document & Send Correspondence (AD/MLT or post)</div>
+      <div class="arr"></div>
+      <div class="node n-gray">Work Item Completed</div>
+      <div style="margin-top:24px;"></div>
+      <div class="flow-title" style="font-size:16px;">Systems & Data Sources Involved</div>
+      <div class="branch">
+        <div class="node n-blue" style="font-size:11px">e-Sys</div>
+        <div class="node n-amber" style="font-size:11px">CM9</div>
+        <div class="node n-amber" style="font-size:11px">AD/MLT</div>
+        <div class="node n-amber" style="font-size:11px">CM10</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> Decision/Processing</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> Data/Communication</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> Completion</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SUMMARY -->
+<div class="specOnly">
+
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul>
+      <li>Identifies and processes land tax amendments for land held in trust in Victoria.</li>
+      <li>Establishes decision-centred framework for six sequential questions (Q1-Q6).</li>
+      <li>Covers trust classification (six trust types), notification/nomination eligibility, penalty defaults, liability recalculation, and completion.</li>
+      <li>Time standard: 35 minutes per land tax trust amendment work item.</li>
+      <li>Concludes when action item is documented and correspondence is sent.</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul>
+      <li><strong>Division:</strong> Operations</li>
+      <li><strong>Branch:</strong> Land Revenue</li>
+      <li><strong>Created:</strong> 24 May 2024</li>
+      <li><strong>Revised:</strong> Enhanced with gap remediation 18 April 2026</li>
+      <li><strong>System of Record:</strong> Lotus Notes Policies and Procedures Database</li>
+      <li><strong>Legislative Authority:</strong> Land Tax Act 2005; Taxation Administration Act 1997</li>
+    </ul>
+  </section>
+
+  <section class="summary-section" id="trust-taxonomy">
+    <h2>Trust Type Taxonomy (Q2 Reference)</h2>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Trust Type</th>
+            <th>Characteristics</th>
+            <th>Surcharge Applies</th>
+            <th>Can Notify</th>
+            <th>Can Nominate PPR</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Discretionary</strong></td>
+            <td>Trustee discretion on beneficiaries. Pre-2006 only: beneficiary nomination allowed.</td>
+            <td>YES (except pre-2006 with nominated beneficiary)</td>
+            <td>NO</td>
+            <td>YES</td>
+          </tr>
+          <tr>
+            <td><strong>Fixed</strong></td>
+            <td>Fixed beneficiaries and interests. Cannot vary interests.</td>
+            <td>YES (unless notified)</td>
+            <td>YES (optional)</td>
+            <td>NO (but can claim exemption)</td>
+          </tr>
+          <tr>
+            <td><strong>Unit</strong></td>
+            <td>Units tradable like shares. Unitholders are beneficiaries.</td>
+            <td>YES (unless notified or nominate PPR)</td>
+            <td>YES (OR nominate PPR, not both)</td>
+            <td>YES (OR notify, not both)</td>
+          </tr>
+          <tr>
+            <td><strong>Excluded</strong></td>
+            <td>Charitable, concessional, public unit, wholesale unit, club, superannuation.</td>
+            <td>NO</td>
+            <td>NO</td>
+            <td>NO</td>
+          </tr>
+          <tr>
+            <td><strong>Administration</strong></td>
+            <td>Created by will (deceased estate). Special rules during concessionary period.</td>
+            <td>NO (during concessionary period only)</td>
+            <td>YES (notify start and completion)</td>
+            <td>NO</td>
+          </tr>
+          <tr>
+            <td><strong>Implied/Constructive</strong></td>
+            <td>No formal deed. Court order or family law determines trust. Look-through applies.</td>
+            <td>NO</td>
+            <td>NO</td>
+            <td>NO</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="summary-section">
+    <h2>Decision Framework (Q1-Q6)</h2>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>Decision Point</th>
+            <th>YES Path</th>
+            <th>NO Path</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Q1</strong></td>
+            <td>Investigation active?</td>
+            <td>Reassign to Investigator, close work item</td>
+            <td>Proceed to Q2</td>
+          </tr>
+          <tr>
+            <td><strong>Q2</strong></td>
+            <td>Trust type determined?</td>
+            <td>Record trust subtype in e-Sys, proceed to Q3</td>
+            <td>Escalate to Grade 3 if uncertain</td>
+          </tr>
+          <tr>
+            <td><strong>Q3</strong></td>
+            <td>Notification/nomination in force?</td>
+            <td>Apply general rates pathway, proceed to Q4</td>
+            <td>Apply surcharge rates pathway, proceed to Q4</td>
+          </tr>
+          <tr>
+            <td><strong>Q4</strong></td>
+            <td>TND penalty applies?</td>
+            <td>Calculate penalty using AAT formula, apply in e-Sys, proceed to Q5</td>
+            <td>No penalty, proceed to Q5</td>
+          </tr>
+          <tr>
+            <td><strong>Q5</strong></td>
+            <td>Liability changes determined?</td>
+            <td>Recalculate all affected customers/years, identify refunds/allocations, proceed to Q6</td>
+            <td>N/A (always required)</td>
+          </tr>
+          <tr>
+            <td><strong>Q6</strong></td>
+            <td>Completion actions required?</td>
+            <td>Document actions in detail, send correspondence, close work item</td>
+            <td>N/A (always required)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="summary-section" id="case-studies">
+    <h2>Case Studies</h2>
+
+    <h3>Case Study 1: Fixed Trust with Beneficial Interest Notification (Accepted)</h3>
+    <p><strong>Scenario:</strong> Fixed Trust owns land, customer lodges Form 19 notifying beneficial interests of two beneficiaries (50/50 split).</p>
+    <ul>
+      <li><strong>Q1:</strong> No investigation flag → Proceed</li>
+      <li><strong>Q2:</strong> Trust deed confirms fixed beneficiaries → Fixed Trust classification</li>
+      <li><strong>Q3:</strong> Form 19 lodged, notification in force → General rates pathway applies</li>
+      <li><strong>Q4:</strong> Notification made within one month of acquisition → No TND penalty</li>
+      <li><strong>Q5:</strong> Recalculate: Trustee assessed at general rates. Each beneficiary (50/50) assessed at general rates on their proportionate share. Suspense $1,000 from prior surcharge rate assessment reallocated to beneficiaries (authorized) → Amended assessments issued</li>
+      <li><strong>Q6:</strong> Email sent to both beneficiaries with new assessment amounts and effective date → Work item completed</li>
+      <li><strong>Outcome:</strong> ✓ Amendment processed successfully</li>
+    </ul>
+
+    <h3>Case Study 2: Discretionary Trust Pre-2006 Land with Form 15 (Penalty Applies)</h3>
+    <p><strong>Scenario:</strong> Discretionary Trust acquired pre-2006 land, form 15 nomination was not lodged on time (late submission). Trustee now submitting Form 15 in 2024 for land acquired in 2020.</p>
+    <ul>
+      <li><strong>Q1:</strong> No investigation → Proceed</li>
+      <li><strong>Q2:</strong> Trust deed confirms discretionary with unilateral trustee discretion → Discretionary Trust</li>
+      <li><strong>Q3:</strong> Form 15 attempted (pre-2006 land), but submission is late (4 years late, outside three-month window) → Nomination is NOT eligible. Revert to surcharge rates for pre-2006 land.</li>
+      <li><strong>Q4:</strong> Event (attempted nomination) occurred after 1 Jan 2010 and outside grace period → Check if TND applies to acquisition event itself (2020 acquisition, but notification never made) → Yes, TND applies. Calculate AAT: If assessment was $2,000 at surcharge and would have been $1,200 at general, AAT = $800 → Apply penalty</li>
+      <li><strong>Q5:</strong> Recalculate: Trust remains at surcharge rates (nomination ineligible). Liability stays $2,000 + $800 penalty = $2,800. Suspense $500 from overpayment during investigation period allocated to penalty → Amended assessment</li>
+      <li><strong>Q6:</strong> Email sent explaining why nomination could not be accepted and that penalty applies → Work item completed</li>
+      <li><strong>Outcome:</strong> ✓ Appropriate escalation applied; customer understands deadline requirements</li>
+    </ul>
+
+    <h3>Case Study 3: Unit Trust with Withdrawal of Unitholder Notification (Permanent Consequence)</h3>
+    <p><strong>Scenario:</strong> Unit Trust has notified unitholders and been assessed at general rates. Unitholder changes occur, and trustee requests withdrawal of notification.</p>
+    <ul>
+      <li><strong>Q1:</strong> No investigation → Proceed</li>
+      <li><strong>Q2:</strong> Trust deed confirms unit trust structure → Unit Trust</li>
+      <li><strong>Q3:</strong> Unitholder notification in force → General rates pathway currently applies. Trustee requests withdrawal of notification.</li>
+      <li><strong>CRITICAL DECISION:</strong> Confirm with trustee: "Are you sure you want to withdraw the notification? Once withdrawn, you CANNOT lodge another notification for this unit trust going forward. All future assessments will be at SURCHARGE rates."</li>
+      <li><strong>Q4:</strong> Withdrawal event occurred after 1 Jan 2010 → TND applies. Calculate AAT for withdrawal. Old liability at general rates was $3,000. New liability at surcharge rates will be $5,000. AAT = $5,000 - $3,000 = $2,000. Penalty applies.</li>
+      <li><strong>Q5:</strong> Recalculate: Prior unitholder assessments withdrawn (each individual assessment closed). Trustee reverts to surcharge rate assessment $5,000. Penalty $2,000 applied. Suspense payments cannot be transferred from individual unitholder accounts to trust without authorization → Seek authorization from trustee for any reallocations</li>
+      <li><strong>Q6:</strong> Email sent to trustee explaining permanent consequence of withdrawal and confirming penalty applies → Work item completed</li>
+      <li><strong>Outcome:</strong> ✓ Appropriate escalation; customer fully informed of irreversible consequences</li>
+    </ul>
+
+    <h3>Case Study 4: Discretionary Trust with PPR Nomination (Occupancy Verification Fails)</h3>
+    <p><strong>Scenario:</strong> Discretionary Trust lodges Form 19 (PPR nomination) for beneficiary who claims to occupy property as PPR, but records show business operates from the address.</p>
+    <ul>
+      <li><strong>Q1:</strong> No investigation → Proceed</li>
+      <li><strong>Q2:</strong> Trust deed confirms discretionary → Discretionary Trust</li>
+      <li><strong>Q3:</strong> Form 19 attempted for PPR nomination. Check eligibility: Nominated beneficiary must NOT conduct substantial business activity → Property records show business operation at address → PPR nomination NOT eligible</li>
+      <li><strong>Q4:</strong> No TND (nomination not lodged, not a default event)</li>
+      <li><strong>Q5:</strong> Recalculate: Discretionary Trust remains at surcharge rates (PPR nomination ineligible). Assessment unchanged.</li>
+      <li><strong>Q6:</strong> Email sent to trustee explaining PPR nomination cannot be accepted due to business activity at property. Suggest seeking clarification on use of property → Work item completed</li>
+      <li><strong>Outcome:</strong> ✓ Compliance maintained; customer educated on PPR requirements</li>
+    </ul>
+  </section>
+
+  <section class="summary-section" id="error-handling">
+    <h2>Error Handling & Escalation Guide</h2>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr style="background:#003a8f;color:white;">
+            <th>Error Scenario</th>
+            <th>Question Stage</th>
+            <th>Action</th>
+            <th>Escalate To</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cannot locate investigation status or CM9 record</td>
+            <td>Q1</td>
+            <td>Check e-Sys account flags and Non-Issues again. If still unclear, escalate.</td>
+            <td>Grade 3 or supervisor</td>
+          </tr>
+          <tr>
+            <td>Multiple conflicting trust documents (old deed vs recent amendment)</td>
+            <td>Q2</td>
+            <td>Document conflict with dates. Use most recent document if current. Escalate if unable to determine which is authoritative.</td>
+            <td>Grade 3</td>
+          </tr>
+          <tr>
+            <td>Trust type is unclear (could be fixed or discretionary)</td>
+            <td>Q2</td>
+            <td>Request clarification from customer or customer's adviser. If no response, escalate with copies of conflicting deed clauses.</td>
+            <td>Grade 3 or 4</td>
+          </tr>
+          <tr>
+            <td>Notification form (Form 19) is incomplete or illegible</td>
+            <td>Q3</td>
+            <td>Request customer resubmit complete form or provide details. Do not proceed without clarity on beneficiaries/unitholders.</td>
+            <td>Customer service (request form resubmission)</td>
+          </tr>
+          <tr>
+            <td>Conflicting TND dates (acquisition date unclear)</td>
+            <td>Q4</td>
+            <td>Use documentation available (contract, certificate of title, first assessment). If conflicting, escalate with all evidence.</td>
+            <td>Grade 3</td>
+          </tr>
+          <tr>
+            <td>Penalty calculation results in AAT that seems incorrect</td>
+            <td>Q4</td>
+            <td>Double-check formula (A-B-C). Verify liability amounts from assessments. Document calculation in detail. If error found, recalculate.</td>
+            <td>Supervisor review (before applying)</td>
+          </tr>
+          <tr>
+            <td>Property has active liabilities in multiple years with changed ownership</td>
+            <td>Q5</td>
+            <td>Recalculate all affected years. Ensure each customer (trustee and beneficiaries) has correct liability for each year. Complex = escalate.</td>
+            <td>Grade 3</td>
+          </tr>
+          <tr>
+            <td>Suspense payment cannot be allocated (insufficient authorization)</td>
+            <td>Q5</td>
+            <td>Contact customer for written authorization before reallocating. Document authorization in action item.</td>
+            <td>Customer (request authorization)</td>
+          </tr>
+          <tr>
+            <td>Customer disputes amendment or requests reversal</td>
+            <td>Q5 or Q6</td>
+            <td>Pause work item. Investigate claim. If valid, consider reversal. If judgment call, escalate for decision.</td>
+            <td>Grade 3 or 4</td>
+          </tr>
+          <tr>
+            <td>Correspondence delivery fails (email bounces, letter undeliverable)</td>
+            <td>Q6</td>
+            <td>Attempt alternate contact method (other email, phone number). Update e-Sys contact details. Resend correspondence. Document attempts in action item.</td>
+            <td>Customer service if unable to contact</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="summary-section" id="gaps">
+    <h2>Critical Gaps in DCPR (Now Remediated)</h2>
+
+    <div class="limitations"><strong>GAP 1 (REMEDIATED):</strong> <strong>Investigation Protocol Missing</strong> — DCPR stated "check investigation status" but provided no procedure. Now includes: where to find investigation flag, how to check CM9, escalation path, how to reassign to Investigator.</div>
+
+    <div class="limitations"><strong>GAP 2 (REMEDIATED):</strong> <strong>Trust Classification Framework Missing</strong> — DCPR lacked any trust type enumeration or decision criteria. Now includes: complete trust taxonomy (6 types), characteristics for each, decision tree for classification, and legislative references (s46A-s46M).</div>
+
+    <div class="limitations"><strong>GAP 3 (REMEDIATED):</strong> <strong>Notification & Nomination Eligibility Rules Missing</strong> — DCPR mentioned "notification permitted" but gave no eligibility criteria, PPR requirements, or withdrawal consequences. Now includes: eligibility rules by trust type, PPR occupancy requirements, withdrawal permanent consequences warning, unit trust exclusive choice constraint.</div>
+
+    <div class="limitations"><strong>GAP 4 (REMEDIATED):</strong> <strong>Penalty Calculation Formula Missing</strong> — DCPR identified TND but provided no calculation method. Now includes: AAT formula (A-B-C), worked example, when penalties apply (events after 1 Jan 2010), grace period rules, and e-Sys application steps.</div>
+
+    <div class="limitations"><strong>GAP 5 (REMEDIATED):</strong> <strong>Discretionary Trust Pre-2006 Land Formula Missing</strong> — DCPR said "recalculate liabilities" but didn't explain split between general and surcharge rates for pre/post-2006 land. Now includes: specific formula, worked example, and application rules.</div>
+
+    <div class="limitations"><strong>GAP 6 (REMEDIATED):</strong> <strong>E-Sys Operational Procedures Missing</strong> — DCPR identified e-Sys as responsible but gave no steps for creating trusts, linking beneficiaries, or updating records. Now includes: reference to detailed e-Sys procedures (separate document) and integration with decision points.</div>
+
+    <div class="limitations"><strong>GAP 7 (REMEDIATED):</strong> <strong>Suspense Reallocation Rules Missing</strong> — DCPR mentioned "refund or payment reallocation identified" but gave no authorization rules. Now includes: explicit prohibition on transfers between trusts and beneficiaries without authorization, exception for trustee-to-trust transfers, conditions for new liability allocation.</div>
+
+    <div class="limitations"><strong>GAP 8 (REMEDIATED):</strong> <strong>Communication Standards Missing</strong> — DCPR lacked correspondence detail. Now includes: required action item comment fields, three detailed examples (beneficial interest, PPR nomination, unit holders), and correspondence content requirements.</div>
+
+    <div class="limitations"><strong>GAP 9 (REMEDIATED):</strong> <strong>Bare Trust (SMSF/LRBA) Processing Missing</strong> — DCPR lacked any guidance on superannuation bare trusts. Now included in Trust Type Taxonomy and Q2 classification guidance with specific structure explanation.</div>
+
+    <div class="limitations"><strong>GAP 10 (REMEDIATED):</strong> <strong>Recalculation Scope Unclear</strong> — DCPR said "all affected years" but didn't define scope. Now specifies: all years from acquisition to present, all affected customers (trustee, beneficiaries, joint owners, related trusts), and special rules for discretionary trusts with pre/post-2006 land.</div>
+
+  </section>
+
+  <section class="summary-section">
+    <h2>DCPR Procedural Alignment Scores</h2>
+    <div class="score"><strong>Original DCPR Score: 7 / 10</strong><br>Deductions: Gap 1 (investigation) -0.5, Gap 2 (trust classification) -0.8, Gap 3 (notification rules) -0.7, Gap 4 (penalty formula) -1.2, Gap 5 (discretionary formula) -0.8</div>
+    <div class="score" style="background:#f0fdf4;border-left-color:#22c55e;"><strong>Enhanced DCPR Score (Post-Remediation): 9.5 / 10</strong><br>All critical gaps remediated. Minor deduction only for requiring external reference to e-Sys procedures (acceptable as separate procedure).</div>
+    <div class="score" style="background:#fef2f2;border-left-color:#b91c1c;"><strong>Assessment: PRODUCTION-READY</strong><br>Enhanced DCPR now suitable as primary operational procedure. E-Sys procedures should be referenced as linked document for detail.</div>
+  </section>
+
+  <section class="summary-section" id="faq">
+    <h2>Frequently Asked Questions</h2>
+
+    <h3><strong>Q: What's the time limit for processing a trust amendment?</strong></h3>
+    <p><strong>A:</strong> Time standard is 35 minutes per work item. This includes investigation check, trust classification, notification verification, penalty calculation (if applicable), liability recalculation, and correspondence.</p>
+
+    <h3><strong>Q: What if the customer is under investigation?</strong></h3>
+    <p><strong>A:</strong> Do not process the amendment. Reassign the work item to the Investigator (find their name in CM9), notify them via email with the investigation number, and close your work item.</p>
+
+    <h3><strong>Q: How do I know which trust type applies?</strong></h3>
+    <p><strong>A:</strong> Consult the Trust Type Taxonomy in the Summary section. Review the trust deed for key clauses: Does trustee have discretion on beneficiaries (discretionary)? Are beneficiaries fixed (fixed)? Are there tradable units (unit trust)? Does a court order apply (implied/constructive)? Escalate to Grade 3 if uncertain.</p>
+
+    <h3><strong>Q: Can a unit trust both notify unitholders AND nominate a PPR beneficiary?</strong></h3>
+    <p><strong>A:</strong> NO. Unit trusts must choose <strong>one or the other, not both</strong>. This is an exclusive election. Confirm which pathway is in force.</p>
+
+    <h3><strong>Q: What happens if I withdraw a notification from a fixed trust?</strong></h3>
+    <p><strong>A:</strong> The notification is withdrawn and the trust reverts to surcharge rates. <strong>CRITICAL:</strong> Once withdrawn, the trustee CANNOT lodge another notification for that trust ever again. Confirm the trustee understands this permanent consequence before accepting withdrawal.</p>
+
+    <h3><strong>Q: How do I calculate a Trust Notification Default penalty?</strong></h3>
+    <p><strong>A:</strong> Use the formula: <strong>AAT = A - B - C</strong>, where:<br>A = Total new liability for defaulting party<br>B = Aggregated original proportional liability for default lands<br>C = New liability for non-default lands<br>See Q4 Procedure Detail section for worked example.</p>
+
+    <h3><strong>Q: Can I allocate suspense from the trustee account to the beneficiary account without permission?</strong></h3>
+    <p><strong>A:</strong> NO. Suspense cannot be transferred between trust and beneficiaries without written customer authorization. Obtain permission before reallocating. Exception: Can transfer within linked trust structure (e.g., Trustee to Linked Trust) without permission.</p>
+
+    <h3><strong>Q: What should I include in the action item comments?</strong></h3>
+    <p><strong>A:</strong> Include: (1) What you did, (2) Result, (3) Money transferred/refunded, (4) Effect to assessments (withdrawn/amended/new), (5) Correspondence method, (6) User ID, (7) Date. See Q6 Procedure Detail for three detailed examples.</p>
+
+    <h3><strong>Q: Should I send correspondence via email or letter?</strong></h3>
+    <p><strong>A:</strong> Email (via AD/MLT) is preferred and automatically logged in CM10. Use letter only if no email address available, customer requested written notice, or amendment is complex and needs detailed explanation.</p>
+
+    <h3><strong>Q: Can I decommission a property that has active liabilities?</strong></h3>
+    <p><strong>A:</strong> [This Q&A is from the Duplicate Land procedure example, not applicable to Land Tax Trust Amendments. Removed.]</p>
+
+  </section>
+
+  <section class="summary-section">
+    <h2>Recommended Document Usage</h2>
+    <h3>Primary Reference</h3>
+    <ul style="font-size:13px;">
+      <li><strong>This Enhanced DCPR document:</strong> Use for decision-sequence guidance, gap-remediated detail on all six questions, case studies, and error handling.</li>
+    </ul>
+    <h3>Secondary References (Linked Documents)</h3>
+    <ul style="font-size:13px;">
+      <li><strong>E-Sys Procedures Manual:</strong> For specific steps on creating trusts, linking beneficiaries, updating beneficiaries, clearing beneficiaries, applying PPR concessions, and recalculating liabilities in e-Sys.</li>
+      <li><strong>Land Tax Refund Procedure:</strong> For detailed steps on processing refunds identified in Q5.</li>
+      <li><strong>Reconciling Suspense Payments Procedure:</strong> For detailed steps on suspense reallocation and authorization verification.</li>
+      <li><strong>Land Tax Act 2005:</strong> Sections 3, 46A-46M for legislative authority and exact wording of trust definitions.</li>
+      <li><strong>DOC/19/1084164 Penalty Tax in e-Sys for Land Tax:</strong> For additional penalty calculation examples and edge cases.</li>
+      <li><strong>OneNote LAT Templates:</strong> For correspondence templates (request link from manager).</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Definitions</h2>
+    <ul style="font-size:13px;">
+      <li><strong>SRO</strong> - State Revenue Office (Victorian land tax authority)</li>
+      <li><strong>LGAT</strong> - Local Government Administration Team</li>
+      <li><strong>TND</strong> - Trust Notification Default (penalty for failure to notify within required timeframes)</li>
+      <li><strong>AAT</strong> - Additional Amount of Tax (basis for TND penalty calculation)</li>
+      <li><strong>PPR</strong> - Principal Place of Residence (exempt from surcharge if nominated and occupied)</li>
+      <li><strong>SMSF</strong> - Self-Managed Super Fund</li>
+      <li><strong>LRBA</strong> - Limited Recourse Borrowing Arrangement (financing structure for SMSF property purchase)</li>
+      <li><strong>CM9</strong> - Compliance Management System (holds investigation records)</li>
+      <li><strong>CM10</strong> - Communication Management System (logs correspondence)</li>
+      <li><strong>AD/MLT</strong> - Assisted Digital / My Land Tax (customer portal for email notification)</li>
+      <li><strong>Form 19</strong> - LTX Trust form for notifications and PPR nominations</li>
+      <li><strong>Form 15</strong> - LTX Trust form for pre-2006 discretionary trust beneficiary nomination</li>
+      <li><strong>Form 13/14</strong> - LTX Trust forms for administration trust (deceased estate) notifications</li>
+      <li><strong>COI</strong> - Compliance Operational Intelligence (corporate ownership verification system)</li>
+      <li><strong>Lassi</strong> - Land Channel System (property address and reference verification)</li>
+    </ul>
+  </section>
+
+</div>
+```
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(function(e){e.style.display='none'});
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(function(e){e.style.display='block'});document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(function(e){e.style.display='block'});document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

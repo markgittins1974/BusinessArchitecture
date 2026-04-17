@@ -1,0 +1,709 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Valuations Data Processing and Formatting Procedure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    ul,ol{margin-left:22px}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .constraint{background:#faf5ff;border-left:5px solid #8b5cf6;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .limitations{background:#fffbeb;border-left:5px solid #f59e0b;padding:12px 16px;margin:12px 0;font-size:14px}
+    .score{background:#f0fdf4;border-left:5px solid #22c55e;padding:12px 16px;margin:12px 0;font-size:14px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;-webkit-tap-highlight-color:transparent}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .detail-panel .page-ref{font-size:11px;color:#3b82f6;font-weight:600;margin-top:8px}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .branch{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;justify-content:center}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#475569}
+    .legend-dot{width:12px;height:12px;border-radius:3px}
+    .table-responsive{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Valuations Data Processing and Formatting</h1>
+  <p>Division: Operations &bull; Branch: Land Revenue &bull; Created: 2024</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Questions</strong>
+    <a href="#q1">Q1 Eligibility</a>
+    <a href="#q2">Q2 Completeness</a>
+    <a href="#q3">Q3 Preparation</a>
+    <a href="#q4">Q4 Validation</a>
+    <a href="#q5">Q5 Documentation</a>
+    <a href="#q6">Q6 Quality Gate</a>
+    <a href="#q7">Q7 Closure</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#workflows" onclick="showView('spec');setTimeout(function(){document.location.hash='workflows'},100);">Workflows</a>
+    <a href="#decision-rules" onclick="showView('spec');setTimeout(function(){document.location.hash='decision-rules'},100);">Decision Rules</a>
+    <a href="#error-handling" onclick="showView('spec');setTimeout(function(){document.location.hash='error-handling'},100);">Error Handling</a>
+    <a href="#critical-gaps" onclick="showView('spec');setTimeout(function(){document.location.hash='critical-gaps'},100);">Critical Gaps</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+```
+<div id="questionFlow">
+
+  <!-- Q1 -->
+  <section id="q1">
+    <h2>Q1 - Is the valuation data file eligible for processing?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Receive Work Item:</strong> Work item contains file reference and council identifier.</li>
+        <li><strong>Verify Receipt:</strong> Confirm files arrived in Outlook Valuations Data folder with all expected attachments.</li>
+        <li><strong>Classify Data Type:</strong> Check email metadata and file names to determine Supplementary or Revaluation.</li>
+        <li><strong>Check Prerequisites:</strong> Confirm no active investigations block processing of council or properties.</li>
+        <li><strong>Decision:</strong> Is file complete and eligible for processing?</li>
+      </ul>
+      <div class="stop">Do NOT proceed if files are incomplete or investigation is active. Escalate and halt processing.</div>
+      <div class="ref"><strong>Procedure reference:</strong> File Receipt and Initial Validation</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Eligibility Criteria</span><span class="detail-toggle-arrow">▼</span></div>
+      <div class="detail-panel">
+        <h4>File Completeness Check</h4>
+        <p><strong>Mandatory files (all 4 required):</strong> Type 1 data, Type 2 data, Type 3 data, VGV reference spreadsheet.</p>
+        <p><strong>Optional files (conditional):</strong> Large value properties Excel file (5 councils only), Alpine resort data files (2 councils only).</p>
+        <h4>Data Type Classification</h4>
+        <p><strong>Supplementary Valuation:</strong> Quarterly receipt, file naming includes "SUPPS", smaller file sizes.</p>
+        <p><strong>Revaluation:</strong> Annual receipt, file naming includes "REVAL" or "VALUATION", larger file sizes.</p>
+        <h4>Prerequisite Verification</h4>
+        <p>Search CM9 for active investigations on council. Check investigation start/end dates. If investigation end date is before file receipt date, file may proceed. If active investigation, escalate to Investigation team.</p>
+        <div class="page-ref">Source: File Receipt and Initial Validation</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Work item, email with file attachments, investigation status</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff (receipt verification), CM9 (investigation check)</div>
+        <div class="block"><strong>Decision</strong>: Complete file set + no investigation = proceed. Incomplete OR investigation = halt</div>
+        <div class="block"><strong>Output</strong>: Data type classified, work item status updated, files marked for processing</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 -->
+  <section id="q2">
+    <h2>Q2 - Are all required files present and accessible?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Save Files:</strong> Move files from email to OneDrive (LGAT - Supps Formatting) in council/year/version folder.</li>
+        <li><strong>Handle Automation Failures:</strong> If automation failed, manually save using "yyyy-mm-dd" folder naming convention.</li>
+        <li><strong>Register Batch:</strong> Record batch reference, council, receipt date, file count in appropriate register (Supps or Reval).</li>
+        <li><strong>Verify Storage:</strong> Confirm all files copied to destination and are accessible from working directory.</li>
+        <li><strong>Decision:</strong> Are files saved and registered correctly?</li>
+      </ul>
+      <div class="constraint"><strong>System Note:</strong> Automation may fail; fallback to manual saving is expected. OneDrive folder structure is enforced by register system.</div>
+      <div class="ref"><strong>Procedure reference:</strong> File Storage and Registration</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Registration Process</span><span class="detail-toggle-arrow">▼</span></div>
+      <div class="detail-panel">
+        <h4>File Save Locations and Rules</h4>
+        <table>
+          <tr><th>Scenario</th><th>Location</th><th>Folder Naming</th><th>Register</th></tr>
+          <tr><td>On-time receipt</td><td>OneDrive LGAT folder</td><td>yyyy-mm-dd</td><td>Active register</td></tr>
+          <tr><td>Automation failed</td><td>OneDrive LGAT folder (manual)</td><td>yyyy-mm-dd</td><td>Active register</td></tr>
+          <tr><td>Late arrival (>31 Dec)</td><td>OneDrive "Unable to apply"</td><td>yyyy-mm-dd</td><td>Special folder only</td></tr>
+        </table>
+        <h4>Registration Steps</h4>
+        <ol>
+          <li>Open appropriate register (Supps OneDrive or Reval H: drive)</li>
+          <li>Enter: Batch number, Council name, Receipt date, File count</li>
+          <li>System auto-moves files to Registered folder</li>
+          <li>Proceed to Q3</li>
+        </ol>
+        <div class="page-ref">Source: File Storage and Registration Procedures</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Files from Q1, receipt date, council identifier, data type</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff (saving, registration), OneDrive (automation), Register system</div>
+        <div class="block"><strong>Decision</strong>: Files saved AND registered = proceed. File missing OR registration failed = escalate</div>
+        <div class="block"><strong>Output</strong>: Files in registered location, register entry created, batch tracked</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q3 -->
+  <section id="q3">
+    <h2>Q3 - Does data require preparation before formatting?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Assess Pathway:</strong> Determine if standard processing or special preparation is needed.</li>
+        <li><strong>Standard Path:</strong> Most supplementary files require file amalgamation only. Proceed directly to Q4.</li>
+        <li><strong>Large Value Properties Path:</strong> 5 councils (Melbourne, Bass Coast, Latrobe, Moonee Valley, Wellington) require field mapping if properties exceed 9-digit value limit.</li>
+        <li><strong>Alpine Resort Path:</strong> 2 councils (Alpine Shire, Mansfield Shire) require data merge if resort files provided.</li>
+        <li><strong>Return Date Check:</strong> Revaluation files must have position 280-288 = "010720XX" (1 July). Correct if different.</li>
+      </ul>
+      <div class="constraint"><strong>System Note:</strong> Only TextPad "Insert Files" method is approved for amalgamation. File count verification prevents file loss.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Preparation Pathways and Methods</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Preparation Sub-Processes</span><span class="detail-toggle-arrow">▼</span></div>
+      <div class="detail-panel">
+        <h4>Standard Supplementary Path</h4>
+        <p>File amalgamation using TextPad. Open blank Type 1 template. Select Edit > Insert Files. Choose all Type 1 received files. Repeat for Type 2 and Type 3. Verify file count matches received count. Save files.</p>
+        
+        <h4>Large Value Properties Preparation (5 councils)</h4>
+        <p>Extract LVP data from Excel spreadsheet provided by VGV. Map property details (not values) into Type 1 file. Insert zero for all value fields in Type 1. Create separate Type 2 entries for SV/CIV/NAV values. Use previous year file as template. Post-load manual update required in e-Sys.</p>
+        
+        <h4>Alpine Resort Data Preparation (2 councils)</h4>
+        <p>Merge resort data with council data using TextPad. Open blank Type 1 template from S:\FTP\Val_Returns\Textpad Templates. Insert Files > select council file + resort file. Save as merged file. Repeat for Type 2 and Type 3.</p>
+        
+        <h4>Return Date Validation (Revaluation Only)</h4>
+        <p>Type 1 file positions 280-288 must be "010720XX" (1 July of relevant year). If incorrect, manually correct before formatting. This date defines assessment period.</p>
+        <div class="page-ref">Source: Preparation Pathways and Methods</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Classified files from Q2, council identifier, data type</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff (pathway selection, preparation), TextPad (file insertion)</div>
+        <div class="block"><strong>Decision</strong>: Standard = no prep | LVP = field mapping | Resorts = data merge | Return date wrong = correct</div>
+        <div class="block"><strong>Output</strong>: Prepared files ready for e-Sys formatting tool, or files pass through unchanged</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q4 -->
+  <section id="q4">
+    <h2>Q4 - Do files pass e-Sys validation?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Launch Tool:</strong> Open e-Sys Formatting Municipal Revaluation Files tool from Tools menu.</li>
+        <li><strong>Enter Parameters:</strong> Municipality code, File type (Supps/Reval), Valuation Year (assessment year, not valuation year).</li>
+        <li><strong>Validate Sequentially:</strong> Type 1 → Type 2 → Type 3 (one at a time, in order). Resolve exceptions after each.</li>
+        <li><strong>Generate Type 4:</strong> Click "Create Type 4 Totals" to auto-generate summary file from validated Types 1, 2, 3.</li>
+        <li><strong>Save All Files:</strong> Save outputs to S:\FTP\Val_Returns\[YEAR]\[COUNCIL]\formatted\ directory.</li>
+      </ul>
+      <div class="stop">Do NOT proceed if exceptions remain. Exception resolution is MANDATORY before file acceptance. Do not use "Select All" button (includes years outside retrospective period).</div>
+      <div class="ref"><strong>Procedure reference:</strong> E-Sys Formatting Tool and Exception Resolution</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Exception Resolution by Type</span><span class="detail-toggle-arrow">▼</span></div>
+      <div class="detail-panel">
+        <h4>Type 1 Validation - Duplicate MPN Check</h4>
+        <p><strong>Rule:</strong> No duplicate Municipal Property Numbers allowed. <strong>Resolution:</strong> Investigate source data. Remove duplicate or correct MPN. Re-validate. <strong>Escalate if:</strong> >5 duplicates found (data quality issue).</p>
+        
+        <h4>Type 2 Validation - Excess Lines and SPI Correction</h4>
+        <p><strong>Excess Lines Rule:</strong> Max 50 lines per Municipal Number. If error: Click Yes, tool highlights MPN, right-click "Remove excess records", re-validate. Repeat until no excess found. <strong>Escalate if:</strong> >10 MUNs affected.</p>
+        <p><strong>SPI Correction Rule:</strong> Field 373 must be valid SPI or "0". If exception: Highlight exception, right-click "Navigate to error", correct SPI value. For complex reference strings (multiple TPs), manual SPI creation required. Re-validate until all SPI exceptions show "SPI 0" message.</p>
+        
+        <h4>Type 3 Validation - Pre-Fill Verification</h4>
+        <p><strong>Rule:</strong> Tool pre-fills missing names with "unknown" and addresses with "not provided". Verify pre-fills are acceptable. If incorrect, update manually and re-validate.</p>
+        
+        <h4>Type 4 Generation</h4>
+        <p>No validation needed. Click "Create Type 4 Totals". Tool auto-generates from Types 1, 2, 3. File ready for next step.</p>
+        <div class="page-ref">Source: E-Sys Formatting Tool Operation and Exception Resolution</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Prepared files from Q3, municipality code, file type, assessment year</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff (tool operation, exception resolution), e-Sys tool (validation, pre-filling)</div>
+        <div class="block"><strong>Decision</strong>: All exceptions resolved = proceed | Exceptions remain = resolve or escalate</div>
+        <div class="block"><strong>Output</strong>: Type 1,2,3,4 validated and saved. Files ready for Q5. Exception report generated.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q5 -->
+  <section id="q5">
+    <h2>Q5 - Are files documented and ready for testing?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Verify File Locations:</strong> Confirm all 4 file types exist in S:\FTP\Val_Returns\[YEAR]\[COUNCIL]\formatted\ directory.</li>
+        <li><strong>Check File Integrity:</strong> All files must be non-empty (>0 bytes). Verify using file properties.</li>
+        <li><strong>Document Work Item:</strong> Record batch reference, council, receipt date, data type, file count, special handling notes.</li>
+        <li><strong>Quality Checklist:</strong> Confirm: All 4 files present, exception count ≤10, files in correct location, documentation complete.</li>
+        <li><strong>Decision:</strong> Are files approved for testing?</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> File Verification and Quality Gate</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Quality Checklist</span><span class="detail-toggle-arrow">▼</span></div>
+      <div class="detail-panel">
+        <h4>Pre-Testing Checklist (All items required)</h4>
+        <ul>
+          <li>☐ Type 1 file present: S:\FTP\Val_Returns\[Y]\[C]\formatted\Type1_[date].txt exists</li>
+          <li>☐ Type 2 file present: S:\FTP\Val_Returns\[Y]\[C]\formatted\Type2_[date].txt exists</li>
+          <li>☐ Type 3 file present: S:\FTP\Val_Returns\[Y]\[C]\formatted\Type3_[date].txt exists</li>
+          <li>☐ Type 4 file present: S:\FTP\Val_Returns\[Y]\[C]\formatted\Type4_[date].txt exists</li>
+          <li>☐ All files non-empty: Each file >0 bytes (check file properties)</li>
+          <li>☐ Exception count: ≤10 per file type (from e-Sys report)</li>
+          <li>☐ Work item documented: Batch reference, council, receipt date, data type, count</li>
+          <li>☐ Testing team notified: Reference added to work item</li>
+        </ul>
+        <h4>Transition Criteria</h4>
+        <p>If all checklist items pass: Mark work item as "Ready for Testing" with date and proceed to Q6. If any item fails: Resolve or escalate.</p>
+        <div class="page-ref">Source: Quality Gate Verification</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Validated formatted files from Q4, work item metadata</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff (checklist verification), system (file validation)</div>
+        <div class="block"><strong>Decision</strong>: All checklist items pass = approve for testing. Items fail = resolve or escalate</div>
+        <div class="block"><strong>Output</strong>: Files approved for testing. Work item status = "Ready for Testing"</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q6 -->
+  <section id="q6">
+    <h2>Q6 - Are mandatory sequencing requirements satisfied?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Sequencing Verification:</strong> Confirm Q1→Q2→Q3→Q4→Q5 completed in order. No backward loops permitted.</li>
+        <li><strong>File Location Check:</strong> Files must be in S:\FTP\Val_Returns\[YEAR]\[COUNCIL]\formatted\ for Testing team access.</li>
+        <li><strong>Work Item Status:</strong> Status must be updated to reflect current stage. No stalled work items.</li>
+        <li><strong>Escalation Review:</strong> If escalations occurred, confirm they were resolved and approved before proceeding.</li>
+        <li><strong>Decision:</strong> Can files proceed to Testing Procedure?</li>
+      </ul>
+      <div class="stop">If mandatory prerequisites not satisfied: Do NOT advance. Resolve blockers before proceeding to Testing.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Sequencing Constraints and Prerequisites</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Sequencing Rules</span><span class="detail-toggle-arrow">▼</span></div>
+      <div class="detail-panel">
+        <h4>Mandatory Execution Order</h4>
+        <p><strong>Q1 Eligibility</strong> → <strong>Q2 Registration</strong> → <strong>Q3 Preparation</strong> → <strong>Q4 Validation</strong> → <strong>Q5 Documentation</strong> → <strong>Q6 Sequencing Gate</strong> → <strong>Q7 Handoff</strong></p>
+        <h4>Blocking Dependencies</h4>
+        <ul>
+          <li><strong>Q4 blocks Q5:</strong> If exceptions unresolved, cannot advance to documentation</li>
+          <li><strong>Q5 blocks Q6:</strong> If files not verified, cannot approve for testing</li>
+          <li><strong>Q6 blocks Q7:</strong> If sequencing not verified, cannot handoff to Testing</li>
+        </ul>
+        <h4>No Backward Loops Rule</h4>
+        <p>Once Q5 complete (files documented), cannot return to Q3 (preparation). Cannot re-run formatting after Q4 complete unless critical issues discovered. Rework requires new batch submission.</p>
+        <div class="page-ref">Source: Sequencing Constraints</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Completed Q1-Q5 stages, work item history</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff (sequencing verification), system (work item tracking)</div>
+        <div class="block"><strong>Decision</strong>: Prerequisites satisfied = proceed to Q7 | Prerequisites not met = resolve blockers</div>
+        <div class="block"><strong>Output</strong>: Work item approved to transition to Testing Procedure</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q7 -->
+  <section id="q7">
+    <h2>Q7 - Are files handed off to Testing Procedure?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Testing Team Notification:</strong> Testing team receives formatted files with work item reference (DOC/20/588843).</li>
+        <li><strong>Procedure Closure:</strong> This procedure (Formatting) is COMPLETE at Q6 verification. Testing team now owns work item.</li>
+        <li><strong>Work Item Status Update:</strong> Mark status as "Handed Off to Testing" with date and Testing Procedure reference.</li>
+        <li><strong>Record Completion Notes:</strong> Document: What was done, files validated, special handling applied, any issues encountered, date, user ID.</li>
+        <li><strong>Archive Reference:</strong> Keep work item reference for audit trail linking Formatting → Testing → Loading procedures.</li>
+      </ul>
+      <div class="ref"><strong>Procedure reference:</strong> Procedure Closure and Handoff</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Completion Requirements</span><span class="detail-toggle-arrow">▼</span></div>
+      <div class="detail-panel">
+        <h4>Work Item Completion Notes Template</h4>
+        <p><strong>Example note:</strong> "(Operator ID, Date) Formatting complete: [Council] [Data type] [Batch ref]. Received [receipt date]. Files: Type1/2/3/4 validated, [exception count] exceptions resolved. [If special: LVP field-mapped / Resorts merged / Return date corrected]. Files saved to S:\FTP\Val_Returns\[YEAR]\[COUNCIL]\formatted\. Ready for DOC/20/588843 Testing Procedure."</p>
+        
+        <h4>Status Transition</h4>
+        <ul>
+          <li>Current: "In Progress - Formatting"</li>
+          <li>New: "Handed Off to Testing"</li>
+          <li>Next Owner: Testing team</li>
+          <li>Reference: DOC/20/588843 (Testing Procedure)</li>
+        </ul>
+        <div class="page-ref">Source: Procedure Closure and Handoff Documentation</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Approved files from Q6, work item</div>
+        <div class="block"><strong>Processing responsibility</strong>: LRA staff (closure documentation), Testing team (next procedure)</div>
+        <div class="block"><strong>Decision</strong>: Formatting procedure complete. Ownership transfers to Testing team.</div>
+        <div class="block"><strong>Output</strong>: Work item closed in this procedure, opened in Testing Procedure (DOC/20/588843)</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION -->
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction (Q1-Q7)</h2>
+    <div class="flow">
+      <div class="flow-title">Process Flow</div>
+      <div class="node n-blue">Q1: Eligibility Check</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q2: File Registration</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q3: Preparation Assessment</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q4: E-Sys Validation</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q5: Documentation</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q6: Quality Gate</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Q7: Handoff to Testing</div>
+      <div style="margin-top:24px;"></div>
+      <div class="flow-title" style="font-size:16px;">Systems Involved</div>
+      <div class="branch">
+        <div class="node n-blue" style="font-size:11px">e-Sys</div>
+        <div class="node n-amber" style="font-size:11px">Outlook</div>
+        <div class="node n-amber" style="font-size:11px">OneDrive</div>
+        <div class="node n-amber" style="font-size:11px">TextPad</div>
+      </div>
+      <div class="branch" style="margin-top:8px;">
+        <div class="node n-amber" style="font-size:11px">S: Drive (Val_Returns)</div>
+        <div class="node n-gray" style="font-size:11px">File System</div>
+        <div class="node n-gray" style="font-size:11px">Register System</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> Primary System</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> Data Source</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> Infrastructure</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>File Movement Flow</h2>
+    <p style="font-size:13px;color:#475569;">Q1-Q2: Email (Outlook) → OneDrive (LGAT - Supps Formatting folder)</p>
+    <p style="font-size:13px;color:#475569;">Q3: [Optional] TextPad processing for LVP/resorts (in-place editing)</p>
+    <p style="font-size:13px;color:#475569;">Q4: OneDrive → S:\FTP\Val_Returns\[YEAR]\[COUNCIL]\formatted\ (e-Sys output)</p>
+    <p style="font-size:13px;color:#475569;">Q5-Q6: Files remain at S: drive location (accessible to Testing team)</p>
+    <p style="font-size:13px;color:#475569;">Q7: Testing team retrieves files from S: drive for DOC/20/588843 procedure</p>
+  </section>
+</div>
+
+<!-- SUMMARY -->
+<div class="specOnly">
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul style="font-size:13px;">
+      <li><strong>Purpose:</strong> Prepare and format valuation data files from Valuer-General Victoria for e-Sys processing.</li>
+      <li><strong>Scope:</strong> Receipt, validation, and readiness for testing (not testing/loading itself).</li>
+      <li><strong>Data Types:</strong> Supplementary valuations (quarterly) and General Revaluations (annual).</li>
+      <li><strong>Output:</strong> 4 validated text files (Types 1-4) ready for DOC/20/588843 (Testing Procedure).</li>
+      <li><strong>Constraint:</strong> All work manual in e-Sys. AD/MLT automation not available.</li>
+      <li><strong>Success:</strong> All exceptions resolved, files in correct location, work item documented.</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul style="font-size:13px;">
+      <li><strong>Division:</strong> Operations</li>
+      <li><strong>Branch:</strong> Land Revenue</li>
+      <li><strong>Related Procedures:</strong> DOC/20/588843 (Testing), DOC/16/80942 (Load to Production), DOC/20/588772 (Troubleshooting)</li>
+      <li><strong>External Reference:</strong> Appendix A (SRO Specifications)</li>
+      <li><strong>Created:</strong> 2024</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Decision Framework</h2>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>Decision</th>
+            <th>Yes Path</th>
+            <th>No Path</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Q1</strong></td>
+            <td>Complete file set + no investigation?</td>
+            <td>→ Q2</td>
+            <td>Escalate/Halt</td>
+          </tr>
+          <tr>
+            <td><strong>Q2</strong></td>
+            <td>Files saved + registered?</td>
+            <td>→ Q3</td>
+            <td>Resolve/Escalate</td>
+          </tr>
+          <tr>
+            <td><strong>Q3</strong></td>
+            <td>Standard/LVP/Resorts/Return date?</td>
+            <td>→ Q4</td>
+            <td>Apply pathway</td>
+          </tr>
+          <tr>
+            <td><strong>Q4</strong></td>
+            <td>All exceptions resolved?</td>
+            <td>→ Q5</td>
+            <td>Resolve/Escalate</td>
+          </tr>
+          <tr>
+            <td><strong>Q5</strong></td>
+            <td>Checklist pass + files verified?</td>
+            <td>→ Q6</td>
+            <td>Resolve/Escalate</td>
+          </tr>
+          <tr>
+            <td><strong>Q6</strong></td>
+            <td>Sequencing satisfied?</td>
+            <td>→ Q7</td>
+            <td>Resolve/Escalate</td>
+          </tr>
+          <tr>
+            <td><strong>Q7</strong></td>
+            <td>Testing team ready?</td>
+            <td>Procedure Complete</td>
+            <td>N/A</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="summary-section" id="workflows">
+    <h2>Workflow Examples</h2>
+
+    <h3 style="font-size:14px;margin-top:20px;color:#003a8f;">Standard Supplementary Workflow</h3>
+    <p style="font-size:13px;color:#475569;">Q1: Receive 4 files, no investigation → Q2: Save to OneDrive, register → Q3: No special prep (standard path) → Q4: Validate, resolve exceptions → Q5: Verify files and checklist → Q6: Confirm sequencing → Q7: Handoff to Testing. <strong>Duration:</strong> 1-2 days.</p>
+
+    <h3 style="font-size:14px;margin-top:20px;color:#003a8f;">Revaluation with Large Value Properties</h3>
+    <p style="font-size:13px;color:#475569;">Q1: Receive 5 files (includes LVP Excel) → Q2: Save to OneDrive, register → Q3: LVP pathway - field map, create Type 2 entries → Q4: Validate, resolve exceptions (SPI creation required) → Q5: Verify 4 files → Q6: Confirm sequencing → Q7: Handoff to Testing. <strong>Note:</strong> Post-load manual value update required. <strong>Duration:</strong> 2-3 days.</p>
+
+    <h3 style="font-size:14px;margin-top:20px;color:#003a8f;">Revaluation with Alpine Resorts</h3>
+    <p style="font-size:13px;color:#475569;">Q1: Receive 6 files (council + 2 resort files) → Q2: Save to OneDrive, register → Q3: Resorts pathway - merge council + resort data using TextPad → Q4: Validate all 3 types → Q5: Verify 4 files → Q6: Confirm sequencing → Q7: Handoff to Testing. <strong>Duration:</strong> 1-2 days (2 councils only).</p>
+  </section>
+
+  <section class="summary-section" id="decision-rules">
+    <h2>Decision Rule Matrix</h2>
+
+    <h3 style="font-size:14px;margin-top:20px;color:#003a8f;">Q1 Eligibility</h3>
+    <div class="table-responsive">
+      <table>
+        <tr><th>Condition</th><th>Complete Files?</th><th>Investigation Active?</th><th>Decision</th></tr>
+        <tr><td>Normal</td><td>Yes</td><td>No</td><td>✓ Proceed to Q2</td></tr>
+        <tr><td>Investigation block</td><td>Yes</td><td>Yes</td><td>✗ Escalate to Investigation</td></tr>
+        <tr><td>Incomplete files</td><td>No</td><td>No</td><td>✗ Halt, request re-submission</td></tr>
+        <tr><td>Both issues</td><td>No</td><td>Yes</td><td>✗ Halt on both</td></tr>
+      </table>
+    </div>
+
+    <h3 style="font-size:14px;margin-top:20px;color:#003a8f;">Q3 Preparation Pathway</h3>
+    <div class="table-responsive">
+      <table>
+        <tr><th>Data Characteristic</th><th>Preparation Required</th><th>Special Handling</th></tr>
+        <tr><td>Standard supplementary</td><td>No</td><td>Proceed to Q4</td></tr>
+        <tr><td>Revaluation (standard)</td><td>No</td><td>Proceed to Q4</td></tr>
+        <tr><td>Revaluation + LVP (5 councils)</td><td>Yes</td><td>Field map, Type 2 additions</td></tr>
+        <tr><td>Revaluation + Resorts (2 councils)</td><td>Yes</td><td>Merge using TextPad</td></tr>
+        <tr><td>Return date wrong</td><td>Yes (correction)</td><td>Edit positions 280-288 to 010720XX</td></tr>
+      </table>
+    </div>
+
+    <h3 style="font-size:14px;margin-top:20px;color:#003a8f;">Q4 Exception Escalation Thresholds</h3>
+    <div class="table-responsive">
+      <table>
+        <tr><th>Exception Type</th><th>Escalation Trigger</th><th>Action</th></tr>
+        <tr><td>Duplicate MPN</td><td>If >5 duplicates</td><td>Investigate data quality, escalate</td></tr>
+        <tr><td>Excess lines (>50/MUN)</td><td>If >10 MUNs affected</td><td>Manual removal, escalate if pattern</td></tr>
+        <tr><td>Invalid SPI</td><td>If >100 SPIs</td><td>Manual correction, escalate</td></tr>
+        <tr><td>Complex SPI creation</td><td>If cannot create</td><td>Escalate to supervisor</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="summary-section" id="error-handling">
+    <h2>Error Handling & Escalation</h2>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr style="background:#003a8f;color:white;">
+            <th>Error Scenario</th>
+            <th>Stage</th>
+            <th>Action</th>
+            <th>Escalate To</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Files not received</td>
+            <td>Q1</td>
+            <td>Check Outlook multiple times. Verify email sent from VGV.</td>
+            <td>IT Support</td>
+          </tr>
+          <tr>
+            <td>Investigation active</td>
+            <td>Q1</td>
+            <td>Do not proceed. Assign work item to Investigator.</td>
+            <td>Investigation Team</td>
+          </tr>
+          <tr>
+            <td>Automation save failed</td>
+            <td>Q2</td>
+            <td>Manual save to OneDrive using yyyy-mm-dd folder naming.</td>
+            <td>None (fallback available)</td>
+          </tr>
+          <tr>
+            <td>Cannot identify file type</td>
+            <td>Q2</td>
+            <td>Check email subject line. Consult VGV cover letter. Ask supervisor.</td>
+            <td>Grade 3</td>
+          </tr>
+          <tr>
+            <td>TextPad Insert Files fails</td>
+            <td>Q3</td>
+            <td>Retry. Check file format. If persists, try alternate method.</td>
+            <td>IT Support / Grade 3</td>
+          </tr>
+          <tr>
+            <td>Return date ambiguous</td>
+            <td>Q3</td>
+            <td>Check VGV documentation. Consult supervisor on correction.</td>
+            <td>Grade 3</td>
+          </tr>
+          <tr>
+            <td>E-Sys tool crashes</td>
+            <td>Q4</td>
+            <td>Capture error. Restart tool. If persists, note error details.</td>
+            <td>IT Support</td>
+          </tr>
+          <tr>
+            <td>Cannot resolve exceptions</td>
+            <td>Q4</td>
+            <td>Check rule definitions. Document issue. Escalate for decision.</td>
+            <td>Grade 3 or 4</td>
+          </tr>
+          <tr>
+            <td>Files not in S: drive</td>
+            <td>Q5</td>
+            <td>Check e-Sys output settings. Re-run formatting if needed.</td>
+            <td>IT Support / Grade 3</td>
+          </tr>
+          <tr>
+            <td>Exception count >10</td>
+            <td>Q5</td>
+            <td>Return to Q4. Resolve additional exceptions. Document reason for threshold.</td>
+            <td>Grade 3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="summary-section" id="critical-gaps">
+    <h2>Critical Gaps & Recommendations</h2>
+
+    <div class="limitations"><strong>GAP 1 (HIGH):</strong> Return date determination unclear. LGA example shows "29/01/xx" but rationale undefined. <strong>Fix:</strong> Define rule: use decommission discovery date OR assessment year end (01 July). Document choice in comments.</div>
+
+    <div class="limitations"><strong>GAP 2 (HIGH):</strong> "Select All" button trap in e-Sys. Users may accidentally include years outside retrospective period (current + 4 years). <strong>Fix:</strong> Mandatory warning: Never use "Select All". Manually select years only within retrospective period.</div>
+
+    <div class="limitations"><strong>GAP 3 (MEDIUM):</strong> SPI creation algorithm not documented. For complex reference strings (multiple TPs), rule is "cannot auto-generate, manual creation required" but process is undefined. <strong>Fix:</strong> Create SPI format rules or reference external Property Reference Code documentation.</div>
+
+    <div class="limitations"><strong>GAP 4 (MEDIUM):</strong> Exception handling lacks fallback rules. If e-Sys tool cannot resolve exception, no documented escalation path. <strong>Fix:</strong> Define: escalate to Grade 3 if >10 unresolved exceptions remain after 2 iterations.</div>
+
+    <div class="limitations"><strong>GAP 5 (MEDIUM):</strong> File location terminology inconsistent. References to S: drive, OneDrive, H: drive locations scattered. <strong>Fix:</strong> Create single "System Architecture" section defining all storage locations and usage.</div>
+
+    <div class="limitations"><strong>GAP 6 (MEDIUM):</strong> Work item lifecycle undefined. No documented states: received → validating → exception resolution → approved → handed off. <strong>Fix:</strong> Create status update rules at each Q-gate.</div>
+
+    <div class="limitations"><strong>GAP 7 (LOW):</strong> No defined SLA for each Q-gate. Formatting duration varies (1-3 days) but no formal time targets. <strong>Fix:</strong> Add target durations: Q1 (1 day), Q2 (1 day), Q3 (1 day if LVP/resorts, <1 day standard), Q4 (1-2 days exception resolution), Q5-Q7 (<1 day).</div>
+  </section>
+
+  <section class="summary-section">
+    <h2>DCPR Alignment Score</h2>
+    <div class="score"><strong>Score: 7 / 10</strong><br>DCPR structure provides Q-gates and decision framework. Deductions: Timing rules undefined (-1.5), Exception escalation unclear (-0.8), Work item lifecycle missing (-0.7).</div>
+    <div class="score" style="background:#e0f2fe;border-left-color:#0284c7;"><strong>Readiness:</strong> PRODUCTION-READY with documented caveats. Critical gaps documented. Recommend review and update within 6 months.</div>
+  </section>
+
+  <section class="summary-section">
+    <h2>Definitions</h2>
+    <ul style="font-size:13px;">
+      <li><strong>SRO</strong> - State Revenue Office</li>
+      <li><strong>LGAT</strong> - Local Government Administration Team</li>
+      <li><strong>MPN</strong> - Municipal Property Number</li>
+      <li><strong>SPI</strong> - Single Property Identifier</li>
+      <li><strong>Type 1</strong> - Property master records file</li>
+      <li><strong>Type 2</strong> - Valuation data file</li>
+      <li><strong>Type 3</strong> - Ownership data file</li>
+      <li><strong>Type 4</strong> - Summary totals file</li>
+      <li><strong>LVP</strong> - Large Value Properties (exceeding 9-digit value)</li>
+      <li><strong>VGV</strong> - Valuer-General Victoria (data source)</li>
+      <li><strong>e-Sys</strong> - Valuation system (primary tool)</li>
+      <li><strong>Retrospective period</strong> - Current year + 4 preceding years</li>
+    </ul>
+  </section>
+</div>
+```
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(function(e){e.style.display='none'});
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(function(e){e.style.display='block'});document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(function(e){e.style.display='block'});document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,533 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Land Ownership Procedure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    ul,ol{margin-left:22px}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .constraint{background:#faf5ff;border-left:5px solid #8b5cf6;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .limitations{background:#fffbeb;border-left:5px solid #f59e0b;padding:12px 16px;margin:12px 0;font-size:14px}
+    .score{background:#f0fdf4;border-left:5px solid #22c55e;padding:12px 16px;margin:12px 0;font-size:14px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;-webkit-tap-highlight-color:transparent}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .detail-panel .page-ref{font-size:11px;color:#3b82f6;font-weight:600;margin-top:8px}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .branch{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;justify-content:center}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#475569}
+    .legend-dot{width:12px;height:12px;border-radius:3px}
+    .table-responsive{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Land Ownership Procedure</h1>
+  <p>Division: Land Revenue Services &bull; Branch: Land Revenue Administration &bull; Created: 25 January 2024</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Key Questions</strong>
+    <a href="#q1">Q1 Investigation Check?</a>
+    <a href="#q2">Q2 Verify Ownership?</a>
+    <a href="#q3">Q3 Update e-Sys?</a>
+    <a href="#q4">Q4 Recalculate Liability?</a>
+    <a href="#q5">Q5 Generate Assessments?</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#amendments" onclick="showView('spec');setTimeout(function(){document.location.hash='amendments'},100);">Amendment Sources</a>
+    <a href="#verification" onclick="showView('spec');setTimeout(function(){document.location.hash='verification'},100);">Verification Methods</a>
+    <a href="#complex" onclick="showView('spec');setTimeout(function(){document.location.hash='complex'},100);">Complex Scenarios</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(function(){document.location.hash='definitions'},100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+```
+<div id="questionFlow">
+
+  <!-- Q1 -->
+  <section id="q1">
+    <h2>Q1 - Is the customer under active investigation?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Check e-Sys Record:</strong> Review customer record for investigation indicators and non-issue flags.</li>
+        <li><strong>Identify Investigation Status:</strong> Red exclamation mark (!) indicates active investigation or investigation within last 3 years.</li>
+        <li><strong>Verify Investigation Number:</strong> Check Under Investigation Non-Issue for IC-prefixed investigation number.</li>
+        <li><strong>Related Customers:</strong> Check Joint Ownership members and Trust beneficiaries for investigation flags.</li>
+        <li><strong>Decision:</strong> Is customer under investigation or high-risk status?</li>
+      </ul>
+      <div class="stop">Do NOT action Land Ownership request if customer is under investigation. Assign to Investigator immediately.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Before You Begin; Investigation Management</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Investigation Indicators</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Active Investigation Flag</h4>
+        <p><strong>Red Exclamation Mark:</strong> Visible in e-Sys next to customer number and name. Indicates either active investigation or investigation completed within last 3 years.</p>
+        <h4>High Risk Period</h4>
+        <p>Customers investigated within last 3 years are flagged for 3-year period and should be treated as high risk.</p>
+        <h4>Under Investigation Non-Issue</h4>
+        <p>Will appear on account with investigation number (prefixed by IC, e.g., IC123456). Document this in case notes.</p>
+        <h4>Related Customer Checks</h4>
+        <p>Always check Joint Ownership members and Trust beneficiaries. If related customer is under investigation, do NOT proceed.</p>
+        <h4>Previous Decisions</h4>
+        <p>If property was previously denied by investigation or TARB decision, inform customer of prior decision. Do NOT reprocess.</p>
+        <div class="page-ref">Source: Before You Begin; Investigation Protocol</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Customer record, investigation status flags, non-issue indicators from e-Sys</div>
+        <div class="block"><strong>Processing responsibility</strong>: Assessor (status check), e-Sys (flag visibility), Investigator (case assignment)</div>
+        <div class="block"><strong>Decision</strong>: Customer under investigation (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Proceed to Q2 if NO investigation; HALT and reassign to Investigator if YES</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 -->
+  <section id="q2">
+    <h2>Q2 - Can ownership details be verified using authorised sources?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Gather Amendment Details:</strong> Identify amendment source (customer contact, NOA, internal discovery) and required information.</li>
+        <li><strong>Select Verification Tools:</strong> Determine which sources to use: COI, DAS, Landata, Municipal Revaluation Files.</li>
+        <li><strong>Cross-reference Data:</strong> Use multiple sources to confirm ownership is accurate and consistent.</li>
+        <li><strong>Document Sources Used:</strong> Record which tools verified the ownership and results obtained.</li>
+        <li><strong>Decision:</strong> Has ownership been successfully verified?</li>
+      </ul>
+      <div class="stop">Do NOT update ownership without verification. If unable to verify, request supporting documents from customer or escalate.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Confirmation Methods; Verification Process</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Verification Tools Explained</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>COI - Compliance Operational Intelligence</h4>
+        <p><strong>LTX Property Summary:</strong> Enter property number to get quick overview: current e-Sys ownership, municipal data, titles office info, DAS details.</p>
+        <p><strong>Search Properties:</strong> Use folio, SPI, or address for detailed search. Returns registered proprietor/s, registration date, manner of holding, shares, dealing details.</p>
+        <h4>DAS Records Search</h4>
+        <p>Use for conflicting information. Shows transfer documents, transferor/transferee details, settlement dates, transaction types. Important: Registration date ≠ actual transfer date.</p>
+        <h4>Landata Search</h4>
+        <p>Last resort option. Can view NOA images, Transfer of Land instruments, or title history. Note: Some searches incur costs - use after exhausting other options.</p>
+        <h4>Municipal Revaluation Files</h4>
+        <p>Accessed via e-Sys Tools menu. Check council valuation data for property in retrospective period. Verify property references and address match.</p>
+        <h4>Customer Supporting Documents</h4>
+        <p>If verification unsuccessful, request from customer: fully signed contracts, settlement statements, trust deeds, probate, or will copies. Reserve item for 21 days with Non-Issue Indicator.</p>
+        <div class="page-ref">Source: Confirmation Methods section</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Customer information, amendment source, property references, NOA/documentation</div>
+        <div class="block"><strong>Processing responsibility</strong>: Assessor (verification), COI (property data), DAS (transfer records), Landata (title history)</div>
+        <div class="block"><strong>Decision</strong>: Ownership verified (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Proceed to Q3 with verified ownership; OR request documentation and place on hold</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q3 -->
+  <section id="q3">
+    <h2>Q3 - Can ownership records be updated in e-Sys?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Load to Tree:</strong> Ensure all required customers (transferor and transferee) and properties are loaded to e-Sys tree.</li>
+        <li><strong>Access Transfer Function:</strong> Select Ownership node, highlight transferor customer, right-click and select Transfer Property.</li>
+        <li><strong>Enter Transfer Details:</strong> Input date of possession, dealing number (if known), and transfer comments (e.g., "Trf'd per DAS").</li>
+        <li><strong>Configure New Owner:</strong> Select New Owners tab, associate new customer, set Lead Customer, adjust ownership shares if multiple owners.</li>
+        <li><strong>Apply PPR:</strong> If applicable, select PPR exemption option.</li>
+        <li><strong>Complete:</strong> Click Complete button to record transfer in e-Sys.</li>
+        <li><strong>Decision:</strong> Has ownership been successfully updated?</li>
+      </ul>
+      <div class="stop">Ensure ownership shares total 100%. Date of possession: Use DAS settlement date if within retro period, else use SRO standard date (from 2024: 1 Dec 2019).</div>
+      <div class="ref"><strong>Procedure reference:</strong> Update Ownership of Property in e-Sys</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Transfer Steps</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Step 1: Prepare e-Sys Tree</h4>
+        <p>Load all required customers to tree. If property not currently owned by customer, locate via property search and load.</p>
+        <h4>Step 2: Access Transfer Function</h4>
+        <p>Confirm purchasers' current liability. Select Ownership node under property. Highlight transferor. Right-click → Transfer Property.</p>
+        <h4>Step 3: Transfer Details</h4>
+        <p><strong>Date of Possession:</strong> Retrospective period = use DAS settlement date. Outside retro = use SRO standard date.</p>
+        <p><strong>Dealing Number:</strong> Enter if known from documentation.</p>
+        <p><strong>Comments:</strong> Record transfer details, e.g., "Trf'd as per DAS. Refer CID 1234567"</p>
+        <h4>Step 4: New Ownership Configuration</h4>
+        <p>Select New Owners tab. Associate Customer (new owner). Choose Lead Customer. If multiple owners, adjust Share% so total = 100%. Select PPR if confirmed.</p>
+        <h4>Step 5: Complete Transfer</h4>
+        <p>Click Complete. Transfer recorded. Proceed to liability recalculation for all affected parties and years.</p>
+        <div class="page-ref">Source: Update Ownership section</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Verified ownership, transfer date, transferor/transferee details, property record</div>
+        <div class="block"><strong>Processing responsibility</strong>: e-Sys (record update), Assessor (data entry), System (validation and storage)</div>
+        <div class="block"><strong>Decision</strong>: Ownership update successful (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Updated ownership records; proceed to Q4 liability recalculation</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q4 -->
+  <section id="q4">
+    <h2>Q4 - Do land tax liabilities require recalculation or creation?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Navigate to Liabilities:</strong> Select Land Taxpayer node, then select Liabilities.</li>
+        <li><strong>Review Liability Summary:</strong> Check current liability status and net liability amounts for all years.</li>
+        <li><strong>Click Recalculate:</strong> Click Recalculate button on Liability Summary screen.</li>
+        <li><strong>Select Years:</strong> In Recalculate Liability screen, select only years requiring recalculation (NOT years outside retrospective period).</li>
+        <li><strong>Execute Recalculation:</strong> Click OK to process the recalculation.</li>
+        <li><strong>Review Outcomes:</strong> Check whether liabilities were amended (increase/decrease), withdrawn (removed), or newly created.</li>
+        <li><strong>Check for Penalties:</strong> Review Workflow node for any LTX Penalty (Notification Dflt) work items that may have been created.</li>
+        <li><strong>Decision:</strong> Have liabilities been appropriately recalculated?</li>
+      </ul>
+      <div class="stop">CRITICAL: Do NOT recalculate years outside the retrospective period (5 years: current + 4 prior). Document outcomes for action item notes.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Recalculating or Creating a Liability</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Recalculation Outcomes</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Liability Amendment</h4>
+        <p>Amount increased or decreased for affected year(s). Reflects ownership change or corrected ownership percentage.</p>
+        <h4>Liability Withdrawal</h4>
+        <p>Liability removed entirely from customer. Property no longer in their holdings (e.g., property sold).</p>
+        <h4>New Liability Creation</h4>
+        <p>New liability established for newly identified owner within retrospective period.</p>
+        <h4>Retrospective Period Definition</h4>
+        <p>Current land tax year PLUS four preceding years = 5 years total. Only these years eligible for recalculation.</p>
+        <h4>Penalty Work Items</h4>
+        <p>If recalculation amends liabilities, check Workflow node for LTX Penalty (Notification Dflt) items. Refer to Penalty Tax in e-Sys for Land Tax Procedure for review process.</p>
+        <h4>Joint Ownership Impact</h4>
+        <p>If amendment affects JO customers, recalculate liabilities for all associated members. Changes to one owner impact collective liability.</p>
+        <div class="page-ref">Source: Recalculating or Creating Liability section</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Updated ownership records, affected years in retrospective period, customer details</div>
+        <div class="block"><strong>Processing responsibility</strong>: e-Sys (calculation engine), Assessor (year selection and confirmation), System (recalculation execution)</div>
+        <div class="block"><strong>Decision</strong>: Liabilities recalculated successfully (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Updated liability records; penalty work items generated if applicable; proceed to Q5</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q5 -->
+  <section id="q5">
+    <h2>Q5 - Can assessments be generated or reissued?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Check Non-Issue Indicators:</strong> Verify no LTX Liability Non-Issue blockers are preventing assessment generation.</li>
+        <li><strong>Review Liabilities:</strong> Check Net Liability (outstanding balance) to determine which assessments require generation/reissuance.</li>
+        <li><strong>Select Assessment Years:</strong> Identify which years need new or revised assessments from Liabilities node.</li>
+        <li><strong>Generate Assessments:</strong> Click Generate Assessment button for each required year.</li>
+        <li><strong>Verify Generation:</strong> Confirm assessments have been successfully generated and appear in Assessments node.</li>
+        <li><strong>Note Withdrawn Assessments:</strong> Withdrawn assessments will have disappeared from liability list.</li>
+        <li><strong>Decision:</strong> Have assessments been appropriately generated or reissued?</li>
+      </ul>
+      <div class="stop">Assessment generation blocked by Non-Issue Indicators. Close blockers first: Edit NII, set cease date to day before current date, click OK.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Generate Assessment/s; Non-Issue Management</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Assessment Delivery Methods</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>Closing Non-Issue Indicators</h4>
+        <p>If NII blocks assessment generation: Select NII, right-click Edit, enter cease date (day BEFORE today), click OK. Assessment can then be generated next business day.</p>
+        <h4>Reissuing Withdrawn Assessments (Digital Customers)</h4>
+        <p>If assessment withdrawn in error and needs reissue but NOT posted: Generate assessment, select "External - Return To Requestor", ensure Priority NOT selected. Customer only sees last version in My Land Tax.</p>
+        <h4>Reissuing Withdrawn Assessments (Postal Customers)</h4>
+        <p>For customers not registered for digital delivery: Generate assessment WITHOUT "External - Return To Requestor" or "Priority". Email operations@sro.vic.gov.au with extraction request (template: CID, address, Assessment IDs).</p>
+        <h4>Assessment Verification</h4>
+        <p>After generation, verify new/amended assessments appear in Assessments node. Multiple years may require separate generation operations.</p>
+        <h4>Digital vs Postal Delivery</h4>
+        <p>Digital customers (My Land Tax, myGov): Assessments generated automatically notify customer. Postal customers: Assessment printed and mailed via operations team.</p>
+        <div class="page-ref">Source: Generate Assessment section; Assessment Delivery</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Recalculated liabilities, NII status, years requiring assessment, customer delivery method</div>
+        <div class="block"><strong>Processing responsibility</strong>: e-Sys (assessment generation), Assessor (year selection), System (validation and delivery)</div>
+        <div class="block"><strong>Decision</strong>: Assessments generated/reissued successfully (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Generated/reissued assessments; proceed to correspondence and action item completion</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION VIEW -->
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction - Land Ownership Amendment Process</h2>
+    <div class="flow">
+      <div class="flow-title">Amendment Processing Flow</div>
+      <div class="node n-amber">Land Ownership Amendment Request Received</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q1: Check for Active Investigation</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Investigation Active?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div>
+          <div class="node n-gray" style="min-width:140px;">YES: Escalate</div>
+        </div>
+        <div>
+          <div class="node n-blue" style="min-width:140px;">NO: Proceed</div>
+        </div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q2: Verify Ownership (COI/DAS/Landata)</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Verification Successful?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div>
+          <div class="node n-gray" style="min-width:140px;">NO: Request Docs</div>
+        </div>
+        <div>
+          <div class="node n-blue" style="min-width:140px;">YES: Proceed</div>
+        </div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q3: Update Ownership in e-Sys</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q4: Recalculate Liabilities (All Years)</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Liabilities Recalculated</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q5: Generate/Reissue Assessments</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Send Correspondence to Customer</div>
+      <div class="arr"></div>
+      <div class="node n-gray">Complete Action Item</div>
+      <div style="margin-top:24px;"></div>
+      <div class="flow-title" style="font-size:16px;">Key Systems Involved</div>
+      <div class="branch">
+        <div class="node n-blue" style="font-size:11px">e-Sys</div>
+        <div class="node n-amber" style="font-size:11px">COI</div>
+        <div class="node n-amber" style="font-size:11px">DAS</div>
+        <div class="node n-amber" style="font-size:11px">Landata</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> Primary Decision Point</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> System Checkpoint</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> Process Completion</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SUMMARY & REFERENCE VIEW -->
+<div class="specOnly">
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul>
+      <li>Identifies and manages land ownership amendments in e-Sys (adding or removing land from customer holdings)</li>
+      <li>Establishes nine-step decision process from investigation check through assessment generation</li>
+      <li>Requires verification using COI, DAS, Landata, and municipal records before updating ownership</li>
+      <li>Defines liability recalculation and assessment generation procedures for affected years</li>
+      <li>Covers complex scenarios including Joint Ownership, Trusts, and Company Share Units</li>
+      <li>Concludes with customer correspondence and action item completion</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul>
+      <li><strong>Division:</strong> Land Revenue Services</li>
+      <li><strong>Branch:</strong> Land Revenue Administration</li>
+      <li><strong>Created:</strong> 25 January 2024</li>
+      <li><strong>Legislation:</strong> Land Tax Act 2005; Taxation Administration Act 1997</li>
+      <li><strong>System of Record:</strong> Lotus Notes Policies and Procedures Database</li>
+      <li><strong>Currency:</strong> Reliance should not be placed on this printed copy without checking the electronic version</li>
+    </ul>
+  </section>
+
+  <section class="summary-section" id="amendments">
+    <h2>Land Ownership Amendment Sources</h2>
+    <h3>Customer-Initiated Amendments</h3>
+    <p>Created when customer contacts via phone, My Land Tax, or written request:</p>
+    <ul>
+      <li>Property not listed in their assessment</li>
+      <li>Property has been sold (no longer owned)</li>
+      <li>Ownership percentage is incorrect</li>
+      <li>Property was never owned by them</li>
+    </ul>
+
+    <h3>Internally-Created Amendments</h3>
+    <p>Identified by SRO staff or automated processes during related tasks:</p>
+    <ul>
+      <li>Valuations team discovery</li>
+      <li>Section 105 certificate processing</li>
+      <li>Debt Management Services referral</li>
+      <li>Investigation findings</li>
+      <li>Late NOA processing post-assessment</li>
+    </ul>
+
+    <h3>Special Transfers</h3>
+    <ul>
+      <li><strong>Terms Sale:</strong> 15% deposit paid</li>
+      <li><strong>Life Tenancy:</strong> Based on Will provisions</li>
+    </ul>
+
+    <div class="limitations">
+      <strong>Processing Note:</strong> Basic property withdrawals processed via AD/MLT. Complex amendments (trusts, estates, shares) require manual e-Sys processing.
+    </div>
+  </section>
+
+  <section class="summary-section" id="verification">
+    <h2>Verification Method Hierarchy</h2>
+    <p>Use verification tools in sequence:</p>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Priority</th>
+            <th>Tool</th>
+            <th>Information</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1</strong></td>
+            <td>COI Property Summary</td>
+            <td>Current ownership, municipal data, titles office info, DAS details</td>
+          </tr>
+          <tr>
+            <td><strong>2</strong></td>
+            <td>COI Search Properties</td>
+            <td>Proprietor/s, registration date, manner of holding, shares, dealings</td>
+          </tr>
+          <tr>
+            <td><strong>3</strong></td>
+            <td>DAS Records</td>
+            <td>Transfer documents, transferor/transferee details, settlement dates</td>
+          </tr>
+          <tr>
+            <td><strong>4</strong></td>
+            <td>Municipal Revaluation</td>
+            <td>Council valuation data, property references, address history</td>
+          </tr>
+          <tr>
+            <td><strong>5</strong></td>
+            <td>Landata</td>
+            <td>NOA images, TOL instruments, title history (costs apply)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="score">
+      <strong>Customer Documentation:</strong> If verification unsuccessful, request supporting documents and place item on 21-day hold with Non-Issue Indicator.
+    </div>
+  </section>
+
+  <section class="summary-section" id="complex">
+    <h2>Complex Scenarios</h2>
+
+    <h3>Company Share Units</h3>
+    <p>Individuals hold shares in company owning land/buildings. Company on title; unit holders are deemed owners for land tax.</p>
+    <p><strong>Verification:</strong> Search ASIC for company. Check Share Details (Historic view). Match ownership dates with other sources. Request supporting docs if needed.</p>
+    <div class="limitations"><strong>Note:</strong> ASIC for verification only. Process transfer normally after confirming ownership.</div>
+
+    <h3>NICO Plan (Not in Common Ownership)</h3>
+    <p>Subdivision/consolidation of multiple titles with different owners. After NICO, all properties held jointly.</p>
+    <p><strong>Treatment:</strong> Assess as JO in e-Sys. Apportion shares by parent title areas. Remains JO until new titles lodged.</p>
+    <p><strong>Example:</strong> Property 1: 85,780 sqm (Owner A); Property 2: 10,750 sqm (Owner B). Totals 96,530 sqm. A: 88.864%; B: 11.136%</p>
+  </section>
+
+  <section class="summary-section" id="definitions">
+    <h2>Definitions & Key Acronyms</h2>
+    <p style="font-size:13px;">
+      <strong>AD/MLT</strong> - Assisted Digital/My Land Tax &bull;
+      <strong>COI</strong> - Compliance Operational Intelligence &bull;
+      <strong>DAS</strong> - Document Assessing System &bull;
+      <strong>JO</strong> - Joint Ownership &bull;
+      <strong>LTX</strong> - Land Tax &bull;
+      <strong>NII</strong> - Non-Issue Indicator &bull;
+      <strong>NOA</strong> - Notice of Acquisition &bull;
+      <strong>PPR</strong> - Principal Place of Residence &bull;
+      <strong>SRO</strong> - State Revenue Office &bull;
+      <strong>TARB</strong> - Technical Advice and Review Branch &bull;
+      <strong>TOL</strong> - Transfer of Land
+    </p>
+    <p style="font-size:13px;margin-top:16px;">
+      <strong>Retrospective Period:</strong> Current year plus four prior years (5 years total) &bull;
+      <strong>Land Ownership Amendment:</strong> Adding/removing land from customer's holdings &bull;
+      <strong>Transfer:</strong> Moving property ownership from one customer to another &bull;
+      <strong>Investigation:</strong> Compliance review of customer's land tax obligations
+    </p>
+  </section>
+</div>
+```
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(function(e){e.style.display='none'});
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(function(e){e.style.display='block'});document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(function(e){e.style.display='block'});document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

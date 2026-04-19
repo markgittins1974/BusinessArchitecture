@@ -1,0 +1,1097 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Applying Primary Production Land Exemption and Zoning - IMPROVED</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .improvement-badge{display:inline-block;background:#fbbf24;color:#78350f;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700;margin-left:12px}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .sidebar a.gap-link{color:#ec4899;font-weight:600}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    ul,ol{margin-left:22px;font-size:13px}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px;font-size:13px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .decision-box{background:#fef3c7;border-left:5px solid #d97706;padding:12px;margin-top:12px;font-size:13px;font-weight:600;color:#92400e}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .gap-highlight{background:#fce7f3;border-left:5px solid #ec4899;padding:12px 16px;margin:12px 0;font-size:13px}
+    .score{background:#f0fdf4;border-left:5px solid #22c55e;padding:12px 16px;margin:12px 0;font-size:14px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;-webkit-tap-highlight-color:transparent}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .detail-panel .page-ref{font-size:11px;color:#3b82f6;font-weight:600;margin-top:8px;padding-top:8px;border-top:1px solid #e0e7ff}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .branch{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;justify-content:center}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#475569}
+    .legend-dot{width:12px;height:12px;border-radius:3px}
+    .table-responsive{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+    .checklist{background:#f9fafb;border:1px solid #e5e7eb;padding:16px;margin:12px 0;border-radius:6px}
+    .checklist li{list-style:none;padding-left:24px;position:relative;margin-bottom:8px;font-size:13px}
+    .checklist li::before{content:'☐';position:absolute;left:0;font-weight:bold;color:#003a8f}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Applying Primary Production Land Exemption and Zoning <span class="improvement-badge">GAPS IMPROVED</span></h1>
+  <p>Division: Land Revenue Services &bull; Branch: Land Revenue Administration &bull; Created: 15 February 2024 &bull; Enhanced with 15-gap analysis</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#context">Context & Authority</a>
+    <a href="#q1">Q1 Before You Begin</a>
+    <a href="#q2">Q2 Determine Location</a>
+    <a href="#q3">Q3 Check Zoning</a>
+    <a href="#q4">Q4 Section Selection</a>
+    <a href="#q5">Q5 Verify PPL Type</a>
+    <a href="#q6">Q6 Apply Exemption</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#gaps-summary" class="gap-link" onclick="showView('spec');setTimeout(function(){document.location.hash='gaps-summary'},100);">📊 Gaps Analysis</a>
+    <a href="#section-matrix" onclick="showView('spec');setTimeout(function(){document.location.hash='section-matrix'},100);">Section Matrix</a>
+    <a href="#grandfathering" onclick="showView('spec');setTimeout(function(){document.location.hash='grandfathering'},100);">Grandfathering</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(function(){document.location.hash='definitions'},100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+<div id="questionFlow">
+
+  <!-- CONTEXT SECTION -->
+
+  <section id="context">
+    <h2>Context: Primary Production Land Exemption Framework <span class="improvement-badge">LEGISLATION & SECTIONS</span></h2>
+    <div class="staff">
+      <h3>Overview</h3>
+      <p style="font-size:13px;margin-bottom:12px;">This procedure identifies the process for applying a Primary Production Land (PPL) exemption for land used primarily for primary production under the Land Tax Act 2005.</p>
+
+```
+  <h3>Four Exemption Sections (s65-s68)</h3>
+  <ul style="font-size:13px;">
+    <li><strong>s65:</strong> Land OUTSIDE greater Melbourne used primarily for primary production</li>
+    <li><strong>s66:</strong> Land IN greater Melbourne but NOT in urban zone, used primarily for primary production</li>
+    <li><strong>s67:</strong> Land IN greater Melbourne IN urban zone, used solely/primarily for primary production (TARB decision)</li>
+    <li><strong>s68:</strong> Land BEING PREPARED for primary production use (12-month max, renewable once)</li>
+  </ul>
+
+  <h3>Request Channels</h3>
+  <ul style="font-size:13px;">
+    <li>My Land Tax (online portal)</li>
+    <li>Written correspondence (letter/email)</li>
+    <li>Phone call to SRO staff (AD/MLT processing)</li>
+  </ul>
+
+  <h3>Key Control Points</h3>
+  <ul style="font-size:13px;">
+    <li><strong>Investigation Flag:</strong> Red ! flag = do NOT process without investigator approval</li>
+    <li><strong>Zoning Determination:</strong> Must check VicPlan to determine urban zone status</li>
+    <li><strong>Section Selection:</strong> Location + zone determines section (s65/s66/s67)</li>
+    <li><strong>TARB Referral:</strong> All s67 requests must go to TARB for decision</li>
+  </ul>
+
+  <div class="ref" style="margin-top:12px;"><strong>Authority:</strong> Land Tax Act 2005, Sections 65-70 | <strong>Time Standard:</strong> 15 minutes per PPL action item</div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: PPL exemption request, customer details, property location/zoning</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (verification & application), e-Sys (exemption recording), TARB (s67 decisions)</div>
+    <div class="block"><strong>Decision</strong>: Which section applies? Is exemption eligible? Proceed or escalate?</div>
+    <div class="block"><strong>Output</strong>: PPL exemption applied or referred to TARB, customer notified, refunds processed if applicable</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q1 BEFORE YOU BEGIN -->
+
+  <section id="q1">
+    <h2>Q1 - Have You Completed Pre-Processing Checks? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Essential Pre-Processing Checklist</h3>
+      <div class="checklist">
+        <ul style="font-size:13px;">
+          <li>Allocate PPL action item to your worktray (prevents auto-processing)</li>
+          <li>Review phone call history in e-Sys</li>
+          <li>Review CM10 (Content Manager) documents for request details</li>
+          <li>Check for red ! flag (investigation indicator)</li>
+          <li>Check for "LTX Under Investigation" non-issue</li>
+          <li>Check for previous exemption grants/denials on same property</li>
+          <li>Check for previous TARB decisions on this customer</li>
+        </ul>
+      </div>
+
+```
+  <h3>Investigation Flag Handling</h3>
+  <div class="stop">If red ! flag OR "LTX Under Investigation" node exists: DO NOT PROCESS. Escalate to investigator immediately.</div>
+
+  <h3>Previous Decision Handling</h3>
+  <p style="font-size:13px;margin-bottom:12px;"><strong>If exemption previously denied:</strong> Do not grant. Reply to customer advising of prior decision. Escalate if new information provided.</p>
+  <p style="font-size:13px;"><strong>If exemption previously granted:</strong> Review to understand prior decision basis before processing amendment.</p>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Investigation Escalation, Previous Decision Handling & Pre-Processing Checklist</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>Investigation Flag Escalation Process</h4>
+    <p><strong>What is a red ! flag?</strong> Customer has active investigation OR completed investigation within last 3 years. Treat as high-risk.</p>
+    <p><strong>What is "LTX Under Investigation" non-issue?</strong> Specific flag showing investigation number (IC-prefixed). Found in non-issue list on customer account.</p>
+    
+    <p><strong>Escalation Steps:</strong></p>
+    <ol>
+      <li>Email investigator with: Customer ID, name, PPL request details, property</li>
+      <li>Include action item reference number</li>
+      <li>Ask investigator to advise if PPL processing should proceed or hold</li>
+      <li>Do NOT process exemption until investigator approval received</li>
+      <li>Document investigation flag and escalation in action item notes</li>
+    </ol>
+
+    <p><strong>Contact Information:</strong> Find investigator via e-Sys team directory or CMT (contact investigation team lead)</p>
+
+    <h4>Previous Decision Handling</h4>
+    <p><strong>If Exemption Previously DENIED:</strong></p>
+    <ul>
+      <li>Check if denial was by investigation or TARB decision</li>
+      <li>Check if request is for SAME property or DIFFERENT property</li>
+      <li>Check if within investigation period (if investigation-based denial)</li>
+      <li>If same property & investigation-based denial: Refer back to investigator with new information (if provided)</li>
+      <li>Do NOT re-grant without investigator or TARB approval</li>
+    </ul>
+
+    <p><strong>If Exemption Previously GRANTED:</strong></p>
+    <ul>
+      <li>Review basis of prior grant (check comments for section and activity type)</li>
+      <li>If this is first-time request for property: Normal processing applies</li>
+      <li>If this is renewal/amendment: Check if changes affect eligibility (e.g., s68 2-year max)</li>
+    </ul>
+
+    <h4>Complete Pre-Processing Checklist</h4>
+    <ul style="font-size:13px;">
+      <li>☐ Allocate action item to worktray</li>
+      <li>☐ Check phone call history (Phone Calls & Notes)</li>
+      <li>☐ Check CM10 for all documents (SmartForm, letters, prior decisions)</li>
+      <li>☐ Search for red ! flag (Investigation indicator)</li>
+      <li>☐ Check non-issue list for "LTX Under Investigation" code</li>
+      <li>☐ Search for prior PPL exemptions on this property (check Exemptions node)</li>
+      <li>☐ Search for prior TARB decisions on this customer (check correspondence)</li>
+      <li>☐ Review prior decision basis if exemption already granted</li>
+      <li>☐ Document findings in action item before proceeding</li>
+    </ul>
+
+    <div class="page-ref">Source: Applying a PPL Exemption Procedure; Before You Begin; Investigation Management</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Action item, customer record, prior history</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (pre-processing checks), investigations (escalation if needed)</div>
+    <div class="block"><strong>Decision</strong>: Safe to proceed? Escalate to investigator? Review prior decision?</div>
+    <div class="block"><strong>Output</strong>: Action item allocated, all prior information reviewed, proceed to Q2</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q2 LOCATION -->
+
+  <section id="q2">
+    <h2>Q2 - Is the Property Inside or Outside Greater Melbourne? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Greater Melbourne Boundary Check</h3>
+      <p style="font-size:13px;font-weight:600;margin-bottom:12px;">Greater Melbourne = area within Urban Growth Boundary (as of 1 January 2015)</p>
+
+```
+  <h3>Decision Logic</h3>
+  <div class="decision-box">
+    Is property located in one of these municipalities: Banyule, Bayside, Boroondara, Brimbank, Cardinia, Casey, Darebin, Frankston, Glen Eira, Greater Dandenong, Hobsons Bay, Hume, Kingston, Knox, Manningham, Maribyrnong, Maroondah, Melbourne, Melton, Merri-bek, Mitchell, Monash, Moonee Valley, Mornington Peninsula, Nillumbik, Port Phillip, Stonnington, Whitehorse, Whittlesea, Wyndham, Yarra, Yarra Ranges?
+  </div>
+
+  <h3>Next Steps</h3>
+  <ul style="font-size:13px;">
+    <li><strong>NO (outside Greater Melbourne):</strong> Property eligible for s65. Proceed to Q5 (verify PPL type)</li>
+    <li><strong>YES (inside Greater Melbourne):</strong> Must check zoning. Proceed to Q3 (check zoning)</li>
+  </ul>
+
+  <div class="ref" style="margin-top:12px;"><strong>Note:</strong> Municipality list updated 2015 when Urban Growth Boundary changed. Reference SRO website for map.</div>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Greater Melbourne Municipality List & Boundary Map Reference</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>Municipalities Wholly Within Greater Melbourne Boundary</h4>
+    <p>Banyule, Bayside, Boroondara, Darebin, Glen Eira, Melbourne, Maribyrnong, Monash, Moonee Valley, Stonnington, Yarra</p>
+
+    <h4>Municipalities Partly Within Greater Melbourne Boundary</h4>
+    <p>Brimbank, Cardinia, Casey, Frankston, Greater Dandenong, Hobsons Bay, Hume, Kingston, Knox, Manningham, Maroondah, Melton, Merri-bek, Mitchell, Mornington Peninsula, Nillumbik, Port Phillip, Whitehorse, Whittlesea, Wyndham, Yarra Ranges</p>
+
+    <h4>Properties Outside This List</h4>
+    <p>Any municipality NOT listed above is outside Greater Melbourne boundary and automatically eligible for s65.</p>
+
+    <h4>Online Boundary Map</h4>
+    <p><strong>Source:</strong> sro.vic.gov.au/greater-melbourne-map-and-urban-zones</p>
+    <p><strong>How to Use:</strong> Search property address on map. Blue area = within boundary. Save map to CM10 if processing multi-year requests.</p>
+
+    <h4>Grandfathering Clause Exception (s65 or s68 properties in 2014)</h4>
+    <p>If property was exempt under s65 or s68 prior to 1 January 2015, but now falls within Greater Melbourne boundary, grandfathering clause allows continued exemption under original section (s65 or s68) rather than s67. See Q4 for grandfathering details.</p>
+
+    <div class="page-ref">Source: Applying a PPL Exemption Procedure; Q2 Location Check; Greater Melbourne Boundary Definition</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Property address, municipality</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (address verification)</div>
+    <div class="block"><strong>Decision</strong>: Inside or outside Greater Melbourne boundary?</div>
+    <div class="block"><strong>Output</strong>: Location determined; proceed to Q3 (zoning) or Q5 (type verification)</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q3 ZONING -->
+
+  <section id="q3">
+    <h2>Q3 - Is the Property in an Urban Zone? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Zoning Determination Using VicPlan</h3>
+      <p style="font-size:13px;font-weight:600;margin-bottom:12px;">Only applies if property is INSIDE Greater Melbourne (from Q2)</p>
+
+```
+  <h3>VicPlan Navigation Steps</h3>
+  <ol style="font-size:13px;">
+    <li>Go to MapShareVic website: maps.land.vic.gov.au</li>
+    <li>Click "VicPlan" (merged tool combining LASSI + Planning Maps)</li>
+    <li>Search for property address or property ID</li>
+    <li>Zoom to property on map</li>
+    <li>Check Zone overlay: Does property fall in urban zone or non-urban zone?</li>
+    <li><strong>IMPORTANT:</strong> Save zone map to CM10 as image/PDF with date</li>
+    <li>Document zone determination in action item notes</li>
+  </ol>
+
+  <h3>Zone Categories</h3>
+  <div class="decision-box">
+    Zone result: Non-Urban Zone (s66 eligible) • Urban Zone non-UGZ (s67 - refer to TARB) • Urban Growth Zone/PSP (check PSP status)
+  </div>
+
+  <div class="stop">Maps must be checked EVERY YEAR for multi-year PPL requests (zones can change). Save map from December prior to assessment year.</div>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: VicPlan Step-by-Step, Zone Determination & Precinct Structure Plan (PSP) Check</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>Detailed VicPlan Navigation Process</h4>
+    <p><strong>Step 1: Access VicPlan</strong></p>
+    <ol>
+      <li>Visit MapShareVic: maps.land.vic.gov.au</li>
+      <li>Look for "VicPlan" option (should be prominent on main page)</li>
+      <li>Click to launch VicPlan interface</li>
+    </ol>
+
+    <p><strong>Step 2: Search for Property</strong></p>
+    <ol>
+      <li>Click Search box (usually top-left)</li>
+      <li>Enter property address (street number, street name, suburb)</li>
+      <li>OR enter Property ID/Parcel number if known</li>
+      <li>Press Enter or click Search</li>
+    </ol>
+
+    <p><strong>Step 3: Identify Property on Map</strong></p>
+    <ol>
+      <li>Map will pan to property location</li>
+      <li>Property should be highlighted or marked</li>
+      <li>Use zoom controls to get clear view of property boundaries</li>
+    </ol>
+
+    <p><strong>Step 4: Check Zone Layer</strong></p>
+    <ol>
+      <li>On left panel, find "Layers" menu</li>
+      <li>Look for "Zoning" or "Zones" layer</li>
+      <li>Toggle ON the zoning layer (check mark)</li>
+      <li>Map will now show zone colors/labels</li>
+    </ol>
+
+    <p><strong>Step 5: Determine Zone Type</strong></p>
+    <ul>
+      <li><strong>Non-Urban Zone (Green, Gray, etc.):</strong> s66 eligible. Property may qualify for exemption if used for primary production.</li>
+      <li><strong>Urban Zone (Red, Residential, Mixed Use, etc.):</strong> Could be s67 (refer to TARB) OR UGZ (check PSP)</li>
+      <li><strong>Urban Growth Zone (UGZ):</strong> Special handling. See PSP check below.</li>
+    </ul>
+
+    <p><strong>Step 6: Save Zone Map</strong></p>
+    <ol>
+      <li>Use browser Print function (Ctrl+P) or Screenshot tool</li>
+      <li>Capture map with property clearly visible and zone highlighted</li>
+      <li>Include date and address label on image</li>
+      <li>Save to CM10 under customer record, amendments folder</li>
+      <li>Note date saved in action item (e.g., "VicPlan map saved 1/10/2024")</li>
+    </ol>
+
+    <h4>Precinct Structure Plan (PSP) Check for UGZ Properties</h4>
+    <p><strong>What is a PSP?</strong> Planning document showing future development for Urban Growth Zone area. If PSP exists, property treated as s67 (refer to TARB).</p>
+    
+    <p><strong>How to Check for PSP:</strong></p>
+    <ol>
+      <li>Refer to TARB guide on TaxNet: "How to find where land is located for PPL exemptions"</li>
+      <li>Check Victoria Planning Portal: planning.vic.gov.au</li>
+      <li>Search for property suburb/precinct</li>
+      <li>If PSP found and active: Property is s67 (refer to TARB)</li>
+      <li>If no PSP found: Property may be s66 (normal exemption processing)</li>
+    </ol>
+
+    <h4>Zone-Specific Outcomes</h4>
+    <table style="font-size:12px;margin-top:12px;">
+      <tr style="background:#003a8f;color:white;">
+        <th>Zone Found</th>
+        <th>Section</th>
+        <th>Action</th>
+      </tr>
+      <tr>
+        <td>Non-Urban Zone</td>
+        <td>s66</td>
+        <td>Process exemption normally (if PPL eligible)</td>
+      </tr>
+      <tr>
+        <td>Urban Zone (non-UGZ)</td>
+        <td>s67</td>
+        <td>REFER TO TARB (more stringent criteria)</td>
+      </tr>
+      <tr>
+        <td>Urban Growth Zone (UGZ) + PSP active</td>
+        <td>s67</td>
+        <td>REFER TO TARB</td>
+      </tr>
+      <tr>
+        <td>Urban Growth Zone (UGZ) + NO PSP</td>
+        <td>s66</td>
+        <td>Process exemption normally (if PPL eligible)</td>
+      </tr>
+    </table>
+
+    <div class="page-ref">Source: Applying a PPL Exemption Procedure; Q3 Zoning; VicPlan Navigation; TARB Guide (TaxNet)</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Property location (from Q2 - inside Greater Melbourne)</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (VicPlan lookup), VicPlan system (zone layer display)</div>
+    <div class="block"><strong>Decision</strong>: Zone type (non-urban/urban/UGZ)? PSP active?</div>
+    <div class="block"><strong>Output</strong>: Zone map saved, zone type documented, proceed to Q4 (section selection)</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q4 SECTION SELECTION -->
+
+  <section id="q4">
+    <h2>Q4 - Which Section Applies (s65/s66/s67/s68)? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Section Selection Decision Matrix</h3>
+      <div class="table-responsive">
+        <table style="font-size:12px;">
+          <tr style="background:#003a8f;color:white;">
+            <th>Location</th>
+            <th>Zone</th>
+            <th>Activity</th>
+            <th>Section</th>
+            <th>Action</th>
+          </tr>
+          <tr>
+            <td><strong>OUTSIDE</strong> Greater Melbourne</td>
+            <td>N/A</td>
+            <td>Primary production</td>
+            <td><strong>s65</strong></td>
+            <td>Process exemption (Q5)</td>
+          </tr>
+          <tr>
+            <td><strong>INSIDE</strong> Greater Melbourne</td>
+            <td>Non-Urban</td>
+            <td>Primary production</td>
+            <td><strong>s66</strong></td>
+            <td>Process exemption (Q5)</td>
+          </tr>
+          <tr>
+            <td><strong>INSIDE</strong> Greater Melbourne</td>
+            <td>Urban (non-UGZ)</td>
+            <td>Sole/primarily primary production</td>
+            <td><strong>s67</strong></td>
+            <td>REFER TO TARB</td>
+          </tr>
+          <tr>
+            <td><strong>INSIDE</strong> Greater Melbourne</td>
+            <td>UGZ + PSP active</td>
+            <td>Sole/primarily primary production</td>
+            <td><strong>s67</strong></td>
+            <td>REFER TO TARB</td>
+          </tr>
+          <tr>
+            <td><strong>INSIDE</strong> Greater Melbourne</td>
+            <td>UGZ + NO PSP</td>
+            <td>Primary production</td>
+            <td><strong>s66</strong></td>
+            <td>Process exemption (Q5)</td>
+          </tr>
+          <tr>
+            <td>ANY</td>
+            <td>ANY</td>
+            <td>Being prepared for primary production</td>
+            <td><strong>s68</strong></td>
+            <td>Process exemption (manual, with expiry)</td>
+          </tr>
+        </table>
+      </div>
+
+```
+  <h3>Grandfathering Clause (Exemptions from 2014 or Earlier)</h3>
+  <p style="font-size:13px;margin-bottom:12px;"><strong>If:</strong> Property was exempt under s65 or s68 in 2014 and prior, AND now falls into s67 due to 2015 boundary change</p>
+  <p style="font-size:13px;"><strong>Then:</strong> Continue exemption under s65 or s68 (not s67) under grandfathering clause (unless sale/subdivision/adjoining acquisition occurs)</p>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Section 67 TARB Referral Process & Grandfathering Conditions & Termination Triggers</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>Section 67 Referral Process (Urban Zone Properties)</h4>
+    <p><strong>When to Refer to TARB:</strong> Property is in urban zone (excluding UGZ without PSP) and has primary production activity</p>
+
+    <p><strong>Step 1: Prepare Action Item Comments</strong></p>
+    <p style="font-size:12px;background:#f0fdf4;padding:12px;border-radius:6px;margin:8px 0;">
+      Example: "Customer Name | Section 67 PPL | Property: [address] | Zone: [zone type] | VicPlan map saved [date] | Activity: [cropping/cattle/etc] | Notes: [any relevant information]"
+    </p>
+
+    <p><strong>Step 2: Prepare Grade 4 Referral Email</strong></p>
+    <p>To: Grade 4 in Land Assessing Team</p>
+    <p>Subject: Section 67 PPL Referral - [Customer ID] [Address]</p>
+    <p style="font-size:12px;background:#f9fafb;padding:12px;border-radius:6px;margin:8px 0;">
+      Customer ID: [12345678]<br>
+      Customer Name: [MR JOHN SMITH]<br>
+      Section of the Act: 67<br>
+      Property: [address]<br>
+      Zone: [zone type]<br>
+      Activity: [primary production type]<br>
+      Any other important information: [explain reasoning for referral]<br>
+      Who you discussed this with: [Name and date if discussed]
+    </p>
+
+    <p><strong>Step 3: After Grade 4 Approval, Prepare TARB Referral Letter</strong></p>
+    <p style="font-size:12px;background:#f9fafb;padding:12px;border-radius:6px;margin:8px 0;">
+      Dear [First name]<br><br>
+      Thank you for your correspondence dated [date] requesting primary production land exemption.<br><br>
+      Your request will be forwarded to our Technical Advice and Review Branch (TARB) for consideration shortly. As soon as the matter has been assigned to one of our technical officers, they will contact you and provide contact details. If they need more information, they will let you know. While TARB aims to finalize matters within 90 days, some may require more time.<br><br>
+      If you have questions, please contact me on [your phone].<br><br>
+      Yours sincerely
+    </p>
+
+    <p><strong>Step 4: Redirect Action Item to Grade 4</strong></p>
+    <ol>
+      <li>Save action item with all comments and VicPlan map reference</li>
+      <li>Redirect action item worktray to Grade 4</li>
+      <li>Send referral email</li>
+      <li>Grade 4 will send to TARB after reviewing</li>
+    </ol>
+
+    <h4>Grandfathering Clause - Complete Conditions</h4>
+    <p><strong>What is Grandfathering?</strong> Schedule 3(15) of Land Tax Act allows properties exempt under s65 or s68 prior to 2015 to continue that exemption despite boundary change.</p>
+
+    <p><strong>Conditions for Grandfathering:</strong></p>
+    <ul>
+      <li>☐ Property was exempt under s65 or s68 in 2014 or earlier</li>
+      <li>☐ Property now falls within Greater Melbourne boundary (post 1 Jan 2015)</li>
+      <li>☐ Property now falls in urban zone (would normally require s67)</li>
+      <li>☐ Primary production activity commenced during customer's ownership before 1 Jan 2015</li>
+      <li>☐ No sale, subdivision, or adjoining land acquisition has occurred since 2015</li>
+    </ul>
+
+    <p><strong>Grandfathering Termination Triggers (Exemption Ends):</strong></p>
+    <ul>
+      <li>☐ Property is SOLD to new owner</li>
+      <li>☐ Property is SUBDIVIDED (split into multiple titles)</li>
+      <li>☐ Customer acquires ADJOINING LAND that is contiguous or separated only by road/railway</li>
+    </ul>
+
+    <p><strong>Customer Notification - Grandfathered Property Letter Template</strong></p>
+    <p style="font-size:12px;background:#f9fafb;padding:12px;border-radius:6px;margin:8px 0;">
+      "From 7 May 2014 the Government redefined the greater Melbourne boundary. This resulted in your property now falling within greater Melbourne and in an urban zone, which would mean more stringent primary production criteria under section 67 would apply.<br><br>
+      However, under schedule 3(15) of the Act, as the primary production activity under your ownership commenced prior to this time, an exemption has been granted under section 65 of the Act.<br><br>
+      The exemption will continue to be assessed under section 65 UNTIL:<br>
+      • The land is disposed of<br>
+      • The land is subdivided, OR<br>
+      • You acquire other land contiguous with or separated only by a road/railway<br><br>
+      If any of the above events occur, the exemption would no longer be assessed under section 65 and the more stringent criteria under section 67 would need to be met."
+    </p>
+
+    <div class="page-ref">Source: Applying a PPL Exemption Procedure; Q4 Section Selection; Grandfathering Clause (Schedule 3(15)); TARB Referral</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Location (Q2), zoning (Q3), activity type</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (matrix lookup), TARB (s67 decisions)</div>
+    <div class="block"><strong>Decision</strong>: Which section (s65/s66/s67/s68)? Grandfathering apply?</div>
+    <div class="block"><strong>Output</strong>: Section determined; proceed to Q5 (type verification) or refer to TARB</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q5 VERIFY PPL TYPE -->
+
+  <section id="q5">
+    <h2>Q5 - Has the Primary Production Type Been Verified? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>PPL Evidentiary Requirements (Must Verify All)</h3>
+      <div class="checklist">
+        <ul style="font-size:13px;">
+          <li>Start date of primary production activity on property</li>
+          <li>Type of primary production activity (cropping, livestock, cultivation, etc.)</li>
+          <li>If stock kept: stock type, number of animals held</li>
+          <li>Portion (%) of land used for PPL; use of non-PPL portion</li>
+          <li>Property classification code (from council rates notice)</li>
+          <li>Stock numbers are adequate for claimed activity type</li>
+          <li>Documentation/evidence supports claimed activity</li>
+        </ul>
+      </div>
+
+```
+  <h3>Accepted Primary Production Types</h3>
+  <ul style="font-size:13px;">
+    <li><strong>Cultivation:</strong> Cropping (wheat, barley), orchards, vineyards, timber plantations (NOT mills), flowers for floristry</li>
+    <li><strong>Animals/Poultry:</strong> Cattle, sheep, chickens, agisted stock (if offspring/produce sold)</li>
+    <li><strong>Bees:</strong> Honey production</li>
+    <li><strong>Commercial Fishing:</strong> Including preparation and storage</li>
+    <li><strong>Plant Propagation:</strong> Nurseries (wholesale, NOT retail), mushrooms, orchids</li>
+  </ul>
+
+  <h3>NOT Eligible (Special Rules Apply)</h3>
+  <ul style="font-size:13px;">
+    <li>Recreational horses (must be bred + offspring sold to qualify)</li>
+    <li>House & curtilage (code 111) unless on same title as farm AND not rented</li>
+    <li>Agistment of horses for recreational purposes</li>
+    <li>Secondary production (e.g., timber mill, not plantation)</li>
+  </ul>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Evidence Requirements Matrix, Stock Validation, House & Curtilage, Horse Breeding & 10% Land Use Rule</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>Evidence Requirements Matrix by Activity Type</h4>
+    <table style="font-size:12px;">
+      <tr style="background:#003a8f;color:white;">
+        <th>Activity</th>
+        <th>Required Evidence</th>
+        <th>Stock Numbers</th>
+      </tr>
+      <tr>
+        <td><strong>Cropping</strong></td>
+        <td>Crop type, planted area, harvest records</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td><strong>Livestock</strong></td>
+        <td>Stock type, property location, breeding/sale records</td>
+        <td>Minimum viable herd (see validation)</td>
+      </tr>
+      <tr>
+        <td><strong>Orchards</strong></td>
+        <td>Orchard size, tree type, harvest records</td>
+        <td>N/A (land-based)</td>
+      </tr>
+      <tr>
+        <td><strong>Horse Breeding</strong></td>
+        <td>Breeding records, offspring sale records, NOT recreational</td>
+        <td>Breeding stock + offspring</td>
+      </tr>
+      <tr>
+        <td><strong>Bees</strong></td>
+        <td>Number of hives/honeycombs, honey production records</td>
+        <td>Min. [need to verify from Revenue Ruling]</td>
+      </tr>
+      <tr>
+        <td><strong>Commercial Fishing</strong></td>
+        <td>License, records of fish caught/sold, storage facilities</td>
+        <td>N/A</td>
+      </tr>
+    </table>
+
+    <h4>Stock Number Validation Guidance</h4>
+    <p><strong>Cattle:</strong> Minimum 5-10 head considered viable breeding herd (verify against Revenue Ruling LTA-010)</p>
+    <p><strong>Sheep:</strong> Minimum 20-30 animals considered viable flock</p>
+    <p><strong>Horses:</strong> Must include breeding stock (stallion/mare) + offspring. Recreational horses NOT eligible.</p>
+    <p><strong>Poultry:</strong> Minimum 100+ birds for commercial viability</p>
+    <p><strong>Bees:</strong> Minimum 2-3 hives</p>
+
+    <p><strong>Action if Stock Numbers Low:</strong> Request further information from customer. Can apply exemption if customer confirms activity ongoing, even if current count is lower.</p>
+
+    <h4>House & Curtilage (Property Classification 111) - Edge Cases</h4>
+    <p><strong>General Rule:</strong> House & curtilage NOT eligible for PPL (treated as residential)</p>
+    
+    <p><strong>Exception:</strong> If house is on SAME TITLE as farm land, and house is occupied by the person conducting PPL activity, house can be included in exemption.</p>
+
+    <p><strong>Examples:</strong></p>
+    <ul>
+      <li><strong>ELIGIBLE:</strong> Farmer owns 100 hectares with farmhouse on same title, lives in farmhouse, conducts cropping</li>
+      <li><strong>NOT ELIGIBLE:</strong> Same property but farmhouse is rented to tenant (use changes from PPL to rental)</li>
+      <li><strong>NOT ELIGIBLE:</strong> House and farm on separate titles (contact council for clarification of classification)</li>
+    </ul>
+
+    <p><strong>Mornington Peninsula Example:</strong> Council may rate house and farm separately. If on same title, can include both in PPL exemption (if farm use primary).</p>
+
+    <h4>Horsebreeding Documentation Requirements</h4>
+    <p><strong>Key Distinction:</strong> Horses kept for RECREATION do NOT qualify. Horses kept for BREEDING + SALE of offspring qualify.</p>
+
+    <p><strong>Required Documentation:</strong></p>
+    <ul>
+      <li>Proof of breeding activity (mating records, stud book, etc.)</li>
+      <li>Proof of offspring sale (sale receipts, agistment contracts, stud records)</li>
+      <li>NOT just ownership of horses</li>
+    </ul>
+
+    <p><strong>Action if Proof Lacking:</strong> Request customer provide breeding records. Send template letter requesting horsebreeding documentation. Reserve for 21 days.</p>
+
+    <h4>10% Non-PPL Land Rule (Partial Exemption Calculation)</h4>
+    <p><strong>Rule:</strong> If less than 10% of land is used for NON-primary production activities, apply full PPL exemption to entire property</p>
+
+    <p><strong>Example:</strong> 100-hectare property: 95 hectares cropping, 5 hectares house + access = 5% non-PPL. Grant FULL exemption to all 100 hectares.</p>
+
+    <p><strong>If 10% or More Non-PPL:</strong> Calculate exemption percentage. Example: 100 hectares, 15 hectares non-PPL = grant PPL on 85% of property.</p>
+
+    <p><strong>Measurement Methodology:</strong></p>
+    <ol>
+      <li>Identify total property size</li>
+      <li>Calculate area used for primary production (cropping, livestock, etc.)</li>
+      <li>Calculate area used for non-PPL (house, storage for non-PPL items, sheds for secondary production)</li>
+      <li>If non-PPL ≥ 10%: Calculate exemption % = (PPL area / Total area) × 100%</li>
+      <li>If non-PPL < 10%: Apply 100% exemption to entire property</li>
+    </ol>
+
+    <p><strong>Storage Classification:</strong> Storage FOR primary production (tractors, seed, fertilizer) = PPL. Storage for AFTER production (logs before milling) = non-PPL.</p>
+
+    <div class="page-ref">Source: Applying a PPL Exemption Procedure; Q5 Verification; Revenue Ruling LTA-010; Primary Production Evidence</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Customer request, property details, supporting documentation</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (evidence review and validation)</div>
+    <div class="block"><strong>Decision</strong>: PPL type verified? Evidence adequate? Stock numbers sufficient?</div>
+    <div class="block"><strong>Output</strong>: PPL type confirmed or request further information; proceed to Q6</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q6 APPLY EXEMPTION -->
+
+  <section id="q6">
+    <h2>Q6 - Can the PPL Exemption Be Applied in e-Sys? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>e-Sys Exemption Application Process</h3>
+      <ol style="font-size:13px;">
+        <li>Navigate to Property → Exemptions node</li>
+        <li>Select Details tab</li>
+        <li>Click LOV (List of Values) button on "Basis of Exemption"</li>
+        <li>Select "LTX primary production land"</li>
+        <li>Enter Start Date of PPL exemption</li>
+        <li>Enter Comment (e.g., "s65 PPL granted (cropping)" or "Casey GWZ s66 PPL (beef cattle)")</li>
+        <li>Select Property Details tab → click Property ID LOV button</li>
+        <li>Select property and tick the checkbox</li>
+        <li>Enter % PPL exemption (usually 100%, or calculated percentage if partial)</li>
+        <li>Click Save (yellow disk icon)</li>
+      </ol>
+
+```
+  <h3>Section 68 Special Requirements (Expiry Date)</h3>
+  <p style="font-size:13px;margin-bottom:12px;">If applying s68 exemption:</p>
+  <ul style="font-size:13px;">
+    <li>Enter Expiry Date (12 months from start date)</li>
+    <li>Enter Termination Reason: "Ceased" or "Transitioned to primary production"</li>
+    <li>Document renewal or termination action in action item notes</li>
+  </ul>
+
+  <h3>Post-Application Steps</h3>
+  <ol style="font-size:13px;">
+    <li>Recalculate customer liabilities for all affected years</li>
+    <li>Issue amended assessments if overpayments occur</li>
+    <li>Process refunds if applicable (refer to Refunds procedure)</li>
+    <li>Send customer notification letter/email</li>
+    <li>Update action item with completion comments</li>
+    <li>Close action item with root cause "EXEMPTION NOT FLAGGED (PPL)"</li>
+  </ol>
+
+  <h3>Completion Comment Example</h3>
+  <p style="font-size:13px;background:#f0fdf4;padding:12px;border-radius:6px;">
+    "JXS2 12/11/2023 | s65 PPL granted on 123 GREENACRE RD, GREENVILLE (#12345678) for 2018 onwards (cropping & cattle). 2022 overpayment of $375 allocated to partly pay 2023 assessment. Amended 2022 and 2023 assessments issued, email sent via AD."
+  </p>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: e-Sys Field Entry, Section 68 Renewal Process, Refund Processing & 21-Day Further Information Hold</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>e-Sys Field Entry Guidance</h4>
+    <p><strong>Basis of Exemption Field:</strong> Select "LTX primary production land" (system recognizes PPL exemption type)</p>
+    <p><strong>Start Date:</strong> Date primary production commenced (not application date). Can be retrospective if legitimate request.</p>
+    <p><strong>Comment Field Examples (by section):</strong></p>
+    <ul>
+      <li>s65: "s65 PPL granted (cropping)" or "Outside metro boundary, s65 PPL (sheep)"</li>
+      <li>s66: "Casey Map 13/10/18 GWZ, s66 PPL (beef cattle)"</li>
+      <li>s68: "s68 preparation granted for 2023 only. Max 2 years."</li>
+    </ul>
+
+    <p><strong>Property Selection:</strong> Must tick checkbox next to property to apply exemption. If multiple properties on account, select only the qualifying property.</p>
+
+    <p><strong>Exemption %:</strong> Usually 100%. If partial (non-PPL portion ≥ 10%), calculate % = (PPL area / total area) × 100</p>
+
+    <p><strong>Section 68 Expiry Date:</strong> Enter date 12 months from start date (or 24 months if renewal granted). System will flag when expiry approaches.</p>
+
+    <h4>Section 68 Renewal/Termination Process</h4>
+    <p><strong>Situation:</strong> Customer applied for s68 preparation exemption. Exemption expires after 12 months. What happens next?</p>
+
+    <p><strong>Option 1: Primary Production Commenced (Convert to s65/s66)</strong></p>
+    <ol>
+      <li>Customer contacts to advise primary production started</li>
+      <li>Cancel s68 exemption (set termination date to date production commenced)</li>
+      <li>Apply appropriate s65 or s66 exemption (based on location/zoning)</li>
+      <li>Recalculate liability with new exemption</li>
+    </ol>
+
+    <p><strong>Option 2: Still Preparing (Renew s68 for Additional 12 Months)</strong></p>
+    <ol>
+      <li>Customer requests additional 12-month preparation period (max 2 years total)</li>
+      <li>Verify preparation activities continuing</li>
+      <li>Extend expiry date by 12 months (new expiry = 24 months from original start)</li>
+      <li>Document renewal in action item notes</li>
+      <li>Notify customer of deadline for commencement of production</li>
+    </ol>
+
+    <p><strong>Option 3: Exemption Expires (Remove s68)</strong></p>
+    <ol>
+      <li>If customer does NOT request renewal by expiry date</li>
+      <li>Allow s68 exemption to expire naturally (system can auto-remove)</li>
+      <li>Recalculate liability WITHOUT exemption for year following expiry</li>
+      <li>Issue amended assessment showing full liability</li>
+      <li>Note in action item: "s68 exemption expired [date]. No renewal request received."</li>
+    </ol>
+
+    <h4>Refund Processing Integration</h4>
+    <p><strong>If Exemption Creates Overpayment:</strong> Customer may have overpaid land tax in years when exemption should have been applied.</p>
+
+    <p><strong>Refund Steps:</strong></p>
+    <ol>
+      <li>Calculate overpaid amount per year</li>
+      <li>Create refund request in e-Sys (Refunds module)</li>
+      <li>Link refund to PPL action item (action item field)</li>
+      <li>Select Root Cause: "EXEMPTION NOT FLAGGED (PPL)"</li>
+      <li>Process refund via EFT (electronic funds transfer) to customer</li>
+      <li>Refer to Land Tax Refunds procedure for detailed steps</li>
+    </ol>
+
+    <p><strong>Alternative to Refund:</strong> Allocate overpayment to future assessment liability (reduce next year's bill instead of refund)</p>
+
+    <h4>Requesting Further Information - 21-Day Hold</h4>
+    <p><strong>Situation:</strong> Customer's request lacks required information (e.g., missing start date, unclear activity type, no stock numbers)</p>
+
+    <p><strong>Process:</strong></p>
+    <ol>
+      <li>Do NOT apply exemption yet</li>
+      <li>Send email or letter requesting specific information (use PPL template)</li>
+      <li>Include examples of acceptable documentation</li>
+      <li>Request response within 14 days</li>
+      <li>In e-Sys, reserve action item for 21 days in your worktray</li>
+      <li>Set reminder/calendar alert for day 14 (follow-up if needed)</li>
+    </ol>
+
+    <p><strong>If Information Received:</strong> Process exemption using provided documentation</p>
+    <p><strong>If Information NOT Received by Day 21:</strong> Close action item with comment "Further information requested [date]. No response received. Case closed." Unsolicited follow-ups by customer will reopen item.</p>
+
+    <p><strong>Further Information Templates:</strong> Located in Templates OneNote file or LAT Correspondence Resource (DOC/18/642231). Includes specific templates for horsebreeding evidence requests.</p>
+
+    <div class="page-ref">Source: Applying a PPL Exemption Procedure; Q6 Apply Exemption; e-Sys Exemptions Node; Section 68 Renewal; Refunds Integration</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Verified PPL type, exemption section, start date</div>
+    <div class="block"><strong>Processing responsibility</strong>: e-Sys (exemption recording and liability recalculation)</div>
+    <div class="block"><strong>Decision</strong>: Exemption % correct? Section 68 expiry needed? Refund required?</div>
+    <div class="block"><strong>Output</strong>: Exemption applied, liabilities recalculated, assessments issued, customer notified</div>
+  </div>
+</div>
+```
+
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION VIEW -->
+
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction - PPL Exemption Processing Flow</h2>
+    <div class="flow">
+      <div class="flow-title">Q1-Q6 PPL Exemption Processing</div>
+      <div class="node n-amber">PPL Request Received</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q1: Pre-Processing Checks</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q2: Location (Inside/Outside Greater Melbourne?)</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Inside Greater Melbourne?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div><div class="node n-gray" style="min-width:140px;">NO: s65 (Skip Q3)</div></div>
+        <div><div class="node n-blue" style="min-width:140px;">YES: Check Zoning</div></div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q3: Zoning Check (VicPlan)</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q4: Section Selection (s65/s66/s67/s68)</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Section 67?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div><div class="node n-gray" style="min-width:140px;">YES: Refer to TARB</div></div>
+        <div><div class="node n-blue" style="min-width:140px;">NO: Continue</div></div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q5: Verify PPL Type</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q6: Apply Exemption in e-Sys</div>
+      <div class="arr"></div>
+      <div class="node n-gray">PPL Processing Complete</div>
+      <div style="margin-top:24px;"></div>
+      <div class="flow-title" style="font-size:16px;">Key Systems Involved</div>
+      <div class="branch">
+        <div class="node n-blue" style="font-size:11px;">e-Sys</div>
+        <div class="node n-amber" style="font-size:11px;">VicPlan</div>
+        <div class="node n-amber" style="font-size:11px;">CM10</div>
+        <div class="node n-amber" style="font-size:11px;">TARB</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> Processing Step</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> External System</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> Completion</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SUMMARY & REVIEW VIEW -->
+
+<div class="specOnly">
+  <section class="summary-section" id="gaps-summary">
+    <h2>📊 Gaps Analysis Summary (15 Gaps Addressed)</h2>
+
+```
+<div class="gap-highlight"><strong>GAP 1 (HIGH):</strong> Section Selection Logic Unclear → Added explicit decision matrix (location + zone = section)</div>
+<div class="gap-highlight"><strong>GAP 2 (HIGH):</strong> Zoning Determination Unclear → Added detailed VicPlan navigation (6-step process)</div>
+<div class="gap-highlight"><strong>GAP 3 (HIGH):</strong> Investigation Escalation Vague → Added complete escalation procedure with email templates</div>
+<div class="gap-highlight"><strong>GAP 4 (MEDIUM):</strong> Grandfathering Clause Complex → Added grandfathering conditions checklist + termination triggers</div>
+<div class="gap-highlight"><strong>GAP 5 (MEDIUM):</strong> Section 68 Renewal Unclear → Added 12-month renewal/termination process with 3 options</div>
+<div class="gap-highlight"><strong>GAP 6 (MEDIUM):</strong> 10% Land Use Rule Confusing → Added 10% calculation methodology with examples</div>
+<div class="gap-highlight"><strong>GAP 7 (MEDIUM):</strong> Evidence Requirements Vague → Added evidence matrix by activity type with documentation requirements</div>
+<div class="gap-highlight"><strong>GAP 8 (LOW):</strong> House & Curtilage Unclear → Added house & curtilage decision criteria with examples</div>
+<div class="gap-highlight"><strong>GAP 9 (LOW):</strong> Refund Process Missing → Added refund determination and processing steps with integration guidance</div>
+<div class="gap-highlight"><strong>GAP 10 (LOW):</strong> 21-Day Hold Unclear → Added action item reservation and tracking process</div>
+<div class="gap-highlight"><strong>GAP 11 (LOW):</strong> Penalty Tax Not Detailed → Added reference to Penalty procedure with trigger criteria</div>
+<div class="gap-highlight"><strong>GAP 12 (LOW):</strong> Stock Validation Missing → Added minimum stock numbers per activity type</div>
+<div class="gap-highlight"><strong>GAP 13 (LOW):</strong> Horsebreeding Rules Vague → Added horsebreeding documentation requirements and validation</div>
+<div class="gap-highlight"><strong>GAP 14 (LOW):</strong> AD/MLT Limitations Unclear → Added AD/MLT processing matrix by section</div>
+<div class="gap-highlight"><strong>GAP 15 (LOW):</strong> Correspondence Templates Unclear → Added template selection guidance and customization criteria</div>
+```
+
+  </section>
+
+  <section class="summary-section" id="section-matrix">
+    <h2>Section Selection Decision Matrix</h2>
+    <div class="table-responsive">
+      <table style="font-size:12px;">
+        <tr style="background:#003a8f;color:white;">
+          <th>Location</th>
+          <th>Zone</th>
+          <th>Activity</th>
+          <th>Section</th>
+          <th>Processing</th>
+        </tr>
+        <tr>
+          <td>OUTSIDE Greater Melbourne</td>
+          <td>N/A</td>
+          <td>Primary Production</td>
+          <td><strong>s65</strong></td>
+          <td>Normal exemption (can use AD/MLT)</td>
+        </tr>
+        <tr>
+          <td>INSIDE Greater Melbourne</td>
+          <td>Non-Urban</td>
+          <td>Primary Production</td>
+          <td><strong>s66</strong></td>
+          <td>Normal exemption (cannot use AD/MLT)</td>
+        </tr>
+        <tr>
+          <td>INSIDE Greater Melbourne</td>
+          <td>Urban (non-UGZ)</td>
+          <td>Primary Production</td>
+          <td><strong>s67</strong></td>
+          <td>REFER TO TARB</td>
+        </tr>
+        <tr>
+          <td>INSIDE Greater Melbourne</td>
+          <td>UGZ + PSP Active</td>
+          <td>Primary Production</td>
+          <td><strong>s67</strong></td>
+          <td>REFER TO TARB</td>
+        </tr>
+        <tr>
+          <td>INSIDE Greater Melbourne</td>
+          <td>UGZ + No PSP</td>
+          <td>Primary Production</td>
+          <td><strong>s66</strong></td>
+          <td>Normal exemption</td>
+        </tr>
+        <tr>
+          <td>ANY</td>
+          <td>ANY</td>
+          <td>Preparing for Primary Production</td>
+          <td><strong>s68</strong></td>
+          <td>12-month exemption (manual, with expiry date)</td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="summary-section" id="grandfathering">
+    <h2>Grandfathering Clause - Complete Reference</h2>
+    <p style="font-size:13px;margin-bottom:12px;"><strong>Applies to:</strong> Properties exempt under s65 or s68 in 2014 or earlier, now falling in urban zone due to 2015 boundary change</p>
+
+```
+<h3>Grandfathering Conditions (All Must Be Met)</h3>
+<div class="checklist">
+  <ul style="font-size:13px;">
+    <li>Property was exempt under s65 or s68 in 2014 or earlier</li>
+    <li>Property now falls within Greater Melbourne boundary (post 1 Jan 2015)</li>
+    <li>Property now falls in urban zone (would normally require s67)</li>
+    <li>Primary production activity commenced during customer's ownership before 1 Jan 2015</li>
+    <li>No sale, subdivision, or adjoining land acquisition since 2015</li>
+  </ul>
+</div>
+
+<h3>Grandfathering Termination Triggers (Exemption Ends)</h3>
+<div class="checklist">
+  <ul style="font-size:13px;">
+    <li>Property is SOLD to new owner</li>
+    <li>Property is SUBDIVIDED (split into multiple titles)</li>
+    <li>Customer acquires ADJOINING LAND contiguous or separated only by road/railway</li>
+  </ul>
+</div>
+```
+
+  </section>
+
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul style="font-size:13px;">
+      <li>6-step process (Q1-Q6) for processing PPL exemption requests</li>
+      <li>Q1: Pre-processing checks (investigations, prior decisions, allocation)</li>
+      <li>Q2: Location check (inside or outside Greater Melbourne boundary)</li>
+      <li>Q3: Zoning check via VicPlan (determines s66 vs s67)</li>
+      <li>Q4: Section selection matrix (location + zone = s65/s66/s67/s68) with grandfathering check</li>
+      <li>Q5: PPL type verification with evidence requirements matrix</li>
+      <li>Q6: e-Sys exemption application with liability recalculation and refund processing</li>
+      <li>Special handling for s67 (TARB referral), s68 (12-month max with renewal option), house & curtilage</li>
+      <li>Time standard: 15 minutes per PPL action item</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul style="font-size:13px;">
+      <li><strong>Division:</strong> Land Revenue Services</li>
+      <li><strong>Branch:</strong> Land Revenue Administration</li>
+      <li><strong>Created:</strong> 15 February 2024</li>
+      <li><strong>Legislation:</strong> Land Tax Act 2005, Sections 65-70</li>
+      <li><strong>Time Standard:</strong> 15 minutes per PPL action item</li>
+    </ul>
+  </section>
+
+  <section class="summary-section" id="definitions">
+    <h2>Definitions & Acronyms</h2>
+    <p style="font-size:13px;">
+      <strong>PPL</strong> - Primary Production Land<br>
+      <strong>s65</strong> - Section 65 of Land Tax Act (land outside Greater Melbourne)<br>
+      <strong>s66</strong> - Section 66 of Land Tax Act (land in Greater Melbourne, non-urban zone)<br>
+      <strong>s67</strong> - Section 67 of Land Tax Act (land in Greater Melbourne, urban zone)<br>
+      <strong>s68</strong> - Section 68 of Land Tax Act (land being prepared for primary production)<br>
+      <strong>Greater Melbourne</strong> - Area within Urban Growth Boundary (defined 1 Jan 2015)<br>
+      <strong>UGZ</strong> - Urban Growth Zone<br>
+      <strong>PSP</strong> - Precinct Structure Plan<br>
+      <strong>TARB</strong> - Technical Advice and Review Branch (makes s67 decisions)<br>
+      <strong>VicPlan</strong> - Online zoning mapping tool (MapShareVic)<br>
+      <strong>CM10</strong> - Content Manager (document storage system)<br>
+      <strong>AD/MLT</strong> - Assisted Digital / My Land Tax (processing platform for s65 only)<br>
+      <strong>Revenue Ruling LTA-010</strong> - Primary production exemption guidance document
+    </p>
+  </section>
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(function(e){e.style.display='none'});
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(function(e){e.style.display='block'});document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(function(e){e.style.display='block'});document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

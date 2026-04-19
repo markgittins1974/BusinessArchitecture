@@ -1,1 +1,727 @@
 
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Calculating Annual PCC Fee - IMPROVED</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .improvement-badge{display:inline-block;background:#fbbf24;color:#78350f;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700;margin-left:12px}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .sidebar a.gap-link{color:#ec4899;font-weight:600}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    ul,ol{margin-left:22px}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .decision-box{background:#fef3c7;border-left:5px solid #d97706;padding:12px;margin-top:12px;font-size:13px;font-weight:600;color:#92400e}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .rationale{background:#ecfdf5;border-left:5px solid #10b981;padding:12px;margin-top:12px;font-size:13px;color:#065f46}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .gap-highlight{background:#fce7f3;border-left:5px solid #ec4899;padding:12px 16px;margin:12px 0;font-size:13px}
+    .score{background:#f0fdf4;border-left:5px solid #22c55e;padding:12px 16px;margin:12px 0;font-size:14px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;-webkit-tap-highlight-color:transparent}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .detail-panel .page-ref{font-size:11px;color:#3b82f6;font-weight:600;margin-top:8px}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .branch{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;justify-content:center}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#475569}
+    .legend-dot{width:12px;height:12px;border-radius:3px}
+    .table-responsive{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+    .code-block{background:#f3f4f6;border-left:4px solid #003a8f;padding:12px;font-family:monospace;font-size:12px;overflow-x:auto;margin:8px 0}
+    .checklist{background:#f9fafb;border:1px solid #e5e7eb;padding:16px;margin:12px 0;border-radius:6px}
+    .checklist li{list-style:none;padding-left:24px;position:relative;margin-bottom:8px}
+    .checklist li::before{content:'☐';position:absolute;left:0;font-weight:bold;color:#003a8f}
+    .flow-box{background:#f0f4ff;border:2px solid #c7d2fe;padding:16px;border-radius:8px;margin:12px 0;font-size:13px}
+    .example-box{background:#f0fdf4;border-left:4px solid #22c55e;padding:12px;margin:12px 0;font-size:13px}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Calculating Annual Property Clearance Certificate Fee <span class="improvement-badge">GAPS IMPROVED</span></h1>
+  <p>Division: Strategic Development &amp; Customer Engagement &bull; Branch: Knowledge Management &bull; Revised: May 2025 &bull; Enhanced with 10-gap analysis</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#q0">Q0 Timing Check</a>
+    <a href="#q1">Q1 Fee Unit Published?</a>
+    <a href="#q2">Q2 Calculate Fee</a>
+    <a href="#q3">Q3 Update Systems</a>
+    <a href="#q4">Q4 Communicate</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#gaps-summary" class="gap-link" onclick="showView('spec');setTimeout(function(){document.location.hash='gaps-summary'},100);">📊 Gaps Analysis</a>
+    <a href="#timeline" onclick="showView('spec');setTimeout(function(){document.location.hash='timeline'},100);">Timeline &amp; Calendar</a>
+    <a href="#rounding-examples" onclick="showView('spec');setTimeout(function(){document.location.hash='rounding-examples'},100);">Rounding Examples</a>
+    <a href="#escalation" onclick="showView('spec');setTimeout(function(){document.location.hash='escalation'},100);">Escalation Matrix</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(function(){document.location.hash='definitions'},100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+<div id="questionFlow">
+
+  <!-- Q0 TIMING CHECK (GAP 2 ADDRESSED) -->
+
+  <section id="q0">
+    <h2>Q0 - Is it the right time to calculate and publish the new PCC fee?<span class="improvement-badge">NEW</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#065f46;">✓ Check the financial year calendar. PCC fee updates occur annually before 1 July (start of financial year).</p>
+      <p style="font-weight:600;margin-bottom:12px;color:#d97706;">⏰ CRITICAL TIMING: Fee unit is published March-May (typically April-May). You must start checking in late March.</p>
+      <ul>
+        <li><strong>Current Month:</strong> What month are we in? (see Timeline in Summary view for exact windows)</li>
+        <li><strong>Financial Year Boundary:</strong> Is it between late March and 30 June? (Typical update window)</li>
+        <li><strong>Budget Timing:</strong> Note that fee unit determination is aligned with annual Budget release (typically April-May)</li>
+        <li><strong>Decision:</strong> Is it the appropriate time to begin fee unit monitoring and calculation?</li>
+      </ul>
+      <div class="decision-box">TIMING DECISION: Is it March-June? YES→Continue to Q1. NO→Wait for appropriate window next financial year.</div>
+      <div class="rationale"><strong>Why timing matters:</strong> Fee unit is published unpredictably within March-May window. You must monitor continuously during this period. Publishing new fee before 1 July is non-negotiable deadline.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Current calendar date, financial year information</div>
+        <div class="block"><strong>Processing responsibility</strong>: KMB staff (monitoring), DTF/Treasury (fee unit determination)</div>
+        <div class="block"><strong>Decision</strong>: Is it March-June (update window)? (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Proceed to Q1 if YES; wait if NO</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q1 FEE UNIT PUBLISHED (GAP 1 ADDRESSED) -->
+
+  <section id="q1">
+    <h2>Q1 - Has the annual fee unit been published by the Treasurer?<span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#d97706;">📋 SEQUENCE REQUIREMENT: Cannot calculate PCC fee without current fee unit. This is the gate-keeping step.</p>
+      <ol>
+        <li><strong>Check DTF Website:</strong> Visit https://www.dtf.vic.gov.au/ and search for "fee unit" or "Monetary Units Act"</li>
+        <li><strong>Check Victorian Government Gazette:</strong> Visit https://www.gazettes.vic.gov.au/ and search for "fee unit" determination</li>
+        <li><strong>Document the Source:</strong> Note the publication date and gazette reference. You will need this for verification (Q2).</li>
+        <li><strong>Extract Fee Unit Value:</strong> The determination will show the annual fee unit amount (e.g., "$187.50" for FY2024-25)</li>
+        <li><strong>Verify Publication Date:</strong> Confirm publication occurred (should be gazetted before you begin Q2)</li>
+        <li><strong>DECISION POINT - Fee Unit Status:</strong>
+          <div class="decision-box" style="margin:12px 0;">
+            <p><strong>What is the status?</strong></p>
+            <ul style="margin:8px 0;margin-left:20px;">
+              <li><strong>IF Published:</strong> Note exact fee unit value. Proceed to Q2.</li>
+              <li><strong>IF Pending (not yet published):</strong> Document date you checked. Retry check next business day. Note: Typically publishes by end of May.</li>
+              <li><strong>IF Delayed beyond 31 May:</strong> Escalate to Knowledge Management Branch Manager. May impact 1 July deadline.</li>
+            </ul>
+          </div>
+        </li>
+        <li><strong>Document Check:</strong> Record in Q1 verification log: DTF check date, Gazette check date, fee unit value, publication reference</li>
+      </ol>
+      <div class="stop">Do NOT proceed with calculation until fee unit is published. Do NOT assume value from previous year. Verify with current year determination only.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: DTF website, Victorian Government Gazette, current date</div>
+        <div class="block"><strong>Processing responsibility</strong>: KMB staff (verification), DTF/Treasury (publication)</div>
+        <div class="block"><strong>Decision</strong>: Fee unit published and documented? (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Confirmed fee unit value and publication reference; proceed to Q2; or defer if not published</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 CALCULATE FEE (GAP 3, 8 ADDRESSED) -->
+
+  <section id="q2">
+    <h2>Q2 - Calculate the property clearance certificate fee<span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#065f46;">✓ Now that you have the fee unit, use it to calculate the PCC fee using the statutory formula.</p>
+      <ol>
+        <li><strong>Recall the Formula:</strong> PCC Fee = 1.16 × Annual Fee Unit Value (from Q1)</li>
+        <li><strong>Perform Calculation:</strong> Multiply 1.16 × the fee unit value from Q1
+          <div class="example-box" style="margin:8px 0;">
+            <strong>Example:</strong> If fee unit = $187.50, then PCC fee = 1.16 × $187.50 = $217.50
+          </div>
+        </li>
+        <li><strong>ROUNDING DECISION (Critical - GAP 3 Addressed):</strong>
+          <div class="decision-box" style="margin:12px 0;">
+            <p><strong>Apply Section 7(3) MUA2004 Rounding Rule:</strong></p>
+            <p>Round the calculated amount to the <strong>nearest 10 cents</strong>:</p>
+            <ul style="margin:8px 0;margin-left:20px;">
+              <li><strong>Amounts ending in $X.X0 – $X.X4:</strong> Round DOWN to $X.X0</li>
+              <li><strong>Amounts ending in $X.X5 – $X.X9:</strong> Round UP to $(X+0.10)</li>
+            </ul>
+            <p><strong>Examples:</strong> $217.37 → $217.40 | $217.34 → $217.30 | $217.45 → $217.50 | $217.54 → $217.50</p>
+          </div>
+        </li>
+        <li><strong>Round Your Result:</strong> Apply the rounding rule above. Document original and rounded amounts.</li>
+        <li><strong>Verification Step (GAP 9 Addressed):</strong> Before proceeding, verify:
+          <div class="checklist" style="margin:8px 0;">
+            <ul>
+              <li>Formula applied correctly (1.16 × fee unit)</li>
+              <li>Rounding applied to nearest 10 cents</li>
+              <li>Result is reasonable (typically between $180-$230)</li>
+              <li>Both original and rounded amounts documented</li>
+            </ul>
+          </div>
+        </li>
+        <li><strong>Document Result:</strong> Record: Calculation date, Fee unit value, Calculation (1.16 × $X), Original amount, Rounded amount, Rounding rule applied</li>
+        <li><strong>Decision:</strong> Has the PCC fee been calculated correctly and verified?</li>
+      </ol>
+      <div class="stop">CRITICAL: Rounding must follow Section 7(3) MUA2004 rule exactly. Incorrect rounding will produce wrong fee and public impact.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Fee unit value from Q1, statutory multiplier (1.16), rounding rule (Section 7(3) MUA2004)</div>
+        <div class="block"><strong>Processing responsibility</strong>: KMB staff (calculation and verification)</div>
+        <div class="block"><strong>Decision</strong>: Calculation correct, rounding applied, verification complete? (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Finalised PCC fee amount (rounded); proceed to Q3 system updates</div>
+      </div>
+    </div>
+    <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Rounding Methodology and Additional Examples</span><span class="detail-toggle-arrow">&#9660;</span></div>
+    <div class="detail-panel">
+      <h4>Rounding Rule (Section 7(3) Monetary Units Act 2004)</h4>
+      <p>The amount of a fee calculated may be rounded to the nearest 10 cents.</p>
+      <p><strong>Standard Rounding Definition:</strong> "Nearest 10 cents" means standard commercial rounding to the nearest $0.10.</p>
+      <h4>Rounding Examples (Comprehensive)</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Original Amount</th>
+            <th>Last Two Digits</th>
+            <th>Rounding Rule</th>
+            <th>Rounded Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>$217.31</td>
+            <td>.31</td>
+            <td>Between .00-.04 → DOWN</td>
+            <td>$217.30</td>
+          </tr>
+          <tr>
+            <td>$217.34</td>
+            <td>.34</td>
+            <td>Between .00-.04 → DOWN</td>
+            <td>$217.30</td>
+          </tr>
+          <tr>
+            <td>$217.35</td>
+            <td>.35</td>
+            <td>Between .05-.09 → UP</td>
+            <td>$217.40</td>
+          </tr>
+          <tr>
+            <td>$217.49</td>
+            <td>.49</td>
+            <td>Between .05-.09 → UP</td>
+            <td>$217.50</td>
+          </tr>
+          <tr>
+            <td>$217.50</td>
+            <td>.50</td>
+            <td>Exactly .50 → UP</td>
+            <td>$217.50</td>
+          </tr>
+          <tr>
+            <td>$217.69</td>
+            <td>.69</td>
+            <td>Between .05-.09 → UP</td>
+            <td>$217.70</td>
+          </tr>
+        </tbody>
+      </table>
+      <h4>Real Fee Calculation Example (FY2024-25)</h4>
+      <p><strong>Given:</strong> Fee unit for FY2024-25 = $187.50</p>
+      <p><strong>Step 1:</strong> Calculate 1.16 × $187.50 = $217.50</p>
+      <p><strong>Step 2:</strong> Apply rounding: $217.50 ends in .50 (already at nearest 10¢)</p>
+      <p><strong>Final PCC Fee:</strong> $217.50</p>
+      <div class="page-ref">Source: Section 7(3) Monetary Units Act 2004; Land Tax Regulations 2015 r7</div>
+    </div>
+  </section>
+
+  <!-- Q3 UPDATE SYSTEMS (GAP 4, 5 ADDRESSED) -->
+
+  <section id="q3">
+    <h2>Q3 - Update all systems with the new PCC fee<span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#d97706;">📋 SEQUENCE & DEADLINE: Multiple systems must be updated by 1 June to meet 1 July effective date. Follow this sequence.</p>
+      <ol>
+        <li><strong>STEP 1 - Notify Land Revenue Branch (Immediate):</strong>
+          <ul style="margin:8px 0;">
+            <li>Send email to: S105.Escalation@sro.vic.gov.au</li>
+            <li>Subject: "New PCC Fee - [FY2024-25] - $217.50"</li>
+            <li>Content: Fee amount, calculation date, fee unit value, effective date (1 July)</li>
+            <li>Purpose: Triggers their systems to be prepared for update</li>
+            <li>Timing: Within 1 business day of calculation completion</li>
+          </ul>
+        </li>
+        <li><strong>STEP 2 - Update TaxNet (By 1 June):</strong>
+          <ul style="margin:8px 0;">
+            <li>Contact: TaxNet Support or Land Revenue Branch</li>
+            <li>Update location: PCC fee configuration in TaxNet</li>
+            <li>What to update: Set new fee amount effective 1 July 2024</li>
+            <li>Dual-display requirement: Both old AND new fees shown until 1 July (see GAP 5 detail)</li>
+            <li>Example format: "PCC fee is $218.50 ($219.20 from 1 July 2024)"</li>
+          </ul>
+        </li>
+        <li><strong>STEP 3 - Update SRO Website (By 1 June):</strong>
+          <div class="checklist" style="margin:8px 0;">
+            <ul>
+              <li>https://www.sro.vic.gov.au/land-tax/property-clearance-certificates</li>
+              <li>https://www.sro.vic.gov.au/buying-property</li>
+              <li>https://www.sro.vic.gov.au/land-tax/apply-property-clearance-certificate</li>
+              <li>SharePoint - TaxNet-LRA: Property-clearance-certificates-overview-for-CSB-LRB.aspx</li>
+              <li>SharePoint - TaxNet-KMB: PCC-essentials.aspx</li>
+            </ul>
+          </div>
+        </li>
+        <li><strong>DUAL-FEE DISPLAY DECISION (Critical - GAP 5 Addressed):</strong>
+          <div class="decision-box" style="margin:12px 0;">
+            <p><strong>Date Range: 1 June to 30 June (30 days)</strong></p>
+            <p><strong>What to display on public-facing pages:</strong></p>
+            <ul style="margin:8px 0;margin-left:20px;">
+              <li><strong>OLD fee:</strong> Current fee (e.g., $218.50)</li>
+              <li><strong>NEW fee:</strong> From 1 July (e.g., $219.20)</li>
+              <li><strong>Format example:</strong> "The property clearance certificate fee is $218.50. From 1 July 2024, the fee will be $219.20."</li>
+            </ul>
+            <p><strong>After 1 July:</strong> Display only new fee amount</p>
+          </div>
+        </li>
+        <li><strong>STEP 4 - Communicate to Staff (By 1 June):</strong>
+          <ul style="margin:8px 0;">
+            <li>Publish in "In The Know" (internal news)</li>
+            <li>Add TaxNet news item on PCC page</li>
+            <li>Send staff email with: Old fee, new fee, effective date, where to find updated info</li>
+            <li>Timing: Early-to-mid June (latest by 30 June)</li>
+          </ul>
+        </li>
+        <li><strong>Verify All Updates (QA Step):</strong> Before 1 July:
+          <div class="checklist" style="margin:8px 0;">
+            <ul>
+              <li>TaxNet displays correct new fee</li>
+              <li>Website pages updated (all 5 links above)</li>
+              <li>Dual-fee display showing old + new (until 1 July)</li>
+              <li>Staff notified via In The Know + email</li>
+              <li>Land Revenue Branch confirmed receipt</li>
+            </ul>
+          </div>
+        </li>
+        <li><strong>Document Completion:</strong> Record update completion date and confirmation from each system</li>
+        <li><strong>Decision:</strong> Have all systems been updated by 1 July with correct fees and dual-display messaging?</li>
+      </ol>
+      <div class="stop">CRITICAL DEADLINE: All updates must be complete by 1 July (effective date). Incomplete updates may cause incorrect fee charges to public.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Finalised PCC fee from Q2, effective date (1 July), old fee amount for dual-display</div>
+        <div class="block"><strong>Processing responsibility</strong>: KMB (coordination), Land Revenue Branch (TaxNet), Web team (SRO website), Communications (staff notification)</div>
+        <div class="block"><strong>Decision</strong>: All systems updated and verified by 1 July deadline? (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Public and internal systems showing correct fees; staff informed; process complete</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q4 VERIFY LEGISLATIVE COMPLIANCE (GAP 6 ADDRESSED) -->
+
+  <section id="q4">
+    <h2>Q4 - Verify compliance with all legislative references<span class="improvement-badge">NEW</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#065f46;">✓ Final verification step: Confirm calculation and publication complies with all legislation.</p>
+      <div class="checklist" style="margin:12px 0;">
+        <ul>
+          <li><strong>Land Tax Regulations 2015, r7:</strong> Verify PCC fee is exactly 1.16 fee units (no deviations)</li>
+          <li><strong>Monetary Units Act 2004, s6:</strong> Verify fee unit used is from current Treasurer determination (not previous year)</li>
+          <li><strong>Monetary Units Act 2004, s7(3):</strong> Verify fee has been rounded to nearest 10 cents per statute</li>
+          <li><strong>Taxation Administration Act 1997:</strong> Verify PCC is configured for all applicable property types (land tax, VRLT, WGT)</li>
+          <li><strong>State Taxation Acts Amendment Act 2020:</strong> Verify you're using current "Property Clearance Certificate" name (not legacy s105/clearance names)</li>
+        </ul>
+      </div>
+      <div class="ref"><strong>Why verification matters:</strong> Incorrect legislative compliance could result in incorrect fee charges, audit findings, or public complaints.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Finalised fee, legislative references, current regulations</div>
+        <div class="block"><strong>Processing responsibility</strong>: KMB staff (verification)</div>
+        <div class="block"><strong>Decision</strong>: All legislative requirements met? (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Compliance verified or issues escalated; process complete</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION VIEW -->
+
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction - Annual PCC Fee Update Workflow</h2>
+    <div class="flow">
+      <div class="flow-title">Q0-Q4 Annual Fee Update Process</div>
+      <div class="node n-amber">Financial Year Cycle (March-June Window)</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q0: Is It Time? (Check Calendar)</div>
+      <div class="arr"></div>
+      <div class="node n-amber">March-June?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div><div class="node n-gray" style="min-width:140px;">NO: Wait</div></div>
+        <div><div class="node n-blue" style="min-width:140px;">YES: Monitor</div></div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q1: Fee Unit Published? (Check DTF/Gazette)</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Fee Unit Available?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div><div class="node n-gray" style="min-width:140px;">NO: Retry Later</div></div>
+        <div><div class="node n-blue" style="min-width:140px;">YES: Proceed</div></div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q2: Calculate Fee (1.16 × Unit)</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Apply Rounding (Nearest 10¢)</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Verify Calculation</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q3: Update Systems (TaxNet, Website, Staff)</div>
+      <div class="arr"></div>
+      <div class="node n-amber">All Updates By 1 June?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div><div class="node n-gray" style="min-width:140px;">Delayed: Escalate</div></div>
+        <div><div class="node n-blue" style="min-width:140px;">Complete</div></div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q4: Verify Compliance (Legislation)</div>
+      <div class="arr"></div>
+      <div class="node n-gray">1 July: New Fee Effective</div>
+      <div style="margin-top:24px;"></div>
+      <div class="flow-title" style="font-size:16px;">Systems Involved</div>
+      <div class="branch">
+        <div class="node n-blue" style="font-size:11px">TaxNet</div>
+        <div class="node n-amber" style="font-size:11px">SRO Website</div>
+        <div class="node n-amber" style="font-size:11px">Staff Comms</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> Staff Action</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> Decision Point</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> System Update</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SUMMARY & REVIEW VIEW -->
+
+<div class="specOnly">
+
+  <section class="summary-section" id="gaps-summary">
+    <h2>📊 Gaps Analysis Summary (10 Gaps Addressed)</h2>
+
+```
+<div class="gap-highlight">
+  <strong>GAP 1 (HIGH): Decision Point Missing - Fee Unit Availability</strong><br>
+  <strong>Fix:</strong> Added explicit Q1 with decision point showing: Published→Proceed | Pending→Retry | Delayed→Escalate
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 2 (HIGH): Timeline Ambiguity - When Is Fee Unit Published?</strong><br>
+  <strong>Fix:</strong> Added Q0 "Timing Check" step with specific calendar window (March-June) and reference to Timeline section
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 3 (HIGH): Rounding Rules Not Clearly Explained</strong><br>
+  <strong>Fix:</strong> Added detailed rounding methodology in Q2 with table of examples showing each rule ($217.31→$217.30, $217.35→$217.40, etc.)
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 4 (MEDIUM): Multiple Update Locations - Sequencing Unclear</strong><br>
+  <strong>Fix:</strong> Added explicit Q3 with 4-step sequence: (1) Land Revenue email, (2) TaxNet, (3) Website (5 URLs), (4) Staff comms
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 5 (MEDIUM): Dual Fee Display Requirement Not Well Explained</strong><br>
+  <strong>Fix:</strong> Added decision box in Q3 showing: Display old+new for 30 days (1 June-30 June), then new fee only
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 6 (MEDIUM): Legislative References Without Operational Context</strong><br>
+  <strong>Fix:</strong> Added new Q4 "Verify Compliance" with checklist covering all 5 legislative references
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 7 (MEDIUM): No Error Handling or Escalation Path</strong><br>
+  <strong>Fix:</strong> Added escalation points in Q1 (if fee unit delayed beyond 31 May) and Q3 (if updates incomplete by 1 June)
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 8 (LOW): Calculation Step Missing</strong><br>
+  <strong>Fix:</strong> Added explicit calculation formula in Q2 with worked example: 1.16 × $187.50 = $217.50
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 9 (LOW): No Verification Step Post-Calculation</strong><br>
+  <strong>Fix:</strong> Added verification checklist in Q2 and system verification checklist in Q3
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 10 (LOW): Staff Communication Timing Unclear</strong><br>
+  <strong>Fix:</strong> Added specific timing in Q3: "Early-to-mid June (latest by 30 June)" with 3 communication channels
+</div>
+```
+
+  </section>
+
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul>
+      <li>Annual fee calculation process for Property Clearance Certificate (PCC)</li>
+      <li>Five-step procedure (Q0-Q4) from timing verification through legislative compliance</li>
+      <li>Critical inputs: Annual fee unit determination from Treasury (published March-May)</li>
+      <li>Calculation formula: 1.16 fee units, with rounding to nearest 10 cents per MUA2004 s7(3)</li>
+      <li>System updates: TaxNet, SRO website (5 URLs), staff notifications, Land Revenue Branch</li>
+      <li>Dual-fee display requirement for 30-day transition period (1-30 June)</li>
+      <li>Compliance verification against 5 legislative instruments</li>
+      <li>Hard deadline: All updates complete and effective by 1 July (start of financial year)</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul>
+      <li><strong>Division:</strong> Strategic Development and Customer Engagement</li>
+      <li><strong>Branch:</strong> Knowledge Management</li>
+      <li><strong>Created:</strong> 25 July 2017</li>
+      <li><strong>Latest Revision:</strong> 2 May 2025</li>
+      <li><strong>Gaps Analysis Applied:</strong> April 2026</li>
+      <li><strong>System of Record:</strong> Lotus Notes Policies and Procedures Database</li>
+      <li><strong>Primary Legislation:</strong> Land Tax Act 2005, Land Tax Regulations 2015, Monetary Units Act 2004</li>
+    </ul>
+  </section>
+
+  <section class="summary-section" id="timeline">
+    <h2>Timeline and Calendar - Annual PCC Fee Update</h2>
+    <div class="flow-box">
+      <p><strong>LATE MARCH – Start Monitoring</strong></p>
+      <p>Treasury typically releases fee unit determination between late March and May, aligned with Budget release. Begin checking DTF website and Victorian Government Gazette daily.</p>
+
+```
+  <p style="margin-top:16px;"><strong>APRIL-MAY – Typical Publication Window</strong></p>
+  <p>Most commonly, fee unit is gazetted in April or May (occasionally into early June). Note exact publication date and gazette reference when found.</p>
+  
+  <p style="margin-top:16px;"><strong>DATE FEE UNIT PUBLISHED – Calculate Fee</strong></p>
+  <p>Within 1 business day of finding fee unit, calculate PCC fee using formula: 1.16 × fee unit value, then round to nearest 10 cents. Document calculation.</p>
+  
+  <p style="margin-top:16px;"><strong>DATE OF CALCULATION + 1 DAY – Notify Land Revenue</strong></p>
+  <p>Email S105.Escalation@sro.vic.gov.au with new fee amount and calculation details. This triggers their system preparation.</p>
+  
+  <p style="margin-top:16px;"><strong>BY 1 JUNE – Update All Systems</strong></p>
+  <p>Complete all updates: TaxNet, website (5 URLs), staff communications. Display dual fees (old and new) until 1 July.</p>
+  
+  <p style="margin-top:16px;"><strong>EARLY-TO-MID JUNE – Staff Communication</strong></p>
+  <p>Publish in In The Know, TaxNet news, and email. Inform staff of fee change, old amount, new amount, effective date.</p>
+  
+  <p style="margin-top:16px;"><strong>BY 30 JUNE – Final Verification</strong></p>
+  <p>Verify all systems display correct fees and dual-display messaging. Confirm Land Revenue Branch ready. Check legislative compliance.</p>
+  
+  <p style="margin-top:16px;"><strong>1 JULY – New Fee Effective</strong></p>
+  <p>New PCC fee becomes official. Public and internal systems must show new fee only (dual-fee display ends). Process complete.</p>
+</div>
+```
+
+  </section>
+
+  <section class="summary-section" id="rounding-examples">
+    <h2>Rounding Examples - Comprehensive Guide</h2>
+    <p><strong>Rule:</strong> Round to nearest 10 cents per Section 7(3) Monetary Units Act 2004.</p>
+    <p><strong>Standard commercial rounding:</strong> Values ending in .00-.04 round down; .05-.09 round up.</p>
+
+```
+<h3>Year-by-Year Examples (Recent)</h3>
+<div class="table-responsive">
+  <table>
+    <thead>
+      <tr>
+        <th>Financial Year</th>
+        <th>Fee Unit Value</th>
+        <th>Calculation (1.16×)</th>
+        <th>Rounded Fee</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>2022-23</td>
+        <td>$168.09</td>
+        <td>1.16 × $168.09 = $194.78</td>
+        <td>$194.80</td>
+      </tr>
+      <tr>
+        <td>2023-24</td>
+        <td>$179.62</td>
+        <td>1.16 × $179.62 = $208.36</td>
+        <td>$208.40</td>
+      </tr>
+      <tr>
+        <td>2024-25</td>
+        <td>$187.50</td>
+        <td>1.16 × $187.50 = $217.50</td>
+        <td>$217.50</td>
+      </tr>
+      <tr>
+        <td>2025-26</td>
+        <td>$189.45</td>
+        <td>1.16 × $189.45 = $219.76</td>
+        <td>$219.80</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+  </section>
+
+  <section class="summary-section" id="escalation">
+    <h2>Escalation Matrix (Addresses GAP 7)</h2>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr style="background:#003a8f;color:white;">
+            <th>Issue</th>
+            <th>Stage</th>
+            <th>Action</th>
+            <th>Escalate To</th>
+            <th>Timeline</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Fee unit not published by 31 May</td>
+            <td>Q1</td>
+            <td>Document check dates. Escalate for guidance on deadline impact.</td>
+            <td>KMB Branch Manager</td>
+            <td>Immediate (if after 31 May)</td>
+          </tr>
+          <tr>
+            <td>Calculation verification fails (mismatch)</td>
+            <td>Q2</td>
+            <td>Do not proceed. Recheck formula and rounding. If still mismatch, escalate.</td>
+            <td>KMB Senior Officer</td>
+            <td>Same day</td>
+          </tr>
+          <tr>
+            <td>TaxNet update incomplete by 1 June</td>
+            <td>Q3</td>
+            <td>Contact Land Revenue to identify delay cause. Escalate if cannot resolve.</td>
+            <td>KMB Branch Manager + LRB Manager</td>
+            <td>Within 24 hours</td>
+          </tr>
+          <tr>
+            <td>Website not updated by 1 June</td>
+            <td>Q3</td>
+            <td>Contact Web Support. Provide all 5 URLs. Escalate if critical path at risk.</td>
+            <td>Web Support Manager + KMB Manager</td>
+            <td>Within 2 hours</td>
+          </tr>
+          <tr>
+            <td>Staff communication not sent by 30 June</td>
+            <td>Q3</td>
+            <td>Prepare alert email immediately. Publish via all 3 channels. Escalate delay.</td>
+            <td>KMB Manager + Communications</td>
+            <td>Within 24 hours</td>
+          </tr>
+          <tr>
+            <td>Legislative compliance issue found</td>
+            <td>Q4</td>
+            <td>Document issue. Consult legislation. Do not publish if critical. Escalate.</td>
+            <td>KMB Senior Officer + Legal</td>
+            <td>Same day</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="summary-section" id="definitions">
+    <h2>Definitions and Acronyms</h2>
+    <ul style="font-size:13px;">
+      <li><strong>PCC</strong> - Property Clearance Certificate (confirms land tax/VRLT/WGT debt on property)</li>
+      <li><strong>Fee Unit</strong> - Monetary amount determined annually by Victorian Treasurer under Monetary Units Act 2004</li>
+      <li><strong>KMB</strong> - Knowledge Management Branch (Strategic Development and Customer Engagement)</li>
+      <li><strong>DTF</strong> - Department of Treasury and Finance (publishes fee unit determinations)</li>
+      <li><strong>MUA2004</strong> - Monetary Units Act 2004 (defines fee unit and rounding rules)</li>
+      <li><strong>LTA</strong> - Land Tax Act 2005 (sets PCC fee at 1.16 fee units, r7 Land Tax Regulations 2015)</li>
+      <li><strong>TAA</strong> - Taxation Administration Act 1997 (PCC provisions)</li>
+      <li><strong>TaxNet</strong> - SRO's internal system for managing land tax and PCC administration</li>
+      <li><strong>SRO</strong> - State Revenue Office (Victoria)</li>
+      <li><strong>Rounding</strong> - Section 7(3) MUA2004: amount may be rounded to nearest 10 cents</li>
+      <li><strong>Dual-Fee Display</strong> - Showing both old and new fees during 30-day transition period (1-30 June)</li>
+      <li><strong>Effective Date</strong> - 1 July (when new fee becomes official)</li>
+    </ul>
+  </section>
+
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(function(e){e.style.display='none'});
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(function(e){e.style.display='block'});document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(function(e){e.style.display='block'});document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,636 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LOAN Property Task Procedure - IMPROVED</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .improvement-badge{display:inline-block;background:#fbbf24;color:#78350f;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700;margin-left:12px}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .sidebar a.gap-link{color:#ec4899;font-weight:600}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    ul,ol{margin-left:22px;font-size:13px;line-height:1.6}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px;font-size:13px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .decision-box{background:#fef3c7;border-left:5px solid #d97706;padding:12px;margin-top:12px;font-size:13px;color:#92400e}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .gap-highlight{background:#fce7f3;border-left:5px solid #ec4899;padding:12px 16px;margin:12px 0;font-size:13px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .detail-panel .page-ref{font-size:11px;color:#3b82f6;font-weight:600;margin-top:8px;padding-top:8px;border-top:1px solid #e0e7ff}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .table-responsive{overflow-x:auto;margin:12px 0}
+    table{width:100%;border-collapse:collapse;font-size:12px}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>LOAN Property Task Procedure <span class="improvement-badge">GAPS IMPROVED (14)</span></h1>
+  <p>Division: Land Revenue Services &bull; Branch: Land Information Management &bull; Revised: 22 April 2025</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#overview">Overview</a>
+    <a href="#q1">Q1 Task Types</a>
+    <a href="#q2">Q2 Find Property</a>
+    <a href="#q3">Q3 Verify References</a>
+    <a href="#q4">Q4 Edit Property</a>
+    <a href="#q5">Q5 Complete</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#gaps-summary" class="gap-link" onclick="showView('spec');setTimeout(()=>location.hash='gaps-summary',100);">📊 Gaps Analysis</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(()=>location.hash='definitions',100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+<div id="questionFlow">
+
+<!-- OVERVIEW -->
+
+<section id="overview">
+<h2>LOAN Property Task Procedure Overview <span class="improvement-badge">CONTEXT</span></h2>
+<div class="staff">
+<h3>Purpose</h3>
+<p style="font-size:13px;">Process Property Tasks in LOAN system to identify and validate the correct property (Involved Property) from Notice of Acquisition (NOA). Match property references to e-Sys Land IDs.</p>
+
+<h3>Why Property Tasks Created</h3>
+<p style="font-size:13px;">LOAN system attempts to auto-match property references to e-Sys Land IDs at Property stage. When auto-matching fails due to exceptions, manual Property Tasks are created.</p>
+
+<h3>Key Definitions</h3>
+<ul style="font-size:13px;">
+<li><strong>Involved Property:</strong> The property from NOA requiring e-Sys Land ID matching</li>
+<li><strong>Title References:</strong> Volume/Folio, Lot/Plan, Crown References</li>
+<li><strong>SPI:</strong> Spatial Property Identifier (matches municipality/title)</li>
+<li><strong>Part Indicator:</strong> When same title reference on multiple properties</li>
+</ul>
+
+<h3>Time Standards</h3>
+<p style="font-size:13px;"><strong>Resolve Property Conflict:</strong> 3 mins | <strong>Resolve Property Match:</strong> 4 mins | <strong>All other:</strong> 5 mins</p>
+
+<div class="ref"><strong>Authority:</strong> Land Tax Act 2005 | <strong>Branch:</strong> Land Information Management</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> NOA property data (address, title references, SPI, municipality)</div>
+<div class="block"><strong>Process:</strong> Match property references to e-Sys Land ID</div>
+<div class="block"><strong>Decision:</strong> Which Land ID is correct property? Create/update?</div>
+<div class="block"><strong>Output:</strong> Property linked or created, references verified</div>
+</div>
+</div>
+</section>
+
+<!-- Q1 TASK TYPES -->
+
+<section id="q1">
+<h2>Q1 - What Property Task Type Am I Processing? <span class="improvement-badge">IMPROVED</span></h2>
+<div class="staff">
+<h3>Six Property Task Types</h3>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Task Type</th>
+<th>When It Occurs</th>
+<th>Primary Action</th>
+</tr>
+<tr>
+<td><strong>Resolve Property Match</strong></td>
+<td>No match OR multiple matches equal confidence</td>
+<td>Find property manually or create</td>
+</tr>
+<tr>
+<td><strong>Resolve Mult Property Match</strong></td>
+<td>Resolve Property Match + 2 source properties</td>
+<td>Locate both properties, link each</td>
+</tr>
+<tr>
+<td><strong>Resolve Property Conflict</strong></td>
+<td>Match found but title/address mismatch</td>
+<td>Verify match, update references/address</td>
+</tr>
+<tr>
+<td><strong>Resolve Mult Property Conflict</strong></td>
+<td>Resolve Property Conflict + 2 properties</td>
+<td>Verify both, update as needed</td>
+</tr>
+<tr>
+<td><strong>Resolve High Volume Property</strong></td>
+<td>High number of source properties on NOA</td>
+<td>Process all properties individually</td>
+</tr>
+<tr>
+<td><strong>Resolve Property in Parcel</strong></td>
+<td>Property is part of parcel with other properties</td>
+<td>Verify all parcel properties transferring</td>
+</tr>
+</table>
+</div>
+
+<h3>Reference/Address Score Thresholds <span class="improvement-badge">CRITICAL</span></h3>
+<div class="decision-box">
+<strong>Very High/High (0.8-1.0):</strong> Link directly, verify references<br>
+<strong>Medium (0.6-0.79):</strong> Manual verification required<br>
+<strong>Low/Poor (0-0.59):</strong> Reject, search further, use Muni Returns for verification
+</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Task Type Decision Matrix & Reference Score Methodology</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Reference Score Components</h4>
+<p style="font-size:13px;"><strong>Range: 0 to 1</strong></p>
+<ul style="font-size:13px;">
+<li>Volume/Folio exact match = high score component</li>
+<li>Lot/Plan exact match = high score component</li>
+<li>Crown References match = high score component</li>
+<li>Historical or incorrect references = reduce score</li>
+</ul>
+
+<h4>Address Score Components</h4>
+<p style="font-size:13px;"><strong>Range: 0 to 1</strong></p>
+<ul style="font-size:13px;">
+<li>Street number/name exact match = high score</li>
+<li>Suburb/postcode match = moderate score</li>
+<li>Minor variations (e.g., "Mount" vs "Mt") = reduce score</li>
+<li>Address history changes = consider start date on property</li>
+</ul>
+
+<div class="page-ref">Source: LOAN Property Task Procedure; Confidence Level Scoring</div>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Exception code, property data, matching results</div>
+<div class="block"><strong>Process:</strong> Identify task type via decision matrix</div>
+<div class="block"><strong>Decision:</strong> Which task type applies?</div>
+<div class="block"><strong>Output:</strong> Task type identified, routing determined</div>
+</div>
+</div>
+</section>
+
+<!-- Q2 FIND PROPERTY -->
+
+<section id="q2">
+<h2>Q2 - Can I Locate the Correct Property? <span class="improvement-badge">IMPROVED</span></h2>
+<div class="staff">
+<h3>Property Search Methods (Priority)</h3>
+<ol style="font-size:13px;">
+<li><strong>Step 1:</strong> Review Matched Properties in LOAN. If High+ confidence, verify via Edit Property Address/References</li>
+<li><strong>Step 2:</strong> If no match, use Find Property (by Address/Municipal or Property References)</li>
+<li><strong>Step 3:</strong> Use Find Seller's Properties (locate via owner/customer)</li>
+<li><strong>Step 4:</strong> Search Muni Returns (Municipal Revaluation Files) for title verification</li>
+<li><strong>Step 5:</strong> Search COI for title reference verification and status</li>
+<li><strong>Step 6:</strong> If still no match → Request Site Valuation</li>
+</ol>
+
+<h3>Find Property Search Screen</h3>
+<p style="font-size:13px;"><strong>Address/Municipal Section:</strong> Prepopulated with source data. Remove Street Type/Suburb/Municipality to improve search likelihood.</p>
+<p style="font-size:13px;"><strong>Property References Section:</strong> NOT prepopulated. Enter Volume/Folio or Lot/Plan manually to search by reference.</p>
+
+<h3>Muni Returns Search (Municipal Revaluation Files) <span class="improvement-badge">SLA DOCUMENTED</span></h3>
+<p style="font-size:13px;"><strong>Access:</strong> Tools → View Municipal Revaluation Files</p>
+<p style="font-size:13px;"><strong>Search by:</strong> SPI, Owner, Street name (select most recent year for current details)</p>
+<p style="font-size:13px;"><strong>Output:</strong> Returns Property ID in e-Sys that matches council valuation data</p>
+
+<h3>Site Valuation Request (For Complex Cases) <span class="improvement-badge">SLA ADDED</span></h3>
+<p style="font-size:13px;"><strong>When:</strong> Cannot locate property after exhausting all searches; need pro-rata subdivision confirmation; need title reference clarification</p>
+<p style="font-size:13px;"><strong>Action:</strong> Click "Request Site Valuation" button. Complete Dealing Number, References, and detailed Comments explaining what action is required.</p>
+<p style="font-size:13px;"><strong>SLA:</strong> Typically 1-2 weeks for response. Check Work Item Notes. Reserve your Property Task while awaiting.</p>
+
+<div class="stop">Do NOT assume property with "no owner" has been subdivided. Verify in COI or via Site Valuation Request. Title references with "Lodged Plan" type may not search correctly.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: COI Search, Find Seller's Properties, Parcel Property Handling & Special Address Issues</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>COI Property Search</h4>
+<p style="font-size:13px;"><strong>Access:</strong> MySRO → COI Main Menu → Find Property</p>
+<ul style="font-size:13px;">
+<li>Search by Dealing Number (to get all property references)</li>
+<li>Search by Volume/Folio (exact match for title)</li>
+<li>Search by Lot/Plan (may return all plan types, including Lodged Plans)</li>
+<li>Search by SPI (confirms property details)</li>
+</ul>
+<p style="font-size:13px;"><strong>Output:</strong> Shows registered proprietor, active/historical references, recent dealings</p>
+
+<h4>Find Seller's Properties Function</h4>
+<p style="font-size:13px;"><strong>When:</strong> Know customer/seller, need to find their properties</p>
+<ol style="font-size:13px;">
+<li>Click Find Seller's Properties</li>
+<li>Click Refresh to prepopulate seller data from NOA</li>
+<li>Or search by Customer ID, Name, or Address</li>
+<li>Select customer → Click OK</li>
+<li>Property Ownerships display → Select correct property</li>
+<li>Returns to LOAN with property linked</li>
+</ol>
+
+<h4>Properties in Parcel Handling</h4>
+<p style="font-size:13px;"><strong>When:</strong> Property is contained within parcel, may need to verify all parcel properties transferring</p>
+<ol style="font-size:13px;">
+<li>If linking property in parcel, warning popup appears</li>
+<li>Load property in separate e-Sys session</li>
+<li>Select Parcels node → view Parcel Summary</li>
+<li>Double-click parcel to view Parcel Detail</li>
+<li>Double-click each parcel property to load in tree</li>
+<li>Review title references for each, verify via COI if active</li>
+<li>Return to LOAN and link ALL parcel properties (using LIDs)</li>
+<li>Verify via title references that all parcel properties are transferring</li>
+<li><strong>If not all transferring:</strong> Consult with Business Team Office (BTO)</li>
+</ol>
+
+<h4>Special Address Issues</h4>
+<ul style="font-size:13px;">
+<li><strong>Mt vs Mount:</strong> LOAN does not recognize as equivalent. May cause "different street name" error. Verify address manually.</li>
+<li><strong>Recent Subdivision (start date <18 months):</strong> Address may not match council data. OK to proceed without confirming address via Muni Returns.</li>
+<li><strong>No Owner Shown:</strong> May indicate property subdivided. Check COI for children properties. Manually transfer children if needed.</li>
+<li><strong>Easement vs Property:</strong> Check Land Channel for sale price/size. If very small with small sale price → may be easement. Cancel ownership change with reason "Properties with little Significance".</li>
+</ul>
+
+<div class="page-ref">Source: LOAN Property Task Procedure; Find Property; Muni Returns; COI Search</div>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Property source data (address, title references, SPI)</div>
+<div class="block"><strong>Process:</strong> Search e-Sys using multiple methods (Find Property, Muni Returns, COI)</div>
+<div class="block"><strong>Decision:</strong> Property found or requires Site Valuation Request?</div>
+<div class="block"><strong>Output:</strong> Property linked or Site Valuation Request submitted</div>
+</div>
+</div>
+</section>
+
+<!-- Q3 VERIFY REFERENCES -->
+
+<section id="q3">
+<h2>Q3 - Are Property References Correct and Complete? <span class="improvement-badge">IMPROVED</span></h2>
+<div class="staff">
+<h3>Reference Verification Checklist</h3>
+<p style="font-size:13px;">When property located, review title references in Matched Properties section:</p>
+<div style="background:#f9fafb;border:1px solid #e5e7eb;padding:12px;border-radius:6px;margin:12px 0;">
+<ul style="font-size:13px;margin:0;">
+<li>☐ Volume/Folio matches source data or is alternate valid reference</li>
+<li>☐ Lot/Plan matches source data</li>
+<li>☐ Crown References match (if applicable)</li>
+<li>☐ References are ACTIVE (not historical/inactive)</li>
+<li>☐ If multiple references, understand "part indicator" usage</li>
+<li>☐ Verify via Muni Returns if confusion about split references</li>
+</ul>
+</div>
+
+<h3>Title Reference Special Cases <span class="improvement-badge">CRITICAL</span></h3>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Case 1: Same Title Reference on Multiple Properties</h4>
+<p style="font-size:13px;">Confirm via Muni Returns SPI that references belong to each property. If yes, tick "Part Indicator" checkbox on ALL properties containing reference.</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Case 2: Lodged Plan Type (L prefix)</h4>
+<p style="font-size:13px;">LOAN search results will show ALL plan types matching lot/plan (not just Lodged Plans). May need to filter manually or match using Address instead. Cannot add Lodged Plan reference to property unless one already exists.</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Case 3: Reference Currently on Another Property</h4>
+<p style="font-size:13px;">If trying to add reference and error says "currently on another property" → Verify via Muni Returns/COI that reference belongs to both properties. If yes, manually delete from other property first before adding to your property in LOAN.</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Case 4: Additional/Extra References</h4>
+<p style="font-size:13px;">If property has references not in source data → Check COI/Muni Returns: Inactive? Remove. Active and accessory? Add. Mistake? Remove. Need pro-rata? Request Site Valuation.</p>
+
+<div class="decision-box">
+When editing property references in LOAN, changes apply immediately. But if must delete reference from one property THEN add to another, must Save and Exit after delete before adding to second property.
+</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Possession Date Updates & Edit Property Operations</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Updating Possession Date</h4>
+<p style="font-size:13px;"><strong>When:</strong> Linked property start/end date doesn't match possession date from source</p>
+<ol style="font-size:13px;">
+<li>Go to Purchase Details section (top middle)</li>
+<li>Existing Possession Date shows source data date</li>
+<li>Enter New Possession Date (to correct the ownership change)</li>
+<li>Click Apply</li>
+</ol>
+
+<h4>Edit Property Address</h4>
+<p style="font-size:13px;"><strong>When:</strong> Property address needs updating to source data address</p>
+<ol style="font-size:13px;">
+<li>Click Edit Property Address button (only active if Link ticked)</li>
+<li>Current address from e-Sys displays</li>
+<li>Click Copy Source Property Address (to update to NOA address), OR</li>
+<li>Manually edit address fields</li>
+<li>Click OK</li>
+<li>Confirm address on Muni Returns</li>
+</ol>
+
+<h4>Edit Property References</h4>
+<p style="font-size:13px;"><strong>When:</strong> Title references need adding/removing</p>
+<ol style="font-size:13px;">
+<li>Click Edit Property References button</li>
+<li>Left side: Source/Available references. Right side: Matched Property references</li>
+<li>To ADD: Highlight reference on left → Click arrow pointing right</li>
+<li>To REMOVE: Highlight reference on right → Click arrow pointing left</li>
+<li>Tick "Part Indicator" if same reference on multiple properties</li>
+<li>Click OK</li>
+</ol>
+
+<div class="page-ref">Source: LOAN Property Task Procedure; Edit Property Details</div>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Linked property record, source references for comparison</div>
+<div class="block"><strong>Process:</strong> Verify reference accuracy and completeness</div>
+<div class="block"><strong>Decision:</strong> Are references correct? Need updates?</div>
+<div class="block"><strong>Output:</strong> References verified and updated</div>
+</div>
+</div>
+</section>
+
+<!-- Q4 EDIT PROPERTY -->
+
+<section id="q4">
+<h2>Q4 - Have All Property Updates Been Applied? <span class="improvement-badge">IMPROVED</span></h2>
+<div class="staff">
+<h3>Mandatory Property Updates</h3>
+<div style="background:#f9fafb;border:1px solid #e5e7eb;padding:12px;border-radius:6px;margin:12px 0;">
+<ul style="font-size:13px;margin:0;">
+<li>☐ Property address matches source data (or verified via Muni Returns)</li>
+<li>☐ All title references added (Volume/Folio, Lot/Plan, Crown)</li>
+<li>☐ Inactive references removed (if applicable)</li>
+<li>☐ Part indicator ticked if reference on multiple properties</li>
+<li>☐ Possession date corrected (if different from property start date)</li>
+<li>☐ All properties in parcel linked (if property in parcel)</li>
+<li>☐ No duplicate property records unresolved</li>
+</ul>
+</div>
+
+<h3>Before Proceeding</h3>
+<p style="font-size:13px;">Verify all visible property references in Property References section match source data. If references differ slightly (plan type, format), verify via Muni Returns or COI that property is correct.</p>
+
+<p style="font-size:13px;"><strong>Click Show Potentials button</strong> to review lower-confidence matches and ensure you selected correct property.</p>
+
+<div class="ref" style="margin-top:12px;"><strong>Reference:</strong> LOAN Property Task Procedure; Edit Property Details</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Subdivision/Consolidation Handling, SPI Matching & Property End Date Interpretation</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Subdivision/Consolidation Scenarios</h4>
+<p style="font-size:13px;"><strong>Property Recently Subdivided:</strong></p>
+<ul style="font-size:13px;">
+<li>Old parent property will show "no owner" in e-Sys</li>
+<li>New child properties created</li>
+<li>Check COI for children properties with same parent references</li>
+<li>Manually transfer to children if required by NOA</li>
+</ul>
+
+<p style="font-size:13px;"><strong>Property Being Consolidated:</strong></p>
+<ul style="font-size:13px;">
+<li>Multiple references on single property</li>
+<li>Verify SPI matches across all references via Muni Returns</li>
+<li>Add all references to single e-Sys property</li>
+</ul>
+
+<h4>SPI Verification (Key Step)</h4>
+<p style="font-size:13px;">SPI (Spatial Property Identifier) from Muni Returns shows: SPI = [Number]-[Number]-[Number]</p>
+<ul style="font-size:13px;">
+<li>Check SPI from source data against Muni Returns SPI</li>
+<li>If same SPI → References belong together on single property</li>
+<li>If different SPI → References belong to different properties</li>
+</ul>
+
+<h4>Property End Date Interpretation</h4>
+<p style="font-size:13px;"><strong>When Property End Date Shown:</strong></p>
+<ul style="font-size:13px;">
+<li>Property has been deleted/voided from e-Sys</li>
+<li>Cannot transfer deleted property</li>
+<li>May indicate recent subdivision or consolidation</li>
+<li>Check children properties if subdivision suspected</li>
+<li>Escalate if cannot resolve</li>
+</ul>
+
+<div class="page-ref">Source: LOAN Property Task Procedure; Tips to Assist with Decision Making</div>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Linked property with references for verification</div>
+<div class="block"><strong>Process:</strong> Apply mandatory updates</div>
+<div class="block"><strong>Decision:</strong> Are all updates complete and correct?</div>
+<div class="block"><strong>Output:</strong> All updates applied and verified</div>
+</div>
+</div>
+</section>
+
+<!-- Q5 COMPLETE TASK -->
+
+<section id="q5">
+<h2>Q5 - Can the Property Task Be Completed? <span class="improvement-badge">IMPROVED</span></h2>
+<div class="staff">
+<h3>Final Completion Checklist</h3>
+<div style="background:#f9fafb;border:1px solid #e5e7eb;padding:12px;border-radius:6px;margin:12px 0;">
+<ul style="font-size:13px;margin:0;">
+<li>☐ All source properties linked to e-Sys Land IDs</li>
+<li>☐ All address updates completed and verified</li>
+<li>☐ All title references correct and complete</li>
+<li>☐ Part indicator applied where needed</li>
+<li>☐ Parcel property handling verified (if applicable)</li>
+<li>☐ Possession date updated (if needed)</li>
+<li>☐ No duplicate property records</li>
+<li>☐ Show Potentials reviewed to verify correct property selected</li>
+</ul>
+</div>
+
+<h3>Completion Options</h3>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:16px;">Option 1: Proceed with Property Matches</h4>
+<p style="font-size:13px;">Click <strong>Proceed with Property Matches</strong> button. Property Task resolved and routes to Ownership stage.</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Option 2: Cancel Ownership Change</h4>
+<p style="font-size:13px;">If NOA should not proceed:</p>
+<ol style="font-size:13px;">
+<li>Click <strong>Cancel Ownership Change</strong> button</li>
+<li>Select Reason from dropdown</li>
+<li>Enter Comments</li>
+<li>Click Cancel</li>
+</ol>
+
+<p style="font-size:13px;"><strong>If Cancelled:</strong> May need to manually transfer property. Refer to Land Ownership Procedure for manual transfer instructions.</p>
+
+<div class="ref" style="margin-top:12px;"><strong>Reference:</strong> LOAN Property Task Procedure; Completing or Removing Property Task</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Verified property with all references correct</div>
+<div class="block"><strong>Process:</strong> Execute completion or cancellation</div>
+<div class="block"><strong>Decision:</strong> Proceed or cancel?</div>
+<div class="block"><strong>Output:</strong> Task completed or cancelled; route to next stage</div>
+</div>
+</div>
+</section>
+
+</div>
+
+<!-- SYSTEM INTERACTION VIEW -->
+
+<div class="systemsOnly">
+<section>
+<h2>System Interaction - LOAN Property Task Processing Flow</h2>
+<div class="flow">
+<div class="flow-title">Q1-Q5 LOAN Property Task Processing</div>
+<div class="node n-amber">Property Task Received</div>
+<div class="arr"></div>
+<div class="node n-blue">Q1: Identify Task Type</div>
+<div class="arr"></div>
+<div class="node n-blue">Q2: Search & Locate Property</div>
+<div class="arr"></div>
+<div class="node n-amber">Property Found?</div>
+<div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+<div><div class="node n-gray">NO: Request Valuation</div></div>
+<div><div class="node n-blue">YES: Link</div></div>
+</div>
+<div class="arr"></div>
+<div class="node n-blue">Q3: Verify References</div>
+<div class="arr"></div>
+<div class="node n-blue">Q4: Edit Property</div>
+<div class="arr"></div>
+<div class="node n-blue">Q5: Complete Property Task</div>
+<div class="arr"></div>
+<div class="node n-gray">Property Task Complete → Ownership Stage</div>
+</div>
+</section>
+</div>
+
+<!-- SUMMARY VIEW -->
+
+<div class="specOnly">
+<section class="summary-section" id="gaps-summary">
+<h2>📊 Gaps Analysis Summary (14 Gaps Addressed)</h2>
+
+<div class="gap-highlight"><strong>GAP 1 (HIGH):</strong> Task Type Decision Matrix Unclear → Added 6 task types with decision logic</div>
+<div class="gap-highlight"><strong>GAP 2 (HIGH):</strong> Reference/Address Score Thresholds Undefined → Added score ranges (Very High/High=link; Medium=verify; Low/Poor=reject)</div>
+<div class="gap-highlight"><strong>GAP 3 (HIGH):</strong> Title Reference Handling Complex → Added Part Indicator, Lodged Plan workaround, multi-property reference process</div>
+<div class="gap-highlight"><strong>GAP 4 (MEDIUM):</strong> Muni Returns Search Format Unclear → Added step-by-step search process and SPI verification</div>
+<div class="gap-highlight"><strong>GAP 5 (MEDIUM):</strong> Site Valuation Request SLA Missing → Added 1-2 week SLA and tracking process</div>
+<div class="gap-highlight"><strong>GAP 6 (MEDIUM):</strong> COI Search Procedures Incomplete → Added search methods (Dealing Number, Vol/Folio, Lot/Plan, SPI)</div>
+<div class="gap-highlight"><strong>GAP 7 (MEDIUM):</strong> Find Seller's Properties Function Vague → Added step-by-step process for locating properties via owner</div>
+<div class="gap-highlight"><strong>GAP 8 (LOW):</strong> Parcel Property Handling Complex → Added procedure for reviewing all parcel properties and verifying transfer</div>
+<div class="gap-highlight"><strong>GAP 9 (LOW):</strong> Possession Date Update Logic Unclear → Added when and how to update possession date</div>
+<div class="gap-highlight"><strong>GAP 10 (LOW):</strong> Special Address Issues Not Covered → Added Mt vs Mount, recent subdivision, "no owner", easement scenarios</div>
+<div class="gap-highlight"><strong>GAP 11 (LOW):</strong> Subdivision/Consolidation Edge Cases → Added procedure for handling subdivided properties and consolidations</div>
+<div class="gap-highlight"><strong>GAP 12 (LOW):</strong> Property End Date Interpretation Missing → Added explanation of end date meaning and resolution steps</div>
+<div class="gap-highlight"><strong>GAP 13 (LOW):</strong> Reference Error Handling Incomplete → Added workaround for "reference on another property" error</div>
+<div class="gap-highlight"><strong>GAP 14 (LOW):</strong> Lodged Plan Type Search Issues → Added explanation and workaround for Lodged Plan search limitations</div>
+</section>
+
+<section class="summary-section">
+<h2>Procedure Summary</h2>
+<ul style="font-size:13px;">
+<li>5-step process (Q1-Q5) for processing LOAN Property Tasks</li>
+<li>Q1: Identify task type (Resolve Match/Conflict, Multi Property, High Volume, Parcel)</li>
+<li>Q2: Search for property using Find Property, Muni Returns, COI, or Find Seller's Properties</li>
+<li>Q3: Verify title references are correct and complete; handle Part Indicator for shared references</li>
+<li>Q4: Update property address, references, and possession date as needed</li>
+<li>Q5: Complete or cancel Property Task</li>
+<li>Reference/Address score thresholds: Very High/High=link; Medium=verify; Low/Poor=reject</li>
+<li>Site Valuation Request SLA: 1-2 weeks typical response</li>
+<li>Time standards: Resolve Conflict=3min; Resolve Match=4min; Others=5min</li>
+</ul>
+</section>
+
+<section class="summary-section">
+<h2>Source of Authority</h2>
+<ul style="font-size:13px;">
+<li><strong>Division:</strong> Land Revenue Services</li>
+<li><strong>Branch:</strong> Land Information Management</li>
+<li><strong>Created:</strong> 1 July 2018</li>
+<li><strong>Revised:</strong> 22 April 2025</li>
+<li><strong>Time Standards:</strong> 3-5 minutes depending on task type</li>
+</ul>
+</section>
+
+<section class="summary-section" id="definitions">
+<h2>Definitions & Acronyms</h2>
+<p style="font-size:13px;">
+<strong>LOAN</strong> - Land Ownership and NOA system<br>
+<strong>NOA</strong> - Notice of Acquisition<br>
+<strong>SPI</strong> - Spatial Property Identifier<br>
+<strong>LID</strong> - Land ID (e-Sys property identifier)<br>
+<strong>COI</strong> - Compliance Operational Intelligence<br>
+<strong>Vol/Folio</strong> - Volume and Folio (title reference)<br>
+<strong>Lot/Plan</strong> - Lot and Plan (title reference)<br>
+<strong>Part Indicator</strong> - Checkbox when same title reference on multiple properties<br>
+<strong>Parcel</strong> - Group of properties held together<br>
+<strong>Muni Returns</strong> - Municipal Revaluation Files<br>
+<strong>UGZ</strong> - Urban Growth Zone<br>
+<strong>PSP</strong> - Precinct Structure Plan<br>
+<strong>Involved Property</strong> - Property from NOA requiring e-Sys Land ID matching<br>
+<strong>Property Conflict</strong> - Match found but title/address mismatch detected<br>
+<strong>Reference Score</strong> - Quality of title reference match (0-1 range)<br>
+<strong>Address Score</strong> - Quality of address match (0-1 range)
+</p>
+</section>
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(e=>e.style.display='none');
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(e=>e.style.display='block');document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(e=>e.style.display='block');document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

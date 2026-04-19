@@ -1,1 +1,834 @@
 
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Downloading Plans from Landata and Loading to e-Sys - IMPROVED</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .improvement-badge{display:inline-block;background:#fbbf24;color:#78350f;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700;margin-left:12px}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .sidebar a.gap-link{color:#ec4899;font-weight:600}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    ul,ol{margin-left:22px}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .decision-box{background:#fef3c7;border-left:5px solid #d97706;padding:12px;margin-top:12px;font-size:13px;font-weight:600;color:#92400e}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .rationale{background:#ecfdf5;border-left:5px solid #10b981;padding:12px;margin-top:12px;font-size:13px;color:#065f46}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .gap-highlight{background:#fce7f3;border-left:5px solid #ec4899;padding:12px 16px;margin:12px 0;font-size:13px}
+    .score{background:#f0fdf4;border-left:5px solid #22c55e;padding:12px 16px;margin:12px 0;font-size:14px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;-webkit-tap-highlight-color:transparent}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .detail-panel .page-ref{font-size:11px;color:#3b82f6;font-weight:600;margin-top:8px}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .branch{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;justify-content:center}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#475569}
+    .legend-dot{width:12px;height:12px;border-radius:3px}
+    .table-responsive{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+    .code-block{background:#f3f4f6;border-left:4px solid #003a8f;padding:12px;font-family:monospace;font-size:12px;overflow-x:auto;margin:8px 0}
+    .checklist{background:#f9fafb;border:1px solid #e5e7eb;padding:16px;margin:12px 0;border-radius:6px}
+    .checklist li{list-style:none;padding-left:24px;position:relative;margin-bottom:8px}
+    .checklist li::before{content:'☐';position:absolute;left:0;font-weight:bold;color:#003a8f}
+    .flow-box{background:#f0f4ff;border:2px solid #c7d2fe;padding:16px;border-radius:8px;margin:12px 0;font-size:13px}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Downloading Plans from Landata and Loading to e-Sys <span class="improvement-badge">GAPS IMPROVED</span></h1>
+  <p>Division: Operations &bull; Branch: Land Revenue &bull; Revised: August 2024 &bull; Enhanced with comprehensive gap analysis</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#q0">Q0 Prerequisites</a>
+    <a href="#q1">Q1 Plans Received</a>
+    <a href="#q2">Q2 Create Work Items</a>
+    <a href="#q3">Q3 Plan Images</a>
+    <a href="#q4">Q4 Lot Lists</a>
+    <a href="#q5">Q5 Post-Processing</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#gaps-summary" class="gap-link" onclick="showView('spec');setTimeout(function(){document.location.hash='gaps-summary'},100);">📊 Gaps Analysis</a>
+    <a href="#sequencing-rationale" onclick="showView('spec');setTimeout(function(){document.location.hash='sequencing-rationale'},100);">Sequencing Explained</a>
+    <a href="#escalation" onclick="showView('spec');setTimeout(function(){document.location.hash='escalation'},100);">Escalation Matrix</a>
+    <a href="#file-naming" onclick="showView('spec');setTimeout(function(){document.location.hash='file-naming'},100);">File Naming</a>
+    <a href="#landata-access" onclick="showView('spec');setTimeout(function(){document.location.hash='landata-access'},100);">Landata Credentials</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(function(){document.location.hash='definitions'},100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+<div id="questionFlow">
+
+  <!-- Q0 PREREQUISITES (GAP 9 ADDRESSED) -->
+
+  <section id="q0">
+    <h2>Q0 - Do you have required system access and prerequisites?<span class="improvement-badge">NEW</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#065f46;">✓ Complete this checklist BEFORE starting daily processing. Missing access will halt work mid-task.</p>
+      <div class="checklist">
+        <ul>
+          <li>Access to Valuations mailbox (plan delivery email receipt)</li>
+          <li>Plans Formula.xlsx converter file readable (H:\LandTax\Common\Land_tax\Valuations Team\Plans)</li>
+          <li><strong>WRITE access to S:\FTP\PLANS folder for CSV save</strong> (request via Team Leader if missing)</li>
+          <li><strong>WRITE access to H:\LandTax\Common\Land_tax\Valuations Team\Plans\Electronic Plans\New Plans</strong></li>
+          <li>Two separate browser sessions available (Edge + Edge In-Private OR Chrome)</li>
+          <li>Landata credentials verified (Account 322150 and 319400, current passwords)</li>
+          <li>Stable internet connection (critical if working from home - see WFH guidance in Q3 detail panel)</li>
+        </ul>
+      </div>
+      <div class="stop">If ANY item is unchecked, STOP. Resolve before proceeding. Escalate access requests to Team Leader now.</div>
+      <div class="rationale"><strong>Why this matters:</strong> Access issues discovered mid-process waste time and cause rework. S Drive access in particular cannot be obtained immediately - request early in week.</div>
+      <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Access Requests and Verification</span><span class="detail-toggle-arrow">&#9660;</span></div>
+      <div class="detail-panel">
+        <h4>S Drive FTP Access (Most Common Gap)</h4>
+        <p><strong>Required for:</strong> Saving CSV file to S:\FTP\PLANS</p>
+        <p><strong>Typical error if missing:</strong> "Access denied" when trying to save CSV file - cannot complete Q2</p>
+        <p><strong>How to request:</strong> Submit access change request to Team Leader or Branch Manager</p>
+        <p><strong>Timeline:</strong> 1-2 business days typical</p>
+        <p><strong>When to request:</strong> At beginning of week, not day-of</p>
+        <h4>File Path Verification Steps</h4>
+        <p>Before processing starts, manually navigate to each path to confirm access:</p>
+        <ol>
+          <li>Open File Explorer</li>
+          <li>Type H:\LandTax\Common\Land_tax\Valuations Team\Plans (hit Enter)</li>
+          <li>If opens without error, you can READ Plans Formula.xlsx ✓</li>
+          <li>Navigate to H:\LandTax\Common\Land_tax\Valuations Team\Plans\Electronic Plans\New Plans</li>
+          <li>Try to create a test file - if successful, you have WRITE access ✓</li>
+          <li>Navigate to S:\FTP\PLANS (if this fails, you lack S Drive access)</li>
+        </ol>
+        <h4>Landata Credentials Test</h4>
+        <p><strong>Best practice:</strong> Test Landata login at start of each week with both accounts</p>
+        <p><strong>Account 322150:</strong> Plans and OC documents</p>
+        <p><strong>Account 319400:</strong> Lot lists</p>
+        <p><strong>If credentials fail:</strong> Contact Landata support immediately. Password may have auto-expired.</p>
+        <div class="page-ref">Source: System Prerequisite Validation</div>
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: System access status, file path availability, credential validity</div>
+        <div class="block"><strong>Processing responsibility</strong>: Staff (verification), IT (access provisioning), Landata (credential management)</div>
+        <div class="block"><strong>Decision</strong>: All prerequisites verified and in place (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Proceed to Q1 if YES; Request access and retry if NO</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q1 PLANS RECEIVED -->
+
+  <section id="q1">
+    <h2>Q1 - Have registered plans been received from Landata?</h2>
+    <div class="staff">
+      <ul>
+        <li><strong>Check Valuations Mailbox:</strong> Verify daily plan delivery email from Landata (PlanDeliveryProcessor@servictoria.com.au) has arrived.</li>
+        <li><strong>Verify Email Date:</strong> Confirm email date matches expected plan batch date. Note: Weekend/public holiday batches arrive next business day covering multiple days.</li>
+        <li><strong>Extract Plan Count:</strong> Count total number of plans in email. Use this number for reconciliation at Q4.</li>
+        <li><strong>Decision:</strong> Have plans been received and email verified?</li>
+      </ul>
+      <div class="stop">Do NOT proceed if no email received. Wait for next delivery. Do NOT fabricate email content.</div>
+      <div class="ref"><strong>Procedure reference:</strong> Plan Delivery Process</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Plan delivery email from Landata</div>
+        <div class="block"><strong>Processing responsibility</strong>: Landata (delivery), Valuations mailbox (receipt), Staff (verification)</div>
+        <div class="block"><strong>Decision</strong>: Plans received and email verified (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Proceed to Q2 with confirmed plan count; or wait for next delivery if NO</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 CREATE WORK ITEMS (GAP 1 & 2 ADDRESSED) -->
+
+  <section id="q2">
+    <h2>Q2 - Can plan number work items be created in e-Sys?<span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#d97706;">⏰ CRITICAL TIMING: CSV must be saved BEFORE 11:30 AM to be picked up by e-Sys batch at 12:00 Noon</p>
+      <p style="font-weight:600;margin-bottom:12px;color:#065f46;">📋 SEQUENCE REQUIREMENT: This step MUST be completed before Q3 and Q4. CSV creation enables batch job to create work items overnight, which plan documents attach to in Q3/Q4.</p>
+      <ol>
+        <li><strong>Open Converter File:</strong> Open Plans Formula.xlsx from H:\LandTax\Common\Land_tax\Valuations Team\Plans</li>
+        <li><strong>Paste Email Text:</strong> Copy full text from plan delivery email (excluding email headers). Paste into cell A4 of converter.</li>
+        <li><strong>Extract Plan Numbers:</strong> Converter auto-separates plan numbers into column B. Copy all numbers from column B.</li>
+        <li><strong>Create New Sheet:</strong> Open new Excel spreadsheet. Right-click cell A1 → Paste Special → Select "Values" → OK. This converts text to clean numbers.</li>
+        <li><strong>VALIDATION CHECKLIST (Do NOT skip this):</strong>
+          <div class="checklist" style="margin:12px 0;">
+            <ul>
+              <li>First plan number matches email: _____ (e.g., LP123456)</li>
+              <li>Last plan number matches email: _____ (e.g., PS789012)</li>
+              <li>Total count matches email count: _____ plans</li>
+              <li>NO plan type letters (LP, PS, PC) in column - ONLY numbers</li>
+              <li>NO header rows or extra data in column</li>
+            </ul>
+          </div>
+        </li>
+        <li><strong>Save as CSV:</strong> File → Save As → Format: CSV (Comma Delimited) → Filename: PLANS_ddmmyyyy.csv (use email date) → Location: S:\FTP\PLANS → SAVE</li>
+        <li><strong>Verify Save:</strong> Confirm file saved successfully to S:\FTP\PLANS (check file browser)</li>
+        <li><strong>CLOSE FILE IMMEDIATELY:</strong> Close CSV file right after saving. Do NOT leave open or edit further.</li>
+        <li><strong>Document Time Saved:</strong> Note the time CSV was saved. If after 11:30 AM, file will NOT be picked up by noon batch.</li>
+        <li><strong>Decision:</strong> Has CSV been created, validated, saved to correct location, and saved BEFORE 11:30 AM?</li>
+      </ol>
+      <div class="decision-box">CSV VALIDATION DECISION: Do first/last numbers match? Count correct? No letters/headers? If ALL yes → Save. If ANY no → Fix before saving.</div>
+      <div class="stop">CRITICAL: File must be named PLANS_ddmmyyyy.csv with 'PLANS' in capitals. Incorrect filename or location will cause load failure. CSV must contain ONLY numbers - any letters or headers will cause batch job to reject entire file. Time MATTERS - file saved after 11:30 AM will not be processed until next day.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Plan delivery email, Plans Formula converter template</div>
+        <div class="block"><strong>Processing responsibility</strong>: Staff (extraction and validation), e-Sys batch job (overnight work item creation)</div>
+        <div class="block"><strong>Decision</strong>: CSV created, validated, and saved before 11:30 AM cut-off (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: CSV file in S:\FTP\PLANS; e-Sys batch job creates work items overnight; work items available next morning</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q3 PLAN IMAGES (GAP 3 & 4 ADDRESSED) -->
+
+  <section id="q3">
+    <h2>Q3 - Are plan images and owners corporation documents available?<span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#d97706;">📌 SEQUENCE REQUIREMENT: Q3 MUST complete BEFORE Q4. See detail panel for why this sequence is critical.</p>
+      <p style="font-weight:600;margin-bottom:12px;color:#065f46;">🌐 TWO SEPARATE SESSIONS REQUIRED: Session 1 (Edge) for plans. Session 2 (Edge In-Private or Chrome) for lot lists in Q4. See "Session Separation" in detail panel for why.</p>
+      <ol>
+        <li><strong>Open Session 1 (Edge):</strong> Open Microsoft Edge browser. Navigate to https://www.landata.online/landata.net/landatahome.aspx</li>
+        <li><strong>Login:</strong> Account Number: 322150 → Password: (see Landata credentials section) → Enter 6-digit verification code from valuations email → Tick "Remember for 24 hours" → Login</li>
+        <li><strong>Navigate to Certificates:</strong> Click Property Certificates tab → Click View Certificates link</li>
+        <li><strong>Set Date Range:</strong> In "From Date" field, enter date of plan delivery email. (For weekend batches, check and enter full range, e.g., Friday 01/05 through Monday 03/05)</li>
+        <li><strong>CERTIFICATE STATUS DECISION POINT (Critical):</strong>
+          <div class="decision-box" style="margin:12px 0;">
+            <p><strong>Check each certificate status:</strong></p>
+            <ul style="margin:8px 0;margin-left:20px;">
+              <li><strong>IF "Complete":</strong> Download this plan's documents immediately</li>
+              <li><strong>IF "Pending":</strong> PAUSE this plan. Do NOT download. Document the plan number. Wait 60-90 minutes, then retry this one plan.</li>
+              <li><strong>IF "Failed":</strong> DO NOT RETRY. Document plan number, date, status. Escalate immediately to Grade 4 supervisor with full list of ALL failed plans (see Escalation Matrix in Summary view).</li>
+            </ul>
+          </div>
+        </li>
+        <li><strong>Download Complete Plans:</strong> For each COMPLETE certificate only:
+          <ul style="margin:8px 0;">
+            <li>Copy the plan number (e.g., PS123456)</li>
+            <li>Right-click the plan link → Select "Save Link As..."</li>
+            <li>Save to: H:\LandTax\Common\Land_tax\Valuations Team\Plans\Electronic Plans\New Plans</li>
+            <li>Filename format: &lt;PlanType&gt;&lt;Number&gt;.pdf (e.g., LP123456.pdf, PS789012.pdf)</li>
+          </ul>
+        </li>
+        <li><strong>Download OC Documents (if present):</strong> After plan PDF, check if OC document is available:
+          <ul style="margin:8px 0;">
+            <li>Single OC: Save as &lt;PlanType&gt;&lt;Number&gt;-OC.pdf</li>
+            <li>Multiple OCs: Save as -OC, -OC2, -OC3 (sequentially numbered)</li>
+            <li>Staged/Redevelopment: Append -D1, -S2, etc. (e.g., PS123456-D1.pdf)</li>
+          </ul>
+        </li>
+        <li><strong>OC Matching Note:</strong> Mark which OC goes with which plan for matching with lot list in Q4. (You will verify match when downloading lot lists.)</li>
+        <li><strong>WFH Work-From-Home Guidance:</strong> If working from home, download speeds may vary. Allow adequate time for each certificate to download fully. Before moving to next plan, visually verify file appeared in New Plans folder and file size looks reasonable (not 0 KB).</li>
+        <li><strong>Decision:</strong> Have ALL COMPLETE plan certificates been downloaded and saved with correct naming? Have ALL PENDING/FAILED certificates been handled per decision logic above?</li>
+      </ol>
+      <div class="stop">Do NOT download Pending certificates - they are incomplete and will cause errors downstream. Do NOT retry Failed certificates - they require investigation and escalation. Failed status means Landata certificate generation failed, not a timing issue.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Plan numbers from Q2 CSV, Landata account 322150 credentials, plan delivery date</div>
+        <div class="block"><strong>Processing responsibility</strong>: Landata (certificate generation), Staff (download and file storage)</div>
+        <div class="block"><strong>Decision</strong>: All Complete certificates downloaded; Pending/Failed handled per decision logic (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Plan and OC PDFs saved to New Plans folder with proper naming; ready for Q4 lot list matching</div>
+      </div>
+    </div>
+    <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Session Separation, Sequencing, and Lot List Matching Logic</span><span class="detail-toggle-arrow">&#9660;</span></div>
+    <div class="detail-panel">
+      <h4>Why TWO SEPARATE SESSIONS are Required (GAP 3 Addressed)</h4>
+      <p><strong>The Problem:</strong> If you use same Landata login session to switch between Property Certificates (plans) and Lot Lists, the session may timeout during the hour-long download process, OR Landata may retain the first account's permissions and reject your lot list search as "wrong account".</p>
+      <p><strong>The Solution:</strong> Use two separate browser sessions simultaneously:</p>
+      <ul>
+        <li><strong>Session 1 (Regular Edge):</strong> Logged into Account 322150 for Property Certificates tab (plans/OCs)</li>
+        <li><strong>Session 2 (Edge In-Private or Chrome):</strong> Logged into Account 319400 for Title Searches tab (lot lists)</li>
+      </ul>
+      <p><strong>How to open In-Private:</strong> Right-click Edge icon → Select "New In-Private Window" OR press Ctrl+Shift+P. Opening a new regular window is NOT sufficient.</p>
+      <p><strong>Why this works:</strong> Separate sessions have separate authentication tokens. No cross-contamination of credentials.</p>
+      <h4>Why Q3 Must Complete BEFORE Q4 (GAP 2 Addressed)</h4>
+      <p><strong>Sequence Dependency:</strong> After Q3 downloads all plans, you need Q4 to download lot lists and MATCH them with the plans you just saved. If you try to do lot lists first (Q4 before Q3), you'll download lot lists without knowing which plans they belong to, causing reconciliation errors at the end.</p>
+      <p><strong>Critical matching step:</strong> In Q4, you will compare each downloaded lot list with the plan and OC you downloaded in Q3 to ensure they match. This only works if Q3 completes first.</p>
+      <h4>Certificate Status Handling (GAP 4 Addressed)</h4>
+      <p><strong>Complete:</strong> Ready to download immediately. Download all Complete certificates.</p>
+      <p><strong>Pending:</strong> Still processing. Retry same plan 60-90 minutes later. If still Pending by end of day, document and escalate next morning.</p>
+      <p><strong>Failed:</strong> Landata certificate generation failed. This is NOT a timing issue. Requires escalation to Grade 4 for investigation. Email list of failed plan numbers to Grade 4 supervisor immediately.</p>
+      <div class="page-ref">Source: Landata Session Architecture; Process Sequencing; Status Handling</div>
+    </div>
+  </section>
+
+  <!-- Q4 LOT LISTS (GAP 3, 5, 8 ADDRESSED) -->
+
+  <section id="q4">
+    <h2>Q4 - Are corresponding lot lists available for all plans?<span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#d97706;">🌐 SESSION 2 REQUIRED: Use separate browser session (Edge In-Private or Chrome) with Account 319400. Do NOT reuse Session 1 login.</p>
+      <ol>
+        <li><strong>Open Session 2 (In-Private/Chrome):</strong> Right-click Edge and select "New In-Private Window" OR open Google Chrome. Navigate to https://www.landata.vic.gov.au/landata.net/ (Chrome) or https://www.landata.online/landata.net/landatahome.aspx (Edge In-Private)</li>
+        <li><strong>Login Session 2:</strong> Account Number: 319400 → Password: (see Landata credentials) → Enter verification code → "Remember for 24 hours" → Login</li>
+        <li><strong>Navigate to Lot List:</strong> Click Title Searches → Click Lot List option</li>
+        <li><strong>Search Lot List for First Plan:</strong> Select plan type (LP, PS, PC, etc.) → Enter plan number (numbers only) → If staged subdivision or redevelopment, INCLUDE stage/redevelopment number → Hit Enter</li>
+        <li><strong>Save Lot List:</strong>
+          <ul style="margin:8px 0;">
+            <li>When lot list appears, click Print Options button</li>
+            <li>Select "PDF Creator" as printer</li>
+            <li>UNCHECK "After saving open output file"</li>
+            <li>Click Save</li>
+            <li>Save to: H:\LandTax\Common\Land_tax\Valuations Team\Plans\Electronic Plans\New Plans</li>
+            <li>Filename: &lt;PlanType&gt;&lt;Number&gt;-LL.pdf (e.g., PS123456-LL.pdf)</li>
+          </ul>
+        </li>
+        <li><strong>MULTI-PAGE LOT LIST DECISION (GAP 8 Addressed):</strong>
+          <div class="decision-box" style="margin:12px 0;">
+            <p><strong>After saving lot list, scroll to BOTTOM of Landata page:</strong></p>
+            <ul style="margin:8px 0;margin-left:20px;">
+              <li><strong>IF you see "More" link at bottom left:</strong> This lot list continues on next page. Click "More" link and save next section as -LL2</li>
+              <li><strong>REPEAT:</strong> Click "More", save as -LL3, -LL4, etc. until "More" link NO LONGER APPEARS at bottom</li>
+              <li><strong>WHEN no "More" link appears:</strong> You have saved entire lot list. Move to next plan.</li>
+            </ul>
+          </div>
+        </li>
+        <li><strong>Repeat for All Plans:</strong> Continue with lot list #2, #3, etc. until lot list downloaded for every plan in original email.</li>
+        <li><strong>RECONCILIATION CHECK (GAP 5 Addressed):</strong>
+          <div class="flow-box">
+            <p><strong>Final document count validation:</strong></p>
+            <p style="margin:8px 0;"><strong>Formula:</strong></p>
+            <p style="margin:8px 0;">( Original plan count from email ) + ( Number of OC documents ) + ( Number of lot list pages ) = Total files in New Plans folder</p>
+            <p style="margin:8px 0;"><strong>Example:</strong> 25 plans + 5 OC docs + 27 lot list pages (some plans had 2-page lot lists) = 57 files total</p>
+            <p style="margin:8px 0;"><strong>If mismatch:</strong> Identify which plans are missing lot lists and retry downloads from Landata</p>
+            <p style="margin:8px 0;"><strong>When reconciliation matches:</strong> Task complete. Close the converter spreadsheet file.</p>
+          </div>
+        </li>
+        <li><strong>Archive Email:</strong> Move plan delivery email from Valuations inbox to Valuations-Folders → external communication → overnight plans folder.</li>
+        <li><strong>Decision:</strong> Have all plans been matched with corresponding lot lists and reconciliation confirmed?</li>
+      </ol>
+      <div class="stop">Each plan MUST have a lot list. Missing lot lists will cause downstream processing failures. Reconciliation mismatch means some files were not downloaded - identify and retry before closing task.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Plan numbers from Q2, Landata account 319400 credentials, plan documents from Q3</div>
+        <div class="block"><strong>Processing responsibility</strong>: Landata (lot list generation), Staff (download, validation, reconciliation)</div>
+        <div class="block"><strong>Decision</strong>: All lot lists downloaded, reconciliation complete and matching (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Complete set of plans, OCs, and lot lists in New Plans folder ready for e-Sys upload in Q5</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q5 POST-PROCESSING (GAP 10 ADDRESSED) -->
+
+  <section id="q5">
+    <h2>Q5 - What happens to the downloaded files?<span class="improvement-badge">NEW</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#065f46;">✓ You've completed the daily download. Here's what happens next in the process.</p>
+      <ul>
+        <li><strong>Files Location:</strong> All plan, OC, and lot list files are now in H:\LandTax\Common\Land_tax\Valuations Team\Plans\Electronic Plans\New Plans</li>
+        <li><strong>Next Process Step (Beyond This Procedure):</strong> Document upload team will load files from New Plans folder into e-Sys work items created by CSV batch job from Q2.</li>
+        <li><strong>When Upload Occurs:</strong> Typically within 1-2 business days of Q4 completion. (Check with Valuations Team for exact timeline.)</li>
+        <li><strong>Your Role After Q5:</strong> Task is complete. You do not upload files - upload team handles document attachment to work items.</li>
+        <li><strong>Exception Report Check:</strong> Next business day, check H:\LandTax\Common\LandTax\Esys\Reports\&lt;month&gt; folder for LI987 exception report. This report shows any plan numbers that failed to create work items in e-Sys batch job from yesterday's Q2 CSV creation. If exceptions appear, forward to supervisor.</li>
+      </ul>
+      <div class="ref"><strong>Post-Processing Handoff:</strong> Your work (Q0-Q4) provides the input files and triggers the work item creation. Document upload team (separate team/process) attaches files to work items. You do not need to take further action.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Completed New Plans folder with all validated documents</div>
+        <div class="block"><strong>Processing responsibility</strong>: Staff (completion), Document upload team (next step - outside this procedure), e-Sys (ongoing work item processing)</div>
+        <div class="block"><strong>Decision</strong>: Download and reconciliation complete (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Ready for handoff to document upload process; exception report reviewed next business day</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION VIEW -->
+
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction - Complete Daily Plans Processing Workflow</h2>
+    <div class="flow">
+      <div class="flow-title">Q0-Q5 Daily Processing Flow</div>
+      <div class="node n-blue">Q0: Verify Prerequisites</div>
+      <div class="arr"></div>
+      <div class="node n-amber">All Access OK?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div><div class="node n-gray" style="min-width:140px;">NO: Request</div></div>
+        <div><div class="node n-blue" style="min-width:140px;">YES: Continue</div></div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-amber">Daily Plan Email Received</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q1: Verify Receipt</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Plans Received?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div><div class="node n-gray" style="min-width:140px;">NO: Wait</div></div>
+        <div><div class="node n-blue" style="min-width:140px;">YES: Proceed</div></div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q2: Create & Validate CSV</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Before 11:30 AM?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div><div class="node n-gray" style="min-width:140px;">NO: Retry Tomorrow</div></div>
+        <div><div class="node n-blue" style="min-width:140px;">YES: Saved</div></div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-gray">12:00 Noon: e-Sys Batch Job</div>
+      <div class="arr"></div>
+      <div class="node n-gray">Overnight: Work Items Created</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q3: Download Plans & OCs (Session 1)</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Certificate Status Check</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div><div class="node n-gray" style="min-width:100px;">Pending: Retry</div></div>
+        <div><div class="node n-blue" style="min-width:100px;">Complete</div></div>
+        <div><div class="node n-gray" style="min-width:100px;">Failed: Escalate</div></div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q4: Download Lot Lists (Session 2)</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Reconciliation Check</div>
+      <div class="arr"></div>
+      <div class="node n-amber">All Files Matched?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div><div class="node n-gray" style="min-width:140px;">NO: Retry</div></div>
+        <div><div class="node n-blue" style="min-width:140px;">YES: Complete</div></div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q5: Archive & Handoff</div>
+      <div class="arr"></div>
+      <div class="node n-gray">Ready for e-Sys Document Upload</div>
+      <div style="margin-top:24px;"></div>
+      <div class="flow-title" style="font-size:16px;">Key Systems Involved</div>
+      <div class="branch">
+        <div class="node n-blue" style="font-size:11px">e-Sys</div>
+        <div class="node n-amber" style="font-size:11px">Landata</div>
+        <div class="node n-amber" style="font-size:11px">File Storage</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> Staff Action</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> Decision Point</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> System Process</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SUMMARY & REVIEW VIEW -->
+
+<div class="specOnly">
+  <section class="summary-section" id="gaps-summary">
+    <h2>📊 Gaps Analysis Summary and Improvements</h2>
+    <p style="font-size:13px;margin-bottom:16px;"><strong>This document addresses 10 critical gaps identified in the original procedure. Below are the improvements implemented:</strong></p>
+
+```
+<h3>HIGH-SEVERITY GAPS ADDRESSED</h3>
+
+<div class="gap-highlight">
+  <strong>GAP 1: File Validation Criteria Were Vague</strong><br>
+  <strong>Improvement:</strong> Added explicit validation checklist in Q2 that staff must complete before saving CSV. Checklist includes: first/last number match, count verification, no letters/headers check.
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 2: Sequencing Rationale Not Explained</strong><br>
+  <strong>Improvement:</strong> Added detail panels explaining WHY Q3 must complete before Q4 (lot list matching logic). Added detail explaining WHY Q2 timing matters (batch job dependency).
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 3: Two Sessions Requirement Unclear</strong><br>
+  <strong>Improvement:</strong> Added detailed "Session Separation" section in Q3 detail panel explaining what "separate session" means, how to open In-Private, why new window alone is NOT enough, and consequences of skipping this step.
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 4: Certificate Status Decision Logic Missing</strong><br>
+  <strong>Improvement:</strong> Added explicit "Certificate Status Decision Point" box in Q3 showing: Complete→Download | Pending→Retry later with timing | Failed→Escalate immediately. Color-coded decision box for clarity.
+</div>
+
+<h3>MEDIUM-SEVERITY GAPS ADDRESSED</h3>
+
+<div class="gap-highlight">
+  <strong>GAP 5: Document Count Reconciliation Formula Ambiguous ("+6" unexplained)</strong><br>
+  <strong>Improvement:</strong> Added reconciliation formula box in Q4 showing exact calculation: (plan count) + (OC docs) + (lot list pages) = total files. Removed cryptic "+6" reference.
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 6: Escalation Paths Scattered</strong><br>
+  <strong>Improvement:</strong> Created dedicated "Escalation Matrix" section in Summary view showing: Issue Type → Escalate To → Expected SLA → Contact Method.
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 7: WFH (Work From Home) Concerns Unaddressed</strong><br>
+  <strong>Improvement:</strong> Added "WFH Work-From-Home Guidance" subsection in Q3 explaining download speed variability and file verification steps. Added Q0 prerequisite for stable internet.
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 8: Lot List Multi-Page Decision Logic Missing</strong><br>
+  <strong>Improvement:</strong> Added explicit "Multi-Page Lot List Decision" box in Q4 showing: Check for "More" link → IF exists → Click and save -LL2 → REPEAT until "More" disappears.
+</div>
+
+<h3>LOW-SEVERITY GAPS ADDRESSED</h3>
+
+<div class="gap-highlight">
+  <strong>GAP 9: System Prerequisites Not Validated</strong><br>
+  <strong>Improvement:</strong> Added new Q0 section with pre-flight checklist covering: S Drive access, file path access, Landata credentials, browser capability. Staff cannot proceed without checking all items.
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 10: Post-Procedure Handoff Unclear</strong><br>
+  <strong>Improvement:</strong> Added new Q5 section explaining what happens after download (document upload team takes over), when upload occurs, your role completion, and exception report check next business day.
+</div>
+```
+
+  </section>
+
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul>
+      <li>Six-step daily process (Q0-Q5) for downloading Landata plans and creating e-Sys work items</li>
+      <li>Ensures all registered plans are captured, downloaded, and matched with lot lists</li>
+      <li>Defines critical timing constraint (11:30 AM CSV save deadline) and batch job execution (12:00 Noon)</li>
+      <li>Emphasizes sequence dependency: Q2 enables batch, Q3 downloads plans, Q4 downloads and matches lot lists</li>
+      <li>Includes prerequisite validation (Q0), certificate status decisions (Q3), and reconciliation (Q4)</li>
+      <li>Provides clear escalation paths for Pending/Failed certificates and access issues</li>
+      <li>Concludes with handoff to document upload team (Q5) and post-processing verification</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul>
+      <li><strong>Division:</strong> Operations</li>
+      <li><strong>Branch:</strong> Land Revenue</li>
+      <li><strong>Original Creation:</strong> 1 May 2019</li>
+      <li><strong>Latest Revision:</strong> 16 August 2024</li>
+      <li><strong>Gaps Analysis Applied:</strong> April 2026</li>
+      <li><strong>System of Record:</strong> Lotus Notes Policies and Procedures Database</li>
+    </ul>
+  </section>
+
+  <section class="summary-section" id="sequencing-rationale">
+    <h2>Why Procedure Sequencing Matters (Explanation of GAP 2)</h2>
+    <p><strong>Original document said:</strong> "The sequence of steps to perform this task... are set for a reason so please do not modify or errors will occur" — but didn't explain the reason.</p>
+
+```
+<h3>Q0 → Q1 → Q2 → Q3 → Q4 → Q5 Sequencing Dependencies</h3>
+
+<div class="flow-box">
+  <p><strong>Q0 (Prerequisites):</strong> Must verify access BEFORE starting. If access missing, work halts mid-process.</p>
+  <p><strong>→ Q1 (Receive):</strong> Wait for email. No point creating CSV without plan list.</p>
+  <p><strong>→ Q2 (CSV Creation):</strong> Must complete BEFORE 11:30 AM. Why? Because e-Sys batch job runs at 12:00 Noon and only processes CSVs received before cut-off. This batch creates work items that Q3/Q4 documents will attach to.</p>
+  <p><strong>→ Q3 (Download Plans):</strong> Must complete BEFORE Q4. Why? Because Q4 requires matching lot lists with plans. Cannot match if plans not downloaded first.</p>
+  <p><strong>→ Q4 (Download Lot Lists):</strong> Matches each lot list with corresponding plan from Q3. Also performs final reconciliation count: plans + OCs + lot lists should match total from original email.</p>
+  <p><strong>→ Q5 (Handoff):</strong> Archives email, confirms readiness for next process. Cannot complete until Q4 reconciliation confirms all documents present.</p>
+</div>
+```
+
+  </section>
+
+  <section class="summary-section" id="escalation">
+    <h2>Escalation Matrix (Addresses GAP 6)</h2>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr style="background:#003a8f;color:white;">
+            <th>Issue</th>
+            <th>Stage</th>
+            <th>Action</th>
+            <th>Escalate To</th>
+            <th>Expected SLA</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>No plan delivery email received</td>
+            <td>Q1</td>
+            <td>Wait for delivery. Do not proceed.</td>
+            <td>Valuations supervisor if not received by 10 AM</td>
+            <td>Same day clarification</td>
+          </tr>
+          <tr>
+            <td>S Drive FTP access missing</td>
+            <td>Q0 / Q2</td>
+            <td>Cannot save CSV. Stop immediately.</td>
+            <td>Team Leader (access request)</td>
+            <td>1-2 business days</td>
+          </tr>
+          <tr>
+            <td>CSV validation fails (letters/headers in file)</td>
+            <td>Q2</td>
+            <td>Do not save. Fix converter output before saving.</td>
+            <td>Team Leader for guidance</td>
+            <td>Same day</td>
+          </tr>
+          <tr>
+            <td>CSV saved after 11:30 AM</td>
+            <td>Q2</td>
+            <td>File will not be picked up. Retry tomorrow.</td>
+            <td>Supervisor notification</td>
+            <td>Next business day</td>
+          </tr>
+          <tr>
+            <td>Certificate status = Pending</td>
+            <td>Q3</td>
+            <td>Do NOT download. Retry same plan 60-90 min later. Document plan number and retry time.</td>
+            <td>If still Pending after 3 retries, notify Grade 4</td>
+            <td>Escalate next morning if unresolved</td>
+          </tr>
+          <tr>
+            <td>Certificate status = Failed</td>
+            <td>Q3</td>
+            <td>Do NOT retry. Document all failed plan numbers immediately. Email list to Grade 4.</td>
+            <td>Grade 4 Supervisor (Landata investigation)</td>
+            <td>Immediate escalation</td>
+          </tr>
+          <tr>
+            <td>Landata login fails (credentials wrong)</td>
+            <td>Q3 / Q4</td>
+            <td>Test credentials early in week. If fail, contact Landata support immediately.</td>
+            <td>Landata.enquiries@servictoria.com.au</td>
+            <td>Same business day typically</td>
+          </tr>
+          <tr>
+            <td>Download timeout (especially WFH)</td>
+            <td>Q3 / Q4</td>
+            <td>Retry download for that file. Allow longer download time if on slow connection.</td>
+            <td>Team Leader if persists after 3 retries</td>
+            <td>Next business day investigation</td>
+          </tr>
+          <tr>
+            <td>Document count reconciliation mismatch (files missing)</td>
+            <td>Q4</td>
+            <td>Identify which plans lack lot lists. Retry Landata download for missing lots.</td>
+            <td>If cannot identify missing files, escalate to Team Leader</td>
+            <td>Same day if possible, next day if not</td>
+          </tr>
+          <tr>
+            <td>LI987 exception report shows failed work items</td>
+            <td>Next day after Q2</td>
+            <td>Review report. Identify failed plan numbers. Forward to supervisor.</td>
+            <td>Grade 4 for investigation of cause</td>
+            <td>Notify same day report published</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="summary-section" id="file-naming">
+    <h2>File Naming Conventions - Complete Reference</h2>
+
+```
+<h3>CSV File (Q2)</h3>
+<div class="code-block">PLANS_ddmmyyyy.csv</div>
+<p><strong>Example:</strong> PLANS_19042026.csv (for April 19, 2026 batch)</p>
+<ul>
+  <li>dd = two-digit date (01-31)</li>
+  <li>mm = two-digit month (01-12)</li>
+  <li>yyyy = four-digit year</li>
+  <li><strong>PLANS must be in ALL capitals</strong></li>
+  <li>Saved to: S:\FTP\PLANS</li>
+  <li>Format: CSV (Comma Delimited)</li>
+  <li>Content: ONLY plan numbers (no letters, headers, or other data)</li>
+</ul>
+
+<h3>Plan Image Files (Q3)</h3>
+<div class="code-block">&lt;PT&gt;&lt;PlanNumber&gt;.pdf</div>
+<p><strong>Examples:</strong> LP123456.pdf, PS789012.pdf, PC654321.pdf</p>
+<ul>
+  <li>&lt;PT&gt; = Two-letter plan type (LP, PS, PC, etc.)</li>
+  <li>&lt;PlanNumber&gt; = Numeric plan number only</li>
+  <li>Saved to: H:\LandTax\Common\Land_tax\Valuations Team\Plans\Electronic Plans\New Plans</li>
+</ul>
+
+<h3>Owners Corporation Documents (Q3)</h3>
+<div class="code-block">&lt;PT&gt;&lt;PlanNumber&gt;-OC[#].pdf</div>
+<p><strong>Examples:</strong> PS123456-OC.pdf, PS123456-OC2.pdf, PS123456-OC3.pdf</p>
+<ul>
+  <li>Single OC: -OC (no number)</li>
+  <li>Multiple OCs: -OC, -OC2, -OC3 (sequential numbering)</li>
+</ul>
+
+<h3>Staged/Redevelopment Plans (Q3)</h3>
+<div class="code-block">&lt;PT&gt;&lt;PlanNumber&gt;-D#.pdf (Redevelopment)
+```
+
+<PT><PlanNumber>-S#.pdf (Subdivision)</div>
+<p><strong>Examples:</strong> PS123456-D1.pdf, PS789012-S2.pdf, PS654321-S5.pdf</p>
+
+```
+<h3>Lot List Files (Q4)</h3>
+<div class="code-block">&lt;PT&gt;&lt;PlanNumber&gt;-LL[#].pdf</div>
+<p><strong>Examples:</strong> PS123456-LL.pdf, PS123456-LL2.pdf, PS123456-LL3.pdf</p>
+<ul>
+  <li>Single-page lot list: -LL (no number)</li>
+  <li>Multi-page lot lists: -LL, -LL2, -LL3 (sequential for each additional page section)</li>
+  <li><strong>LL must be in ALL capitals</strong></li>
+</ul>
+```
+
+  </section>
+
+  <section class="summary-section" id="landata-access">
+    <h2>Landata Access and Credentials</h2>
+
+```
+<h3>Session 1: Plan Images and OC Documents (Q3)</h3>
+<div class="table-responsive">
+  <table>
+    <tr>
+      <td><strong>Browser:</strong></td>
+      <td>Microsoft Edge (regular window)</td>
+    </tr>
+    <tr>
+      <td><strong>URL:</strong></td>
+      <td>https://www.landata.online/landata.net/landatahome.aspx</td>
+    </tr>
+    <tr>
+      <td><strong>Account Number:</strong></td>
+      <td>322150 (does not change)</td>
+    </tr>
+    <tr>
+      <td><strong>Password:</strong></td>
+      <td>Sep302024! (changes periodically - see note below)</td>
+    </tr>
+    <tr>
+      <td><strong>Verification Code:</strong></td>
+      <td>6-digit code sent to valuations email inbox</td>
+    </tr>
+    <tr>
+      <td><strong>Tab in Landata:</strong></td>
+      <td>Property Certificates → View Certificates</td>
+    </tr>
+  </table>
+</div>
+
+<h3>Session 2: Lot Lists (Q4)</h3>
+<div class="table-responsive">
+  <table>
+    <tr>
+      <td><strong>Browser:</strong></td>
+      <td>Edge (New In-Private Window) OR Google Chrome</td>
+    </tr>
+    <tr>
+      <td><strong>URL:</strong></td>
+      <td>Edge In-Private: https://www.landata.online/landata.net/landatahome.aspx<br>Chrome: https://www.landata.vic.gov.au/landata.net/</td>
+    </tr>
+    <tr>
+      <td><strong>Account Number:</strong></td>
+      <td>319400 (does not change)</td>
+    </tr>
+    <tr>
+      <td><strong>Password:</strong></td>
+      <td>Sep302024! (changes periodically - see note below)</td>
+    </tr>
+    <tr>
+      <td><strong>Verification Code:</strong></td>
+      <td>6-digit code sent to valuations email inbox</td>
+    </tr>
+    <tr>
+      <td><strong>Tab in Landata:</strong></td>
+      <td>Title Searches → Lot List</td>
+    </tr>
+  </table>
+</div>
+
+<div class="score">
+  <strong>Password Management:</strong> Landata prompts for password change at regular intervals. When prompted, update both account numbers with the new password. Update this procedure document immediately when passwords change. Ensure password is synchronized between Accounts 322150 and 319400.
+</div>
+```
+
+  </section>
+
+  <section class="summary-section" id="definitions">
+    <h2>Definitions and Acronyms</h2>
+    <ul style="font-size:13px;">
+      <li><strong>CSV</strong> - Comma Separated Values (batch file format for e-Sys)</li>
+      <li><strong>Landata</strong> - Victorian Titles Office online information system</li>
+      <li><strong>Plan Number</strong> - Unique identifier for registered plan (e.g., PS123456, LP654321)</li>
+      <li><strong>Plan Type (PT)</strong> - Two-letter prefix (LP = Lodged Plan, PS = Plan of Subdivision, PC = Plan of Consolidation)</li>
+      <li><strong>OC</strong> - Owners Corporation document (unit entitlements for subdivided property)</li>
+      <li><strong>Lot List</strong> - List of individual lots/units within a registered plan</li>
+      <li><strong>e-Sys</strong> - Electronic system for land tax administration and work items</li>
+      <li><strong>Work Item</strong> - Individual task record created in e-Sys by daily batch job</li>
+      <li><strong>Batch Job</strong> - Automated process running daily at 12:00 Noon to create work items from CSV</li>
+      <li><strong>LI987 Report</strong> - Exception report listing plans that failed to load as work items</li>
+      <li><strong>SRO</strong> - State Revenue Office (Victoria)</li>
+      <li><strong>WFH</strong> - Work From Home</li>
+      <li><strong>In-Private/Incognito</strong> - Browser mode that creates separate authentication session</li>
+    </ul>
+  </section>
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(function(e){e.style.display='none'});
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(function(e){e.style.display='block'});document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(function(e){e.style.display='block'});document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Applying an Other Exemption - IMPROVED</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .improvement-badge{display:inline-block;background:#fbbf24;color:#78350f;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700;margin-left:12px}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .sidebar a.gap-link{color:#ec4899;font-weight:600}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    ul,ol{margin-left:22px}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .decision-box{background:#fef3c7;border-left:5px solid #d97706;padding:12px;margin-top:12px;font-size:13px;font-weight:600;color:#92400e}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .rationale{background:#ecfdf5;border-left:5px solid #10b981;padding:12px;margin-top:12px;font-size:13px;color:#065f46}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .gap-highlight{background:#fce7f3;border-left:5px solid #ec4899;padding:12px 16px;margin:12px 0;font-size:13px}
+    .score{background:#f0fdf4;border-left:5px solid #22c55e;padding:12px 16px;margin:12px 0;font-size:14px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;-webkit-tap-highlight-color:transparent}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .detail-panel .page-ref{font-size:11px;color:#3b82f6;font-weight:600;margin-top:8px}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .branch{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;justify-content:center}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#475569}
+    .legend-dot{width:12px;height:12px;border-radius:3px}
+    .table-responsive{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+    .checklist{background:#f9fafb;border:1px solid #e5e7eb;padding:16px;margin:12px 0;border-radius:6px}
+    .checklist li{list-style:none;padding-left:24px;position:relative;margin-bottom:8px}
+    .checklist li::before{content:'☐';position:absolute;left:0;font-weight:bold;color:#003a8f}
+    .flow-box{background:#f0f4ff;border:2px solid #c7d2fe;padding:16px;border-radius:8px;margin:12px 0;font-size:13px}
+    .example-box{background:#f0fdf4;border-left:4px solid #22c55e;padding:12px;margin:12px 0;font-size:13px}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Applying an Other Exemption <span class="improvement-badge">GAPS IMPROVED</span></h1>
+  <p>Division: Land Revenue Services &bull; Branch: Land Revenue Administration &bull; Enhanced with 12-gap analysis</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#definition">What is Other Exemption?</a>
+    <a href="#q0">Q0 Exemption Type</a>
+    <a href="#q1">Q1 Eligibility Check</a>
+    <a href="#q2">Q2 Application Path</a>
+    <a href="#q3">Q3 Verify Documents</a>
+    <a href="#q4">Q4 Make Decision</a>
+    <a href="#q5">Q5 Apply & Configure</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#gaps-summary" class="gap-link" onclick="showView('spec');setTimeout(function(){document.location.hash='gaps-summary'},100);">📊 Gaps Analysis</a>
+    <a href="#eligibility-criteria" onclick="showView('spec');setTimeout(function(){document.location.hash='eligibility-criteria'},100);">Eligibility Criteria</a>
+    <a href="#documentation-checklist" onclick="showView('spec');setTimeout(function(){document.location.hash='documentation-checklist'},100);">Documentation Guide</a>
+    <a href="#duration-renewal" onclick="showView('spec');setTimeout(function(){document.location.hash='duration-renewal'},100);">Duration & Renewal</a>
+    <a href="#escalation" onclick="showView('spec');setTimeout(function(){document.location.hash='escalation'},100);">Escalation Matrix</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(function(){document.location.hash='definitions'},100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+<div id="questionFlow">
+
+  <!-- OPENING DEFINITION SECTION (GAP 1 ADDRESSED) -->
+
+  <section id="definition">
+    <h2>What is an "Other Exemption"?<span class="improvement-badge">NEW</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#065f46;">✓ Understanding the exemption type is critical. "Other Exemption" is a distinct category that must be clearly differentiated from named exemptions.</p>
+
+```
+  <h3>Definition</h3>
+  <p><strong>"Other Exemption"</strong> means an exemption from land tax that does not fall within the standard named exemption categories (e.g., primary residence exemption, charitable exemption, religious exemption, etc.). It is applied under specific legislative authority when circumstances warrant exemption but don't fit standard categories.</p>
+  
+  <h3>Examples of "Other Exemptions" (QUALIFIES)</h3>
+  <div class="example-box">
+    <ul>
+      <li>Crown land held for specific public purpose not covered by standard exemptions</li>
+      <li>Property used exclusively for emergency services depot or public infrastructure</li>
+      <li>Land held in trust for public benefit under specific legislative authority</li>
+      <li>Property exempted by specific Order-in-Council or ministerial decision</li>
+      <li>Temporary exemption for community benefit project (time-limited)</li>
+    </ul>
+  </div>
+
+  <h3>Examples of What is NOT "Other Exemption" (DOES NOT QUALIFY)</h3>
+  <div class="stop">
+    <ul style="margin:8px 0;margin-left:20px;">
+      <li>Primary residence exemption (use standard Primary Residence procedure)</li>
+      <li>Charitable exemption (use standard Charitable exemption procedure)</li>
+      <li>Religious exemption (use standard Religious exemption procedure)</li>
+      <li>Government owned land (use Crown property procedure)</li>
+      <li>Disability exemption (use standard Disability exemption procedure)</li>
+    </ul>
+  </div>
+
+  <h3>Key Distinction</h3>
+  <p><strong>Named Exemption:</strong> Property fits a pre-defined category with standard eligibility criteria. Example: "Residential property used as principal place of residence."</p>
+  <p><strong>Other Exemption:</strong> Property requires individual assessment against specific legislative criteria. Example: "Crown land held for public benefit under Minister's direction."</p>
+
+  <div class="decision-box">THRESHOLD QUESTION: Does this property fit one of the named exemption types (Primary Residence, Charitable, Religious, Disability, etc.) OR does it require individual assessment as "other"?</div>
+
+  <div class="ref"><strong>Key point:</strong> If you're unsure whether this is "other exemption" vs. named exemption, proceed to Q0 below for explicit decision logic.</div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Property description, applicant claim, legislative context</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (initial categorization)</div>
+    <div class="block"><strong>Decision</strong>: Is this "other exemption" requiring individual assessment? (YES→Q0 / NO→Route to named exemption procedure)</div>
+    <div class="block"><strong>Output</strong>: Confirmed exemption type; proceed to appropriate procedure</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q0 EXEMPTION TYPE DETERMINATION (GAP 1, 3 ADDRESSED) -->
+
+  <section id="q0">
+    <h2>Q0 - Is this claim an "other exemption" or a named exemption type?<span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#d97706;">🔀 ROUTING DECISION: This step determines which procedure applies. Route to wrong procedure = wrong outcome.</p>
+      <ol>
+        <li><strong>Review Property & Claim:</strong> What is the property used for? What exemption is claimed?</li>
+        <li><strong>CHECK DECISION TREE:</strong>
+          <div class="decision-box" style="margin:12px 0;">
+            <p><strong>Does property fit one of these named categories?</strong></p>
+            <ul style="margin:8px 0;margin-left:20px;">
+              <li><strong>IF Primary Residence:</strong> Owner-occupied residential property used as principal place of residence → Use PRIMARY RESIDENCE exemption procedure</li>
+              <li><strong>IF Charitable:</strong> Property used exclusively for charitable purposes → Use CHARITABLE exemption procedure</li>
+              <li><strong>IF Religious:</strong> Property used exclusively for religious purposes → Use RELIGIOUS exemption procedure</li>
+              <li><strong>IF Disability:</strong> Property of person with disability used for disability support → Use DISABILITY exemption procedure</li>
+              <li><strong>IF None of above:</strong> Property requires individual assessment → PROCEED TO Q1 (Other Exemption process)</li>
+            </ul>
+          </div>
+        </li>
+        <li><strong>Document Routing Decision:</strong> Note which category applies or confirm "other exemption" path</li>
+        <li><strong>Decision:</strong> Is this "other exemption" requiring individual assessment?</li>
+      </ol>
+      <div class="stop">CRITICAL: Routing to wrong procedure will cause application rejection and customer frustration. If uncertain, ask supervisor before proceeding.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Property type, claimed exemption category, applicant documentation</div>
+        <div class="block"><strong>Processing responsibility</strong>: Staff (initial routing)</div>
+        <div class="block"><strong>Decision</strong>: Named exemption type OR other exemption? (Route accordingly)</div>
+        <div class="block"><strong>Output</strong>: Confirmed routing; proceed to named exemption procedure OR to Q1 for other exemption process</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q1 ELIGIBILITY VERIFICATION (GAP 2 ADDRESSED) -->
+
+  <section id="q1">
+    <h2>Q1 - Does the applicant and property meet basic eligibility criteria?<span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#065f46;">✓ Before investing time in document collection, verify basic eligibility. If ineligible, reject application immediately.</p>
+      <div class="checklist" style="margin:12px 0;">
+        <ul>
+          <li>Property is within Victorian jurisdiction (SRO has authority)</li>
+          <li>Property is land subject to land tax (not exempt property type like Government-owned)</li>
+          <li>Applicant has standing to claim exemption (owner, registered proprietor, or authorized representative)</li>
+          <li>Application received in correct format (written claim with supporting documents)</li>
+          <li>No previous rejection for same claim without material change in circumstances</li>
+          <li>Property is not subject to active dispute or legal challenge</li>
+        </ul>
+      </div>
+      <div class="decision-box">ELIGIBILITY DECISION: Do ALL six criteria above apply? YES→Proceed to Q2. NO→Reject application with clear explanation.</div>
+      <div class="stop">If rejecting, provide written notice explaining which eligibility criterion was not met and what would be needed to reapply.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Property record, applicant details, claim documentation</div>
+        <div class="block"><strong>Processing responsibility</strong>: Staff (eligibility assessment)</div>
+        <div class="block"><strong>Decision</strong>: All eligibility criteria met? (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Proceed to Q2 if eligible; or reject with explanation if ineligible</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 APPLICATION PATH (GAP 3 ADDRESSED) -->
+
+  <section id="q2">
+    <h2>Q2 - What type of application is this - new, renewal, amendment, or appeal?<span class="improvement-badge">NEW</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#d97706;">📋 APPLICATION PATH DECISION: Each path requires different documentation and process steps. Choose the correct path.</p>
+      <div class="decision-box" style="margin:12px 0;">
+        <p><strong>Which application type applies?</strong></p>
+        <ul style="margin:8px 0;margin-left:20px;">
+          <li><strong>NEW APPLICATION:</strong> Property has never had "other exemption" before. Go to Q3 (collect full documentation)</li>
+          <li><strong>RENEWAL:</strong> Property previously had exemption that expired or requires annual renewal. Go to Q3 (use renewal checklist in documentation section)</li>
+          <li><strong>AMENDMENT:</strong> Property has exemption but circumstances changed (address, use, ownership). Go to Q3 (collect amendment documentation only)</li>
+          <li><strong>APPEAL/CHALLENGE:</strong> Applicant disputes previous decision to grant or deny exemption. Reference APPEALS PROCESS section in Summary view; may require separate procedure</li>
+        </ul>
+      </div>
+      <div class="rationale"><strong>Why path matters:</strong> New applications require full validation. Renewals use abbreviated process. Amendments focus on changed circumstances only. Appeals require review authority, not initial assessment.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Current exemption status, application type indicator</div>
+        <div class="block"><strong>Processing responsibility</strong>: Staff (path determination)</div>
+        <div class="block"><strong>Decision</strong>: Application type - New/Renewal/Amendment/Appeal? (Route accordingly)</div>
+        <div class="block"><strong>Output</strong>: Confirmed application path; proceed to Q3 (or appeal process if applicable)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q3 COLLECT & VERIFY DOCUMENTATION (GAP 4, 5 ADDRESSED) -->
+
+  <section id="q3">
+    <h2>Q3 - Collect and verify all required documentation<span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#065f46;">✓ Use the consolidated documentation checklist below to ensure nothing is missed. Verify each document against listed sources.</p>
+
+```
+  <h3>Required Documentation Checklist</h3>
+  <div class="checklist" style="margin:12px 0;">
+    <ul>
+      <li><strong>Property identification:</strong> Land title (Volume/Folio or Crown Allotment), Property address, Map reference</li>
+      <li><strong>Ownership evidence:</strong> Current Title Register extract, or Land Court document, or Crown Grant</li>
+      <li><strong>Purpose statement:</strong> Written description of how property is currently used</li>
+      <li><strong>Legislative basis:</strong> Reference to Act/Regulation/Order under which exemption is claimed</li>
+      <li><strong>Supporting evidence:</strong> Documents proving intended use (lease, management plan, council approval, etc.)</li>
+      <li><strong>Applicant declaration:</strong> Statutory declaration signed by applicant confirming accuracy of claim</li>
+      <li><strong>Contact details:</strong> Applicant name, address, phone, email for correspondence</li>
+    </ul>
+  </div>
+
+  <h3>Verification Methodology (By Document Type)</h3>
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>Document</th>
+          <th>Verification Method</th>
+          <th>Source</th>
+          <th>How to Verify</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Land Title</td>
+          <td>Title Register check</td>
+          <td>Land Titles Office / Landata</td>
+          <td>Search property on Landata; verify V/F details match claim</td>
+        </tr>
+        <tr>
+          <td>Ownership</td>
+          <td>Title inspection</td>
+          <td>Land Titles Office</td>
+          <td>Confirm registered proprietor name matches applicant</td>
+        </tr>
+        <tr>
+          <td>Property Use</td>
+          <td>Site inspection / Council records</td>
+          <td>Valuation data, Council records, Site visit</td>
+          <td>Verify current land use matches claimed exemption purpose</td>
+        </tr>
+        <tr>
+          <td>Legislative Reference</td>
+          <td>Legislative validation</td>
+          <td>Legislation library</td>
+          <td>Confirm cited Act/Regulation section actually provides for claimed exemption</td>
+        </tr>
+        <tr>
+          <td>Supporting Evidence</td>
+          <td>Document authentication</td>
+          <td>Issuing authority</td>
+          <td>Contact issuing body (Council, lease holder, etc.) to confirm document authenticity</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ol>
+    <li><strong>Collect All Documents:</strong> Use checklist above. Request any missing documents in writing with 14-day deadline.</li>
+    <li><strong>Verify Each Document:</strong> Use verification methodology above. Document verification results.</li>
+    <li><strong>Record Verification:</strong> Note: verification date, method used, source contacted, result (verified/not verified/unable to verify)</li>
+    <li><strong>Assess Verification Outcome:</strong>
+      <div class="decision-box" style="margin:8px 0;">
+        <p><strong>IF All verified:</strong> Proceed to Q4 (decision)</p>
+        <p><strong>IF Some unverifiable:</strong> Request applicant clarification. If not resolved, escalate (see Escalation Matrix)</p>
+        <p><strong>IF Documentation fraudulent:</strong> Reject immediately. Consider referring to investigator.</p>
+      </div>
+    </li>
+    <li><strong>Decision:</strong> Is documentation complete and verified?</li>
+  </ol>
+  <div class="stop">Do NOT proceed to Q4 if documentation is incomplete or unverified. Weak documentation leads to weak decisions and potential audit findings.</div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Applicant documents, land title information, supporting evidence</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (collection and verification), Third-party sources (verification)</div>
+    <div class="block"><strong>Decision</strong>: Documentation complete and verified? (YES/NO)</div>
+    <div class="block"><strong>Output</strong>: Verified documentation set; proceed to Q4 decision-making; or request additional info/escalate</div>
+  </div>
+</div>
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Documentation Requirements by Application Type (NEW / RENEWAL / AMENDMENT)</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+  <h4>NEW APPLICATION - Full Documentation Required</h4>
+  <p>Collect all seven items from main checklist above. Verify each thoroughly.</p>
+  <h4>RENEWAL APPLICATION - Abbreviated Checklist</h4>
+  <ul>
+    <li>Renewal application form (standard template)</li>
+    <li>Current Title Register extract (to confirm continued ownership)</li>
+    <li>Updated property use statement (confirm use hasn't changed inappropriately)</li>
+    <li>Statutory declaration (re-affirming continued eligibility)</li>
+  </ul>
+  <p><strong>Skip from main checklist:</strong> You don't need to re-verify items already verified in original application unless circumstances have changed.</p>
+  <h4>AMENDMENT APPLICATION - Change Documentation Only</h4>
+  <ul>
+    <li>Amendment application form (explaining what changed)</li>
+    <li>Documentation of change (e.g., new title if ownership changed, lease if use changed)</li>
+    <li>New statutory declaration (covering amended details only)</li>
+  </ul>
+  <p><strong>Skip from main checklist:</strong> Items that haven't changed don't need re-verification.</p>
+</div>
+```
+
+  </section>
+
+  <!-- Q4 EXEMPTION DECISION (HIGH PRIORITY) -->
+
+  <section id="q4">
+    <h2>Q4 - Make the exemption decision - approve or reject<span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#065f46;">✓ Based on verified documentation and statutory criteria, determine if exemption should be granted or denied.</p>
+      <ol>
+        <li><strong>Review Decision Criteria:</strong> The following questions must ALL be answered YES for approval:
+          <div class="checklist" style="margin:8px 0;">
+            <ul>
+              <li>Is there clear legislative basis for exemption (Act/Regulation/Order)?</li>
+              <li>Does applicant meet all conditions of that legislation?</li>
+              <li>Is property actually used for claimed exempt purpose?</li>
+              <li>Is exemption consistent with prior decisions on similar cases?</li>
+              <li>Is there no public policy reason to deny exemption?</li>
+            </ul>
+          </div>
+        </li>
+        <li><strong>Decision Logic:</strong>
+          <div class="decision-box" style="margin:12px 0;">
+            <p><strong>ALL questions above = YES:</strong> APPROVE exemption. Issue notice of exemption grant.</p>
+            <p><strong>ONE or more = NO:</strong> REJECT exemption. Issue notice of rejection with reasons.</p>
+          </div>
+        </li>
+        <li><strong>Prepare Written Decision:</strong> Whether approving or rejecting, provide written notice including:
+          <ul style="margin:8px 0;">
+            <li>Decision (approved/rejected)</li>
+            <li>Effective date (if approved)</li>
+            <li>Reasons for decision (legal and factual basis)</li>
+            <li>Duration of exemption (if approved)</li>
+            <li>Renewal requirements (if approved)</li>
+            <li>Appeal/review process (if rejected)</li>
+          </ul>
+        </li>
+        <li><strong>Escalation for Complex Cases:</strong> If ANY of the five criteria above is unclear or borderline, escalate to supervisor before finalizing decision (see Escalation Matrix)</li>
+        <li><strong>Decision:</strong> Has exemption decision been made and documented?</li>
+      </ol>
+      <div class="stop">Do NOT approve exemption if all five criteria are not clearly met. When in doubt, escalate - don't guess.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Verified documentation, statutory criteria, prior decisions on similar cases</div>
+        <div class="block"><strong>Processing responsibility</strong>: Staff (initial assessment), Supervisor/Manager (complex cases - escalation)</div>
+        <div class="block"><strong>Decision</strong>: Exemption approve or reject based on five criteria? (APPROVE/REJECT)</div>
+        <div class="block"><strong>Output</strong>: Written decision notice; proceed to Q5 if approved; or communicate rejection</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q5 APPLY & CONFIGURE (GAP 8, 12 ADDRESSED) -->
+
+  <section id="q5">
+    <h2>Q5 - Apply exemption in TaxNet and communicate to customer<span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;color:#065f46;">✓ After approval, apply exemption to system and notify customer of effective date and renewal requirements.</p>
+      <ol>
+        <li><strong>Configure in TaxNet:</strong>
+          <ul style="margin:8px 0;">
+            <li>Access TaxNet property record</li>
+            <li>Navigate to Exemptions section</li>
+            <li>Add new exemption: Type = "Other Exemption", Category = [specific type], Effective Date = [approval date]</li>
+            <li>Set expiry date based on duration table (see Summary view)</li>
+            <li>Record renewal trigger date (typically 30 days before expiry)</li>
+            <li>Save and verify exemption applies to current assessment</li>
+          </ul>
+        </li>
+        <li><strong>Calculate Impact:</strong> TaxNet will recalculate land tax excluding exempt land. Verify result is reasonable.</li>
+        <li><strong>Issue Updated Assessment:</strong> Generate and mail updated assessment showing exemption applied (if property was previously assessable)</li>
+        <li><strong>Communicate with Customer:</strong> Send written notice including:
+          <ul style="margin:8px 0;">
+            <li>Decision to grant exemption</li>
+            <li>Effective date (usually date of approval)</li>
+            <li>Duration of exemption (see Duration table)</li>
+            <li>Renewal requirements and timeline</li>
+            <li>Contact details for questions</li>
+          </ul>
+        </li>
+        <li><strong>Schedule Renewal:</strong> Add to calendar: Renewal review to occur 30 days before exemption expiry date</li>
+        <li><strong>Record-Keeping:</strong> File decision notice, verification documents, and TaxNet configuration snapshot (see Record-Keeping Checklist in Summary)</li>
+        <li><strong>Decision:</strong> Has exemption been applied in TaxNet and customer notified?</li>
+      </ol>
+      <div class="stop">CRITICAL: Exemption is not effective until BOTH (1) TaxNet configured AND (2) Customer notified. Don't do one without the other.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Approved exemption decision, property record, customer contact details</div>
+        <div class="block"><strong>Processing responsibility</strong>: Staff (TaxNet configuration and customer communication), TaxNet system (assessment recalculation)</div>
+        <div class="block"><strong>Decision</strong>: Exemption applied in TaxNet and customer notified? (YES/NO)</div>
+        <div class="block"><strong>Output</strong>: Exemption active in system; customer informed; renewal scheduled; process complete</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION VIEW -->
+
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction - Other Exemption Application Workflow</h2>
+    <div class="flow">
+      <div class="flow-title">Q0-Q5 Exemption Application Process</div>
+      <div class="node n-amber">Other Exemption Claim Received</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q0: Is This "Other" Or Named Exemption?</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Exemption Type?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div><div class="node n-gray" style="min-width:140px;">Named: Route Out</div></div>
+        <div><div class="node n-blue" style="min-width:140px;">Other: Continue</div></div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q1: Verify Eligibility</div>
+      <div class="arr"></div>
+      <div class="node n-amber">All Criteria Met?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div><div class="node n-gray" style="min-width:140px;">NO: Reject</div></div>
+        <div><div class="node n-blue" style="min-width:140px;">YES: Continue</div></div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q2: Identify Application Path (New/Renewal/Amendment)</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q3: Collect & Verify Documentation</div>
+      <div class="arr"></div>
+      <div class="node n-amber">Documentation Complete?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div><div class="node n-gray" style="min-width:140px;">NO: Request/Escalate</div></div>
+        <div><div class="node n-blue" style="min-width:140px;">YES: Continue</div></div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q4: Make Exemption Decision</div>
+      <div class="arr"></div>
+      <div class="node n-amber">All Criteria Met?</div>
+      <div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+        <div><div class="node n-gray" style="min-width:140px;">NO: Reject</div></div>
+        <div><div class="node n-blue" style="min-width:140px;">YES: Approve</div></div>
+      </div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q5: Configure TaxNet & Notify Customer</div>
+      <div class="arr"></div>
+      <div class="node n-gray">Exemption Active; Customer Notified</div>
+      <div style="margin-top:24px;"></div>
+      <div class="flow-title" style="font-size:16px;">Key Systems Involved</div>
+      <div class="branch">
+        <div class="node n-blue" style="font-size:11px">TaxNet</div>
+        <div class="node n-amber" style="font-size:11px">Land Titles</div>
+        <div class="node n-amber" style="font-size:11px">Verification Sources</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> Staff Action</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> Decision Point</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> System Update</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SUMMARY & REVIEW VIEW -->
+
+<div class="specOnly">
+
+  <section class="summary-section" id="gaps-summary">
+    <h2>📊 Gaps Analysis Summary (12 Gaps Addressed)</h2>
+
+```
+<div class="gap-highlight">
+  <strong>GAP 1 (HIGH): Vague "Other Exemption" Definition</strong><br>
+  <strong>Fix:</strong> Added opening definition section with clear examples of what qualifies vs. doesn't qualify, and distinction from named exemptions
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 2 (HIGH): No Explicit Eligibility Decision Logic</strong><br>
+  <strong>Fix:</strong> Added Q1 with explicit eligibility checklist (6 criteria) - all must be YES for approval
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 3 (HIGH): Multiple Application Paths Not Addressed</strong><br>
+  <strong>Fix:</strong> Added Q2 showing four paths: New Application, Renewal, Amendment, Appeal (with routing guidance)
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 4 (MEDIUM): Documentation Requirements Scattered</strong><br>
+  <strong>Fix:</strong> Added consolidated documentation checklist in Q3 with 7 required document categories
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 5 (MEDIUM): Verification Process Undefined</strong><br>
+  <strong>Fix:</strong> Added verification table in Q3 showing method, source, and how to verify for each document type
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 6 (MEDIUM): Duration and Renewal Unclear</strong><br>
+  <strong>Fix:</strong> Added Duration & Renewal table in Summary view showing how long exemptions last and renewal triggers
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 7 (MEDIUM): No Escalation Path for Complex Cases</strong><br>
+  <strong>Fix:</strong> Added escalation matrix in Summary view showing when/how to escalate and who decides
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 8 (MEDIUM): Exemption Withdrawal/Revocation Missing</strong><br>
+  <strong>Fix:</strong> Added "Exemption Withdrawal Process" section in Summary view
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 9 (LOW): Record-Keeping Requirements Not Explicit</strong><br>
+  <strong>Fix:</strong> Added Record-Keeping Checklist in Summary view showing what to keep and retention periods
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 10 (LOW): No Error Handling Guide</strong><br>
+  <strong>Fix:</strong> Added Common Issues & Troubleshooting section in Summary view
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 11 (LOW): Appeal/Review Process Not Documented</strong><br>
+  <strong>Fix:</strong> Added Appeals Process section in Summary view with reference to separate appeal procedure
+</div>
+
+<div class="gap-highlight">
+  <strong>GAP 12 (LOW): TaxNet Configuration Not Mentioned</strong><br>
+  <strong>Fix:</strong> Added explicit TaxNet configuration steps in Q5 with field-by-field guidance
+</div>
+```
+
+  </section>
+
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul>
+      <li>Six-step procedure (Q0-Q5) for assessing and applying "other exemptions" from land tax</li>
+      <li>Routing gate (Q0) ensures correct exemption type - prevents applications going to wrong procedure</li>
+      <li>Eligibility check (Q1) with explicit six-point criteria - all must pass</li>
+      <li>Application path determination (Q2) - different process for new vs. renewal vs. amendment vs. appeal</li>
+      <li>Comprehensive documentation collection and verification (Q3) with verification table</li>
+      <li>Explicit decision criteria (Q4) - five-point test for approval vs. rejection</li>
+      <li>TaxNet configuration and customer communication (Q5) - makes exemption effective in system</li>
+      <li>Supporting resources: Duration/renewal table, escalation matrix, record-keeping checklist, appeals process</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul>
+      <li><strong>Division:</strong> Land Revenue Services</li>
+      <li><strong>Branch:</strong> Land Revenue Administration</li>
+      <li><strong>Gaps Analysis Applied:</strong> April 2026</li>
+      <li><strong>System of Record:</strong> Lotus Notes Policies and Procedures Database</li>
+      <li><strong>Legislative Authority:</strong> Land Tax Act 2005; Taxation Administration Act 1997</li>
+    </ul>
+  </section>
+
+  <section class="summary-section" id="eligibility-criteria">
+    <h2>Eligibility Criteria - Q1 Detailed Explanation</h2>
+    <p>These six criteria must ALL be satisfied. If even one fails, application must be rejected with written explanation.</p>
+
+```
+<h3>1. Victorian Jurisdiction</h3>
+<p><strong>Requirement:</strong> Property must be located within Victoria and subject to Victorian land tax law. SRO cannot grant exemptions for property outside jurisdiction.</p>
+<p><strong>How to Verify:</strong> Check property address against State boundaries. Verify property is Victorian land tax assessable property (not NSW, SA, etc.).</p>
+
+<h3>2. Land Subject to Tax</h3>
+<p><strong>Requirement:</strong> Property must be land (not improvements) that is ordinarily subject to land tax. Some land types are automatically exempt by law (e.g., certain Crown land) and don't require "other exemption" application.</p>
+<p><strong>How to Verify:</strong> Check valuation record. Confirm property has been assessed for land tax in current or prior year (not automatically exempt category).</p>
+
+<h3>3. Applicant Standing</h3>
+<p><strong>Requirement:</strong> Applicant must have legal standing - either registered proprietor (owner), or authorized representative with documented power of attorney.</p>
+<p><strong>How to Verify:</strong> Check Land Titles Office title register. Confirm applicant name matches registered proprietor OR review power of attorney document if represented.</p>
+
+<h3>4. Correct Application Format</h3>
+<p><strong>Requirement:</strong> Application must be in writing with supporting documents. Verbal requests or incomplete applications don't proceed.</p>
+<p><strong>How to Verify:</strong> Review application submission. Ensure written claim + supporting docs provided. If incomplete, request missing items in writing.</p>
+
+<h3>5. No Prior Rejection Without Material Change</h3>
+<p><strong>Requirement:</strong> If exemption was previously rejected, don't re-process identical claim. Only accept re-application if circumstances have materially changed.</p>
+<p><strong>How to Verify:</strong> Search exemption history for property. If previous rejection found, compare new application to prior rejection. If unchanged, reject immediately as frivolous.</p>
+
+<h3>6. No Active Dispute</h3>
+<p><strong>Requirement:</strong> Property cannot be subject to active legal dispute, court challenge, or unresolved dispute notice.</p>
+<p><strong>How to Verify:</strong> Check SRO dispute register. Contact Land Revenue Branch for any known legal proceedings. If dispute found, hold application pending resolution.</p>
+```
+
+  </section>
+
+  <section class="summary-section" id="documentation-checklist">
+    <h2>Documentation Guide - Complete Reference</h2>
+    <p><strong>Use this guide alongside Q3 in the Staff view. This provides detailed guidance on each required document.</strong></p>
+
+```
+<h3>1. Property Identification Documents</h3>
+<ul>
+  <li><strong>Land Title:</strong> Obtain current title from Landata or Land Titles Office. Required fields: Volume/Folio, Crown Allotment, or Parish/Lot number.</li>
+  <li><strong>Property Address:</strong> Full street address, suburb, postcode. Note: must match TaxNet assessment address.</li>
+  <li><strong>Map Reference:</strong> If available, provide cadastral map coordinates or council map reference.</li>
+</ul>
+
+<h3>2. Ownership Verification</h3>
+<ul>
+  <li><strong>Title Register Extract:</strong> Current title page from Land Titles Office. Must show registered proprietor name matching applicant.</li>
+  <li><strong>If Crown Land:</strong> Provide Crown Grant or Crown Land Lease document instead of private title.</li>
+  <li><strong>If Trustees/Company:</strong> Provide corporate title and evidence of authority (board resolution, etc.).</li>
+</ul>
+
+<h3>3. Property Use Statement</h3>
+<ul>
+  <li><strong>Written Description:</strong> 1-2 page statement describing how property is currently used. Example: "Property is used exclusively as community center providing free services to local residents."</li>
+  <li><strong>Supporting Lease/Agreement:</strong> If property is leased, provide lease showing intended use.</li>
+  <li><strong>Management Plan:</strong> If required by exemption type, provide management/operating plan for the property.</li>
+</ul>
+
+<h3>4. Legislative Basis</h3>
+<ul>
+  <li><strong>Reference to Legislation:</strong> Applicant must cite specific Act, Regulation section, or Order-in-Council. Example: "Exemption claimed under Land Tax Act 2005 s[XX] for Crown land used for public benefit."</li>
+  <li><strong>Verification:</strong> You must independently verify cited legislation actually allows such exemption. Check legislation library.</li>
+</ul>
+
+<h3>5. Supporting Evidence</h3>
+<ul>
+  <li><strong>Council Approval:</strong> If needed, provide council letter approving community use of property.</li>
+  <li><strong>Insurance/License:</strong> If property is operated, provide public liability insurance policy or license.</li>
+  <li><strong>Financial Evidence:</strong> For charitable use, provide audited accounts or charity registration.</li>
+  <li><strong>Ministerial Authority:</strong> If exemption granted by order, provide copy of the ministerial decision or Order-in-Council.</li>
+</ul>
+
+<h3>6. Applicant Statutory Declaration</h3>
+<ul>
+  <li><strong>Format:</strong> Must be signed statutory declaration (not just letter). Signed before Justice of the Peace or lawyer.</li>
+  <li><strong>Content:</strong> Declaration must state all facts in the application are true and correct to applicant's knowledge.</li>
+  <li><strong>Date:</strong> Must be recent (within last 3 months). Older declarations may need to be updated.</li>
+</ul>
+
+<h3>7. Contact Details</h3>
+<ul>
+  <li><strong>Name, Address:</strong> Full contact details for applicant or representative.</li>
+  <li><strong>Phone, Email:</strong> Best contact method. Ensure provided details are current and monitored.</li>
+  <li><strong>Authorization:</strong> If representative applying, provide letter authorizing them to act.</li>
+</ul>
+```
+
+  </section>
+
+  <section class="summary-section" id="duration-renewal">
+    <h2>Duration & Renewal - How Long Exemptions Last</h2>
+    <p>Different "other exemption" types have different durations. Use this table to determine renewal timing.</p>
+
+```
+<div class="table-responsive">
+  <table>
+    <thead>
+      <tr>
+        <th>Exemption Type</th>
+        <th>Duration</th>
+        <th>Renewal Trigger</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Crown Land (Public Purpose)</td>
+        <td>Indefinite (until Crown status changes)</td>
+        <td>Annual verification recommended</td>
+        <td>Continues until property transferred out of Crown ownership</td>
+      </tr>
+      <tr>
+        <td>Emergency Services</td>
+        <td>Indefinite (while in use)</td>
+        <td>Review if use changes</td>
+        <td>Continues while property used for emergency services</td>
+      </tr>
+      <tr>
+        <td>Community Benefit (Temporary)</td>
+        <td>2-5 years (as approved)</td>
+        <td>30 days before expiry date</td>
+        <td>Requires renewal application to extend</td>
+      </tr>
+      <tr>
+        <td>Order-in-Council</td>
+        <td>As specified in Order</td>
+        <td>As specified in Order</td>
+        <td>Check Order document for specific duration</td>
+      </tr>
+      <tr>
+        <td>Ministerial Direction</td>
+        <td>As specified in direction</td>
+        <td>As specified in direction</td>
+        <td>Review direction document for renewal requirements</td>
+      </tr>
+      <tr>
+        <td>Transitional Exemption</td>
+        <td>1 year (renewable)</td>
+        <td>30 days before expiry</td>
+        <td>Designed as temporary; requires annual renewal application</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Renewal Process</h3>
+<ol>
+  <li><strong>Trigger:</strong> 30 days before exemption expiry date, send renewal notice to property owner</li>
+  <li><strong>Applicant Response:</strong> Owner must submit renewal application (see Q2 Renewal path for documentation)</li>
+  <li><strong>Timeline:</strong> Renewal decision must be made BEFORE expiry date to avoid assessment gap</li>
+  <li><strong>Consequence:</strong> If renewal not processed by expiry, exemption ends and property becomes assessable again</li>
+</ol>
+```
+
+  </section>
+
+  <section class="summary-section" id="escalation">
+    <h2>Escalation Matrix - Complex Cases</h2>
+    <p>Use this matrix to determine when and how to escalate difficult decisions.</p>
+
+```
+<div class="table-responsive">
+  <table>
+    <thead>
+      <tr style="background:#003a8f;color:white;">
+        <th>Issue Type</th>
+        <th>When to Escalate</th>
+        <th>Escalate To</th>
+        <th>Expected Decision Timeline</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Eligibility Borderline</td>
+        <td>If one or more eligibility criteria (Q1) is unclear or arguable</td>
+        <td>Supervisor / Senior Officer</td>
+        <td>5 business days</td>
+      </tr>
+      <tr>
+        <td>Documentation Unverifiable</td>
+        <td>If supporting evidence cannot be verified despite reasonable effort</td>
+        <td>Land Revenue Manager</td>
+        <td>10 business days (may require applicant clarification)</td>
+      </tr>
+      <tr>
+        <td>Legislative Ambiguity</td>
+        <td>If legislative basis for claimed exemption is unclear or contested</td>
+        <td>Legal Services or Knowledge Management</td>
+        <td>10 business days</td>
+      </tr>
+      <tr>
+        <td>Precedent Conflict</td>
+        <td>If decision conflicts with prior similar cases</td>
+        <td>Land Revenue Manager</td>
+        <td>7 business days (consistency review)</td>
+      </tr>
+      <tr>
+        <td>Policy Implications</td>
+        <td>If exemption raises significant policy or equity issues</td>
+        <td>Division Manager (Strategic Development & Customer Engagement)</td>
+        <td>14 business days</td>
+      </tr>
+      <tr>
+        <td>Fraudulent Documentation</td>
+        <td>If documents appear forged, falsified, or fraudulent</td>
+        <td>Investigation Unit + Legal Services</td>
+        <td>Immediate + 20 business days</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+  </section>
+
+  <section class="summary-section" id="record-keeping">
+    <h2>Record-Keeping Checklist - What to Keep & How Long</h2>
+    <p>Maintain complete records for every exemption decision. These form audit trail and support future review/renewal.</p>
+
+```
+<div class="checklist" style="margin:12px 0;">
+  <ul>
+    <li><strong>Decision Notice (KEEP 7 years):</strong> Written approval/rejection decision with reasons. File in correspondence folder.</li>
+    <li><strong>Application Form & Documents (KEEP 7 years):</strong> Original submitted application and all supporting documents. Keep in order received.</li>
+    <li><strong>Verification Log (KEEP 7 years):</strong> Document showing verification method, source, and result for each document. Essential for audit trail.</li>
+    <li><strong>Title Register Copy (KEEP duration of exemption + 3 years):</strong> Dated title copy at time of approval. Proves ownership at that date.</li>
+    <li><strong>Correspondence (KEEP 7 years):</strong> All emails, letters, documents exchanged with applicant, verifiers, other agencies.</li>
+    <li><strong>Exemption Configuration (KEEP duration of exemption + 3 years):</strong> Snapshot of TaxNet exemption setup (screenshot of exemption fields, effective date, expiry date).</li>
+    <li><strong>Escalation Documentation (KEEP 7 years):</strong> If case escalated, keep escalation request, supervisor notes, escalation decision.</li>
+    <li><strong>Renewal Documents (KEEP each renewal cycle):</strong> For renewed exemptions, keep each renewal application and decision separately.</li>
+  </ul>
+</div>
+
+<h3>Storage Location</h3>
+<ul>
+  <li><strong>Physical Files:</strong> Land Revenue correspondence files, indexed by property address/V/F number</li>
+  <li><strong>Electronic Files:</strong> Shared drive exemptions folder, organized by financial year and property</li>
+  <li><strong>TaxNet History:</strong> TaxNet maintains audit trail of all exemption configuration changes - accessible via admin function</li>
+</ul>
+```
+
+  </section>
+
+  <section class="summary-section" id="exemption-withdrawal">
+    <h2>Exemption Withdrawal/Revocation Process (GAP 8 Addressed)</h2>
+    <p>Describes how to withdraw or revoke an exemption that was previously granted.</p>
+
+```
+<h3>When Exemption Must be Withdrawn</h3>
+<ul>
+  <li>Property no longer meets exemption conditions (e.g., community use ceases, changed to private use)</li>
+  <li>Ownership transferred and new owner doesn't qualify</li>
+  <li>Exemption was granted in error (e.g., fraudulent documentation later discovered)</li>
+  <li>Legislative basis for exemption no longer applies</li>
+  <li>Exemption duration has expired and not renewed</li>
+</ul>
+
+<h3>Revocation Process</h3>
+<ol>
+  <li><strong>Identify Need for Withdrawal:</strong> Review exemption status periodically. Identify if conditions still met.</li>
+  <li><strong>Notify Property Owner:</strong> Send written notice to registered proprietor (30 days advance notice if possible) explaining:
+    <ul>
+      <li>Reason for revocation</li>
+      <li>Effective date of revocation</li>
+      <li>Opportunity for owner to respond (14 days)</li>
+    </ul>
+  </li>
+  <li><strong>Consider Response:</strong> If owner disputes revocation, escalate to manager for decision</li>
+  <li><strong>Issue Revocation Decision:</strong> Provide written final decision with reasons</li>
+  <li><strong>Update TaxNet:</strong> Remove exemption from TaxNet, set expiry date to revocation date</li>
+  <li><strong>Generate New Assessment:</strong> Property becomes assessable again. Issue updated assessment showing land tax now due.</li>
+  <li><strong>Record Documentation:</strong> Keep revocation notice, owner response (if any), and decision file with exemption records</li>
+</ol>
+```
+
+  </section>
+
+  <section class="summary-section" id="appeals">
+    <h2>Appeals Process - Applicant Disputes Decision</h2>
+    <p>If applicant disagrees with exemption decision (approval or rejection), they have right to appeal.</p>
+
+```
+<h3>Applicant Rights</h3>
+<ul>
+  <li>Right to appeal decision within 60 days of decision notice</li>
+  <li>Right to have appeal reviewed by higher authority than original decision maker</li>
+  <li>Right to provide additional evidence or argument in appeal</li>
+  <li>Right to receive written decision on appeal with reasons</li>
+</ul>
+
+<h3>Escalation for Appeals</h3>
+<p><strong>Note:</strong> Appeals process is documented in separate procedure "Appeals and Reviews - Exemption Decisions" procedure. Refer applicant to that procedure for steps and timelines.</p>
+
+<h3>Staff Role in Appeals</h3>
+<ul>
+  <li>When receiving appeal, acknowledge in writing within 5 business days</li>
+  <li>Provide original decision file and all documentation to appeals reviewer</li>
+  <li>Do NOT make new decision on appeal - escalate to appropriate authority</li>
+  <li>Cooperate with appeals team to provide evidence or clarification if requested</li>
+</ul>
+```
+
+  </section>
+
+  <section class="summary-section" id="common-issues">
+    <h2>Common Issues & Troubleshooting (GAP 10 Addressed)</h2>
+
+```
+<h3>Issue 1: Applicant Can't Provide Required Documents</h3>
+<p><strong>Situation:</strong> Applicant has submitted application but is missing one or more required documents (e.g., statutory declaration, title certificate).</p>
+<p><strong>Solution:</strong> Issue written request for missing documents with 14-day deadline. Specify which documents needed and why. If deadline passes without response, reject application with notice of reasons for rejection.</p>
+
+<h3>Issue 2: Document Verification Fails</h3>
+<p><strong>Situation:</strong> You attempt to verify supporting evidence (e.g., council approval letter) but the issuing body cannot confirm its authenticity.</p>
+<p><strong>Solution:</strong> Request applicant clarify or re-submit document from original source. If still unverifiable, escalate to manager. Do NOT approve exemption on weak/unverified documentation.</p>
+
+<h3>Issue 3: Legislative Reference Not Found</h3>
+<p><strong>Situation:</strong> Applicant cites Act/Regulation section supporting exemption, but you search legislation and can't find that section or it doesn't say what applicant claims.</p>
+<p><strong>Solution:</strong> Escalate to Legal Services or Knowledge Management for legislative interpretation. Do NOT approve unless satisfied statutory basis exists.</p>
+
+<h3>Issue 4: Property Previously Rejected for Same Exemption</h3>
+<p><strong>Situation:</strong> You find record that same property was previously rejected for exemption without material change in circumstances.</p>
+<p><strong>Solution:</strong> Reject immediately. Send written notice citing prior rejection decision and explaining no material change has occurred. Applicant can appeal if they disagree.</p>
+
+<h3>Issue 5: Exemption Expired - Customer Wants Retroactive Renewal</h3>
+<p><strong>Situation:</strong> Exemption expired 6 months ago; customer only now applies for renewal.</p>
+<p><strong>Solution:</strong> Process renewal application immediately. If approved, backdated renewal possible only if property use continued unchanged and circumstances justify. Contact manager for guidance on backdating.</p>
+
+<h3>Issue 6: Conflicting Information in Application</h3>
+<p><strong>Situation:</strong> Applicant's written statement about property use conflicts with supporting documentation or council records.</p>
+<p><strong>Solution:</strong> Request clarification in writing. If conflict unresolved, escalate to manager. Site inspection may be needed to verify actual current use.</p>
+```
+
+  </section>
+
+  <section class="summary-section" id="definitions">
+    <h2>Definitions and Acronyms</h2>
+    <ul style="font-size:13px;">
+      <li><strong>Other Exemption</strong> - Exemption from land tax that doesn't fit standard named categories; requires individual legislative assessment</li>
+      <li><strong>Exemption</strong> - Freedom from land tax obligation on specified property, granted under legislative authority</li>
+      <li><strong>Exemption Duration</strong> - Period for which exemption remains effective; may be indefinite or time-limited</li>
+      <li><strong>Renewal</strong> - Process of extending exemption beyond initial expiry date; requires new application</li>
+      <li><strong>Revocation</strong> - Cancellation of previously granted exemption; property becomes assessable again</li>
+      <li><strong>Amendment</strong> - Change to existing exemption (e.g., ownership change, use change); less intensive than new application</li>
+      <li><strong>Statutory Declaration</strong> - Formal sworn statement by applicant; must be signed before JP or lawyer</li>
+      <li><strong>Legislative Authority</strong> - Act/Regulation/Order that permits exemption; must be cited in application</li>
+      <li><strong>Land Tax</strong> - Annual tax levied on land valued over threshold; calculated on unimproved value</li>
+      <li><strong>TaxNet</strong> - SRO's system for managing land tax assessments, exemptions, and billing</li>
+      <li><strong>V/F</strong> - Volume/Folio number; unique identifier for registered land title</li>
+      <li><strong>Landata</strong> - Public land title search tool; provides current title register information</li>
+      <li><strong>Registered Proprietor</strong> - Legal owner of land as shown in Land Titles Office register</li>
+      <li><strong>Crown Land</strong> - Land owned by State of Victoria; automatically exempt in most cases</li>
+      <li><strong>Public Benefit</strong> - Use of property for benefit to public (not private); requirement for many exemptions</li>
+    </ul>
+  </section>
+
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(function(e){e.style.display='none'});
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(function(e){e.style.display='block'});document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(function(e){e.style.display='block'});document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

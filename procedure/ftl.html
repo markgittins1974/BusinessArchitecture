@@ -1,0 +1,811 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>First Time Liability - IMPROVED</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .improvement-badge{display:inline-block;background:#fbbf24;color:#78350f;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700;margin-left:12px}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .sidebar a.gap-link{color:#ec4899;font-weight:600}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    ul,ol{margin-left:22px}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .decision-box{background:#fef3c7;border-left:5px solid #d97706;padding:12px;margin-top:12px;font-size:13px;font-weight:600;color:#92400e}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .gap-highlight{background:#fce7f3;border-left:5px solid #ec4899;padding:12px 16px;margin:12px 0;font-size:13px}
+    .score{background:#f0fdf4;border-left:5px solid #22c55e;padding:12px 16px;margin:12px 0;font-size:14px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;-webkit-tap-highlight-color:transparent}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .branch{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;justify-content:center}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#475569}
+    .legend-dot{width:12px;height:12px;border-radius:3px}
+    .table-responsive{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+    .checklist{background:#f9fafb;border:1px solid #e5e7eb;padding:16px;margin:12px 0;border-radius:6px}
+    .checklist li{list-style:none;padding-left:24px;position:relative;margin-bottom:8px}
+    .checklist li::before{content:'☐';position:absolute;left:0;font-weight:bold;color:#003a8f}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>First Time Liability <span class="improvement-badge">GAPS IMPROVED</span></h1>
+  <p>Division: Land Revenue Administration &bull; Branch: Land Information Management &bull; June 2024 &bull; Enhanced with 14-gap analysis</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#definition">FTL Definition</a>
+    <a href="#q0">Q0 FTL Source</a>
+    <a href="#q1">Q1 Identify FTL</a>
+    <a href="#q2">Q2 Ready?</a>
+    <a href="#q3">Q3 Investigation</a>
+    <a href="#q4">Q4 Address</a>
+    <a href="#q5">Q5 PPR</a>
+    <a href="#q6">Q6 Duplicates</a>
+    <a href="#q7">Q7 Recalculate</a>
+    <a href="#q8">Q8 Complete</a>
+    <a href="#q9">Q9 Assessment</a>
+    <a href="#q10">Q10 Deceased</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#gaps-summary" class="gap-link" onclick="showView('spec');setTimeout(function(){document.location.hash='gaps-summary'},100);">📊 Gaps Analysis</a>
+    <a href="#retro-period" onclick="showView('spec');setTimeout(function(){document.location.hash='retro-period'},100);">Retrospective Period</a>
+    <a href="#data-sources" onclick="showView('spec');setTimeout(function(){document.location.hash='data-sources'},100);">Data Sources</a>
+    <a href="#escalation" onclick="showView('spec');setTimeout(function(){document.location.hash='escalation'},100);">Escalation Matrix</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(function(){document.location.hash='definitions'},100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+<div id="questionFlow">
+
+  <!-- DEFINITION SECTION -->
+
+  <section id="definition">
+    <h2>What is First Time Liability (FTL)? <span class="improvement-badge">NEW</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;">First Time Liability occurs when a customer becomes liable for land tax for the first time - they had NO prior assessment for that property in the retrospective period (current + 4 prior years).</p>
+
+```
+  <h3>Four FTL Sources</h3>
+  <ul style="font-size:13px;">
+    <li><strong>Programmatic Creation:</strong> Automated data cleansing identifies new liability</li>
+    <li><strong>Data Matching:</strong> Address/ownership reconciliation finds missing record</li>
+    <li><strong>Valuation Change:</strong> Property value exceeds exemption threshold</li>
+    <li><strong>Staff-Initiated:</strong> Customer reports new ownership or missing assessment</li>
+  </ul>
+
+  <h3>NOT FTL (Common Errors)</h3>
+  <div class="stop">
+    <ul style="margin:8px 0;margin-left:20px;font-size:13px;">
+      <li>Address change only (existing liability, address updated)</li>
+      <li>PPR exemption removal (existing liability, exemption changed)</li>
+      <li>Liability recalculation (existing liability being amended)</li>
+      <li>Annual renewal (existing liability continuing)</li>
+    </ul>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Customer record, property history, assessment data</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (FTL identification)</div>
+    <div class="block"><strong>Decision</strong>: Is this first liability OR existing liability change?</div>
+    <div class="block"><strong>Output</strong>: FTL confirmed → proceed to Q0; or non-FTL process</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q0 SOURCE -->
+
+  <section id="q0">
+    <h2>Q0 - Identify FTL Source <span class="improvement-badge">NEW</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;">Different FTL sources require different validation. Identify source type first:</p>
+      <div class="decision-box">
+        Which FTL source? (Programmatic / Data Match / Valuation / Staff-Initiated)
+        <br><br>Source type determines validation requirements. Document source in action item.
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: FTL action item source details</div>
+        <div class="block"><strong>Processing responsibility</strong>: Staff (source identification)</div>
+        <div class="block"><strong>Decision</strong>: Which FTL source type (4 categories)?</div>
+        <div class="block"><strong>Output</strong>: Confirmed source → Q1 uses source-specific validation</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q1 IDENTIFY -->
+
+  <section id="q1">
+    <h2>Q1 - Has FTL Been Correctly Identified? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <div class="checklist">
+        <ul style="font-size:13px;">
+          <li>Customer has NO prior assessment for property in retrospective period</li>
+          <li>Property identified is correct (V/F, Crown Allotment)</li>
+          <li>Customer/ownership match is correct</li>
+          <li>Perform source-specific validation (based on Q0)</li>
+        </ul>
+      </div>
+      <div class="stop" style="margin-top:12px;">If ANY check fails, reject FTL. Do not proceed with invalid FTL.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: FTL action item, prior assessment history, FTL source</div>
+        <div class="block"><strong>Processing responsibility</strong>: Staff (4-point validation + source checks)</div>
+        <div class="block"><strong>Decision</strong>: Is FTL valid and correct?</div>
+        <div class="block"><strong>Output</strong>: Valid → Q2; Invalid → Reject and close</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q2 READY -->
+
+  <section id="q2">
+    <h2>Q2 - Is FTL Item Ready to Process? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <ol style="font-size:13px;">
+        <li>Launch FTL Investigations item in e-Sys workflow</li>
+        <li>Allocate to yourself; set status to "In Progress"</li>
+        <li>Load related customers (if joint ownership)</li>
+        <li>Check for conflicting action items on property/customer</li>
+        <li>If conflicts found → Redirect to LOAN Complex tray</li>
+        <li>If no conflicts → Proceed to Q3</li>
+      </ol>
+      <div class="ref" style="margin-top:12px;">Conflicting items: Active investigations, disputes, pending amendments, multiple FTLs on same property</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: FTL item status, related customers, action item list</div>
+        <div class="block"><strong>Processing responsibility</strong>: Staff (item allocation, conflict check)</div>
+        <div class="block"><strong>Decision</strong>: Ready for processing OR redirect to complex tray?</div>
+        <div class="block"><strong>Output</strong>: Processing proceeds OR escalate to LOAN Complex</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q3 INVESTIGATION -->
+
+  <section id="q3">
+    <h2>Q3 - Is Customer Under Investigation? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <ol style="font-size:13px;">
+        <li>Check for red exclamation mark (!) on customer record</li>
+        <li>Check "Under Investigation" non-issue indicator</li>
+        <li>Check related customers (joint owners) for investigation flags</li>
+      </ol>
+      <div class="decision-box">
+        Investigation Active?<br>
+        • YES → Notify Investigator; redirect FTL item; pause processing<br>
+        • NO → Proceed to Q4
+      </div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Investigation indicators, customer flags</div>
+        <div class="block"><strong>Processing responsibility</strong>: Staff (investigation check)</div>
+        <div class="block"><strong>Decision</strong>: Investigation active YES/NO?</div>
+        <div class="block"><strong>Output</strong>: Active → Redirect; Inactive → Continue to Q4</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q4 ADDRESS -->
+
+  <section id="q4">
+    <h2>Q4 - Determine Assessment Correspondence Address <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <p style="font-size:13px;margin-bottom:12px;">When sources conflict, apply hierarchy priority:</p>
+      <div class="table-responsive">
+        <table style="font-size:12px;">
+          <tr style="background:#f3f4f6;">
+            <td><strong>Priority</strong></td>
+            <td><strong>Source</strong></td>
+            <td><strong>Rule</strong></td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>RTBA</td>
+            <td>Most recent (if property rented)</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>ATO Rental</td>
+            <td>Current rental address</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>DLS</td>
+            <td>Most recent address on record</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>COI</td>
+            <td>Ownership address (corroborated)</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>NOA</td>
+            <td>Customer-reported address</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>e-Sys</td>
+            <td>Current e-Sys address (default)</td>
+          </tr>
+        </table>
+      </div>
+      <div class="stop" style="margin-top:12px;">Use MOST RECENT address from highest-priority source. Document which source used.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Address data from 6 sources</div>
+        <div class="block"><strong>Processing responsibility</strong>: Staff (hierarchy selection)</div>
+        <div class="block"><strong>Decision</strong>: Which address to use (hierarchy priority)?</div>
+        <div class="block"><strong>Output</strong>: Assessment correspondence address confirmed</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q5 PPR -->
+
+  <section id="q5">
+    <h2>Q5 - Verify &amp; Apply Principal Place of Residence (PPR) <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>PPR Verification Sources</h3>
+      <ul style="font-size:13px;">
+        <li><strong>Property Classification:</strong> Residential property (not commercial/industrial)</li>
+        <li><strong>RTBA Data:</strong> Property address matches customer's rental bond address</li>
+        <li><strong>ATO Rental Data:</strong> Customer in ATO system as tenant at property</li>
+        <li><strong>Landata/Title:</strong> Property is residential land</li>
+        <li><strong>Customer Declaration:</strong> Customer claim of PPR use</li>
+      </ul>
+
+```
+  <div class="decision-box">
+    PPR Decision Logic:<br>
+    • Residential + Occupancy + No exemption → Apply PPR<br>
+    • Non-residential OR Not occupied → Do NOT apply<br>
+    • Uncertain → Escalate to Senior Officer
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Property classification, occupancy indicators</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (verification checks)</div>
+    <div class="block"><strong>Decision</strong>: Apply / Amend / Remove PPR?</div>
+    <div class="block"><strong>Output</strong>: PPR status set; liability impact calculated</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q6 DUPLICATES -->
+
+  <section id="q6">
+    <h2>Q6 - Resolve Duplicate Customers <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Valid vs. Invalid Duplicates</h3>
+      <ul style="font-size:13px;">
+        <li><strong>Valid Duplicate:</strong> Same person with two records (data error to correct)</li>
+        <li><strong>Invalid Duplicate:</strong> Different people with same/similar name (leave separate)</li>
+      </ul>
+
+```
+  <h3>Decision Criteria</h3>
+  <div class="checklist">
+    <ul style="font-size:13px;">
+      <li>Same date of birth? → Likely valid</li>
+      <li>Same address? → Likely valid</li>
+      <li>Same ID (ABN, ACN)? → Definitely valid</li>
+      <li>Completely different details? → Invalid (leave separate)</li>
+    </ul>
+  </div>
+
+  <p style="margin-top:12px;font-size:13px;">If valid duplicate → Decommission one record. Escalate if unsure.</p>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Customer identity details, duplicate indicators</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (duplicate assessment)</div>
+    <div class="block"><strong>Decision</strong>: Valid vs. invalid duplicate?</div>
+    <div class="block"><strong>Output</strong>: Customer records corrected or confirmed separate</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q7 RECALCULATE -->
+
+  <section id="q7">
+    <h2>Q7 - Recalculate Liabilities <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <p style="font-size:13px;margin-bottom:12px;">Select years within retrospective period (current + 4 prior only):</p>
+      <ol style="font-size:13px;">
+        <li>Navigate to Liabilities node</li>
+        <li>Click Recalculate Liability button</li>
+        <li>Select ONLY years in retrospective period</li>
+        <li>DO NOT select years outside retrospective period</li>
+        <li>Click OK to process</li>
+      </ol>
+      <div class="stop" style="margin-top:12px;">Years outside retrospective period cannot be recalculated. Verify year selection before confirming.</div>
+    </div>
+    <div class="architect">
+      <div class="arch">
+        <div class="block"><strong>Input data</strong>: Liability data, available years</div>
+        <div class="block"><strong>Processing responsibility</strong>: Staff (year selection)</div>
+        <div class="block"><strong>Decision</strong>: Which years to recalculate (retrospective only)?</div>
+        <div class="block"><strong>Output</strong>: Liabilities recalculated for selected years</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q8 COMPLETE -->
+
+  <section id="q8">
+    <h2>Q8 - Complete FTL Action Item <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Completion Checklist (ALL required)</h3>
+      <div class="checklist">
+        <ul style="font-size:13px;">
+          <li>FTL identity verified</li>
+          <li>Address determined and documented</li>
+          <li>PPR verified and applied (or not, with reasons)</li>
+          <li>Duplicates resolved (if any)</li>
+          <li>Liabilities recalculated for all years</li>
+          <li>Assessment ready to generate</li>
+          <li>Deceased estate checked</li>
+          <li>Comments and notes recorded</li>
+          <li>QA/FTL comments completed</li>
+        </ul>
+      </div>
+
+```
+  <div class="decision-box">
+    All checks complete? YES → Mark item complete / NO → Continue to Q9/Q10
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: FTL processing status (9-point checklist)</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (completion verification)</div>
+    <div class="block"><strong>Decision</strong>: All requirements met? Ready to close?</div>
+    <div class="block"><strong>Output</strong>: FTL action item marked complete</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q9 ASSESSMENT -->
+
+  <section id="q9">
+    <h2>Q9 - Generate Assessment <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Assessment Timing Rules</h3>
+      <ul style="font-size:13px;">
+        <li><strong>Current Year FTL:</strong> Assessment generated in normal cycle</li>
+        <li><strong>Prior Year FTL:</strong> Assessment generated once cycle complete</li>
+        <li><strong>Multiple Years:</strong> Separate assessment for each year</li>
+      </ul>
+
+```
+  <h3>Generation Steps</h3>
+  <ol style="font-size:13px;">
+    <li>Verify liability recalculation complete</li>
+    <li>Confirm assessment address correct</li>
+    <li>Click "Generate Assessment" button</li>
+    <li>Select year(s) requiring assessment</li>
+    <li>Verify assessment generated</li>
+    <li>Generate Late Issue Letter if prior year</li>
+  </ol>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Recalculated liabilities, current/prior year status</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (assessment generation)</div>
+    <div class="block"><strong>Decision</strong>: Current year OR prior year? Which years?</div>
+    <div class="block"><strong>Output</strong>: Assessment generated and issued</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q10 DECEASED -->
+
+  <section id="q10">
+    <h2>Q10 - Handle Deceased Estate (If Applicable) <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Deceased Estate Detection</h3>
+      <ul style="font-size:13px;">
+        <li>Check if customer is deceased (marked in e-Sys)</li>
+        <li>Confirm date of death (DLS or Probate Register)</li>
+      </ul>
+
+```
+  <h3>Form 13 vs. Form 14 Decision</h3>
+  <div class="table-responsive">
+    <table style="font-size:12px;">
+      <tr style="background:#f3f4f6;">
+        <td><strong>Scenario</strong></td>
+        <td><strong>Form Type</strong></td>
+        <td><strong>Action</strong></td>
+      </tr>
+      <tr>
+        <td>Death &lt; 1 year ago</td>
+        <td>Form 13 (Intestacy)</td>
+        <td>Create Form 13 action item</td>
+      </tr>
+      <tr>
+        <td>Death &gt; 1 year ago</td>
+        <td>Form 14 (Beneficiary)</td>
+        <td>Create Form 14 action item</td>
+      </tr>
+    </table>
+  </div>
+
+  <p style="margin-top:12px;font-size:13px;">Apply deceased non-issue indicator to prevent assessment generation until estate resolved.</p>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Deceased indicators, date of death</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (estate handling)</div>
+    <div class="block"><strong>Decision</strong>: Deceased YES/NO? Form 13 or 14?</div>
+    <div class="block"><strong>Output</strong>: Form 13/14 action item created or FTL continues</div>
+  </div>
+</div>
+```
+
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION VIEW -->
+
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction - First Time Liability Processing</h2>
+    <div class="flow">
+      <div class="flow-title">Q0-Q10 FTL Processing Flow</div>
+      <div class="node n-amber">FTL Action Item Received</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Definition: Is This Genuinely FTL?</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q0: Identify FTL Source</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q1: Validate FTL</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q2: Check Conflicts</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q3: Investigation Check</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q4: Determine Address</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q5: Verify PPR</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q6: Resolve Duplicates</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q7: Recalculate Liabilities</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q8: Complete Checklist</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q9: Generate Assessment</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q10: Deceased Check</div>
+      <div class="arr"></div>
+      <div class="node n-gray">FTL Processing Complete</div>
+      <div style="margin-top:24px;"></div>
+      <div class="flow-title" style="font-size:16px;">Key Systems</div>
+      <div class="branch">
+        <div class="node n-blue" style="font-size:11px;">e-Sys</div>
+        <div class="node n-amber" style="font-size:11px;">COI</div>
+        <div class="node n-amber" style="font-size:11px;">DLS</div>
+        <div class="node n-amber" style="font-size:11px;">RTBA</div>
+        <div class="node n-amber" style="font-size:11px;">Landata</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> Processing Step</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> Data Checkpoint</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> Completion</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SUMMARY & REVIEW VIEW -->
+
+<div class="specOnly">
+  <section class="summary-section" id="gaps-summary">
+    <h2>📊 Gaps Analysis Summary (14 Gaps Addressed)</h2>
+
+```
+<div class="gap-highlight"><strong>GAP 1 (HIGH):</strong> FTL Definition Unclear → Added definition section with examples</div>
+<div class="gap-highlight"><strong>GAP 2 (HIGH):</strong> FTL Sources Unclear → Added Q0 routing for 4 FTL sources</div>
+<div class="gap-highlight"><strong>GAP 3 (HIGH):</strong> Retrospective Period Undefined → Added explicit period definition (current + 4 prior)</div>
+<div class="gap-highlight"><strong>GAP 4 (MEDIUM):</strong> Address Logic Vague → Added Q4 6-source hierarchy table</div>
+<div class="gap-highlight"><strong>GAP 5 (MEDIUM):</strong> PPR Verification Missing → Added Q5 verification sources & logic</div>
+<div class="gap-highlight"><strong>GAP 6 (MEDIUM):</strong> Duplicate Criteria Missing → Added Q6 valid/invalid definitions</div>
+<div class="gap-highlight"><strong>GAP 7 (MEDIUM):</strong> Investigation Impact Unclear → Added Q3 investigation logic</div>
+<div class="gap-highlight"><strong>GAP 8 (MEDIUM):</strong> Deceased Estate Sparse → Added Q10 Form 13/14 decision table</div>
+<div class="gap-highlight"><strong>GAP 9 (LOW):</strong> Assessment Timing Undefined → Added Q9 timing rules</div>
+<div class="gap-highlight"><strong>GAP 10 (LOW):</strong> Completion Criteria Missing → Added Q8 9-point checklist</div>
+<div class="gap-highlight"><strong>GAP 11 (LOW):</strong> LOAN Complex Escalation Undefined → Added Q2 escalation criteria</div>
+<div class="gap-highlight"><strong>GAP 12 (LOW):</strong> Data Sources Not Validated → Added Q4 data source hierarchy</div>
+<div class="gap-highlight"><strong>GAP 13 (LOW):</strong> Joint Ownership Not Detailed → Added Q2 joint ownership guidance</div>
+<div class="gap-highlight"><strong>GAP 14 (LOW):</strong> Error Handling Missing → Added escalation matrix below</div>
+```
+
+  </section>
+
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul style="font-size:13px;">
+      <li>12-step FTL process (Definition + Q0-Q10) for processing first-time land tax liabilities</li>
+      <li>Definition section clarifies FTL vs. other liability changes (addresses GAP 1)</li>
+      <li>Q0 routes to correct source-specific validation (addresses GAP 2)</li>
+      <li>Explicit retrospective period definition: current year + 4 prior years (addresses GAP 3)</li>
+      <li>Q4 address hierarchy with 6 sources ranked by priority (addresses GAP 4)</li>
+      <li>Q5 PPR verification using 5 data sources (addresses GAP 5)</li>
+      <li>Q6 duplicate resolution with valid/invalid criteria (addresses GAP 6)</li>
+      <li>Q3 investigation impact with decision logic (addresses GAP 7)</li>
+      <li>Q10 deceased estate with Form 13/14 decision (addresses GAP 8)</li>
+      <li>Supporting resources: retrospective period, data source hierarchy, escalation matrix</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul style="font-size:13px;">
+      <li><strong>Division:</strong> Land Revenue Administration</li>
+      <li><strong>Branch:</strong> Land Information Management</li>
+      <li><strong>Created:</strong> 3 June 2024</li>
+      <li><strong>Gaps Analysis:</strong> April 2026 (14 gaps identified and addressed)</li>
+      <li><strong>System of Record:</strong> Lotus Notes Policies and Procedures Database</li>
+    </ul>
+  </section>
+
+  <section class="summary-section" id="retro-period">
+    <h2>Retrospective Period Definition</h2>
+    <p style="font-size:13px;"><strong>Retrospective Period = Current calendar year + 4 prior years = 5 years total</strong></p>
+
+```
+<h3>Example (Year 2024)</h3>
+<ul style="font-size:13px;">
+  <li>Current: 2024</li>
+  <li>Prior 1: 2023</li>
+  <li>Prior 2: 2022</li>
+  <li>Prior 3: 2021</li>
+  <li>Prior 4: 2020</li>
+  <li>OUTSIDE PERIOD: 2019 and earlier (cannot process in FTL)</li>
+</ul>
+
+<p style="margin-top:12px;font-size:13px;"><strong>Rule:</strong> Only liabilities within 5-year period can be recalculated. Years outside cannot be amended via FTL.</p>
+```
+
+  </section>
+
+  <section class="summary-section" id="data-sources">
+    <h2>Data Source Hierarchy - Q4 Address Determination</h2>
+    <p style="font-size:13px;">When multiple systems have conflicting information, use this hierarchy (most authoritative first):</p>
+
+```
+<div class="table-responsive">
+  <table style="font-size:12px;">
+    <tr style="background:#003a8f;color:white;">
+      <th>Rank</th>
+      <th>System</th>
+      <th>Data Element</th>
+      <th>Authority</th>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>RTBA</td>
+      <td>Occupancy, rental address</td>
+      <td>High (most recent if renting)</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>ATO Rental</td>
+      <td>Rental address</td>
+      <td>High (tax context)</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>DLS</td>
+      <td>Current address, deceased status</td>
+      <td>High (Government issued)</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>COI</td>
+      <td>Corporate ownership, address</td>
+      <td>Medium (ASIC cross-reference)</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>NOA</td>
+      <td>Customer-reported address</td>
+      <td>Medium (customer source)</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>e-Sys</td>
+      <td>Current assessment address</td>
+      <td>Low (SRO internal, may have errors)</td>
+    </tr>
+  </table>
+</div>
+
+<p style="margin-top:12px;font-size:13px;"><strong>Rule:</strong> Use most recent address from highest-ranked available source. Always document which source was used.</p>
+```
+
+  </section>
+
+  <section class="summary-section" id="escalation">
+    <h2>Escalation Matrix - When to Escalate</h2>
+
+```
+<div class="table-responsive">
+  <table style="font-size:12px;">
+    <tr style="background:#003a8f;color:white;">
+      <th>Issue</th>
+      <th>Stage</th>
+      <th>Escalate To</th>
+      <th>Timeline</th>
+    </tr>
+    <tr>
+      <td>FTL validity uncertain</td>
+      <td>Q1</td>
+      <td>Senior Officer</td>
+      <td>Immediate</td>
+    </tr>
+    <tr>
+      <td>Conflicting items exist</td>
+      <td>Q2</td>
+      <td>LOAN Complex tray</td>
+      <td>Immediate</td>
+    </tr>
+    <tr>
+      <td>Active investigation</td>
+      <td>Q3</td>
+      <td>Investigator</td>
+      <td>Immediate</td>
+    </tr>
+    <tr>
+      <td>Address sources conflict</td>
+      <td>Q4</td>
+      <td>Senior Officer</td>
+      <td>5 business days</td>
+    </tr>
+    <tr>
+      <td>PPR determination unclear</td>
+      <td>Q5</td>
+      <td>Senior Officer</td>
+      <td>5 business days</td>
+    </tr>
+    <tr>
+      <td>Duplicate resolution complex</td>
+      <td>Q6</td>
+      <td>Senior Officer</td>
+      <td>5 business days</td>
+    </tr>
+    <tr>
+      <td>Joint ownership complex</td>
+      <td>Q2-Q5</td>
+      <td>Senior Officer</td>
+      <td>5 business days</td>
+    </tr>
+    <tr>
+      <td>Deceased estate</td>
+      <td>Q10</td>
+      <td>Senior Officer</td>
+      <td>Immediate</td>
+    </tr>
+  </table>
+</div>
+```
+
+  </section>
+
+  <section class="summary-section" id="definitions">
+    <h2>Definitions &amp; Acronyms</h2>
+    <p style="font-size:13px;">
+      <strong>FTL</strong> - First Time Liability (customer's first assessment for a property)<br>
+      <strong>Retrospective Period</strong> - Current year plus 4 prior years (5 years total)<br>
+      <strong>PPR</strong> - Principal Place of Residence (exemption from land tax)<br>
+      <strong>e-Sys</strong> - SRO's property and liability management system<br>
+      <strong>COI</strong> - Compliance Operational Intelligence (corporate/ownership data)<br>
+      <strong>DLS</strong> - Driver Licensing System<br>
+      <strong>RTBA</strong> - Residential Tenancy Bond Authority<br>
+      <strong>ATO</strong> - Australian Taxation Office<br>
+      <strong>Landata</strong> - Land titles online search system<br>
+      <strong>NOA</strong> - Notice of Acquisition<br>
+      <strong>V/F</strong> - Volume/Folio (unique land title identifier)<br>
+      <strong>LOAN Complex Tray</strong> - Specialist team for complex liability cases
+    </p>
+  </section>
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(function(e){e.style.display='none'});
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(function(e){e.style.display='block'});document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(function(e){e.style.display='block'});document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

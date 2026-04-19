@@ -1,0 +1,801 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LOAN Party Task Procedure - IMPROVED</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .improvement-badge{display:inline-block;background:#fbbf24;color:#78350f;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700;margin-left:12px}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .sidebar a.gap-link{color:#ec4899;font-weight:600}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    ul,ol{margin-left:22px;font-size:13px;line-height:1.6}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px;font-size:13px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .decision-box{background:#fef3c7;border-left:5px solid #d97706;padding:12px;margin-top:12px;font-size:13px;color:#92400e}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .gap-highlight{background:#fce7f3;border-left:5px solid #ec4899;padding:12px 16px;margin:12px 0;font-size:13px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .detail-panel .page-ref{font-size:11px;color:#3b82f6;font-weight:600;margin-top:8px;padding-top:8px;border-top:1px solid #e0e7ff}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .table-responsive{overflow-x:auto;margin:12px 0}
+    table{width:100%;border-collapse:collapse;font-size:12px}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+    .checklist{background:#f9fafb;border:1px solid #e5e7eb;padding:16px;margin:12px 0;border-radius:6px}
+    .checklist li{list-style:none;padding-left:24px;position:relative;margin-bottom:8px;font-size:13px}
+    .checklist li::before{content:'☐';position:absolute;left:0;font-weight:bold;color:#003a8f}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>LOAN Party Task Procedure <span class="improvement-badge">GAPS IMPROVED (15)</span></h1>
+  <p>Division: Land Revenue Services &bull; Branch: Land Information Management &bull; Revised: 15 November 2024</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#overview">Overview</a>
+    <a href="#q1">Q1 Task Types</a>
+    <a href="#q2">Q2 Find Buyer</a>
+    <a href="#q3">Q3 Verify Data</a>
+    <a href="#q4">Q4 Edit Details</a>
+    <a href="#q5">Q5 Complete</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#gaps-summary" class="gap-link" onclick="showView('spec');setTimeout(()=>location.hash='gaps-summary',100);">📊 Gaps Analysis</a>
+    <a href="#task-matrix" onclick="showView('spec');setTimeout(()=>location.hash='task-matrix',100);">Task Type Matrix</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(()=>location.hash='definitions',100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+<div id="questionFlow">
+
+<!-- OVERVIEW -->
+
+<section id="overview">
+<h2>LOAN Party Task Procedure Overview <span class="improvement-badge">CONTEXT</span></h2>
+<div class="staff">
+<h3>Purpose</h3>
+<p style="font-size:13px;">Process Party Tasks in LOAN system to identify and validate the correct customer (Involved Party/buyer) from Notice of Acquisition (NOA) data. Ensures land tax assessment notices are issued accurately.</p>
+
+<h3>Why Party Tasks Created</h3>
+<p style="font-size:13px;">LOAN system attempts to auto-match buyers to e-Sys customers at Party stage. When auto-matching fails due to exceptions, manual Party Tasks are created for staff resolution.</p>
+
+<h3>Key Definitions</h3>
+<ul style="font-size:13px;">
+<li><strong>Involved Party:</strong> The purchaser (buyer) from NOA requiring customer matching</li>
+<li><strong>Source Data:</strong> NOA information (name, address, DOB, ACN/ABN)</li>
+<li><strong>Matching Customers:</strong> e-Sys customers identified as potential matches</li>
+<li><strong>Confidence Level:</strong> Quality score (Poor/Low/Medium/High/Very High) for match</li>
+</ul>
+
+<h3>Time Standard</h3>
+<p style="font-size:13px;font-weight:600;">5 minutes per Party Task</p>
+
+<div class="ref"><strong>Authority:</strong> Land Tax Act 2005 | <strong>Branch:</strong> Land Information Management</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> NOA buyer data (name, address, DOB, ACN/ABN), exception code</div>
+<div class="block"><strong>Process:</strong> Match source data to e-Sys customer or create new customer</div>
+<div class="block"><strong>Decision:</strong> Which customer is correct involved party? Create new?</div>
+<div class="block"><strong>Output:</strong> Customer linked or created, exception resolved</div>
+</div>
+</div>
+</section>
+
+<!-- Q1 TASK TYPES -->
+
+<section id="q1">
+<h2>Q1 - What Party Task Type Am I Processing? <span class="improvement-badge">IMPROVED</span></h2>
+<div class="staff">
+<h3>Five Party Task Types</h3>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Task Type</th>
+<th>When It Occurs</th>
+<th>Primary Action</th>
+</tr>
+<tr>
+<td><strong>Resolve Party Match</strong></td>
+<td>No match found OR multiple matches with equal confidence</td>
+<td>Search further, manually select, or create customer</td>
+</tr>
+<tr>
+<td><strong>Verify Party Match</strong></td>
+<td>Match found but name/address mismatch detected</td>
+<td>Verify match is correct, update data if needed</td>
+</tr>
+<tr>
+<td><strong>Resolve High Volume Party</strong></td>
+<td>Resolve Party Match + 3+ buyers on NOA</td>
+<td>Process all buyers; link each individually</td>
+</tr>
+<tr>
+<td><strong>Resolve Excluded Party</strong></td>
+<td>Buyer name contains excluded word (Trustee, Company)</td>
+<td>Verify entity type, locate or create correctly</td>
+</tr>
+<tr>
+<td><strong>Resolve Trust Party Exception</strong></td>
+<td>Trust NOA; trust or trustee unmatched</td>
+<td>Create/link trust and trustee (or escalate)</td>
+</tr>
+</table>
+</div>
+
+<h3>Confidence Level Acceptance Criteria <span class="improvement-badge">CRITICAL</span></h3>
+<div class="decision-box">
+<strong>Very High/High (80-100%):</strong> Link directly, verify customer details current<br>
+<strong>Medium (60-79%):</strong> Manual review required, verify match carefully<br>
+<strong>Low/Poor (0-59%):</strong> Reject match, search further or create customer
+</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Exception Code Reference Table & Task Type Decision Flowchart</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Exception Code Reference (Most Common)</h4>
+<div class="table-responsive">
+<table>
+<tr style="background:#f3f4f6;">
+<th>Code</th>
+<th>Description</th>
+<th>Task Type</th>
+<th>Action</th>
+</tr>
+<tr>
+<td><strong>PART001</strong></td>
+<td>No customer match found</td>
+<td>Resolve Party Match</td>
+<td>Create new customer</td>
+</tr>
+<tr>
+<td><strong>PART002</strong></td>
+<td>Multiple matches, equal confidence</td>
+<td>Resolve Party Match</td>
+<td>Manually select correct</td>
+</tr>
+<tr>
+<td><strong>PART003</strong></td>
+<td>Name mismatch detected</td>
+<td>Verify Party Match</td>
+<td>Verify and update name</td>
+</tr>
+<tr>
+<td><strong>PART004</strong></td>
+<td>Invalid address format</td>
+<td>Verify Party Match</td>
+<td>Correct address details</td>
+</tr>
+<tr>
+<td><strong>PART005</strong></td>
+<td>Excluded name detected</td>
+<td>Resolve Excluded Party</td>
+<td>Verify entity type</td>
+</tr>
+<tr>
+<td><strong>PART006</strong></td>
+<td>Trust party exception</td>
+<td>Resolve Trust Party Exception</td>
+<td>Create/link trust & trustee</td>
+</tr>
+<tr>
+<td><strong>PART007</strong></td>
+<td>3+ buyers on NOA</td>
+<td>Resolve High Volume Party</td>
+<td>Process all buyers</td>
+</tr>
+</table>
+</div>
+
+<h4>Task Type Decision Flowchart</h4>
+<p style="font-size:12px;background:#f0fdf4;padding:12px;border-radius:6px;margin:8px 0;">
+<strong>Review Exception Code</strong><br>
+↓<br>
+Trust NOA? → YES → Resolve Trust Party Exception<br>
+↓ NO<br>
+Excluded Name? → YES → Resolve Excluded Party<br>
+↓ NO<br>
+3+ Buyers? → YES → Resolve High Volume Party<br>
+↓ NO<br>
+Name/Address Mismatch? → YES → Verify Party Match<br>
+↓ NO<br>
+No Match/Multiple Equal → Resolve Party Match
+</p>
+
+<div class="page-ref">Source: LOAN Party Task Procedure; Exception Types</div>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Exception code, buyer data, matching results</div>
+<div class="block"><strong>Process:</strong> Identify task type via decision matrix</div>
+<div class="block"><strong>Decision:</strong> Which task type applies?</div>
+<div class="block"><strong>Output:</strong> Task type identified, routing determined</div>
+</div>
+</div>
+</section>
+
+<!-- Q2 FIND BUYER -->
+
+<section id="q2">
+<h2>Q2 - Can I Locate the Correct Buyer/Customer? <span class="improvement-badge">IMPROVED</span></h2>
+<div class="staff">
+<h3>Customer Search Sequence (Priority Order)</h3>
+<ol style="font-size:13px;">
+<li><strong>Step 1:</strong> Review Matching Customers in LOAN. If High+ confidence, click Edit Customer to verify current</li>
+<li><strong>Step 2:</strong> If Low/Medium confidence, search by ACN/ABN (most precise match)</li>
+<li><strong>Step 3:</strong> Search by DOB + Surname (if ACN/ABN unavailable)</li>
+<li><strong>Step 4:</strong> Search by Address only (last resort for location matching)</li>
+<li><strong>Step 5:</strong> Check COI DLS to verify identity before creating new customer</li>
+<li><strong>Step 6:</strong> If no match found after exhaustive search → Create new customer</li>
+</ol>
+
+<h3>Find Customer Function</h3>
+<p style="font-size:13px;">Click <strong>Find Customer</strong> button. Source data auto-populates. To search name only, clear Address Format dropdown to blank before searching.</p>
+
+<h3>Critical: System Search Behavior</h3>
+<ul style="font-size:13px;">
+<li><strong>Remove non-essential fields:</strong> Delete Street Type, Suburb, Municipality to increase match likelihood</li>
+<li><strong>Address Format dropdown:</strong> Set to [blank] to remove address filters and search by name only</li>
+<li><strong>Refresh button:</strong> Prepopulates BOTH name AND address. Use carefully</li>
+</ul>
+
+<div class="stop">Do NOT assume top Matching Customers result is current name/address. Always click Edit Customer to verify current details. Multiple name/address records per customer exist.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Search Optimization, COI DLS Lookup, ASIC Search, DAS Verification & Create Customer Validation Checklist</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>ACN/ABN Search (Most Precise) - Step 2</h4>
+<ol style="font-size:13px;">
+<li>Click Find Customer</li>
+<li>In Name Details: Click "All" field → enter ACN or ABN</li>
+<li>Clear Address Format to [blank]</li>
+<li>Click Find</li>
+</ol>
+
+<h4>DOB + Name Search - Step 3</h4>
+<ol style="font-size:13px;">
+<li>Click Find Customer</li>
+<li>Name Details: Enter First Name, Surname, DOB</li>
+<li>Clear Address Format to [blank]</li>
+<li>Click Find</li>
+</ol>
+
+<h4>COI DLS Verification (Before Creating Customer)</h4>
+<p style="font-size:13px;"><strong>When:</strong> Before creating new customer, verify buyer identity</p>
+<ul style="font-size:13px;">
+<li>Access MySRO → COI DLS</li>
+<li><strong>CRITICAL:</strong> Uncheck eSys search function</li>
+<li>Search by Name + DOB</li>
+<li>If result shows eSys ID match → use that ID</li>
+<li>If no eSys ID → check if recently created (search LOAN)</li>
+</ul>
+
+<h4>ASIC Search (Company/Trust Verification)</h4>
+<p style="font-size:13px;"><strong>When:</strong> Buyer is company or trust entity</p>
+<ul style="font-size:13px;">
+<li>Open separate e-Sys session</li>
+<li>Tools → View ASIC Files</li>
+<li>Search by ACN, ABN, or Organisation Name (omit "Pty Ltd", use "%")</li>
+<li>Verify company is REGISTERED (not deregistered)</li>
+<li>Check Historic View for former names</li>
+<li><strong>Decision:</strong> If registered & matches source → OK to link/create. If deregistered → Escalate</li>
+</ul>
+
+<h4>DAS Bundle Search (Transfer Verification)</h4>
+<p style="font-size:13px;"><strong>When:</strong> Verify buyer details match actual transfer; clarify duplicate buyers on same NOA</p>
+<ul style="font-size:13px;">
+<li>Open separate e-Sys</li>
+<li>Search → Find DAS Bundle</li>
+<li>Enter Dealing Number</li>
+<li>Go to Transferees tab → Right-click → View Transferee</li>
+<li>Compare to source data</li>
+<li><strong>Decision:</strong> If DAS shows different buyer → reject e-Sys match, search for correct buyer</li>
+</ul>
+
+<h4>Create Customer Validation Checklist</h4>
+<div style="background:#f9fafb;border:1px solid #e5e7eb;padding:12px;border-radius:6px;margin:8px 0;">
+<p style="font-size:12px;margin:0 0 8px 0;"><strong>Before clicking Create Customer, verify ALL:</strong></p>
+<ul style="font-size:12px;margin:0;">
+<li>☐ Surname in SURNAME field (not middle name)</li>
+<li>☐ All available data: First Name, Surname, DOB, ACN/ABN</li>
+<li>☐ Current/residential address entered (required)</li>
+<li>☐ Address State/Municipality correct</li>
+<li>☐ Address Type selected (Residential or Postal)</li>
+<li>☐ If PO Box/RMB only → also add valid residential address</li>
+<li>☐ COI DLS search completed (no duplicate)</li>
+<li>☐ ASIC search completed if company (verify registered)</li>
+<li>☐ Customer type correct (Individual/Company/Trust)</li>
+<li>☐ No typos in address, proper case</li>
+</ul>
+</div>
+
+<div class="page-ref">Source: LOAN Party Task Procedure; Find Customer; Create Customer</div>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Buyer source data (name, address, DOB, ACN/ABN)</div>
+<div class="block"><strong>Process:</strong> Search e-Sys database using prioritized search sequence</div>
+<div class="block"><strong>Decision:</strong> Customer found or requires creation?</div>
+<div class="block"><strong>Output:</strong> Customer linked (existing) or created (new)</div>
+</div>
+</div>
+</section>
+
+<!-- Q3 VERIFY DATA -->
+
+<section id="q3">
+<h2>Q3 - Is Customer Data Complete and Accurate? <span class="improvement-badge">IMPROVED</span></h2>
+<div class="staff">
+<h3>Pre-Completion Verification</h3>
+<div class="checklist">
+<ul style="font-size:13px;">
+<li>Customer name matches source data (or corrected)</li>
+<li>DOB present (or applied from source)</li>
+<li>ACN/ABN present (or applied from source)</li>
+<li>Future Address added from source data (if provided)</li>
+<li>Address Type correct (Residential or Postal)</li>
+<li>Trust entity created and linked (if applicable)</li>
+<li>All buyers on multi-buyer NOAs linked</li>
+<li>No duplicate customers exist</li>
+</ul>
+</div>
+
+<h3>Name Change Process</h3>
+<p style="font-size:13px;">If customer name needs updating:</p>
+<ol style="font-size:13px;">
+<li>Ensure customer linked (Link checkbox ticked)</li>
+<li>Click Edit Customer button</li>
+<li>Names tab → Right-click existing name → Edit, OR</li>
+<li>Click Apply Buyer Name (uses source data name)</li>
+<li>Click Save and Exit</li>
+<li><strong>CRITICAL:</strong> After saving, click OFF name then click BACK on it. LOAN refreshes and shows updated name automatically</li>
+</ol>
+
+<h3>Address Change Process</h3>
+<p style="font-size:13px;">If customer address needs updating:</p>
+<ol style="font-size:13px;">
+<li>Ensure customer linked (Link checkbox ticked)</li>
+<li>Click Edit Customer button</li>
+<li>Addresses tab → Right-click address → Edit, OR</li>
+<li>Click Add Future Address (if future address in source), OR</li>
+<li>Click Add Address (manually add)</li>
+<li><strong>To update Delivery Indicator:</strong> Right-click address → Edit → tick checkbox</li>
+<li>Click Save and Exit</li>
+<li><strong>NOTE:</strong> Address changes do NOT auto-refresh; use Edit Customer to verify updates</li>
+</ol>
+
+<div class="stop">All data must be verified and corrected BEFORE proceeding. Any missing data will cause ownership change to fail downstream.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Trust Verification, Bare Trust Handling, Superfund vs Company & Duplicate Resolution SLA</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Trust Entity Verification</h4>
+<p style="font-size:13px;"><strong>When buyer is a trust:</strong> Must locate/create BOTH trust AND trustee</p>
+<ul style="font-size:13px;">
+<li>Search for trust by name in e-Sys</li>
+<li>If multiple trusts same name → Match by trustee name (check DAS)</li>
+<li>If DAS shows CHANGE OF TRUSTEE → May need to update trustee only, not create new ownership</li>
+</ul>
+
+<h4>Bare Trust (Cannot be Created in LOAN)</h4>
+<p style="font-size:13px;"><strong>Bare trust with superfund beneficiary:</strong> Bare trustee = registered proprietor; superfund = beneficial owner</p>
+<p style="font-size:13px;"><strong>ESCALATE TO SENIOR STAFF MEMBER</strong> - Cannot create in LOAN, must create manually in e-Sys</p>
+
+<h4>Superfund vs Company Distinction (Critical!)</h4>
+<ul style="font-size:13px;">
+<li><strong>"ABC Superfund Pty Ltd":</strong> COMPANY (has "Pty Ltd" → create as company)</li>
+<li><strong>"ABC Superfund Trust":</strong> TRUST (create as trust, set Sub-Type to "Superannuation Trust (Compliant)")</li>
+<li><strong>"ABC Superannuation Fund":</strong> TRUST (same as above)</li>
+</ul>
+
+<h4>Duplicate Customer - Escalation Required</h4>
+<p style="font-size:13px;"><strong>If duplicate customer located:</strong></p>
+<ol style="font-size:13px;">
+<li>Confirm customer is truly duplicate (compare name, DOB, address, ACN/ABN)</li>
+<li><strong>ESCALATE TO SENIOR STAFF MEMBER IMMEDIATELY</strong></li>
+<li>Link only most current/complete record</li>
+<li>Document reason in work item notes</li>
+<li><strong>DO NOT PROCEED</strong> until Senior Staff resolves</li>
+</ol>
+
+<div class="page-ref">Source: LOAN Party Task Procedure; Edit Customer Details; Bare Trusts; Duplicate Customers</div>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Linked customer record, source data</div>
+<div class="block"><strong>Process:</strong> Verify data completeness and accuracy</div>
+<div class="block"><strong>Decision:</strong> Is customer data complete? All buyers linked?</div>
+<div class="block"><strong>Output:</strong> Customer data verified and updated</div>
+</div>
+</div>
+</section>
+
+<!-- Q4 EDIT DETAILS -->
+
+<section id="q4">
+<h2>Q4 - Have All Required Updates Been Applied? <span class="improvement-badge">IMPROVED</span></h2>
+<div class="staff">
+<h3>Mandatory Pre-Completion Updates</h3>
+<div class="checklist">
+<ul style="font-size:13px;">
+<li>Applied future/buyer address to all buyers</li>
+<li>Updated surname if spelling differs</li>
+<li>Applied DOB from source data</li>
+<li>Applied ACN/ABN from source data</li>
+<li>Verified trust and trustee linked (if trust buyer)</li>
+<li>All buyers on NOA linked to customer</li>
+<li>Address Type set (Residential or Postal)</li>
+<li>Delivery Indicator set on mailing address</li>
+<li>No duplicate customers unresolved</li>
+</ul>
+</div>
+
+<h3>Critical System Behaviors</h3>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:16px;">Name Changes Auto-Refresh; Address Changes Don't</h4>
+<p style="font-size:13px;">After saving name change, click OFF customer name then click BACK = auto-refresh shows updated name. Address changes do NOT auto-refresh; must use Edit Customer to verify.</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Edit Customer Button Active Only If Link Ticked</h4>
+<p style="font-size:13px;">Edit Customer button is ONLY ACTIVE when Link checkbox ticked AND top result for that customer ID highlighted.</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Delivery Indicator Must Use Edit, Not Checkbox</h4>
+<p style="font-size:13px;">Cannot simply tick Delivery Indicator on listed address. Must RIGHT-CLICK address → Edit → tick checkbox → OK.</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">State Correction Workaround (ACT vs NSW)</h4>
+<p style="font-size:13px;">If wrong state entered: Remove Suburb and Postcode, then re-enter Postcode and select Suburb from dropdown. System auto-populates correct State.</p>
+
+<div class="decision-box" style="margin-top:12px;">
+After all updates complete, click Hide Potentials button to verify correct customer linked before proceeding.
+</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Customer Age Indicators, Special Name Issues, Usage Type Selection & Handling Multiple Same Buyers</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Customer Age Indicators (Without DOB)</h4>
+<p style="font-size:13px;">If no DOB available, customer ID digit count indicates age:</p>
+<ul style="font-size:13px;">
+<li><strong>6 digits:</strong> Created before 2000 (older customer)</li>
+<li><strong>7 digits:</strong> Created 2000-2009</li>
+<li><strong>8+ digits:</strong> Created 2010+ (newer customer)</li>
+</ul>
+
+<h4>Special Name Issues</h4>
+<p style="font-size:13px;"><strong>Surname in Middle Name Field:</strong> Check surname field first (required). If missing, check middle name field. Manually move to correct field before creating.</p>
+
+<h4>Usage Type Selection (Critical!)</h4>
+<ul style="font-size:13px;">
+<li><strong>Use "Residential":</strong> Customer lives at address (home address)</li>
+<li><strong>Use "Postal":</strong> Address differs from home (PO Box, C/O, business mailing address)</li>
+<li><strong>If PO Box/RMB only:</strong> MUST also add valid residential address (e.g., "1 Smith St, Fitzroy")</li>
+</ul>
+
+<h4>Multiple Same Buyers on NOA</h4>
+<p style="font-size:13px;"><strong>Situation:</strong> Same customer listed twice as buyer on same NOA</p>
+<p style="font-size:13px;"><strong>Action:</strong> Cannot edit in LOAN. Check DAS to confirm customer obtaining share in own right AND as trustee. Manual transfer required in e-Sys. Escalate if unable to resolve.</p>
+
+<div class="page-ref">Source: LOAN Party Task Procedure; Tips to Assist with Decision Making</div>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Linked customer with source data for comparison</div>
+<div class="block"><strong>Process:</strong> Apply mandatory updates</div>
+<div class="block"><strong>Decision:</strong> Are all updates complete?</div>
+<div class="block"><strong>Output:</strong> All updates applied and verified</div>
+</div>
+</div>
+</section>
+
+<!-- Q5 COMPLETE TASK -->
+
+<section id="q5">
+<h2>Q5 - Can the Party Task Be Completed? <span class="improvement-badge">IMPROVED</span></h2>
+<div class="staff">
+<h3>Final Completion Checklist</h3>
+<div class="checklist">
+<ul style="font-size:13px;">
+<li>All buyers on NOA linked to customers</li>
+<li>All name updates applied</li>
+<li>All address updates applied (including future address)</li>
+<li>All DOB/ACN/ABN applied</li>
+<li>No duplicate customers unresolved</li>
+<li>Trust and trustee properly linked (if applicable)</li>
+<li>Hide Potentials clicked to verify correct matches</li>
+</ul>
+</div>
+
+<h3>Completion Options</h3>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:16px;">Option 1: Proceed with Party Matches (Normal)</h4>
+<p style="font-size:13px;">Click <strong>Proceed with Party Matches</strong> button under Actions section. Party Task resolves and routes to Property stage.</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Option 2: Cancel Ownership Change (Remove)</h4>
+<p style="font-size:13px;">If NOA should not proceed:</p>
+<ol style="font-size:13px;">
+<li>Click <strong>Cancel Ownership Change</strong> button</li>
+<li>Select Reason from dropdown</li>
+<li>Enter Comments explaining reason</li>
+<li>Click Cancel</li>
+<li>Task removed from system</li>
+</ol>
+
+<h3>Task Reservation & Redirection <span class="improvement-badge">SLA DOCUMENTED</span></h3>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:16px;">Reserving a Task</h4>
+<p style="font-size:13px;"><strong>When:</strong> Task needs to be paused (awaiting info, Senior Staff review)</p>
+<ol style="font-size:13px;">
+<li>From My Process Tasks, tick checkbox next to task</li>
+<li>Click Reserve button</li>
+<li>Enter your name in Work Tray Name</li>
+<li>Enter Active Date (reappear date)</li>
+<li>Click Reserve</li>
+</ol>
+<p style="font-size:13px;"><strong>SLA:</strong> Do not reserve beyond 5 business days without update/escalation</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Redirecting a Task</h4>
+<p style="font-size:13px;"><strong>When:</strong> Task requires Senior Staff or specialist review</p>
+<ol style="font-size:13px;">
+<li>From My Process Tasks, tick checkbox</li>
+<li>Click Redirect button</li>
+<li>Enter recipient's name in Work Tray Name</li>
+<li>Enter Comments explaining reason</li>
+<li>Click Redirect</li>
+</ol>
+<p style="font-size:13px;"><strong>SLA:</strong> Senior Staff ack within 1 day; complete within 3 days</p>
+
+<div class="ref" style="margin-top:12px;"><strong>Reference:</strong> LOAN Party Task Procedure; Completing or Removing Party Task</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: My Process Tasks Features & Searching by Dealing Number</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Searching My Process Tasks by Dealing Number</h4>
+<p style="font-size:13px;"><strong>To find specific NOA Party Task:</strong></p>
+<ol style="font-size:13px;">
+<li>From My Process Tasks list</li>
+<li>Click External Source Type dropdown</li>
+<li>Select "Change of ownership Dealing Number"</li>
+<li>Enter Dealing Number from NOA</li>
+<li>Click Find (top right)</li>
+<li>Task will be highlighted</li>
+</ol>
+
+<h4>Filtering by Task Type</h4>
+<ol style="font-size:13px;">
+<li>Click LOV button next to Task Description</li>
+<li>Select relevant task type (Resolve Party Match, etc.)</li>
+<li>Click Find</li>
+</ol>
+
+<div class="page-ref">Source: LOAN Party Task Procedure; My Process Tasks Features</div>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Verified customer records, all linked parties</div>
+<div class="block"><strong>Process:</strong> Execute completion or cancellation</div>
+<div class="block"><strong>Decision:</strong> Proceed or cancel?</div>
+<div class="block"><strong>Output:</strong> Task completed or cancelled; system routes to next stage</div>
+</div>
+</div>
+</section>
+
+</div>
+
+<!-- SYSTEM INTERACTION VIEW -->
+
+<div class="systemsOnly">
+<section>
+<h2>System Interaction - LOAN Party Task Processing Flow</h2>
+<div class="flow">
+<div class="flow-title">Q1-Q5 LOAN Party Task Processing</div>
+<div class="node n-amber">Party Task Received</div>
+<div class="arr"></div>
+<div class="node n-blue">Q1: Identify Task Type & Exception Code</div>
+<div class="arr"></div>
+<div class="node n-blue">Q2: Search & Locate Customer</div>
+<div class="arr"></div>
+<div class="node n-amber">Customer Found?</div>
+<div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+<div><div class="node n-gray">NO: Create New</div></div>
+<div><div class="node n-blue">YES: Link</div></div>
+</div>
+<div class="arr"></div>
+<div class="node n-blue">Q3: Verify Customer Data</div>
+<div class="arr"></div>
+<div class="node n-blue">Q4: Apply Updates</div>
+<div class="arr"></div>
+<div class="node n-blue">Q5: Complete Party Task</div>
+<div class="arr"></div>
+<div class="node n-gray">Party Task Complete → Property Stage</div>
+</div>
+</section>
+</div>
+
+<!-- SUMMARY VIEW -->
+
+<div class="specOnly">
+<section class="summary-section" id="gaps-summary">
+<h2>📊 Gaps Analysis Summary (15 Gaps Addressed)</h2>
+
+<div class="gap-highlight"><strong>GAP 1 (HIGH):</strong> Party Task Types Not Sequenced → Added decision matrix with exception code mapping and flowchart</div>
+<div class="gap-highlight"><strong>GAP 2 (HIGH):</strong> Confidence Levels Unclear → Added acceptance thresholds (Very High/High=link; Medium=verify; Low/Poor=reject)</div>
+<div class="gap-highlight"><strong>GAP 3 (HIGH):</strong> Bare Trust Process Incomplete → Added escalation procedure (cannot create in LOAN, requires Senior Staff)</div>
+<div class="gap-highlight"><strong>GAP 4 (MEDIUM):</strong> Exception Codes Not Documented → Added exception code reference table (PART001-PART007 with actions)</div>
+<div class="gap-highlight"><strong>GAP 5 (MEDIUM):</strong> Find Customer Search Logic Unclear → Added 6-step search sequence (ACN → DOB+Name → Address)</div>
+<div class="gap-highlight"><strong>GAP 6 (MEDIUM):</strong> Create Customer Validation Missing → Added 10-point validation checklist</div>
+<div class="gap-highlight"><strong>GAP 7 (MEDIUM):</strong> Edit Customer Behavior Unclear → Added section documenting name auto-refresh vs address manual check</div>
+<div class="gap-highlight"><strong>GAP 8 (LOW):</strong> Trust Matching Unclear → Added trust verification process with trustee matching via DAS</div>
+<div class="gap-highlight"><strong>GAP 9 (LOW):</strong> ASIC Search Criteria Missing → Added decision criteria (verify registered, check e-Sys first)</div>
+<div class="gap-highlight"><strong>GAP 10 (LOW):</strong> DAS Prioritization Missing → Added when to use DAS (buyer verification, transfer confirmation)</div>
+<div class="gap-highlight"><strong>GAP 11 (LOW):</strong> Duplicate Resolution SLA Missing → Added escalation SLA (Senior Staff within 1 day, do not proceed until resolved)</div>
+<div class="gap-highlight"><strong>GAP 12 (LOW):</strong> Superfund/Company Distinction Unclear → Added comparison ("ABC Pty Ltd"=company; "ABC Trust"=trust)</div>
+<div class="gap-highlight"><strong>GAP 13 (LOW):</strong> Completion Criteria Not Explicit → Added mandatory updates checklist before proceeding</div>
+<div class="gap-highlight"><strong>GAP 14 (LOW):</strong> COI DLS Search Format Unclear → Added search steps and critical note to uncheck eSys search</div>
+<div class="gap-highlight"><strong>GAP 15 (LOW):</strong> Reserve/Redirect SLA Missing → Added SLA (reserve max 5 days; redirect ack within 1 day, complete within 3)</div>
+</section>
+
+<section class="summary-section" id="task-matrix">
+<h2>Party Task Type Decision Matrix</h2>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Task Type</th>
+<th>Exception Trigger</th>
+<th>Customer Status</th>
+<th>Action Required</th>
+</tr>
+<tr>
+<td><strong>Resolve Party Match</strong></td>
+<td>No match OR multiple equal</td>
+<td>Unknown</td>
+<td>Manual selection or create</td>
+</tr>
+<tr>
+<td><strong>Verify Party Match</strong></td>
+<td>Match found, data mismatch</td>
+<td>Matched, unverified</td>
+<td>Verify & update</td>
+</tr>
+<tr>
+<td><strong>Resolve High Volume</strong></td>
+<td>Resolve Party Match + 3+ buyers</td>
+<td>Multiple matches</td>
+<td>Process all buyers</td>
+</tr>
+<tr>
+<td><strong>Resolve Excluded Party</strong></td>
+<td>Excluded word in name</td>
+<td>Special entity</td>
+<td>Verify entity type</td>
+</tr>
+<tr>
+<td><strong>Resolve Trust Party</strong></td>
+<td>Trust NOA, unmatched trust/trustee</td>
+<td>Trust-specific</td>
+<td>Create/link or escalate</td>
+</tr>
+</table>
+</div>
+</section>
+
+<section class="summary-section">
+<h2>Procedure Summary</h2>
+<ul style="font-size:13px;">
+<li>5-step process (Q1-Q5) for processing LOAN Party Tasks</li>
+<li>Q1: Identify task type via exception code decision matrix</li>
+<li>Q2: Search for customer using 6-step priority sequence (ACN → DOB+Name → Address)</li>
+<li>Q3: Verify linked customer data complete; escalate duplicates</li>
+<li>Q4: Apply mandatory updates (name/address/DOB/ACN); understand system refresh behavior</li>
+<li>Q5: Complete Party Task or cancel/redirect as needed</li>
+<li>Special handling: trust entities, bare trusts (escalate), superfund classification</li>
+<li>Confidence thresholds: Very High/High=link; Medium=verify; Low/Poor=reject</li>
+<li>Time standard: 5 minutes per Party Task</li>
+</ul>
+</section>
+
+<section class="summary-section">
+<h2>Source of Authority</h2>
+<ul style="font-size:13px;">
+<li><strong>Division:</strong> Land Revenue Services</li>
+<li><strong>Branch:</strong> Land Information Management</li>
+<li><strong>Created:</strong> 1 July 2018</li>
+<li><strong>Revised:</strong> 15 November 2024</li>
+<li><strong>Time Standard:</strong> 5 minutes per Party Task</li>
+</ul>
+</section>
+
+<section class="summary-section" id="definitions">
+<h2>Definitions & Acronyms</h2>
+<p style="font-size:13px;">
+<strong>LOAN</strong> - Land Ownership and NOA system<br>
+<strong>NOA</strong> - Notice of Acquisition<br>
+<strong>SRO</strong> - State Revenue Office<br>
+<strong>CID</strong> - Customer ID<br>
+<strong>ACN</strong> - Australian Company Number<br>
+<strong>ABN</strong> - Australian Business Number<br>
+<strong>DOB</strong> - Date of Birth<br>
+<strong>COI DLS</strong> - Compliance Operational Intelligence, Driver License System<br>
+<strong>DAS</strong> - Document Assessing System<br>
+<strong>ASIC</strong> - Australian Securities & Investments Commission<br>
+<strong>Involved Party</strong> - The purchaser (buyer) from NOA being matched<br>
+<strong>Confidence Level</strong> - Quality score for match (Poor/Low/Medium/High/Very High)<br>
+<strong>Bare Trust</strong> - Trust with superfund beneficiary (escalate, manual creation required)<br>
+<strong>Superfund</strong> - Superannuation fund trust (Sub-Type = "Superannuation Trust (Compliant)")<br>
+<strong>Trustee</strong> - Individual or company managing trust on behalf of beneficiary
+</p>
+</section>
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(e=>e.style.display='none');
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(e=>e.style.display='block');document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(e=>e.style.display='block');document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

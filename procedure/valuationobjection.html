@@ -1,1 +1,703 @@
 
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Complying with Valuation Objection VCAT Orders - IMPROVED</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .improvement-badge{display:inline-block;background:#fbbf24;color:#78350f;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700;margin-left:12px}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .sidebar a.gap-link{color:#ec4899;font-weight:600}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    ul,ol{margin-left:22px;font-size:13px}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px;font-size:13px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .decision-box{background:#fef3c7;border-left:5px solid #d97706;padding:12px;margin-top:12px;font-size:13px;font-weight:600;color:#92400e}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .gap-highlight{background:#fce7f3;border-left:5px solid #ec4899;padding:12px 16px;margin:12px 0;font-size:13px}
+    .score{background:#f0fdf4;border-left:5px solid #22c55e;padding:12px 16px;margin:12px 0;font-size:14px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;-webkit-tap-highlight-color:transparent}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .detail-panel .page-ref{font-size:11px;color:#3b82f6;font-weight:600;margin-top:8px;padding-top:8px;border-top:1px solid #e0e7ff}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .branch{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;justify-content:center}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#475569}
+    .legend-dot{width:12px;height:12px;border-radius:3px}
+    .table-responsive{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+    .checklist{background:#f9fafb;border:1px solid #e5e7eb;padding:16px;margin:12px 0;border-radius:6px}
+    .checklist li{list-style:none;padding-left:24px;position:relative;margin-bottom:8px;font-size:13px}
+    .checklist li::before{content:'☐';position:absolute;left:0;font-weight:bold;color:#003a8f}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Complying with Valuation Objection VCAT Orders <span class="improvement-badge">GAPS IMPROVED</span></h1>
+  <p>Division: Operations &bull; Branch: Land Revenue &bull; Revised: October 2025 &bull; Enhanced with 15-gap analysis</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#background">Background & Context</a>
+    <a href="#q1">Q1 Valid Order?</a>
+    <a href="#q2">Q2 Action Item</a>
+    <a href="#q3">Q3 Apply Valuation</a>
+    <a href="#q4">Q4 Reassess & Refund</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#gaps-summary" class="gap-link" onclick="showView('spec');setTimeout(function(){document.location.hash='gaps-summary'},100);">📊 Gaps Analysis</a>
+    <a href="#vcat-vg-comparison" onclick="showView('spec');setTimeout(function(){document.location.hash='vcat-vg-comparison'},100);">VCAT vs VG</a>
+    <a href="#special-customer" onclick="showView('spec');setTimeout(function(){document.location.hash='special-customer'},100);">Special Customer</a>
+    <a href="#documentation-checklist" onclick="showView('spec');setTimeout(function(){document.location.hash='documentation-checklist'},100);">Documentation</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(function(){document.location.hash='definitions'},100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+<div id="questionFlow">
+
+  <!-- BACKGROUND SECTION -->
+
+  <section id="background">
+    <h2>Background: Valuation Objection Process <span class="improvement-badge">CONTEXT</span></h2>
+    <div class="staff">
+      <h3>Overview of Valuation Objection Framework</h3>
+      <p style="font-size:13px;margin-bottom:12px;">Under Part III of the <em>Valuation of Land Act 1960</em>, customers may object to valuations on rate notices, ESVF notices, or land tax assessments (including VRLT). This procedure applies when a VCAT Order has been issued amending a valuation.</p>
+
+```
+  <h3>Objection Timeline</h3>
+  <ul style="font-size:13px;">
+    <li><strong>Customer objects:</strong> Within 2 months of assessment being issued</li>
+    <li><strong>Valuer reviews:</strong> Has 4 months to recommend adjustment or disallow</li>
+    <li><strong>VGV decides:</strong> Has 2 months to allow or disallow recommendation</li>
+    <li><strong>VCAT review:</strong> Customer can appeal to VCAT if dissatisfied with valuer or VGV decision</li>
+    <li><strong>VCAT Order:</strong> VCAT may amend valuation; SRO must comply</li>
+  </ul>
+
+  <div class="ref" style="margin-top:12px;"><strong>Legislation:</strong> <em>Valuation of Land Act 1960</em> Part III, <em>Taxation Administration Act 1997</em> Section 24A (interest on refunds)</div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: VCAT Order, customer record, property valuation history</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (compliance and amendment), e-Sys (valuation recording)</div>
+    <div class="block"><strong>Decision</strong>: Is order valid and ready to process?</div>
+    <div class="block"><strong>Output</strong>: Amended valuation, recalculated liability, customer notification</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q1 VALID ORDER -->
+
+  <section id="q1">
+    <h2>Q1 - Has a Valid VCAT Order Amending a Valuation Been Received? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <div class="checklist">
+        <ul style="font-size:13px;">
+          <li>Order is issued by VCAT (not a recommendation or draft)</li>
+          <li>Order relates to land valuation (not other matters)</li>
+          <li>Order specifies amended valuation (original and new values shown)</li>
+          <li>Order identifies affected property/properties clearly</li>
+          <li>Order references are complete (VCAT case number present)</li>
+          <li>Order received from customer, valuer, or VGV (documented source)</li>
+        </ul>
+      </div>
+
+```
+  <h3>Next Steps if Valid</h3>
+  <ol style="font-size:13px;">
+    <li>Save order in customer CM10 file (EDRMS)</li>
+    <li>Record VCAT Reference on action item (Reference Tab)</li>
+    <li>Proceed to Q2 (Action Item Check)</li>
+  </ol>
+
+  <div class="stop" style="margin-top:12px;">If order does NOT meet all 6 validity checks, escalate to Team Leader. Do NOT proceed with incomplete orders.</div>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: VCAT Order Validity Checklist</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>What Makes a VCAT Order Valid?</h4>
+    <p>A valid VCAT Order must:</p>
+    <ul>
+      <li>Be a Final Order (not interim, draft, or recommendation)</li>
+      <li>Be signed/issued by VCAT tribunal member</li>
+      <li>Have a VCAT case reference (e.g., VCAT Case 123/2025)</li>
+      <li>State the decision (e.g., "Application allowed" or "Valuation amended")</li>
+      <li>Specify original AND amended valuations</li>
+      <li>Identify property clearly (address, lot/plan, or property ID)</li>
+      <li>Specify year(s) to which amendment applies</li>
+    </ul>
+
+    <h4>NOT Valid - Do Not Process</h4>
+    <ul>
+      <li>VG Recommendation (not a VCAT Order - different process)</li>
+      <li>Draft or unsigned order</li>
+      <li>Order missing valuation amounts</li>
+      <li>Order relating to rates only (not land tax)</li>
+      <li>Photocopies without certification as true copy</li>
+    </ul>
+
+    <h4>If Order is Unclear</h4>
+    <p>Contact VCAT or the customer for clarification. Do not proceed until order is confirmed as valid.</p>
+
+    <div class="page-ref">Source: Receiving VCAT Orders (LGA Procedure); Valuation of Land Act 1960 Part III</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: VCAT Order document, customer identification</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (validity assessment), EDRMS (document storage)</div>
+    <div class="block"><strong>Decision</strong>: Is order valid (meets 6 criteria)?</div>
+    <div class="block"><strong>Output</strong>: Valid → Save and proceed to Q2; Invalid → Escalate for clarification</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q2 ACTION ITEM -->
+
+  <section id="q2">
+    <h2>Q2 - Does a Relevant Amendment Action Item Exist? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <p style="font-weight:600;margin-bottom:12px;font-size:13px;">Check e-Sys for existing action items relating to this property and valuation level.</p>
+
+```
+  <div class="decision-box">
+    Which action item type exists?<br><br>
+    • "Valuation Objection Amendment" (preferred for VCAT orders)<br>
+    • "Other Amendment" (acceptable if already created)<br>
+    • No action item (create new)<br>
+    • Different type (change to "Valuation Objection Amendment" if possible)
+  </div>
+
+  <h3>If Action Item Exists (Same Property & Level)</h3>
+  <ul style="font-size:13px;">
+    <li>Add notes to existing item with VCAT reference</li>
+    <li>Continue to Q3 (Apply Valuation)</li>
+  </ul>
+
+  <h3>If No Action Item Exists</h3>
+  <ul style="font-size:13px;">
+    <li>Create new "Valuation Objection Amendment" action item</li>
+    <li>Record VCAT Reference (Reference Tab)</li>
+    <li>Proceed to Q3</li>
+  </ul>
+
+  <h3>If Different Type Exists</h3>
+  <ul style="font-size:13px;">
+    <li>Contact Team Leader/Grade 3 to change type if possible</li>
+    <li>If change not possible, note reason and continue</li>
+  </ul>
+
+  <div class="ref" style="margin-top:12px;"><strong>Note:</strong> Special Customer handling - see Summary & Review view</div>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Action Item Type Selection & Special Customer Handling</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>Action Item Type: Valuation Objection Amendment vs Other Amendment</h4>
+    <p><strong>Preferred:</strong> "Valuation Objection Amendment" - Used specifically for VCAT orders and valuation objection processes. Better tracking and easier to identify.</p>
+    <p><strong>Acceptable:</strong> "Other Amendment" - Can be used if "Valuation Objection Amendment" not available in system.</p>
+    <p><strong>Decision Rule:</strong> If only one type available, use that type. Record in comments that this is a VCAT order.</p>
+
+    <h4>Special Customer Handling</h4>
+    <p>If the customer is designated as a "Special Customer" in e-Sys (e.g., government agency, large corporation, disputed liability), you MUST:</p>
+    <ol>
+      <li>Discuss the VCAT order with assigned Senior Customer Service Officer BEFORE processing</li>
+      <li>Document the discussion in action item comments</li>
+      <li>Proceed only after Senior CSO approval</li>
+    </ol>
+    <p><strong>Special Customer Definition:</strong> Customers flagged in e-Sys as requiring special handling due to size, complexity, dispute history, or strategic importance.</p>
+
+    <div class="page-ref">Source: Receiving VCAT Orders (LGA Procedure); e-Sys Special Customer Classification</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: VCAT Order, e-Sys action item list for property</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (action item check), e-Sys (action item management)</div>
+    <div class="block"><strong>Decision</strong>: Action item type - Valuation Objection vs Other vs Create new?</div>
+    <div class="block"><strong>Output</strong>: Action item identified/created and recorded with VCAT reference</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q3 APPLY VALUATION -->
+
+  <section id="q3">
+    <h2>Q3 - Can the Amended Valuation Be Applied as Specified in the VCAT Order? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Step 1: Identify Affected Land</h3>
+      <ol style="font-size:13px;">
+        <li>Review VCAT Order to identify property/properties</li>
+        <li>Confirm property matches customer's holdings</li>
+        <li>If multiple lots, confirm all are listed on order</li>
+        <li>Note current site value and capital improved value</li>
+      </ol>
+
+```
+  <h3>Step 2: Check for Valuation Breakdown Requirement</h3>
+  <div class="decision-box">
+    Does VCAT Order provide single value for multiple lots?<br><br>
+    • NO (single property) → Proceed to Step 3<br>
+    • YES (multiple properties) → Request breakdown (see detail panel)
+  </div>
+
+  <h3>Step 3: Load Property to e-Sys</h3>
+  <ul style="font-size:13px;">
+    <li>Load relevant property to e-Sys tree</li>
+    <li>Refer to VG Confirmation procedure for guidance</li>
+  </ul>
+
+  <h3>Step 4: Apply Amended Valuation</h3>
+  <ul style="font-size:13px;">
+    <li>Valuation Type: "Objection"</li>
+    <li>Return Date: Unchanged (do not modify)</li>
+    <li>Site Value: Update per VCAT Order</li>
+    <li>Capital Improved Value: Update if VRLT affected</li>
+    <li>Comment: VCAT Reference + relevant notes</li>
+  </ul>
+
+  <div class="stop" style="margin-top:12px;">Do NOT apply valuation without required breakdown. Contact VGV for multi-property orders.</div>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Valuation Breakdown, Multi-Property Orders, & Subdivision/Consolidation</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>When is Valuation Breakdown Required?</h4>
+    <p>Breakdown is needed when:</p>
+    <ul>
+      <li>VCAT Order provides single value for multiple properties</li>
+      <li>Common for shopping centres, multi-property estates</li>
+      <li>Breakdown must show: individual property value + total</li>
+    </ul>
+
+    <h4>How to Request Breakdown</h4>
+    <p><strong>Contact:</strong> Valuer General of Victoria or relevant valuation officer</p>
+    <p><strong>Information to Provide:</strong> VCAT case reference, property details, original order</p>
+    <p><strong>Timeline:</strong> Request within 5 working days of receiving order. VGV usually responds within 10-15 business days.</p>
+
+    <h4>Multi-Property Handling Process</h4>
+    <ol>
+      <li>Identify all properties in VCAT Order</li>
+      <li>Load each property to e-Sys separately</li>
+      <li>Apply breakdown values to each property</li>
+      <li>Verify total matches VCAT order amount</li>
+      <li>Document breakdown received in action item comments</li>
+    </ol>
+
+    <h4>Subdivision/Consolidation Scenarios</h4>
+    <p><strong>When subdivision may occur:</strong> If VCAT order addresses property that has been subdivided since original valuation.</p>
+    <p><strong>When consolidation may occur:</strong> If VCAT order addresses consolidated property that was previously separate lots.</p>
+    <p><strong>Action:</strong> If either situation suspected, escalate to Grade 3 for guidance on valuation application.</p>
+
+    <h4>Valuation Type "Objection" System Field</h4>
+    <p>This field identifies the valuation as resulting from a VCAT or objection process (not a revaluation cycle). Important for reporting and audit purposes.</p>
+
+    <div class="page-ref">Source: Processing a VCAT Order (LGA Procedure); VG Confirmation Procedure; e-Sys Valuation Fields Guide</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: VCAT Order (with valuations), property details, current valuation data</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (identification & application), e-Sys (valuation recording), VGV (breakdown if needed)</div>
+    <div class="block"><strong>Decision</strong>: Can valuation be applied? (breakdown needed? subdivision/consolidation?)</div>
+    <div class="block"><strong>Output</strong>: Amended valuation applied to relevant property/properties and years</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q4 REASSESS & REFUND -->
+
+  <section id="q4">
+    <h2>Q4 - Reassess Liability, Calculate Refunds, and Notify Customer <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Step 1: Recalculate Land Tax Liability</h3>
+      <ol style="font-size:13px;">
+        <li>Apply amended valuation to all relevant years</li>
+        <li>Recalculate land tax liability for affected years</li>
+        <li>Reissue assessment for each amended year</li>
+      </ol>
+
+```
+  <h3>Step 2: Determine Overpayments & Refunds</h3>
+  <div class="decision-box">
+    Has amended valuation resulted in overpayment?<br><br>
+    • NO overpayment → Proceed to Step 4<br>
+    • YES overpayment → Calculate refund (with interest)
+  </div>
+
+  <h3>Step 3: Calculate Refund & Interest</h3>
+  <ul style="font-size:13px;">
+    <li>Identify amount of overpayment</li>
+    <li><strong>IMPORTANT:</strong> Interest applies under Section 24A TAA 1997</li>
+    <li>Interest accrues from original payment date to refund date</li>
+    <li>Refer to separate Land Tax Refunds procedure for calculation method</li>
+    <li>Arrange refund via EFT (electronic funds transfer)</li>
+  </ul>
+
+  <h3>Step 4: Prepare Customer Notification</h3>
+  <ul style="font-size:13px;">
+    <li>Send email/letter to customer with:</li>
+    <li>VCAT Order reference</li>
+    <li>Table showing: property, year, original value, amended value</li>
+    <li>Notification of new assessment issuance date</li>
+    <li>Refund amount and payment method (EFT preferred)</li>
+    <li>Request for bank details if refund needed</li>
+  </ul>
+
+  <div class="ref" style="margin-top:12px;"><strong>Note:</strong> Email template provided in detail panel. Customization guidance included.</div>
+
+  <h3>Step 5: Complete Action Item</h3>
+  <div class="checklist">
+    <ul style="font-size:13px;">
+      <li>Order saved to CM10 file</li>
+      <li>VCAT Reference recorded on action item</li>
+      <li>Valuation applied to all affected years</li>
+      <li>Liability recalculated</li>
+      <li>Refund calculated (if applicable)</li>
+      <li>Customer notification sent</li>
+      <li>All comments and notes documented</li>
+      <li>Action item closed</li>
+    </ul>
+  </div>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Refund Calculation, Interest Calculation, Customer Notification Template & Prior Year Amendments</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>Refund Determination Decision Tree</h4>
+    <p><strong>Question:</strong> Has amended valuation reduced land tax liability?</p>
+    <ul>
+      <li><strong>Yes:</strong> Customer overpaid. Refund is due.</li>
+      <li><strong>No:</strong> Amended valuation is equal or higher. No refund.</li>
+    </ul>
+
+    <h4>Interest Calculation - Section 24A TAA 1997</h4>
+    <p><strong>Rule:</strong> Interest applies to refunds of overpaid land tax from objection/VCAT processes.</p>
+    <p><strong>Calculation:</strong> Interest accrues from original payment date to refund date at current interest rate (set by Treasurer annually).</p>
+    <p><strong>Application:</strong> For detailed interest calculation methodology, refer to Land Tax Refunds procedure.</p>
+    <p><strong>Document Interest:</strong> Show interest separately in refund communication. Explain that interest is required by legislation.</p>
+
+    <h4>Customer Notification: When & How</h4>
+    <p><strong>When to Send:</strong> After liability recalculated, assessment reissued, and refund calculated.</p>
+    <p><strong>Method:</strong> Email preferred (faster); letter alternative if customer lacks email.</p>
+    <p><strong>Customization:</strong> Use provided template as base. Customize only values and specific property details. Do NOT change legislative statements or refund conditions.</p>
+
+    <h4>Customer Notification Template (Customizable)</h4>
+    <p><em>Subject: VCAT Order - Updated Land Tax Assessment [VCAT Reference]</em></p>
+    <p><em>Good morning/afternoon,</em></p>
+    <p><em>I refer to the Victorian Civil and Administrative Tribunal (VCAT) order provided (Reference No. [INSERT VCAT REF]).</em></p>
+    <p><em>Please be advised that the VCAT order has now been applied as per the below:</em></p>
+    <p><em>TABLE: [Insert property, year, valuation type, original value, amended value, decision (Allowed)]</em></p>
+    <p><em>As a result, amended [YEAR] land tax assessments have been issued and a refund of overpayments will be provided.</em></p>
+    <p><em>We issue refunds via electronic funds transfer (EFT). To receive your refund, please reply with: account name, BSB, account number.</em></p>
+    <p><em>Note: Section 22 TAA 1997 - If tax recovered from another person, you must reimburse them within 90 days of receiving refund.</em></p>
+    <p><em>Contact: 13 21 61 for queries.</em></p>
+
+    <h4>Prior Year Amendment Process</h4>
+    <p><strong>Situation:</strong> VCAT Order amends valuation for years not in current assessment cycle.</p>
+    <p><strong>Process:</strong></p>
+    <ol>
+      <li>Identify all years affected by VCAT Order</li>
+      <li>Load each year's assessment to e-Sys</li>
+      <li>Apply amended valuation per order</li>
+      <li>Recalculate liability for each year</li>
+      <li>Reissue assessment for each amended year</li>
+      <li>Calculate cumulative refund if multiple years affected</li>
+    </ol>
+    <p><strong>Documentation:</strong> Record all years amended in action item comments and customer communication.</p>
+
+    <div class="page-ref">Source: Processing a VCAT Order (LGA Procedure); Taxation Administration Act 1997 Section 24A; Land Tax Refunds Procedure</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Amended valuation (applied), recalculated liability, current/prior year assessments</div>
+    <div class="block"><strong>Processing responsibility</strong>: e-Sys (liability recalculation), Staff (refund determination), Refunds team (refund processing)</div>
+    <div class="block"><strong>Decision</strong>: Overpayment? Refund amount? Prior years affected?</div>
+    <div class="block"><strong>Output</strong>: Reissued assessments, refund initiated, customer notified, action item completed</div>
+  </div>
+</div>
+```
+
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION VIEW -->
+
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction - VCAT Order Processing Flow</h2>
+    <div class="flow">
+      <div class="flow-title">Q1-Q4 VCAT Order Processing</div>
+      <div class="node n-amber">VCAT Order Received</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q1: Validate Order</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q2: Check/Create Action Item</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q3: Identify & Load Properties</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q3: Apply Amended Valuation</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q4: Recalculate Liability</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q4: Determine Refunds</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q4: Notify Customer</div>
+      <div class="arr"></div>
+      <div class="node n-gray">Processing Complete</div>
+      <div style="margin-top:24px;"></div>
+      <div class="flow-title" style="font-size:16px;">Systems Involved</div>
+      <div class="branch">
+        <div class="node n-blue" style="font-size:11px;">e-Sys</div>
+        <div class="node n-amber" style="font-size:11px;">EDRMS (CM10)</div>
+        <div class="node n-amber" style="font-size:11px;">VGV</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> Processing Step</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> External System</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> Completion</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SUMMARY & REVIEW VIEW -->
+
+<div class="specOnly">
+  <section class="summary-section" id="gaps-summary">
+    <h2>📊 Gaps Analysis Summary (15 Gaps Addressed)</h2>
+
+```
+<div class="gap-highlight"><strong>GAP 1 (HIGH):</strong> VCAT Order Validity Undefined → Added Q1 6-point validity checklist</div>
+<div class="gap-highlight"><strong>GAP 2 (HIGH):</strong> VCAT vs VG Confirmation Not Distinguished → Added comparison table (see Resources)</div>
+<div class="gap-highlight"><strong>GAP 3 (HIGH):</strong> Action Item Type Ambiguity → Added Q2 decision criteria (Valuation Objection vs Other)</div>
+<div class="gap-highlight"><strong>GAP 4 (MEDIUM):</strong> Valuation Breakdown Unclear → Added Q3 breakdown request process & timeline</div>
+<div class="gap-highlight"><strong>GAP 5 (MEDIUM):</strong> Land Identification Vague → Added Q3 structured 4-step identification</div>
+<div class="gap-highlight"><strong>GAP 6 (MEDIUM):</strong> Valuation Application Rules Undefined → Added Q3 subdivision/consolidation criteria</div>
+<div class="gap-highlight"><strong>GAP 7 (MEDIUM):</strong> Special Customer Handling Unclear → Added Q2 definition & escalation process</div>
+<div class="gap-highlight"><strong>GAP 8 (MEDIUM):</strong> Refund Determination Vague → Added Q4 decision tree & refund logic</div>
+<div class="gap-highlight"><strong>GAP 9 (LOW):</strong> Interest Calculation Not Explained → Added Q4 Section 24A guidance</div>
+<div class="gap-highlight"><strong>GAP 10 (LOW):</strong> Customer Notification Template Unclear → Added Q4 customization guidance</div>
+<div class="gap-highlight"><strong>GAP 11 (LOW):</strong> Completion Criteria Missing → Added Q4 8-item completion checklist</div>
+<div class="gap-highlight"><strong>GAP 12 (LOW):</strong> Multi-Property Orders Not Detailed → Added Q3 multi-property process</div>
+<div class="gap-highlight"><strong>GAP 13 (LOW):</strong> Prior Year Amendments Unclear → Added Q4 prior-year amendment process</div>
+<div class="gap-highlight"><strong>GAP 14 (LOW):</strong> Documentation Checklist Missing → Added in Summary (Documentation Checklist)</div>
+<div class="gap-highlight"><strong>GAP 15 (LOW):</strong> Valuation Type "Objection" Undefined → Added Q3 system field guidance</div>
+```
+
+  </section>
+
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul style="font-size:13px;">
+      <li>4-step process (Q1-Q4) for complying with VCAT Orders amending land tax valuations</li>
+      <li>Q1: Validate VCAT Order using 6-point checklist</li>
+      <li>Q2: Check/create relevant amendment action item</li>
+      <li>Q3: Identify affected properties and apply amended valuation</li>
+      <li>Q4: Recalculate liability, determine refunds (with interest), notify customer</li>
+      <li>Covers single and multi-property orders</li>
+      <li>Includes refund determination with Section 24A interest calculation</li>
+      <li>Includes special customer handling and prior-year amendments</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul style="font-size:13px;">
+      <li><strong>Division:</strong> Operations</li>
+      <li><strong>Branch:</strong> Land Revenue</li>
+      <li><strong>Created:</strong> 1 July 2018</li>
+      <li><strong>Revised:</strong> 1 October 2025</li>
+      <li><strong>Legislation:</strong> <em>Valuation of Land Act 1960</em> Part III; <em>Taxation Administration Act 1997</em> Section 24A</li>
+      <li><strong>System of Record:</strong> Lotus Notes Policies and Procedures Database</li>
+    </ul>
+  </section>
+
+  <section class="summary-section" id="vcat-vg-comparison">
+    <h2>VCAT Orders vs VG Confirmation: Key Distinctions</h2>
+    <p style="font-size:13px;margin-bottom:12px;">Understanding the difference is critical for applying the correct procedure.</p>
+
+```
+<div class="table-responsive">
+  <table style="font-size:12px;">
+    <tr style="background:#003a8f;color:white;">
+      <th>Aspect</th>
+      <th>VCAT Order</th>
+      <th>VG Confirmation</th>
+    </tr>
+    <tr>
+      <td><strong>Origin</strong></td>
+      <td>VCAT tribunal (judicial body)</td>
+      <td>Valuer General of Victoria recommendation</td>
+    </tr>
+    <tr>
+      <td><strong>Authority</strong></td>
+      <td>Binding final decision (appealable only to higher courts)</td>
+      <td>Recommendation from VGV assessment process</td>
+    </tr>
+    <tr>
+      <td><strong>Procedure to Use</strong></td>
+      <td>THIS procedure (VCAT Orders)</td>
+      <td>VG Confirmation procedure (different)</td>
+    </tr>
+    <tr>
+      <td><strong>When Occurs</strong></td>
+      <td>After customer appeals VGV decision to VCAT</td>
+      <td>After valuer completes assessment review</td>
+    </tr>
+    <tr>
+      <td><strong>Action Item Type</strong></td>
+      <td>Valuation Objection Amendment</td>
+      <td>Valuation Objection Amendment (same)</td>
+    </tr>
+    <tr>
+      <td><strong>Refund Possible</strong></td>
+      <td>Yes (if overpaid)</td>
+      <td>Yes (if overpaid)</td>
+    </tr>
+  </table>
+</div>
+```
+
+  </section>
+
+  <section class="summary-section" id="special-customer">
+    <h2>Special Customer Handling Process</h2>
+    <p style="font-size:13px;"><strong>What is a Special Customer?</strong> Customers designated in e-Sys as requiring special handling due to: government agency status, large corporation, dispute history, strategic importance, or complexity.</p>
+
+```
+<h3>Escalation Process for Special Customers</h3>
+<ol style="font-size:13px;">
+  <li>Identify customer as "Special" in e-Sys</li>
+  <li>BEFORE processing VCAT Order: Discuss with assigned Senior Customer Service Officer</li>
+  <li>Document discussion in action item comments</li>
+  <li>Obtain Senior CSO approval before proceeding</li>
+  <li>Proceed with normal processing steps</li>
+</ol>
+
+<div class="stop">Never process a VCAT Order for a Special Customer without Senior CSO notification and approval.</div>
+```
+
+  </section>
+
+  <section class="summary-section" id="documentation-checklist">
+    <h2>Documentation & Audit Trail Checklist</h2>
+    <p style="font-size:13px;margin-bottom:12px;">Complete audit trail requires documentation at each step:</p>
+
+```
+<div class="checklist">
+  <ul style="font-size:13px;">
+    <li>VCAT Order saved to CM10 customer file (EDRMS)</li>
+    <li>VCAT Reference recorded on action item (Reference Tab)</li>
+    <li>Source of order documented (customer, valuer, VGV)</li>
+    <li>Date received recorded</li>
+    <li>Validity check documented in action item notes</li>
+    <li>Special Customer escalation (if applicable) documented</li>
+    <li>Breakdown request (if required) documented with timeline</li>
+    <li>Properties loaded to e-Sys documented</li>
+    <li>Original valuations noted before amendment</li>
+    <li>Amended valuation applied with VCAT reference in comment field</li>
+    <li>Years affected recorded in action item</li>
+    <li>Refund amount calculated and documented</li>
+    <li>Interest calculation documented (with rate used)</li>
+    <li>Customer notification sent with date recorded</li>
+    <li>Action item marked complete with final date</li>
+  </ul>
+</div>
+```
+
+  </section>
+
+  <section class="summary-section" id="definitions">
+    <h2>Definitions &amp; Acronyms</h2>
+    <p style="font-size:13px;">
+      <strong>VCAT</strong> - Victorian Civil and Administrative Tribunal (judicial review body)<br>
+      <strong>VGV</strong> - Valuer General of Victoria<br>
+      <strong>EDRMS</strong> - Electronic Document Record Management System<br>
+      <strong>CM10</strong> - EDRMS file name for customer documents<br>
+      <strong>e-Sys</strong> - Land Revenue system for assessment and liability management<br>
+      <strong>VRLT</strong> - Vacant Residential Land Tax<br>
+      <strong>ESVF</strong> - Emergency Services Victoria Fund<br>
+      <strong>TAA</strong> - Taxation Administration Act 1997<br>
+      <strong>EFT</strong> - Electronic Funds Transfer (preferred refund method)<br>
+      <strong>Special Customer</strong> - Customer designated for special handling (government, large entity, etc.)
+    </p>
+  </section>
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(function(e){e.style.display='none'});
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(function(e){e.style.display='block'});document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(function(e){e.style.display='block'});document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

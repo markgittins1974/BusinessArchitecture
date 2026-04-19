@@ -1,0 +1,743 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LOAN Ownership Task Procedure - IMPROVED</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .improvement-badge{display:inline-block;background:#fbbf24;color:#78350f;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700;margin-left:12px}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .sidebar a.gap-link{color:#ec4899;font-weight:600}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    ul,ol{margin-left:22px;font-size:13px;line-height:1.6}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px;font-size:13px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .decision-box{background:#fef3c7;border-left:5px solid #d97706;padding:12px;margin-top:12px;font-size:13px;color:#92400e}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .gap-highlight{background:#fce7f3;border-left:5px solid #ec4899;padding:12px 16px;margin:12px 0;font-size:13px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel h5{font-size:13px;font-weight:700;color:#1e3a8a;margin:10px 0 4px;margin-left:12px}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .detail-panel .page-ref{font-size:11px;color:#3b82f6;font-weight:600;margin-top:8px;padding-top:8px;border-top:1px solid #e0e7ff}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .table-responsive{overflow-x:auto;margin:12px 0}
+    table{width:100%;border-collapse:collapse;font-size:12px}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>LOAN Ownership Task Procedure <span class="improvement-badge">GAPS IMPROVED (14)</span></h1>
+  <p>Division: Land Revenue Services &bull; Branch: Land Information Management &bull; Revised: 22 April 2025</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#overview">Overview</a>
+    <a href="#q1">Q1 Task Types</a>
+    <a href="#q2">Q2 Verify Ownership</a>
+    <a href="#q3">Q3 Resolve Exceptions</a>
+    <a href="#q4">Q4 Manual Transfer</a>
+    <a href="#q5">Q5 Complete</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#gaps-summary" class="gap-link" onclick="showView('spec');setTimeout(()=>location.hash='gaps-summary',100);">📊 Gaps Analysis</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(()=>location.hash='definitions',100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+<div id="questionFlow">
+
+<!-- OVERVIEW -->
+
+<section id="overview">
+<h2>LOAN Ownership Task Procedure Overview <span class="improvement-badge">CONTEXT</span></h2>
+<div class="staff">
+<h3>Purpose</h3>
+<p style="font-size:13px;">Process Ownership Tasks in LOAN system to validate and complete correct ownership changes in e-Sys based on NOA data. Final stage after Party and Property Tasks resolved.</p>
+
+<h3>Why Ownership Tasks Created</h3>
+<p style="font-size:13px;">After Party (customer) and Property (land ID) are matched, LOAN system attempts to auto-update ownership. When system cannot process due to exceptions or special circumstances, manual Ownership Tasks are created.</p>
+
+<h3>Key Definitions</h3>
+<ul style="font-size:13px;">
+<li><strong>VCOO:</strong> Verify Change of Ownership (exception detected in automated update)</li>
+<li><strong>OWN007:</strong> Potential duplicate ownership exception</li>
+<li><strong>OWN022:</strong> Owner Unknown record with calendar year boundary issue</li>
+<li><strong>Terms Sale:</strong> Vendor remains owner until purchaser takes possession AND pays 15%</li>
+<li><strong>Manner of Holding:</strong> Joint proprietors vs tenants in common</li>
+</ul>
+
+<h3>Time Standard</h3>
+<p style="font-size:13px;font-weight:600;">5 minutes per Ownership Task</p>
+
+<div class="ref"><strong>Authority:</strong> Land Tax Act 2005 s15-s16 | <strong>Branch:</strong> Land Information Management</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Verified Party (customer) and Property (Land ID), ownership update exception</div>
+<div class="block"><strong>Process:</strong> Validate and execute ownership change in e-Sys via DAS verification or manual transfer</div>
+<div class="block"><strong>Decision:</strong> Can LOAN proceed with auto update or requires manual transfer?</div>
+<div class="block"><strong>Output:</strong> Ownership updated in e-Sys, tax liability assigned to correct customer</div>
+</div>
+</div>
+</section>
+
+<!-- Q1 TASK TYPES -->
+
+<section id="q1">
+<h2>Q1 - What Ownership Task Type Am I Processing? <span class="improvement-badge">IMPROVED</span></h2>
+<div class="staff">
+<h3>Two Ownership Task Types</h3>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Task Type</th>
+<th>When It Occurs</th>
+<th>Primary Action</th>
+</tr>
+<tr>
+<td><strong>Verify Change of Ownership (VCOO)</strong></td>
+<td>LOAN system encountered issue updating ownership (duplicate record, incorrect DOP, invalid share)</td>
+<td>Resolve exception, verify data, proceed or manual transfer</td>
+</tr>
+<tr>
+<td><strong>Verify Special Customer</strong></td>
+<td>Involved Party OR current owner is Special Customer with "prevent NOA automation" flag</td>
+<td>Confirm with Grade 3/4 staff before processing</td>
+</tr>
+</table>
+</div>
+
+<h3>Common Ownership Exception Codes <span class="improvement-badge">CRITICAL</span></h3>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Code</th>
+<th>Description</th>
+<th>Cause</th>
+<th>Action Required</th>
+</tr>
+<tr>
+<td><strong>OWN007</strong></td>
+<td>Potential duplicate ownership</td>
+<td>Same DOP as current, or same buyer listed, or buyer=current owner, or within 10 days</td>
+<td>Verify via DAS; if sequence issue, adjust possession date</td>
+</tr>
+<tr>
+<td><strong>OWN022</strong></td>
+<td>Owner Unknown record conflict</td>
+<td>DOP crosses 31 December with Owner Unknown record</td>
+<td>Confirm DOP with DAS/TOL; update possession date if needed</td>
+</tr>
+<tr>
+<td><strong>OWN010</strong></td>
+<td>Terms Sale detected</td>
+<td>Vendor conditions in transfer document</td>
+<td>Verify contract/possession dates; confirm buyer paid 15%</td>
+</tr>
+<tr>
+<td><strong>OWN015</strong></td>
+<td>Change of trustee only</td>
+<td>Trustee changed but beneficiary/ownership same</td>
+<td>Update trustee record only, do NOT change ownership</td>
+</tr>
+<tr>
+<td><strong>OWN020</strong></td>
+<td>Manner of holding conflict</td>
+<td>Joint proprietors vs tenants in common mismatch</td>
+<td>Verify DAS; update manner of holding if needed</td>
+</tr>
+</table>
+</div>
+
+<div class="decision-box">
+Special Customer Flag: If Involved Party OR current owner has "prevent NOA automation" flag, MUST confirm with Grade 3/4 staff BEFORE processing. Do NOT proceed without confirmation.
+</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Ownership Exception Code Reference (OWN001-OWN025) & Special Customer SLA</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Complete Ownership Exception Code Reference</h4>
+<div class="table-responsive">
+<table style="font-size:11px;">
+<tr style="background:#f3f4f6;">
+<th>Code</th>
+<th>Description</th>
+<th>Escalation Required</th>
+</tr>
+<tr>
+<td><strong>OWN001</strong></td>
+<td>Invalid share percentage</td>
+<td>No - Correct share</td>
+</tr>
+<tr>
+<td><strong>OWN002</strong></td>
+<td>Missing beneficiary data</td>
+<td>Yes - Senior Staff</td>
+</tr>
+<tr>
+<td><strong>OWN007</strong></td>
+<td>Potential duplicate ownership</td>
+<td>No - Verify DAS, adjust if needed</td>
+</tr>
+<tr>
+<td><strong>OWN010</strong></td>
+<td>Terms Sale conditions detected</td>
+<td>No - Verify contract, confirm 15% paid</td>
+</tr>
+<tr>
+<td><strong>OWN015</strong></td>
+<td>Change of trustee only</td>
+<td>No - Update trustee, not ownership</td>
+</tr>
+<tr>
+<td><strong>OWN020</strong></td>
+<td>Manner of holding conflict</td>
+<td>No - Verify DAS, update if needed</td>
+</tr>
+<tr>
+<td><strong>OWN022</strong></td>
+<td>Owner Unknown calendar boundary</td>
+<td>No - Verify DOP, adjust date if needed</td>
+</tr>
+<tr>
+<td><strong>OWN025</strong></td>
+<td>Special Customer automation flag</td>
+<td>Yes - Confirm with Grade 3/4</td>
+</tr>
+</table>
+</div>
+
+<h4>Special Customer Processing SLA <span class="improvement-badge">SLA ADDED</span></h4>
+<p style="font-size:13px;"><strong>When Involved Party OR current owner is Special Customer with "prevent NOA automation" flag:</strong></p>
+<ul style="font-size:13px;">
+<li>If VCOO + DOP in current assessment year → Can resolve normally</li>
+<li>If VCOO + DOP in prior assessment year → MUST confirm with relevant CSO (shown bottom-right of screen) before processing</li>
+<li>If prevent NOA automation flag present → ALWAYS confirm with CSO regardless of year</li>
+<li><strong>CSO Confirmation SLA:</strong> Request confirmation same day if possible; do not exceed 2 business days</li>
+<li><strong>If no response:</strong> Escalate to Senior Staff member (CSO's manager)</li>
+</ul>
+
+<div class="page-ref">Source: LOAN Ownership Task Procedure; Exception Types; Special Customer Processing</div>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Exception code, ownership update request, customer/property details</div>
+<div class="block"><strong>Process:</strong> Identify task type and determine if requires manual escalation</div>
+<div class="block"><strong>Decision:</strong> Can LOAN proceed or does manual staff approval needed?</div>
+<div class="block"><strong>Output:</strong> Task type identified, escalation determined</div>
+</div>
+</div>
+</section>
+
+<!-- Q2 VERIFY OWNERSHIP -->
+
+<section id="q2">
+<h2>Q2 - Can the Ownership Change Be Verified? <span class="improvement-badge">IMPROVED</span></h2>
+<div class="staff">
+<h3>DAS Bundle Verification (Critical Step)</h3>
+<p style="font-size:13px;">Before proceeding, verify ownership details in DAS (Dealing system documents) to confirm transfer is correct:</p>
+<ol style="font-size:13px;">
+<li>Open separate e-Sys session</li>
+<li>Search → Find DAS Bundle (enter Dealing Number)</li>
+<li>Go to <strong>Land Transfer tab</strong> → Verify DOP and TransType</li>
+<li>Go to <strong>Properties tab</strong> → Verify title references match</li>
+<li>Go to <strong>Transferees tab</strong> → Verify buyer/share details</li>
+<li>Right-click transferee → View Transferee to see full details</li>
+</ol>
+
+<h3>Terms Sale vs Normal Ownership (Decision Matrix) <span class="improvement-badge">CRITICAL</span></h3>
+<div class="decision-box">
+<strong>Terms Sale Definition (LTA2005 s15-s16):</strong><br>
+Vendor = deemed owner UNTIL purchaser takes possession AND pays 15% purchase price<br>
+Purchaser = deemed owner when in possession (regardless of payment status)<br>
+<br>
+<strong>Check DAS:</strong> If transfer shows vendor conditions (payment due, possession conditions), may be Terms Sale. Review contract date vs possession date.
+</div>
+
+<h3>Terms Sale Process</h3>
+<ol style="font-size:13px;">
+<li>Review transfer conditions in DAS Bundle → View Transferee → Contract/Possession dates</li>
+<li>If vendor retained conditions (payment due, possession withheld) → Terms Sale</li>
+<li>Tick Terms Sale indicator in Purchase Details</li>
+<li>Review contract date vs possession date:</li>
+<li style="margin-left:40px;">- If title updated to new purchaser AND no outstanding LTX → Proceed</li>
+<li style="margin-left:40px;">- If vendor liabilities outstanding OR possession conditions unfulfilled → Redirect to Business Team Office (BTO) with comment "Possible Terms Sale"</li>
+</ol>
+
+<h3>Duplicate Ownership Exception (OWN007) <span class="improvement-badge">IMPROVED</span></h3>
+<p style="font-size:13px;"><strong>When OWN007 occurs, investigate:</strong></p>
+<ul style="font-size:13px;">
+<li>Is same DOP on LOAN task as current DOP in e-Sys? → Duplicate same-day transfer</li>
+<li>Is same buyer listed on LOAN task as current owner in e-Sys? → Duplicate buyer</li>
+<li>Is different owner with DOP within 10 days? → Sequence issue (see below)</li>
+</ul>
+
+<p style="font-size:13px;"><strong>If duplicate confirmed:</strong> Check DAS to understand why two transfers same property same date. Escalate to Senior Staff member if cannot resolve.</p>
+
+<h3>Sequence of Ownership (Same-Day or Close Transactions) <span class="improvement-badge">IMPROVED</span></h3>
+<p style="font-size:13px;"><strong>Scenario: Two transfers within 10 days with different parties</strong></p>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Sequence Resolution Logic for Trust/Trustee, Owner Unknown & Same-Day Transactions</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Trust → Trustee Sequence (Change of Trustee)</h4>
+<p style="font-size:13px;"><strong>Situation:</strong> Current owner = trust, buyer = trustee of same trust</p>
+<p style="font-size:13px;"><strong>Resolution:</strong> Trust is NOT changing ownership; trustee is changing. Update New Possession Date to day BEFORE trust's possession start date. This ensures transfer records in correct sequence.</p>
+
+<h4>Trustee → Trust Sequence</h4>
+<p style="font-size:13px;"><strong>Situation:</strong> Current owner = trustee, buyer = trust</p>
+<p style="font-size:13px;"><strong>Resolution:</strong> Update New Possession Date to day AFTER trustee's possession start date. Verify trustee name in NOA or View Document button in LOAN (Trust NOA Part C).</p>
+
+<h4>Owner Unknown Sequence (OWN022)</h4>
+<p style="font-size:13px;"><strong>Situation:</strong> DOP crosses 31 December with Owner Unknown record existing in current year</p>
+<p style="font-size:13px;"><strong>Resolution Steps:</strong></p>
+<ol style="font-size:13px;">
+<li>Review DAS Bundle, TOL signature date, e-Sys dates, CM9 records</li>
+<li><strong>If DOP confirmed SAME YEAR as Owner Unknown:</strong> Update New Possession Date, click Proceed. Transfer replaces Owner Unknown.</li>
+<li><strong>If DOP confirmed FOLLOWING YEAR:</strong> Note prior owner CID, click Proceed with following year DOP, then create Land Ownership action item to recalculate prior owner liability for relevant year</li>
+<li>If DOP cannot be confirmed → Request Site Valuation or escalate to Senior Staff</li>
+</ol>
+
+<h4>Multiple Same-Day Transfers (Joint Ownership Sequence)</h4>
+<p style="font-size:13px;"><strong>Situation:</strong> Property transferred to multiple buyers on same day (joint proprietors or tenants in common)</p>
+<ol style="font-size:13px;">
+<li>Search COI by dealing number → Review Manner of Holding column</li>
+<li>J = joint proprietors (joint and several liability)</li>
+<li>S = tenants in common (separate liability per owner)</li>
+<li>In LOAN, manually update possession date if DOP differs between e-Sys and source</li>
+<li>Verify all buyers linked and manor of holding correct before proceeding</li>
+</ol>
+
+<h4>OWNUNKNOWN Source Type</h4>
+<p style="font-size:13px;"><strong>When source NOA type = OWNUNKNOWN:</strong> Replaces Owner Unknown record (CID 71948581). Proceed directly with transfer, no DOP conflict expected.</p>
+
+<div class="page-ref">Source: LOAN Ownership Task Procedure; Resolving Exceptions; Change of Trustee; Owner Unknown</div>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> VCOO exception, DAS Bundle data, current ownership record</div>
+<div class="block"><strong>Process:</strong> Verify DAS details, identify sequence/exception issue</div>
+<div class="block"><strong>Decision:</strong> Can ownership proceed or requires manual transfer/escalation?</div>
+<div class="block"><strong>Output:</strong> Exception resolved or manual transfer required</div>
+</div>
+</div>
+</section>
+
+<!-- Q3 RESOLVE EXCEPTIONS -->
+
+<section id="q3">
+<h2>Q3 - How Should This Ownership Exception Be Resolved? <span class="improvement-badge">IMPROVED</span></h2>
+<div class="staff">
+<h3>Exception Resolution Decision Tree</h3>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Exception Type: OWN007 (Duplicate Ownership)</h4>
+<p style="font-size:13px;"><strong>Action:</strong></p>
+<ol style="font-size:13px;">
+<li>Search COI by dealing number to understand why duplicate</li>
+<li>Check DAS Bundle for two separate transfers OR same transfer recorded twice</li>
+<li>If change of trustee scenario (current owner=trust, buyer=trustee) → Adjust possession date (see Q2 sequence)</li>
+<li>If change of ownership share scenario (compare Share% to current ownership) → May need Shares tab update instead of new transfer</li>
+<li>If genuine duplicate → Escalate to Senior Staff with explanation</li>
+</ol>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Exception Type: OWN022 (Owner Unknown Calendar Boundary)</h4>
+<p style="font-size:13px;"><strong>Action:</strong></p>
+<ol style="font-size:13px;">
+<li>Verify DOP using DAS Bundle, TOL signature, and Land Channel</li>
+<li>Check if DOP is same year or different year from Owner Unknown record</li>
+<li>Adjust possession date if needed to separate transactions (see Q2 sequence)</li>
+<li>If DOP prior year → Create Land Ownership action item after proceeding</li>
+</ol>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Exception Type: OWN010 (Terms Sale)</h4>
+<p style="font-size:13px;"><strong>Action:</strong></p>
+<ol style="font-size:13px;">
+<li>Review contract date vs possession date in DAS/transfer document</li>
+<li>If vendor conditions exist AND vendor liabilities outstanding → Redirect to BTO (comment: "Possible Terms Sale")</li>
+<li>If vendor conditions exist BUT title already updated to purchaser → May proceed if no outstanding LTX</li>
+</ol>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Exception Type: OWN015 (Change of Trustee Only)</h4>
+<p style="font-size:13px;"><strong>Action:</strong></p>
+<ol style="font-size:13px;">
+<li>Confirm via DAS that beneficiary/trust terms unchanged, only trustee changed</li>
+<li>In e-Sys, do NOT update ownership; update Trustees tab of existing trust</li>
+<li>Add new trustee with start date = DOP</li>
+<li>Cancel Ownership Change in LOAN with reason "Change of Trustee Only"</li>
+</ol>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Exception Type: OWN020 (Manner of Holding Conflict)</h4>
+<p style="font-size:13px;"><strong>Action:</strong></p>
+<ol style="font-size:13px;">
+<li>Search COI by dealing number to see current Manner of Holding</li>
+<li>Check DAS for intended manner of holding</li>
+<li>In LOAN, use Shares tab to verify/update manner of holding if proceeding</li>
+<li>If conflict cannot be resolved → Escalate to Senior Staff</li>
+</ol>
+
+<div class="stop">If Special Customer flag present, do NOT proceed without Grade 3/4 confirmation (see Q1 CSO SLA). Request confirmation same day if possible.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Manual Transfer Prerequisites, Shares Tab Update Logic & Retrospective Period Handling</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>When Manual Transfer Required</h4>
+<p style="font-size:13px;"><strong>LOAN cannot proceed when:</strong></p>
+<ul style="font-size:13px;">
+<li>Exception unresolvable via date adjustment or sequence fix</li>
+<li>Multiple overlapping exceptions on same property</li>
+<li>Special customer automation flag present AND CSO not confirmed</li>
+<li>Exception code indicates manual processing required (see exception code reference)</li>
+<li>DAS details conflict with e-Sys data and cannot be reconciled</li>
+</ul>
+
+<h4>Manual Transfer Prerequisites in e-Sys</h4>
+<p style="font-size:13px;"><strong>Before manually updating ownership in e-Sys:</strong></p>
+<ol style="font-size:13px;">
+<li>DAS Bundle fully reviewed and understood</li>
+<li>Current ownership record in e-Sys reviewed</li>
+<li>All Party Task details verified (correct customers linked)</li>
+<li>All Property Task details verified (correct Land IDs linked)</li>
+<li>New Possession Date identified from DAS</li>
+<li>New owners' share percentages confirmed from DAS</li>
+<li>Manner of holding (joint/tenants) confirmed from DAS</li>
+<li>Dealing number or batch reference documented</li>
+</ol>
+
+<h4>Shares Tab Update (Share% Change Only)</h4>
+<p style="font-size:13px;"><strong>When duplicate ownership = change of shares only (not new owner):</strong></p>
+<ol style="font-size:13px;">
+<li>Compare Share% in LOAN task to current ownership</li>
+<li>Go to Shares tab</li>
+<li>Highlight customer</li>
+<li>Right-click → New Share</li>
+<li>Enter new Share% with effective date = DOP</li>
+<li>Total must equal 100% (may need to reduce other owners' shares)</li>
+<li>Add dealing number to Comments on current ownership record</li>
+<li>Then Cancel Ownership Change (not Proceed)</li>
+</ol>
+
+<h4>Retrospective Ownership Updates (Prior Assessment Year)</h4>
+<p style="font-size:13px;"><strong>When DOP is in prior assessment year:</strong></p>
+<ol style="font-size:13px;">
+<li>After proceeding/manual transfer, recalculate liabilities for prior owner for relevant assessment year</li>
+<li>Create 'Land Ownership action item' with:</li>
+<li style="margin-left:40px;">- Prior owner CID</li>
+<li style="margin-left:40px;">- Assessment year requiring recalculation</li>
+<li style="margin-left:40px;">- Non-Issue Indicator ticked</li>
+<li style="margin-left:40px;">- Comment explaining DOP and ownership change</li>
+</ol>
+
+<div class="page-ref">Source: LOAN Ownership Task Procedure; Resolving Exceptions; Manual Transfer; Retrospective Updates</div>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Ownership exception details, DAS verification results</div>
+<div class="block"><strong>Process:</strong> Apply exception-specific resolution logic</div>
+<div class="block"><strong>Decision:</strong> Ownership proceed, manual transfer, or escalation?</div>
+<div class="block"><strong>Output:</strong> Exception resolved or manual transfer required</div>
+</div>
+</div>
+</section>
+
+<!-- Q4 MANUAL TRANSFER -->
+
+<section id="q4">
+<h2>Q4 - Is Manual Transfer Required in e-Sys? <span class="improvement-badge">IMPROVED</span></h2>
+<div class="staff">
+<h3>When to Use Manual Transfer</h3>
+<p style="font-size:13px;">Use manual transfer when LOAN system cannot automatically update ownership due to exception that cannot be resolved via date/sequence adjustment.</p>
+
+<h3>Manual Transfer Process (e-Sys)</h3>
+<ol style="font-size:13px;">
+<li>Copy Property ID/Land ID from LOAN Linked Property section</li>
+<li>Open separate e-Sys session</li>
+<li>Search → Find Property (enter Property ID)</li>
+<li>Right-click Property on tree → Ownership node</li>
+<li>Right-click → Transfer Property</li>
+<li>Enter DOP from LOAN task</li>
+<li>Enter Dealing Number from LOAN task</li>
+<li>Enter Comments documenting reason for manual transfer</li>
+<li>Go to <strong>New Owners tab</strong></li>
+<li>Click Associate Customers → Select buyer(s) from LOAN task</li>
+<li>Set <strong>Lead Member</strong> for joint ownership (first listed owner)</li>
+<li>Tick <strong>PPR checkbox</strong> if principal place of residence</li>
+<li>If Shares tab appears, enter Share% per LOAN/DAS</li>
+<li>Click Complete</li>
+</ol>
+
+<h3>After Manual Transfer Complete</h3>
+<ol style="font-size:13px;">
+<li>Return to LOAN Ownership Task</li>
+<li>Click <strong>Proceed with Ownership Change</strong> (to mark task complete)</li>
+<li>If Prior Assessment Year DOP → Create Land Ownership action item for prior owner recalculation</li>
+</ol>
+
+<div class="ref"><strong>Reference:</strong> Manual Transfer Instructions; e-Sys Property Ownership Update</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Possession Date vs Contract Date Update Rules & Updating DOP When Incorrect</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Contract Date vs Possession Date (LTA2005 s15)</h4>
+<p style="font-size:13px;"><strong>Ownership Transfer Triggers:</strong></p>
+<ul style="font-size:13px;">
+<li>Purchaser = deemed owner when in possession (s15)</li>
+<li>Vendor = deemed owner until purchaser in possession AND paid 15% (s16)</li>
+<li><strong>Possession Date:</strong> When purchaser takes occupation/control</li>
+<li><strong>Contract Date:</strong> When contract signed (often before possession)</li>
+</ul>
+
+<p style="font-size:13px;"><strong>In LOAN:</strong> If contract date entered incorrectly (shows future date but possession already occurred), update contract date to day BEFORE possession date.</p>
+
+<h4>Correcting Incorrect DOP (Possession Date)</h4>
+<p style="font-size:13px;"><strong>If New Possession Date entered in LOAN, updates DOP when transfer processed.</strong></p>
+<p style="font-size:13px;"><strong>If DOP incorrect in current e-Sys ownership and need to correct:</strong></p>
+<ol style="font-size:13px;">
+<li>Open e-Sys, go to property Ownership node</li>
+<li>Right-click current ownership → Edit</li>
+<li>Update Possession Date field (if allowed)</li>
+<li>Save and exit</li>
+<li>This recalculates tax liability for that assessment year</li>
+</ol>
+
+<div class="page-ref">Source: LOAN Ownership Task Procedure; Manual Transfer; Update Possession Date</div>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Exception details, decision to proceed manually, all verified details</div>
+<div class="block"><strong>Process:</strong> Execute manual transfer in e-Sys</div>
+<div class="block"><strong>Decision:</strong> Manual transfer complete?</div>
+<div class="block"><strong>Output:</strong> Ownership updated in e-Sys, LOAN task marked complete</div>
+</div>
+</div>
+</section>
+
+<!-- Q5 COMPLETE TASK -->
+
+<section id="q5">
+<h2>Q5 - Can the Ownership Task Be Completed? <span class="improvement-badge">IMPROVED</span></h2>
+<div class="staff">
+<h3>Final Completion Checklist</h3>
+<div style="background:#f9fafb;border:1px solid #e5e7eb;padding:12px;border-radius:6px;margin:12px 0;">
+<ul style="font-size:13px;margin:0;">
+<li>☐ DAS Bundle reviewed and verified</li>
+<li>☐ Ownership exception identified and understood</li>
+<li>☐ Exception resolution approach determined (proceed via LOAN or manual transfer)</li>
+<li>☐ If sequence issue, possession date corrected</li>
+<li>☐ If special customer, CSO confirmation obtained</li>
+<li>☐ All Party details verified (correct customers linked)</li>
+<li>☐ All Property details verified (correct Land IDs linked)</li>
+<li>☐ Manual transfer completed (if required)</li>
+<li>☐ Land Ownership action item created (if prior year DOP)</li>
+</ul>
+</div>
+
+<h3>Completion Options</h3>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:16px;">Option 1: Proceed with Ownership Change</h4>
+<p style="font-size:13px;">Click <strong>Proceed with Ownership Change</strong> button. LOAN system executes ownership update. Ownership Task complete and closed.</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Option 2: Cancel Ownership Change</h4>
+<p style="font-size:13px;">If NOA should not proceed to ownership update:</p>
+<ol style="font-size:13px;">
+<li>Click <strong>Cancel Ownership Change</strong> button</li>
+<li>Select Reason from dropdown (e.g., "Change of Trustee Only", "Manual Transfer Completed", "Unable to Process")</li>
+<li>Enter Comments explaining reason</li>
+<li>Click Cancel</li>
+<li>If manual transfer already completed in e-Sys, property ownership already updated (task just marks as cancelled in LOAN)</li>
+</ol>
+
+<h3>Post-Completion Documentation</h3>
+<p style="font-size:13px;"><strong>Prior Assessment Year DOP:</strong> After ownership updated (LOAN Proceed or manual transfer), create Land Ownership action item to recalculate liabilities for prior assessment year. Include prior owner CID and Non-Issue Indicator.</p>
+
+<div class="ref" style="margin-top:12px;"><strong>Reference:</strong> LOAN Ownership Task Procedure; Completing or Cancelling Ownership Task; Land Ownership Action Items</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Resolved exception, verified ownership details, exception resolution completed</div>
+<div class="block"><strong>Process:</strong> Execute completion via LOAN Proceed or finalize manual transfer</div>
+<div class="block"><strong>Decision:</strong> LOAN proceed or manual already done?</div>
+<div class="block"><strong>Output:</strong> Ownership task complete, ownership updated in e-Sys</div>
+</div>
+</div>
+</section>
+
+</div>
+
+<!-- SYSTEM INTERACTION VIEW -->
+
+<div class="systemsOnly">
+<section>
+<h2>System Interaction - LOAN Ownership Task Processing Flow</h2>
+<div class="flow">
+<div class="flow-title">Q1-Q5 LOAN Ownership Task Processing</div>
+<div class="node n-amber">Ownership Task Received (Party & Property Resolved)</div>
+<div class="arr"></div>
+<div class="node n-blue">Q1: Identify Task Type & Exception Code</div>
+<div class="arr"></div>
+<div class="node n-blue">Q2: Verify via DAS Bundle</div>
+<div class="arr"></div>
+<div class="node n-amber">Exception Resolvable?</div>
+<div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+<div><div class="node n-blue">YES: Q3 Resolve</div></div>
+<div><div class="node n-gray">NO: Manual Transfer (Q4)</div></div>
+</div>
+<div class="arr"></div>
+<div class="node n-blue">Q5: Complete Task</div>
+<div class="arr"></div>
+<div class="node n-gray">Ownership Task Complete</div>
+<div style="margin-top:12px;font-size:12px;text-align:center;color:#666;">LOAN Processing Complete: Party → Property → Ownership All Resolved</div>
+</div>
+</section>
+</div>
+
+<!-- SUMMARY VIEW -->
+
+<div class="specOnly">
+<section class="summary-section" id="gaps-summary">
+<h2>📊 Gaps Analysis Summary (14 Gaps Addressed)</h2>
+
+<div class="gap-highlight"><strong>GAP 1 (HIGH):</strong> Ownership Exception Codes Not Documented → Added complete exception code reference (OWN001-OWN025) with descriptions and actions</div>
+<div class="gap-highlight"><strong>GAP 2 (HIGH):</strong> Terms Sale vs Ownership Change Criteria Unclear → Added LTA2005 s15-s16 definition, detection process, and vendor liability verification</div>
+<div class="gap-highlight"><strong>GAP 3 (HIGH):</strong> Change of Trustee vs Ownership Change Distinction Missing → Added process to identify trustee-only changes and handle in Trustees tab instead of ownership</div>
+<div class="gap-highlight"><strong>GAP 4 (MEDIUM):</strong> Manner of Holding Documentation Inadequate → Added Joint vs Tenants in Common explanation with COI verification and Shares tab update</div>
+<div class="gap-highlight"><strong>GAP 5 (MEDIUM):</strong> Sequence of Ownership Logic Complex → Added Trust→Trustee, Trustee→Trust, and same-day transaction sequence resolution</div>
+<div class="gap-highlight"><strong>GAP 6 (MEDIUM):</strong> Owner Unknown Handling Incomplete → Added OWN022 exception process with calendar year boundary logic and prior owner recalculation</div>
+<div class="gap-highlight"><strong>GAP 7 (MEDIUM):</strong> Special Customer Processing SLA Missing → Added CSO confirmation SLA (same day if possible, max 2 business days)</div>
+<div class="gap-highlight"><strong>GAP 8 (MEDIUM):</strong> Manual Transfer Prerequisites Unclear → Added 8-step checklist before e-Sys manual transfer execution</div>
+<div class="gap-highlight"><strong>GAP 9 (LOW):</strong> Possession Date vs Contract Date Rules Unclear → Added LTA2005 explanation and when to correct each date</div>
+<div class="gap-highlight"><strong>GAP 10 (LOW):</strong> DAS Bundle Interpretation Incomplete → Added step-by-step DAS review (Transfer/Properties/Transferees tabs)</div>
+<div class="gap-highlight"><strong>GAP 11 (LOW):</strong> Duplicate Ownership (OWN007) Resolution Vague → Added decision tree to identify duplicate type (same DOP, same buyer, sequence issue)</div>
+<div class="gap-highlight"><strong>GAP 12 (LOW):</strong> Same-Day Transaction Handling → Added joint proprietors vs tenants in common COI verification process</div>
+<div class="gap-highlight"><strong>GAP 13 (LOW):</strong> Retrospective Ownership Updates Missing → Added Land Ownership action item creation procedure for prior year recalculation</div>
+<div class="gap-highlight"><strong>GAP 14 (LOW):</strong> Shares Tab Update Logic Unclear → Added when/how to update shares (share% change only, not new owner)</div>
+</section>
+
+<section class="summary-section">
+<h2>Procedure Summary</h2>
+<ul style="font-size:13px;">
+<li>5-step process (Q1-Q5) for processing LOAN Ownership Tasks</li>
+<li>Q1: Identify task type (VCOO or Verify Special Customer) via exception code</li>
+<li>Q2: Verify ownership via DAS Bundle (Transfer, Properties, Transferees tabs)</li>
+<li>Q3: Resolve ownership exception (OWN007, OWN022, OWN010, OWN015, OWN020) via sequence adjustment or escalation</li>
+<li>Q4: Execute manual transfer in e-Sys if exception unresolvable by LOAN</li>
+<li>Q5: Complete task via LOAN Proceed or Cancel Ownership Change</li>
+<li>Critical concepts: Terms Sale (LTA2005 s15-s16), Change of Trustee, Sequence of Ownership, Owner Unknown (calendar year logic)</li>
+<li>Special handling: Special Customer CSO confirmation (same day SLA), retrospective period recalculation, manual transfer prerequisites</li>
+<li>Time standard: 5 minutes per Ownership Task (may extend if manual transfer required)</li>
+</ul>
+</section>
+
+<section class="summary-section">
+<h2>Source of Authority</h2>
+<ul style="font-size:13px;">
+<li><strong>Division:</strong> Land Revenue Services</li>
+<li><strong>Branch:</strong> Land Information Management</li>
+<li><strong>Created:</strong> 1 July 2018</li>
+<li><strong>Revised:</strong> 22 April 2025</li>
+<li><strong>Legislative Authority:</strong> Land Tax Act 2005 sections 15, 16 (ownership deemed dates)</li>
+<li><strong>Time Standard:</strong> 5 minutes per Ownership Task</li>
+<li><strong>SLAs:</strong> CSO confirmation same day if possible, max 2 days; Special Customer processing Grade 3/4 only</li>
+</ul>
+</section>
+
+<section class="summary-section" id="definitions">
+<h2>Definitions & Acronyms</h2>
+<p style="font-size:13px;">
+<strong>LOAN</strong> - Land Ownership and NOA system<br>
+<strong>NOA</strong> - Notice of Acquisition<br>
+<strong>VCOO</strong> - Verify Change of Ownership<br>
+<strong>DAS</strong> - Document Assessing System (Duties)<br>
+<strong>DOP</strong> - Date of Possession<br>
+<strong>LTA2005</strong> - Land Tax Act 2005<br>
+<strong>OWN007</strong> - Potential duplicate ownership exception<br>
+<strong>OWN022</strong> - Owner Unknown calendar boundary exception<br>
+<strong>OWN010</strong> - Terms Sale conditions detected<br>
+<strong>OWN015</strong> - Change of trustee only<br>
+<strong>OWN020</strong> - Manner of holding conflict<br>
+<strong>Terms Sale</strong> - Vendor deemed owner until purchaser takes possession AND pays 15%<br>
+<strong>Manner of Holding</strong> - Joint proprietors (J) vs Tenants in common (S)<br>
+<strong>Owner Unknown</strong> - Special customer record (CID 71948581) for unknown buyers<br>
+<strong>CSO</strong> - Customer Service Officer (Grade 3/4)<br>
+<strong>BTO</strong> - Business Team Office<br>
+<strong>PPR</strong> - Principal Place of Residence<br>
+<strong>Trustee</strong> - Individual/company managing trust<br>
+<strong>Lead Member</strong> - First-named owner in joint proprietorship<br>
+<strong>Shares Tab</strong> - e-Sys feature for updating ownership percentages
+</p>
+</section>
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(e=>e.style.display='none');
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(e=>e.style.display='block');document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(e=>e.style.display='block');document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

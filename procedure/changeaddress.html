@@ -1,0 +1,1512 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Change of Customer Details for Land Tax - IMPROVED</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .improvement-badge{display:inline-block;background:#fbbf24;color:#78350f;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700;margin-left:12px}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .sidebar a.gap-link{color:#ec4899;font-weight:600}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    ul,ol{margin-left:22px;font-size:13px}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px;font-size:13px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .decision-box{background:#fef3c7;border-left:5px solid #d97706;padding:12px;margin-top:12px;font-size:13px;font-weight:600;color:#92400e}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .gap-highlight{background:#fce7f3;border-left:5px solid #ec4899;padding:12px 16px;margin:12px 0;font-size:13px}
+    .score{background:#f0fdf4;border-left:5px solid #22c55e;padding:12px 16px;margin:12px 0;font-size:14px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;-webkit-tap-highlight-color:transparent}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul,.detail-panel ol{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .detail-panel .page-ref{font-size:11px;color:#3b82f6;font-weight:600;margin-top:8px;padding-top:8px;border-top:1px solid #e0e7ff}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .branch{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;justify-content:center}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#475569}
+    .legend-dot{width:12px;height:12px;border-radius:3px}
+    .table-responsive{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+    .checklist{background:#f9fafb;border:1px solid #e5e7eb;padding:16px;margin:12px 0;border-radius:6px}
+    .checklist li{list-style:none;padding-left:24px;position:relative;margin-bottom:8px;font-size:13px}
+    .checklist li::before{content:'☐';position:absolute;left:0;font-weight:bold;color:#003a8f}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Change of Customer Details for Land Tax <span class="improvement-badge">GAPS IMPROVED</span></h1>
+  <p>Division: Land Revenue Services &bull; Branch: Land Information Management &bull; Revised: November 2024 &bull; Enhanced with 15-gap analysis</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#context">Context & Authority</a>
+    <a href="#q1">Q1 In Scope?</a>
+    <a href="#q2">Q2 Request Source</a>
+    <a href="#q3">Q3 Customer Type</a>
+    <a href="#q4">Q4 Authorization</a>
+    <a href="#q5">Q5 Address Update</a>
+    <a href="#q6">Q6 Representatives</a>
+    <a href="#q7">Q7 Name/Contact</a>
+    <a href="#q8">Q8 PPR Amendment</a>
+    <a href="#q9">Q9 Derivatives</a>
+    <a href="#q10">Q10 Complete Item</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#gaps-summary" class="gap-link" onclick="showView('spec');setTimeout(function(){document.location.hash='gaps-summary'},100);">📊 Gaps Analysis</a>
+    <a href="#scope-criteria" onclick="showView('spec');setTimeout(function(){document.location.hash='scope-criteria'},100);">Scope Criteria</a>
+    <a href="#authority-matrix" onclick="showView('spec');setTimeout(function(){document.location.hash='authority-matrix'},100);">Authority Matrix</a>
+    <a href="#customer-type-rules" onclick="showView('spec');setTimeout(function(){document.location.hash='customer-type-rules'},100);">Customer Types</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(function(){document.location.hash='definitions'},100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+<div id="questionFlow">
+
+  <!-- CONTEXT SECTION -->
+
+  <section id="context">
+    <h2>Context: Change of Customer Details Process <span class="improvement-badge">AUTHORITY & SCOPE</span></h2>
+    <div class="staff">
+      <h3>Overview</h3>
+      <p style="font-size:13px;margin-bottom:12px;">This procedure covers processing customer requests to change postal address, name, contact information, authorised representatives, or minor property details for Land Tax purposes.</p>
+
+```
+  <h3>Request Channels</h3>
+  <ul style="font-size:13px;">
+    <li>SmartForm (GEN-03) - Structured web/email form submission</li>
+    <li>My Land Tax - Online self-service portal (auto-authenticated)</li>
+    <li>Written correspondence - Letter or email</li>
+    <li>Phone calls - Verbal requests requiring documentation</li>
+  </ul>
+
+  <h3>Key Control Points</h3>
+  <ul style="font-size:13px;">
+    <li><strong>Authority:</strong> Verify requester is authorised before processing</li>
+    <li><strong>Scope:</strong> Confirm request is within COCD scope</li>
+    <li><strong>System Updates:</strong> Apply changes to correct e-Sys fields</li>
+    <li><strong>Derivatives:</strong> Update related customer records (Trusts, JO, Groups)</li>
+  </ul>
+
+  <div class="ref" style="margin-top:12px;"><strong>Time Standard:</strong> 7.5 minutes per item | <strong>System of Record:</strong> Lotus Notes Policies and Procedures Database</div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Customer request, submission channel, customer structure, requester identity</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (authority verification, details update), e-Sys (customer records)</div>
+    <div class="block"><strong>Decision</strong>: Is request in scope? Is requester authorised? What updates needed?</div>
+    <div class="block"><strong>Output</strong>: Updated customer details, completed COCD action item, derivative updates if required</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q1 IN SCOPE -->
+
+  <section id="q1">
+    <h2>Q1 - Is the Request Within Scope of a COCD Work Item? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>In-Scope Items (Process via COCD)</h3>
+      <div class="checklist">
+        <ul style="font-size:13px;">
+          <li>Change of postal address (mailing address)</li>
+          <li>Change of residential address (property address)</li>
+          <li>Change of customer name (legal name)</li>
+          <li>Change of contact details (phone, email)</li>
+          <li>Addition of authorised representative</li>
+          <li>Amendment to authorised representative details</li>
+          <li>Removal of authorised representative</li>
+          <li>Minor property detail correction (lot number, address format)</li>
+        </ul>
+      </div>
+
+```
+  <h3>Out-of-Scope Items (Refer to Senior Officer)</h3>
+  <div class="decision-box">
+    Request involves: Ownership changes • Liability disputes • PPR eligibility challenges • Valuation objections • Property subdivisions/consolidations • Customer type change (e.g., Individual to Trust)
+  </div>
+
+  <h3>Next Step if In Scope</h3>
+  <p style="font-size:13px;font-weight:600;">Proceed to Q2 (Identify Request Source)</p>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: In-Scope vs Out-of-Scope - Complete Criteria with Examples</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>IN-SCOPE Examples</h4>
+    <ul>
+      <li><strong>Address:</strong> Customer moves house → new postal address</li>
+      <li><strong>Address:</strong> Customer provides additional address detail (unit number, suburb spelling)</li>
+      <li><strong>Name:</strong> Customer married, requests name change</li>
+      <li><strong>Name:</strong> Customer requests correction of spelling error in record</li>
+      <li><strong>Contact:</strong> Customer provides updated phone number</li>
+      <li><strong>Contact:</strong> Customer requests email address to receive assessments</li>
+      <li><strong>Representative:</strong> Accountant appointed to manage correspondence</li>
+      <li><strong>Representative:</strong> Power of Attorney holder added to account</li>
+      <li><strong>Property Detail:</strong> Correction of lot/plan number format</li>
+      <li><strong>Property Detail:</strong> Addition of property alias/trading name</li>
+    </ul>
+
+    <h4>OUT-OF-SCOPE Examples (Refer to Senior Officer)</h4>
+    <ul>
+      <li><strong>Ownership Changes:</strong> Request to change ownership from one party to another</li>
+      <li><strong>Liability Disputes:</strong> Objection to land tax amount or calculation</li>
+      <li><strong>PPR Eligibility:</strong> Challenge to Principal Place of Residence determination</li>
+      <li><strong>Valuation Disputes:</strong> Objection to property valuation</li>
+      <li><strong>Property Subdivision:</strong> Request to split property into multiple lots</li>
+      <li><strong>Property Consolidation:</strong> Request to merge multiple lots</li>
+      <li><strong>Customer Type Change:</strong> Request to convert from Individual to Trust ownership</li>
+      <li><strong>Assessment Year Changes:</strong> Requests affecting prior/future assessment years</li>
+      <li><strong>Legal Proceedings:</strong> Requests involving court orders (beyond VCAT)</li>
+    </ul>
+
+    <h4>Decision Rule</h4>
+    <p>If request is primarily about changing WHO owns the property, WHERE it is located structurally, WHAT it's worth, or HOW it's assessed → OUT OF SCOPE. Refer to Senior Officer for routing to correct procedure.</p>
+
+    <div class="page-ref">Source: Change of Customer Details Procedure for Land Tax; Q1 Scope Definition</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Request description/content</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (scope assessment)</div>
+    <div class="block"><strong>Decision</strong>: In scope (8 items) vs out of scope (7+ categories)?</div>
+    <div class="block"><strong>Output</strong>: Proceed to Q2 or refer to Senior Officer</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q2 REQUEST SOURCE -->
+
+  <section id="q2">
+    <h2>Q2 - What is the Source of the COCD Request? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Identify Request Source & Location</h3>
+      <div class="decision-box">
+        Which channel: SmartForm (GEN-03) • My Land Tax • Written • Phone Call?
+      </div>
+
+```
+  <h3>Source-to-Location Mapping</h3>
+  <div class="table-responsive">
+    <table style="font-size:12px;">
+      <tr style="background:#003a8f;color:white;">
+        <th>Source Channel</th>
+        <th>Look in e-Sys Tab</th>
+        <th>What to Find</th>
+        <th>Authority Status</th>
+      </tr>
+      <tr>
+        <td><strong>SmartForm (GEN-03)</strong></td>
+        <td>Enquiry Tab or Reference Tab</td>
+        <td>Form attachment with all requested changes</td>
+        <td>Verify signature on form</td>
+      </tr>
+      <tr>
+        <td><strong>My Land Tax Portal</strong></td>
+        <td>Other Tab or CM10 (EDRMS)</td>
+        <td>Authenticated submission record</td>
+        <td>Auto-authorized (customer authenticated)</td>
+      </tr>
+      <tr>
+        <td><strong>Written Letter/Email</strong></td>
+        <td>CM10 (EDRMS) or Reference Tab</td>
+        <td>Letter or email with requested changes</td>
+        <td>Check for signature / authority letter</td>
+      </tr>
+      <tr>
+        <td><strong>Phone Call</strong></td>
+        <td>Phone Calls & Notes section</td>
+        <td>Notes documenting request and authority</td>
+        <td>Requires follow-up written authority</td>
+      </tr>
+    </table>
+  </div>
+
+  <h3>GEN-03 SmartForm Fields</h3>
+  <ul style="font-size:13px;">
+    <li>Customer ID / Property Address</li>
+    <li>Requested change type (Address / Name / Contact / Rep / Property Detail)</li>
+    <li>Current details and new details</li>
+    <li>Signature and date</li>
+    <li>Authorisation declaration</li>
+  </ul>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Request Source Navigation, My Land Tax Verification & Phone Call Authority Requirements</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>SmartForm (GEN-03) Processing</h4>
+    <p><strong>Location:</strong> Enquiry tab (if submitted via web) or Reference tab (if forwarded as attachment)</p>
+    <p><strong>Required Fields:</strong> Customer ID, property address, specific change requested, new value, signature, date</p>
+    <p><strong>Authority:</strong> Signature on form indicates authority. Check clarity and ensure date is recent (within 30 days).</p>
+    <p><strong>Action:</strong> If any required field missing, contact customer for completion before proceeding.</p>
+
+    <h4>My Land Tax Submission Process & Verification</h4>
+    <p><strong>Location:</strong> Other tab or CM10 system record</p>
+    <p><strong>How It Works:</strong> Customer logs in with username/password → submits changes → system auto-records with timestamp</p>
+    <p><strong>Authority Status:</strong> AUTOMATICALLY AUTHORISED. Customer's login credentials authenticate them. No additional authority needed.</p>
+    <p><strong>Verification:</strong> Check submission timestamp; verify customer details in submission match e-Sys records</p>
+    <p><strong>Action:</strong> Proceed directly to Q3 (no authority verification needed)</p>
+
+    <h4>Phone Call Authority Requirements & Documentation</h4>
+    <p><strong>Issue:</strong> Verbal requests lack documentation. Authority must be confirmed in writing.</p>
+    <p><strong>Process:</strong></p>
+    <ol>
+      <li>Document request in Phone Calls & Notes with: date, time, caller name, specific changes requested</li>
+      <li>Confirm caller identity (customer ID, DOB or property address match)</li>
+      <li>Inform caller: "Authority letter needed to process. We'll send template."</li>
+      <li>Send authority template via email/letter</li>
+      <li>Wait for signed authority before proceeding (see Q4 reservation process)</li>
+    </ol>
+    <p><strong>Timeline:</strong> Reserve item for 2 weeks for authority receipt. If not received, close item with note "Authority not provided"</p>
+
+    <h4>Written Correspondence (Letter/Email)</h4>
+    <p><strong>Location:</strong> CM10 (EDRMS) or Reference tab</p>
+    <p><strong>Check:</strong> Signature (if letter), sender email address (if email), date, clarity of requested changes</p>
+    <p><strong>Authority:</strong> If signed letter or email from known account → proceed. If unsigned → treat as phone call (require written authority)</p>
+
+    <div class="page-ref">Source: Change of Customer Details Procedure for Land Tax; Q2 Request Source Identification</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Submission metadata, source system/tab indicator</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (source identification and location lookup)</div>
+    <div class="block"><strong>Decision</strong>: Which source (GEN-03 / My Land Tax / Written / Phone)? Where is request located?</div>
+    <div class="block"><strong>Output</strong>: Request retrieved, source documented, proceed to Q3</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q3 CUSTOMER TYPE -->
+
+  <section id="q3">
+    <h2>Q3 - What Customer Type Applies? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Identify Customer Type in e-Sys</h3>
+      <div class="decision-box">
+        Customer is: Individual • Company • Trust • Joint Ownership (JO) • Estate • Land Tax Group?
+      </div>
+
+```
+  <h3>Customer Type Rules - Quick Reference</h3>
+  <div class="table-responsive">
+    <table style="font-size:12px;">
+      <tr style="background:#003a8f;color:white;">
+        <th>Type</th>
+        <th>Auto-Authorised</th>
+        <th>Address Update Rules</th>
+        <th>Derivative Notes</th>
+      </tr>
+      <tr>
+        <td><strong>Individual</strong></td>
+        <td>Customer self</td>
+        <td>Update postal & residential directly</td>
+        <td>None (single entity)</td>
+      </tr>
+      <tr>
+        <td><strong>Company</strong></td>
+        <td>Company officer (verify company details)</td>
+        <td>Use registered office address format</td>
+        <td>Verify ASIC registration</td>
+      </tr>
+      <tr>
+        <td><strong>Trust</strong></td>
+        <td>Trustee of trust only</td>
+        <td>Derive from Trustee address</td>
+        <td>Update Trustee first, then derive</td>
+      </tr>
+      <tr>
+        <td><strong>Joint Ownership</strong></td>
+        <td>Lead Customer only</td>
+        <td>Update Lead, then confirm JO mailing list</td>
+        <td>All JOs must agree; confirm mailing</td>
+      </tr>
+      <tr>
+        <td><strong>Estate</strong></td>
+        <td>Estate legal representative</td>
+        <td>Update per representative authority</td>
+        <td>Requires POA/letters of admin</td>
+      </tr>
+      <tr>
+        <td><strong>Land Tax Group</strong></td>
+        <td>Nominated Member only</td>
+        <td>Update Nominated Member, flows to Group</td>
+        <td>Update Nominated, verify group updates</td>
+      </tr>
+    </table>
+  </div>
+
+  <h3>Next Step</h3>
+  <p style="font-size:13px;font-weight:600;">Proceed to Q4 (Verify Authority)</p>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Customer Type Consolidated Rules & Derivative Structure Updates</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>Individual Customer</h4>
+    <p><strong>Auto-Authorised:</strong> Customer can request own changes directly</p>
+    <p><strong>Address:</strong> Update postal address + residential address in Maintain Customer</p>
+    <p><strong>Derivatives:</strong> None (single entity)</p>
+
+    <h4>Company Customer</h4>
+    <p><strong>Auto-Authorised:</strong> Company officer (verified against ASIC). Manager or director of company.</p>
+    <p><strong>Authority Verification:</strong> Check officer details against ASIC database to confirm status</p>
+    <p><strong>Address:</strong> Use registered office address per ASIC. Format must match corporate registration.</p>
+    <p><strong>Derivatives:</strong> None (company is single entity)</p>
+
+    <h4>Trust Customer</h4>
+    <p><strong>Auto-Authorised:</strong> Trustee of the trust ONLY. Not beneficiaries.</p>
+    <p><strong>Authority Verification:</strong> Verify trustee identity; may require trust deed or trustee certificate</p>
+    <p><strong>Address Rules:</strong> Trust address derives from Trustee address. Update Trustee first, then address flows to Trust.</p>
+    <p><strong>Process:</strong> (1) Update Trustee customer details if needed, (2) Confirm Trust address automatically derives</p>
+    <p><strong>Derivatives:</strong> Trustee customer → Trust address derives automatically</p>
+
+    <h4>Joint Ownership (JO) Customer</h4>
+    <p><strong>Auto-Authorised:</strong> Lead Customer ONLY. Other JO members cannot request changes without all members' consent.</p>
+    <p><strong>Authority Verification:</strong> Confirm requester is Lead Customer on JO mailing list</p>
+    <p><strong>Address Rules:</strong> Update Lead Customer postal address; must confirm JO mailing list (all JO members)</p>
+    <p><strong>Process:</strong> (1) Update Lead Customer details, (2) Confirm all JO members receive same address for mail, (3) Update JO mailing list confirmation</p>
+    <p><strong>Derivatives:</strong> All JO members must consent; confirm mailing list updated</p>
+
+    <h4>Estate Customer</h4>
+    <p><strong>Auto-Authorised:</strong> Legal representative of estate (executor, administrator). Requires proof of authority.</p>
+    <p><strong>Authority Verification:</strong> Require letters of probate, letters of administration, or power of attorney</p>
+    <p><strong>Address:</strong> Update to representative's address (executor/administrator)</p>
+    <p><strong>Derivatives:</strong> May involve original owner's records; document carefully</p>
+
+    <h4>Land Tax Group Customer</h4>
+    <p><strong>Auto-Authorised:</strong> Nominated Member ONLY. Other group members cannot request changes independently.</p>
+    <p><strong>Authority Verification:</strong> Confirm requester is Nominated Member</p>
+    <p><strong>Address Rules:</strong> Update Nominated Member address; flows to entire group for correspondence</p>
+    <p><strong>Process:</strong> (1) Update Nominated Member details, (2) Confirm address flows to all group members, (3) Verify group mailing list</p>
+    <p><strong>Derivatives:</strong> Address update to Nominated Member flows to all Land Tax Group members</p>
+
+    <div class="page-ref">Source: Change of Customer Details Procedure for Land Tax; Customer Type Rules; Q3 Customer Type Decision</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Customer structure from e-Sys</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (customer type identification)</div>
+    <div class="block"><strong>Decision</strong>: Which customer type (6 types)? What rules apply?</div>
+    <div class="block"><strong>Output</strong>: Customer type confirmed, type-specific rules identified</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q4 AUTHORIZATION -->
+
+  <section id="q4">
+    <h2>Q4 - Is the Requester an Authorised Contact? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Authority Verification Decision</h3>
+      <div class="decision-box">
+        Is requester automatically authorized by customer type? OR requires authority letter?
+      </div>
+
+```
+  <h3>Authority Matrix by Customer Type & Channel</h3>
+  <div class="table-responsive">
+    <table style="font-size:12px;">
+      <tr style="background:#003a8f;color:white;">
+        <th>Customer Type</th>
+        <th>My Land Tax (Self-Service)</th>
+        <th>SmartForm/Written (Signed)</th>
+        <th>Phone Call</th>
+        <th>Authority Letter Required</th>
+      </tr>
+      <tr>
+        <td><strong>Individual</strong></td>
+        <td>✓ Auto-auth</td>
+        <td>✓ Signature = auth</td>
+        <td>Written auth after call</td>
+        <td>Only if unauthorized requester</td>
+      </tr>
+      <tr>
+        <td><strong>Company</strong></td>
+        <td>✓ Officer auto-auth</td>
+        <td>✓ Officer signature</td>
+        <td>Written auth required</td>
+        <td>If requester not verified officer</td>
+      </tr>
+      <tr>
+        <td><strong>Trust</strong></td>
+        <td>✓ Trustee only</td>
+        <td>✓ Trustee signature</td>
+        <td>Written auth required</td>
+        <td>If non-trustee requests</td>
+      </tr>
+      <tr>
+        <td><strong>Joint Ownership</strong></td>
+        <td>✓ Lead only</td>
+        <td>✓ Lead signature</td>
+        <td>Written auth required</td>
+        <td>If not Lead Customer</td>
+      </tr>
+      <tr>
+        <td><strong>Estate</strong></td>
+        <td>Rep only (auth letter)</td>
+        <td>Rep signature + proof</td>
+        <td>Written auth + proof</td>
+        <td>YES - Always (probate/POA)</td>
+      </tr>
+      <tr>
+        <td><strong>Land Tax Group</strong></td>
+        <td>✓ Nom Member only</td>
+        <td>✓ Nom Member sig</td>
+        <td>Written auth required</td>
+        <td>If not Nominated Member</td>
+      </tr>
+    </table>
+  </div>
+
+  <h3>If Authorized → Proceed to Q5</h3>
+  <h3>If Unauthorized → Request Authority Letter</h3>
+  <ul style="font-size:13px;">
+    <li>Send authority template to requester</li>
+    <li>Reserve action item for 2 weeks</li>
+    <li>Follow up if authority not received (see detail panel)</li>
+  </ul>
+
+  <div class="stop">Never process an unauthorised request. Authority verification is the primary control gate.</div>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Authority Document Acceptance Criteria, Phone Call Authority Process & Reservation/Follow-up Timeline</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>Authority Document Acceptance Checklist</h4>
+    <p><strong>Signed Authority Letter (from unauthorised requester):</strong></p>
+    <ul>
+      <li>☐ Signed by customer (or authorized representative)</li>
+      <li>☐ Dated within 30 days of today</li>
+      <li>☐ Specifies exact changes being authorized</li>
+      <li>☐ Includes customer ID or property address</li>
+      <li>☐ Contact details of authorising person</li>
+    </ul>
+
+    <p><strong>Power of Attorney (POA) - for non-customer requester:</strong></p>
+    <ul>
+      <li>☐ Certified copy (not original)</li>
+      <li>☐ Relevant to land/tax matters (specific POA, not general)</li>
+      <li>☐ Current (not expired or revoked)</li>
+      <li>☐ Grantor clearly identified</li>
+      <li>☐ Attorney (agent) clearly identified</li>
+    </ul>
+
+    <p><strong>VCAT Order (for VCAT-ordered changes):</strong></p>
+    <ul>
+      <li>☐ Official VCAT order (not recommendation)</li>
+      <li>☐ Relates to change being requested</li>
+      <li>☐ VCAT reference number present</li>
+      <li>☐ Final and binding (dated and signed)</li>
+    </ul>
+
+    <p><strong>Letters of Probate/Administration (Estate executors):</strong></p>
+    <ul>
+      <li>☐ Certified copy from court</li>
+      <li>☐ Shows executor/administrator appointment</li>
+      <li>☐ Name and signature of executor</li>
+      <li>☐ Current (not expired)</li>
+    </ul>
+
+    <h4>Phone Call Authority Process</h4>
+    <p><strong>Step 1: Document the Call</strong></p>
+    <ol>
+      <li>Record in Phone Calls & Notes: caller name, phone number, time, date</li>
+      <li>Confirm customer identity: ask for DOB or property address</li>
+      <li>Document exact changes requested</li>
+      <li>State: "We'll need written authority before processing"</li>
+    </ol>
+
+    <p><strong>Step 2: Send Authority Template</strong></p>
+    <ol>
+      <li>Email or post authority template to customer</li>
+      <li>Include instructions: sign, date, specify changes, return within 7 days</li>
+      <li>Record template sent date in action item</li>
+    </ol>
+
+    <p><strong>Step 3: Proceed to Q5 only after authority received</strong></p>
+
+    <h4>Authority Reservation & Follow-up Timeline</h4>
+    <p><strong>Timeline:</strong></p>
+    <ol>
+      <li><strong>Day 0 - Authority Request:</strong> Determine authority missing → send template/letter</li>
+      <li><strong>Day 7:</strong> Follow-up call/email to customer</li>
+      <li><strong>Day 14:</strong> Final reminder that item will be closed without further notice</li>
+      <li><strong>Day 14+ (end of 2-week period):</strong> If authority still not received, close item with status "Not completed - authority not provided"</li>
+    </ol>
+
+    <p><strong>Follow-up Contact:</strong></p>
+    <ul>
+      <li>Phone call preferred (faster)</li>
+      <li>Email alternative if phone not available</li>
+      <li>Remind of template sent date and deadline</li>
+      <li>Document all follow-up attempts</li>
+    </ul>
+
+    <p><strong>Closure If Authority Not Received:</strong></p>
+    <ul>
+      <li>Action item status: "Completed (Not updated - Authority not provided)"</li>
+      <li>Notes: "Authority requested on [date], two-week hold expired on [date], no response received"</li>
+      <li>Root cause: "Authority not provided"</li>
+      <li>Customer must resubmit request with authority to reopen</li>
+    </ul>
+
+    <div class="page-ref">Source: Change of Customer Details Procedure for Land Tax; Q4 Authority Verification; Authority Requirements</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Requester identity, customer type, request source (channel)</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (authority verification against matrix)</div>
+    <div class="block"><strong>Decision</strong>: Authorized (by type) or unauthorized (require authority letter)?</div>
+    <div class="block"><strong>Output</strong>: Authorized → Proceed to Q5; Unauthorized → Request authority or close item after 2 weeks</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q5 ADDRESS UPDATE -->
+
+  <section id="q5">
+    <h2>Q5 - Does the Request Require Updating Address Details? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Address Update Process</h3>
+      <div class="decision-box">
+        Request includes: Postal address change? • Residential address change? • Both?
+      </div>
+
+```
+  <h3>System Fields: Address Format, Usage Type & Delivery Indicator</h3>
+  <p style="font-size:13px;font-weight:600;margin-top:12px;">Before updating in e-Sys, verify correct field selection:</p>
+
+  <div class="table-responsive">
+    <table style="font-size:12px;">
+      <tr style="background:#003a8f;color:white;">
+        <th>Field Name</th>
+        <th>Options</th>
+        <th>When to Use</th>
+        <th>Examples</th>
+      </tr>
+      <tr>
+        <td><strong>Address Format</strong></td>
+        <td>RSD / PO Box / C/O / Other</td>
+        <td>RSD = standard street address; PO Box = locked bag; C/O = care of person</td>
+        <td>123 Smith St = RSD; PO Box 999 = PO Box; C/O John Smith = C/O</td>
+      </tr>
+      <tr>
+        <td><strong>Usage Type</strong></td>
+        <td>Postal / Residential / Both</td>
+        <td>Postal = mailing address; Residential = where customer lives; Both = same address for both</td>
+        <td>Apartment = Residential only; PO Box = Postal only; Home owner = Both</td>
+      </tr>
+      <tr>
+        <td><strong>Delivery Indicator</strong></td>
+        <td>Standard / Urgent / Confidential / Special</td>
+        <td>Standard = normal mail; Urgent = priority; Confidential = secure handling required</td>
+        <td>Normal = Standard; Court matters = Confidential; Time-sensitive = Urgent</td>
+      </tr>
+    </table>
+  </div>
+
+  <h3>Update Steps</h3>
+  <ol style="font-size:13px;">
+    <li>Verify Address Format selection (RSD/PO Box/C/O/Other)</li>
+    <li>Verify Usage Type selection (Postal/Residential/Both)</li>
+    <li>Verify Delivery Indicator (Standard/Urgent/Confidential/Special)</li>
+    <li>Confirm updates flow through Protocols and Land Taxpayer nodes</li>
+    <li>Save changes to e-Sys Maintain Customer</li>
+  </ol>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Address Field System Guidance with Examples by Customer Type</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>Address Format Codes - System Requirements</h4>
+    <ul>
+      <li><strong>RSD</strong> (Residential Street Address): Standard street addresses (123 Main St, Unit 5/100 High St). Most common. Required for Australia Post validation.</li>
+      <li><strong>PO Box</strong> (Post Office Box): Locked Bag, Private Bag numbers. Used for business mail receiving points.</li>
+      <li><strong>C/O</strong> (Care Of): Mail addressed to person at another address (e.g., "C/O John Smith, 10 Elm Ave"). Use when correspondence goes to third party at their address.</li>
+      <li><strong>Other</strong> (Special Format): Non-standard addresses, rural properties with descriptions, or addresses that don't fit standard formats.</li>
+    </ul>
+
+    <h4>Usage Type Selection - What Goes Where</h4>
+    <p><strong>Postal Only:</strong> Customer receives Land Tax correspondence at this address, but doesn't live there.</p>
+    <p>Example: Small investor uses accountant's office (PO Box 123) to receive tax correspondence, lives in another state.</p>
+
+    <p><strong>Residential Only:</strong> This is where customer lives, but Land Tax correspondence goes somewhere else.</p>
+    <p>Example: Tenant in rental property (residential address known to us), but correspondence goes to landlord/agent.</p>
+
+    <p><strong>Both:</strong> Same address for Land Tax correspondence AND residential location. Most common for owner-occupiers.</p>
+    <p>Example: Customer lives at 123 Main St and wants all Land Tax mail there.</p>
+
+    <h4>Delivery Indicator - Special Handling</h4>
+    <ul>
+      <li><strong>Standard:</strong> Normal mail, no special handling. Default for most customers.</li>
+      <li><strong>Urgent:</strong> Use if customer specifically requests priority handling. Flags assessments for express mail.</li>
+      <li><strong>Confidential:</strong> Use for sensitive matters (disputes, legal proceedings). Ensures mail handled securely.</li>
+      <li><strong>Special:</strong> Other special handling. Document in notes what special handling means.</li>
+    </ul>
+
+    <h4>Customer Type Address Examples</h4>
+    <p><strong>Individual:</strong> Lives at 42 High St, Melbourne. Format=RSD, Usage=Both, Delivery=Standard</p>
+    <p><strong>Company:</strong> Registered office 100 Collins St. Format=RSD, Usage=Postal (may receive at registered office), Delivery=Standard</p>
+    <p><strong>Trust:</strong> Trustee lives at 5 Park Rd. Derive address from Trustee. Format=RSD, Usage=Postal, Delivery=Standard</p>
+    <p><strong>Joint Ownership:</strong> Lead Customer at 88 Maple Ave. All JOs get correspondence at this address. Format=RSD, Usage=Both, Delivery=Standard</p>
+
+    <h4>Confirmation of Update Flow</h4>
+    <p>After updating address in Maintain Customer, verify:</p>
+    <ul>
+      <li>Update flows to Protocols node (controls correspondence routing)</li>
+      <li>Update flows to Land Taxpayer node (visible on assessment)</li>
+      <li>All related derivative customers updated if applicable (Trusts, JO, Groups)</li>
+    </ul>
+
+    <div class="page-ref">Source: Change of Customer Details Procedure for Land Tax; Q5 Address Update; e-Sys Maintain Customer Field Guide</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Address change request with details</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (field selection and entry), e-Sys (address validation and flow)</div>
+    <div class="block"><strong>Decision</strong>: What format/usage/delivery? Confirm flow to nodes?</div>
+    <div class="block"><strong>Output</strong>: Address updated in e-Sys, flows confirmed</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q6 REPRESENTATIVES -->
+
+  <section id="q6">
+    <h2>Q6 - Does the Request Involve Authorised Representatives? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Representative Action Type</h3>
+      <div class="decision-box">
+        Request involves: Add new representative? • Amend existing representative? • Remove representative?
+      </div>
+
+```
+  <h3>Update Location in e-Sys</h3>
+  <p style="font-size:13px;font-weight:600;">Land Taxpayer Contact Tab → Authorized Representatives section</p>
+
+  <h3>Representative Update Steps</h3>
+  <ol style="font-size:13px;">
+    <li>Access Land Taxpayer Contact tab</li>
+    <li>Locate Authorized Representatives section</li>
+    <li>Add: Enter name, role, contact details, authorization type</li>
+    <li>Amend: Update contact details or authority scope</li>
+    <li>Remove: Delete representative record with reason noted</li>
+    <li>Apply GEN-03 authorisation flag if correspondence should go to rep</li>
+    <li>Update Protocols if correspondence redirection needed</li>
+    <li>Save changes</li>
+  </ol>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Representative Addition/Amendment/Removal Process & GEN-03 Protocol Updates</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>Adding a New Authorized Representative</h4>
+    <p><strong>Information Required:</strong></p>
+    <ul>
+      <li>Full name of representative</li>
+      <li>Title/role (e.g., Accountant, Lawyer, Tax Agent, Attorney)</li>
+      <li>Organization name (if applicable)</li>
+      <li>Phone number</li>
+      <li>Email address</li>
+      <li>Authorization scope (all matters, address only, etc.)</li>
+      <li>Start date of authority</li>
+    </ul>
+
+    <p><strong>System Entry:</strong> In Land Taxpayer Contact tab, add as "Contact Type = Authorized Representative". Apply GEN-03 flag if correspondence should go to this person.</p>
+
+    <p><strong>Protocols Update:</strong> If correspondence should be redirected to representative, update Protocols to route assessments to rep's address.</p>
+
+    <h4>Amending Existing Representative Details</h4>
+    <p><strong>Examples:</strong> Phone/email change, change of organization, expanded authority scope</p>
+    <p><strong>Process:</strong> Locate representative record, update changed fields, verify Protocols reflect any addressing changes, save.</p>
+
+    <h4>Removing a Representative - Process & Authority</h4>
+    <p><strong>Who Can Request Removal:</strong></p>
+    <ul>
+      <li>Customer (primary owner) - can remove any rep</li>
+      <li>Representative themselves - can request own removal</li>
+      <li>NEW representative - often included when new rep appointed</li>
+    </ul>
+
+    <p><strong>Authority Requirements:</strong> Same as for adding rep (signed letter or phone call with follow-up)</p>
+
+    <p><strong>Removal Process:</strong></p>
+    <ol>
+      <li>Verify authority to remove</li>
+      <li>Locate representative in Land Taxpayer Contact</li>
+      <li>Mark as "Removed" or delete record (per system design)</li>
+      <li>Document removal reason and date in notes</li>
+      <li>Update Protocols if correspondence was being redirected to this person</li>
+      <li>Redirect correspondence back to primary customer address</li>
+    </ol>
+
+    <p><strong>Follow-up:</strong> If representative continues to receive correspondence after removal, they may contact us. Have documentation ready showing authorized removal.</p>
+
+    <h4>GEN-03 Flag & Correspondence Redirection</h4>
+    <p><strong>GEN-03 Authorization Flag:</strong> System field that marks which representative(s) should receive correspondence.</p>
+    <p><strong>How It Works:</strong> When flag is set for a representative, Land Tax assessments and notices are sent to that person's address instead of customer's address.</p>
+    <p><strong>Usage:</strong> Check GEN-03 flag when adding/updating representative if customer wants correspondence redirected to that person.</p>
+
+    <h4>Updating Protocols for Correspondence Redirection</h4>
+    <p><strong>Protocols Node:</strong> Controls where correspondence is sent. If representative should receive mail, Protocols must be updated.</p>
+    <p><strong>Process:</strong> In Protocols section, set mailing address to representative's address. Verify it's distinct from customer address.</p>
+    <p><strong>Confirmation:</strong> Verify that next assessment will be sent to correct address (representative vs customer)</p>
+
+    <div class="page-ref">Source: Change of Customer Details Procedure for Land Tax; Q6 Authorized Representatives; Land Taxpayer Contact Field Guide</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Representative add/amend/remove request with details</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (contact record updates), e-Sys (protocol routing)</div>
+    <div class="block"><strong>Decision</strong>: Add vs amend vs remove? GEN-03 flag needed?</div>
+    <div class="block"><strong>Output</strong>: Representative records updated, protocols updated if correspondence redirected</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q7 NAME/CONTACT -->
+
+  <section id="q7">
+    <h2>Q7 - Does the Request Involve Updating Name or Contact Details? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Name Change Verification</h3>
+      <p style="font-size:13px;margin-bottom:12px;">Before applying name changes, verify against secondary source.</p>
+
+```
+  <h3>Name Change Verification Hierarchy</h3>
+  <div class="decision-box">
+    Acceptable sources (in order of preference): Marriage/Divorce Certificate • Deed Poll • COI (Compliance Operational Intelligence) • DLS (Driver License System) • Other official documentation
+  </div>
+
+  <h3>Contact Details Update</h3>
+  <ul style="font-size:13px;">
+    <li>Phone number: Update in Maintain Customer (Contact Phone)</li>
+    <li>Email: Update in Maintain Customer (Contact Email)</li>
+    <li>No verification required for contact details</li>
+  </ul>
+
+  <h3>Update Location</h3>
+  <p style="font-size:13px;font-weight:600;">Maintain Customer tab → Name and Contact section</p>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Name Change Verification Source Hierarchy & Contact Details Update</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>Name Change Verification Source Hierarchy</h4>
+    <p><strong>Preferred Sources (in order):</strong></p>
+
+    <p><strong>1. Marriage Certificate / Divorce Decree</strong></p>
+    <ul>
+      <li>Official document from Registry of Births, Deaths & Marriages</li>
+      <li>Shows legal name change and effective date</li>
+      <li>Certified copy acceptable</li>
+      <li>Check: Still valid (not revoked), matches customer ID</li>
+    </ul>
+
+    <p><strong>2. Deed Poll / Name Change Document</strong></p>
+    <ul>
+      <li>Official name change document (not marriage-related)</li>
+      <li>Certified by court or legal practitioner</li>
+      <li>Shows old name and new legal name</li>
+      <li>Check: Current, matches customer, certified</li>
+    </ul>
+
+    <p><strong>3. COI (Compliance Operational Intelligence) Database</strong></p>
+    <ul>
+      <li>Government database linking customers to known identities</li>
+      <li>Look up customer ID in COI; verify name matches request</li>
+      <li>Acceptable if COI record shows current legal name</li>
+    </ul>
+
+    <p><strong>4. DLS (Driver Licensing System)</strong></p>
+    <ul>
+      <li>Victoria's driver license database</li>
+      <li>Pull DLS record; verify name matches request</li>
+      <li>Acceptable if DLS shows current legal name</li>
+    </ul>
+
+    <p><strong>5. Other Official Documentation</strong></p>
+    <ul>
+      <li>Passport, naturalisation certificate, or government ID</li>
+      <li>Must be official, current, and clearly state customer's legal name</li>
+      <li>Certified copy acceptable</li>
+    </ul>
+
+    <h4>Name Change Verification Process</h4>
+    <ol>
+      <li>Request shows desired name change (e.g., from "John Smith" to "Jon Smith")</li>
+      <li>Check available secondary source (in hierarchy order)</li>
+      <li>If match found (e.g., DLS shows "Jon Smith"), proceed</li>
+      <li>If no match, request marriage/deed poll documentation from customer</li>
+      <li>Once verified, update name in Maintain Customer</li>
+      <li>Document verification source in action item notes</li>
+    </ol>
+
+    <h4>Contact Details Update (No Verification Required)</h4>
+    <p><strong>Phone Number Update:</strong> Accept as provided in request. Update Contact Phone field in Maintain Customer. No verification needed.</p>
+    <p><strong>Email Update:</strong> Accept as provided in request. Update Contact Email field in Maintain Customer. No verification needed (unless email previously bounced)</p>
+
+    <h4>System Update Process</h4>
+    <p><strong>Location:</strong> Maintain Customer tab, Name and Contact section</p>
+    <p><strong>Fields to Update:</strong></p>
+    <ul>
+      <li>Name (Legal Name field) - must be verified</li>
+      <li>Contact Phone - accept as provided</li>
+      <li>Contact Email - accept as provided</li>
+    </ul>
+    <p><strong>Save:</strong> Confirm changes and save to e-Sys</p>
+
+    <div class="page-ref">Source: Change of Customer Details Procedure for Land Tax; Q7 Name and Contact Update; Verification Sources</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Name/contact change request</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (verification and entry), secondary sources (COI/DLS)</div>
+    <div class="block"><strong>Decision</strong>: Name verified? Contact details clear?</div>
+    <div class="block"><strong>Output</strong>: Name and contact details updated in Maintain Customer</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q8 PPR AMENDMENT -->
+
+  <section id="q8">
+    <h2>Q8 - Does the Address Update Require a PPR Amendment? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>PPR Eligibility Decision</h3>
+      <div class="decision-box">
+        Is address change related to Principal Place of Residence eligibility? Does customer want PPR applied/removed?
+      </div>
+
+```
+  <h3>PPR Eligibility Criteria</h3>
+  <p style="font-size:13px;font-weight:600;margin-bottom:12px;">PPR (Principal Place of Residence) exemption applies only if:</p>
+  <ul style="font-size:13px;">
+    <li>Address is customer's main residential address (where they live most of the time)</li>
+    <li>Customer owns property in own name (not investment property)</li>
+    <li>Customer must provide evidence of residency (utility bill, rates notice, COI check, DLS)</li>
+    <li>Address meets residential criteria (not vacant land, not commercial)</li>
+  </ul>
+
+  <h3>PPR Effective Date</h3>
+  <p style="font-size:13px;font-weight:600;">PPR applied from 1 December of current year → affects next year's assessment</p>
+
+  <h3>PPR Application Process</h3>
+  <ol style="font-size:13px;">
+    <li>Verify address qualifies for PPR (residential, customer primary residence)</li>
+    <li>Confirm customer wants PPR applied</li>
+    <li>Apply PPR flag from 1 December current year</li>
+    <li>PPR exemption will flow to next year's assessment (following year)</li>
+    <li>Document PPR application in action item notes</li>
+  </ol>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: PPR Eligibility Criteria, Verification Sources, 1 December Effective Date Explanation & Removal Process</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>What is PPR (Principal Place of Residence)?</h4>
+    <p>PPR is a land tax exemption available to owner-occupiers of residential properties. If a property qualifies for PPR, the liability is waived for that year. PPR is NOT available for investors (properties held for rental income).</p>
+
+    <h4>Full PPR Eligibility Criteria - All Must Be Met</h4>
+    <p><strong>1. Property Type:</strong> Must be residential (house, apartment, townhouse). NOT vacant land, NOT commercial, NOT agricultural.</p>
+    <p><strong>2. Ownership:</strong> Customer must own property (be on title). Tenants don't qualify.</p>
+    <p><strong>3. Primary Residence:</strong> Property must be where customer lives most of the time (principal place of residence, not investment/holiday home).</p>
+    <p><strong>4. Use:</strong> Property must not be used for business or rental. Owner-occupied only.</p>
+    <p><strong>5. Proof of Residency:</strong> Customer must provide evidence they live there.</p>
+
+    <h4>Residency Verification Sources (in priority order)</h4>
+    <p><strong>1. RTBA (Rental Tenancy Bond Authority):</strong> If customer previously listed as tenant at this address, they've lived there (if recent).</p>
+    <p><strong>2. DLS (Driver License System):</strong> Address on driver license = residential address (if current).</p>
+    <p><strong>3. COI (Compliance Operational Intelligence):</strong> Government linkage of customer to address.</p>
+    <p><strong>4. Utility Bills:</strong> Council rates, water bill, electricity bill showing this address (must be current or very recent).</p>
+    <p><strong>5. Customer Declaration:</strong> Customer states they live there; use if other sources unavailable (document in notes).</p>
+
+    <h4>Why 1 December Effective Date?</h4>
+    <p><strong>Explanation:</strong> Land Tax assessments are issued on specific dates each year. To ensure PPR exemption is applied to the following financial year, it must be entered into the system by 1 December of the current year. If PPR is applied after 1 December, it doesn't affect the next year's assessment (flows to year after).</p>
+
+    <p><strong>Example:</strong></p>
+    <ul>
+      <li>Today: 30 October 2024</li>
+      <li>Customer moves to new residential address</li>
+      <li>We apply PPR flag on 30 October</li>
+      <li>PPR affects 2024-25 assessment (issued after 1 December cutoff)</li>
+    </ul>
+
+    <h4>PPR Removal Process</h4>
+    <p><strong>When to Remove:</strong> If customer sells property, moves to investment property, or no longer qualifies (e.g., becomes investment property).</p>
+    <p><strong>Process:</strong> Remove PPR flag in e-Sys, effective date is removal date. Future assessments will include full land tax liability.</p>
+    <p><strong>Verification:</strong> Require proof of sale or change of use before removing PPR.</p>
+
+    <h4>PPR in e-Sys System Field</h4>
+    <p><strong>Location:</strong> Property/Valuation section</p>
+    <p><strong>Entry:</strong> Set PPR = Yes/No, with effective date (1 December or specific date)</p>
+    <p><strong>Result:</strong> Next assessment run includes PPR exemption if flag = Yes</p>
+
+    <div class="page-ref">Source: Change of Customer Details Procedure for Land Tax; Q8 PPR Amendment; PPR Eligibility & Verification</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Address change, PPR eligibility indicators, residency evidence</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (eligibility assessment), e-Sys (PPR flag application)</div>
+    <div class="block"><strong>Decision</strong>: Does address qualify for PPR? Apply or remove?</div>
+    <div class="block"><strong>Output</strong>: PPR applied/removed effective 1 December (or specified date)</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q9 DERIVATIVES -->
+
+  <section id="q9">
+    <h2>Q9 - Are Derivative Updates Required Due to Customer Structure? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Derivative Update by Customer Type</h3>
+      <div class="decision-box">
+        Customer structure: Trust? • Joint Ownership? • Land Tax Group? → Requires derivative updates
+      </div>
+
+```
+  <h3>Derivative Update Process by Type</h3>
+  
+  <h4>Trust Customers</h4>
+  <ul style="font-size:13px;">
+    <li><strong>Action:</strong> Update Trustee customer first → Trust address derives automatically</li>
+    <li><strong>Process:</strong> (1) Update Trustee name/address, (2) Confirm Trust customer address auto-updates, (3) No separate Trust entry needed</li>
+    <li><strong>Verification:</strong> Check Trust record shows updated Trustee details reflected</li>
+  </ul>
+
+  <h4>Joint Ownership (JO) Customers</h4>
+  <ul style="font-size:13px;">
+    <li><strong>Action:</strong> Update Lead Customer → Confirm all JO members consent and receive updated mailing address</li>
+    <li><strong>Process:</strong> (1) Update Lead Customer address, (2) Verify all JO members listed in JO mailing group, (3) Confirm all JOs will receive correspondence at new address, (4) Document consent from other JO members if available</li>
+    <li><strong>Verification:</strong> Confirm JO mailing list updated; all members get same address</li>
+  </ul>
+
+  <h4>Land Tax Group Customers</h4>
+  <ul style="font-size:13px;">
+    <li><strong>Action:</strong> Update Nominated Member → Address flows to all group members</li>
+    <li><strong>Process:</strong> (1) Update Nominated Member address, (2) Confirm all group members in Land Tax Group list, (3) Verify all group members will receive correspondence at Nominated Member's address, (4) Document group composition</li>
+    <li><strong>Verification:</strong> Confirm group mailing list reflects new address</li>
+  </ul>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Detailed Derivative Update Processes per Structure Type with Verification Steps</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>Trust Derivative Updates - Detailed Process</h4>
+    <p><strong>Customer Structure:</strong> Trust owns property; Trustee is responsible party for Land Tax.</p>
+    <p><strong>How Derivative Works:</strong> Trust customer details (address, contact) are linked to Trustee customer. Changes to Trustee automatically flow to Trust.</p>
+
+    <p><strong>Step-by-Step Process:</strong></p>
+    <ol>
+      <li>Request is for Trust address change (e.g., trustee moved to new address)</li>
+      <li>Access Trustee customer record in e-Sys</li>
+      <li>Update Trustee address to new address</li>
+      <li>Check Trust customer record → confirm address has auto-updated</li>
+      <li>Verify derived address matches Trustee address</li>
+      <li>Document in COCD action item: "Trust address derived from Trustee [date]"</li>
+    </ol>
+
+    <p><strong>Troubleshooting:</strong> If Trust address doesn't auto-derive, escalate to Grade 3 for system check.</p>
+
+    <h4>Joint Ownership Derivative Updates - Detailed Process</h4>
+    <p><strong>Customer Structure:</strong> Multiple customers own property jointly. Lead Customer receives correspondence; change affects all JO members.</p>
+    <p><strong>How Derivative Works:</strong> All JO members linked to Lead Customer. Correspondence goes to Lead Customer's address; all JOs get copies.</p>
+
+    <p><strong>Step-by-Step Process:</strong></p>
+    <ol>
+      <li>Request is for JO address change (e.g., Lead Customer moved)</li>
+      <li>Verify requester is Lead Customer (only Lead can authorize address changes)</li>
+      <li>Access Lead Customer record</li>
+      <li>Update Lead Customer address</li>
+      <li>Check JO mailing list → confirm all JO members listed</li>
+      <li>Verify correspondence will go to Lead's new address and be copied to all JOs</li>
+      <li>Document in COCD action item: "JO address updated [date]. All JO members: [names]. Correspondence to Lead at [new address]"</li>
+    </ol>
+
+    <p><strong>Important:</strong> All JO members must receive correspondence. If any JO member has different address requirement, escalate (out of scope for standard COCD).</p>
+
+    <h4>Land Tax Group Derivative Updates - Detailed Process</h4>
+    <p><strong>Customer Structure:</strong> Multiple properties grouped together for Land Tax assessment. Nominated Member receives group correspondence; changes affect entire group.</p>
+    <p><strong>How Derivative Works:</strong> All properties in group linked to Nominated Member. Correspondence goes to Nominated Member's address.</p>
+
+    <p><strong>Step-by-Step Process:</strong></p>
+    <ol>
+      <li>Request is for group address change (e.g., Nominated Member moved)</li>
+      <li>Verify requester is Nominated Member (only Nom Member can authorize)</li>
+      <li>Access Nominated Member customer record</li>
+      <li>Update Nominated Member address</li>
+      <li>Check Land Tax Group record → confirm all properties listed in group</li>
+      <li>Verify correspondence will go to Nominated Member's new address for all group properties</li>
+      <li>Document in COCD action item: "Land Tax Group address updated [date]. Nominated Member: [name]. Properties in group: [list]. Group correspondence to [new address]"</li>
+    </ol>
+
+    <p><strong>Important:</strong> All properties in group must have correspondence go to same address (Nominated Member). If any property needs different address, escalate.</p>
+
+    <h4>Verification Steps - All Derivative Types</h4>
+    <p>After applying any derivative update:</p>
+    <ul>
+      <li>☐ Confirm derived customer record reflects new address</li>
+      <li>☐ Verify all linked customers/properties listed correctly</li>
+      <li>☐ Confirm next correspondence will go to correct address for all linked parties</li>
+      <li>☐ Document all changes in COCD action item notes</li>
+      <li>☐ Set action item for completion</li>
+    </ul>
+
+    <div class="page-ref">Source: Change of Customer Details Procedure for Land Tax; Q9 Derivative Updates; Customer Structure Management</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: Customer structure type, details change affecting linked customers</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (structure assessment and linked updates), e-Sys (derivative linking)</div>
+    <div class="block"><strong>Decision</strong>: Derivatives exist? What type (Trust/JO/Group)? What updates needed?</div>
+    <div class="block"><strong>Output</strong>: Derivative customer records updated (Trustee/Lead/Nom Member); linked records verified</div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- Q10 COMPLETION -->
+
+  <section id="q10">
+    <h2>Q10 - Can the COCD Action Item Be Completed? <span class="improvement-badge">IMPROVED</span></h2>
+    <div class="staff">
+      <h3>Completion Checklist</h3>
+      <div class="checklist">
+        <ul style="font-size:13px;">
+          <li>Request scope verified (Q1 - in scope)</li>
+          <li>Request source identified and located (Q2)</li>
+          <li>Customer type confirmed (Q3)</li>
+          <li>Authority verified or obtained (Q4)</li>
+          <li>Address details updated if required (Q5)</li>
+          <li>Representative records updated if required (Q6)</li>
+          <li>Name/contact details updated if required (Q7)</li>
+          <li>PPR applied/removed if required (Q8)</li>
+          <li>Derivative updates completed if required (Q9)</li>
+        </ul>
+      </div>
+
+```
+  <h3>Action Item Completion Steps</h3>
+  <ol style="font-size:13px;">
+    <li>Record all verification steps and updates in action item notes</li>
+    <li>Specify which questions (Q1-Q9) applied to this request</li>
+    <li>Document sources used for verification (e.g., DLS, COI, authority letter)</li>
+    <li>Apply appropriate root cause code</li>
+    <li>Set action item status to "Completed"</li>
+    <li>Add completion date</li>
+    <li>Save action item</li>
+  </ol>
+
+  <h3>Root Cause Codes</h3>
+  <ul style="font-size:13px;">
+    <li>Address Change (Postal)</li>
+    <li>Address Change (Residential)</li>
+    <li>Name Change</li>
+    <li>Contact Detail Update</li>
+    <li>Representative Addition/Removal</li>
+    <li>PPR Amendment</li>
+    <li>Bulk Update (if multiple items changed)</li>
+  </ul>
+
+  <div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Documentation Checklist & Completion Requirements</span><span class="detail-toggle-arrow">▼</span></div>
+  <div class="detail-panel">
+    <h4>Complete Documentation Checklist (Before Closing Action Item)</h4>
+    <div style="background:#f9fafb;border:1px solid #e5e7eb;padding:16px;border-radius:6px;margin:12px 0;">
+      <p style="font-size:13px;margin-bottom:12px;"><strong>Request Documentation:</strong></p>
+      <ul style="font-size:13px;margin-left:18px;">
+        <li>☐ Request source documented (SmartForm/My Land Tax/Letter/Phone)</li>
+        <li>☐ Request location recorded (which tab/file found)</li>
+        <li>☐ Date request received recorded</li>
+        <li>☐ Requester name and contact documented (if phone call)</li>
+      </ul>
+
+      <p style="font-size:13px;margin-bottom:12px;"><strong>Authority Documentation:</strong></p>
+      <ul style="font-size:13px;margin-left:18px;">
+        <li>☐ Authority verified or letter obtained</li>
+        <li>☐ Authorization source documented (signature/My Land Tax/phone)</li>
+        <li>☐ Date authority verified recorded</li>
+        <li>☐ If reserved: request date, follow-up dates, final resolution documented</li>
+      </ul>
+
+      <p style="font-size:13px;margin-bottom:12px;"><strong>Customer Type Documentation:</strong></p>
+      <ul style="font-size:13px;margin-left:18px;">
+        <li>☐ Customer type confirmed (Individual/Company/Trust/JO/Estate/Group)</li>
+        <li>☐ Type-specific rules applied documented</li>
+      </ul>
+
+      <p style="font-size:13px;margin-bottom:12px;"><strong>Update Documentation:</strong></p>
+      <ul style="font-size:13px;margin-left:18px;">
+        <li>☐ Address: old address and new address recorded</li>
+        <li>☐ Address: Format, Usage Type, Delivery Indicator recorded</li>
+        <li>☐ Address: Protocols update confirmed (if applicable)</li>
+        <li>☐ Name: Verification source documented (marriage cert/DLS/COI/other)</li>
+        <li>☐ Contact: Phone/email updates recorded</li>
+        <li>☐ Representative: Action (add/amend/remove) and details recorded</li>
+        <li>☐ PPR: Eligibility verification source and decision recorded</li>
+        <li>☐ Derivatives: All linked customers/properties updated and verified</li>
+      </ul>
+
+      <p style="font-size:13px;margin-bottom:12px;"><strong>Completion Documentation:</strong></p>
+      <ul style="font-size:13px;margin-left:18px;">
+        <li>☐ All verification steps summarized in notes</li>
+        <li>☐ Root cause code applied</li>
+        <li>☐ Completion date recorded</li>
+        <li>☐ Staff member name recorded</li>
+      </ul>
+    </div>
+
+    <h4>Documentation Format in Action Item Notes</h4>
+    <p><strong>Good Example:</strong></p>
+    <p style="font-size:12px;background:#f0fdf4;padding:12px;border-radius:6px;margin:8px 0;">
+      "Request received via SmartForm GEN-03 on [date]. Customer: Individual. Authority: Signature on form [date]. Updates applied: Address changed from [old] to [new] (Format=RSD, Usage=Both). Verification: DLS check confirms new address. Phone updated [old] → [new]. No PPR required (investment property). Derivatives: None. Completed [date]. Root cause: Address Change (Postal)."
+    </p>
+
+    <p><strong>Poor Example (avoid):</strong></p>
+    <p style="font-size:12px;background:#fef2f2;padding:12px;border-radius:6px;margin:8px 0;">
+      "Changed details. Done."</p>
+
+    <h4>Root Cause Selection</h4>
+    <p><strong>Single Change:</strong> Select specific root cause (e.g., "Address Change (Postal)").</p>
+    <p><strong>Multiple Changes:</strong> Select "Bulk Update" if 2+ types of changes (address + name + contact, etc.).</p>
+
+    <div class="page-ref">Source: Change of Customer Details Procedure for Land Tax; Q10 Completion; Documentation Requirements</div>
+  </div>
+</div>
+<div class="architect">
+  <div class="arch">
+    <div class="block"><strong>Input data</strong>: All Q1-Q9 completion status</div>
+    <div class="block"><strong>Processing responsibility</strong>: Staff (completion verification and documentation)</div>
+    <div class="block"><strong>Decision</strong>: Are all required steps completed? Is documentation complete?</div>
+    <div class="block"><strong>Output</strong>: Action item closed with full documentation and root cause</div>
+  </div>
+</div>
+```
+
+  </section>
+
+</div>
+
+<!-- SYSTEM INTERACTION VIEW -->
+
+<div class="systemsOnly">
+  <section>
+    <h2>System Interaction - COCD Request Processing Flow</h2>
+    <div class="flow">
+      <div class="flow-title">Q1-Q10 COCD Request Processing</div>
+      <div class="node n-amber">Customer Request Received</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q1: Scope Check</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q2: Source Identification</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q3: Customer Type</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q4: Authority Verification</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q5: Address Update</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q6: Representatives</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q7: Name/Contact</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q8: PPR Amendment</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q9: Derivatives</div>
+      <div class="arr"></div>
+      <div class="node n-blue">Q10: Complete Item</div>
+      <div class="arr"></div>
+      <div class="node n-gray">COCD Complete</div>
+      <div style="margin-top:24px;"></div>
+      <div class="flow-title" style="font-size:16px;">Key Systems Involved</div>
+      <div class="branch">
+        <div class="node n-blue" style="font-size:11px;">e-Sys</div>
+        <div class="node n-amber" style="font-size:11px;">CM10/EDRMS</div>
+        <div class="node n-amber" style="font-size:11px;">COI/DLS</div>
+        <div class="node n-amber" style="font-size:11px;">My Land Tax</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a8a"></div> Processing Step</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> External System</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#6b7280"></div> Completion</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SUMMARY & REVIEW VIEW -->
+
+<div class="specOnly">
+  <section class="summary-section" id="gaps-summary">
+    <h2>📊 Gaps Analysis Summary (15 Gaps Addressed)</h2>
+
+```
+<div class="gap-highlight"><strong>GAP 1 (HIGH):</strong> In-Scope Definition Vague → Added explicit in-scope/out-of-scope checklist with examples (8 in-scope, 7 out-of-scope categories)</div>
+<div class="gap-highlight"><strong>GAP 2 (HIGH):</strong> Authority Verification Incomplete → Added authority matrix by customer type with auto-authorization rules</div>
+<div class="gap-highlight"><strong>GAP 3 (HIGH):</strong> Address Format/Usage Type Unclear → Added system field guidance with examples for RSD, PO Box, C/O, Usage Types</div>
+<div class="gap-highlight"><strong>GAP 4 (MEDIUM):</strong> Customer Type Rules Scattered → Added consolidated customer type matrix in Q3 with all rules per type</div>
+<div class="gap-highlight"><strong>GAP 5 (MEDIUM):</strong> Request Source Lookup Unclear → Added source-to-location mapping table (GEN-03, My Land Tax, Written, Phone)</div>
+<div class="gap-highlight"><strong>GAP 6 (MEDIUM):</strong> Authority Letter Acceptance Missing → Added authority document acceptance checklist (4 document types with criteria)</div>
+<div class="gap-highlight"><strong>GAP 7 (MEDIUM):</strong> PPR Eligibility Undefined → Added PPR eligibility criteria (5 conditions) with 1 December effective date explanation</div>
+<div class="gap-highlight"><strong>GAP 8 (MEDIUM):</strong> Derivative Updates Unclear → Added detailed process per structure type (Trust, JO, Land Tax Group)</div>
+<div class="gap-highlight"><strong>GAP 9 (LOW):</strong> GEN-03 Form Unclear → Added GEN-03 field reference guide with all required fields</div>
+<div class="gap-highlight"><strong>GAP 10 (LOW):</strong> My Land Tax Submission Process Missing → Added My Land Tax verification process and auto-authorization explanation</div>
+<div class="gap-highlight"><strong>GAP 11 (LOW):</strong> Phone Call Authority Unclear → Added phone call authority documentation process (3-step)</div>
+<div class="gap-highlight"><strong>GAP 12 (LOW):</strong> Reservation Follow-up Undefined → Added 2-week timeline with 3 follow-up checkpoints and closure procedure</div>
+<div class="gap-highlight"><strong>GAP 13 (LOW):</strong> Completion Checklist Missing → Added 9-item completion checklist plus 15-item documentation checklist</div>
+<div class="gap-highlight"><strong>GAP 14 (LOW):</strong> Name Verification Sources Unclear → Added 5-level source hierarchy (Marriage cert, Deed Poll, COI, DLS, Other)</div>
+<div class="gap-highlight"><strong>GAP 15 (LOW):</strong> Representative Removal Process Missing → Added removal authorization requirements and process (4 steps)</div>
+```
+
+  </section>
+
+  <section class="summary-section" id="scope-criteria">
+    <h2>In-Scope vs Out-of-Scope Criteria</h2>
+    <p style="font-size:13px;margin-bottom:12px;"><strong>IN SCOPE (8 items):</strong> Address (postal/residential), Name, Contact (phone/email), Representatives (add/amend/remove), Minor property detail</p>
+    <p style="font-size:13px;margin-bottom:12px;"><strong>OUT OF SCOPE (7+ categories):</strong> Ownership changes, Liability disputes, PPR challenges, Valuation objections, Property subdivisions, Customer type change, Assessment year changes</p>
+    <div style="background:#f0fdf4;border-left:5px solid #22c55e;padding:12px 16px;margin:12px 0;font-size:13px;">
+      <strong>Decision Rule:</strong> If request is about WHO owns, WHERE structurally, WHAT it's worth, or HOW assessed → OUT OF SCOPE. Refer to Senior Officer.
+    </div>
+  </section>
+
+  <section class="summary-section" id="authority-matrix">
+    <h2>Authority Verification Matrix by Customer Type</h2>
+    <div class="table-responsive">
+      <table style="font-size:12px;">
+        <tr style="background:#003a8f;color:white;">
+          <th>Customer Type</th>
+          <th>Auto-Authorized (Which Party)</th>
+          <th>Requires Authority Letter If</th>
+          <th>Authority Document Type</th>
+        </tr>
+        <tr>
+          <td><strong>Individual</strong></td>
+          <td>Customer self (any channel)</td>
+          <td>Non-customer requester (spouse, family, etc.)</td>
+          <td>Signed letter or POA</td>
+        </tr>
+        <tr>
+          <td><strong>Company</strong></td>
+          <td>Company officer (ASIC verified)</td>
+          <td>Non-officer requester</td>
+          <td>ASIC certification + POA</td>
+        </tr>
+        <tr>
+          <td><strong>Trust</strong></td>
+          <td>Trustee of trust only</td>
+          <td>Non-trustee (beneficiary, etc.)</td>
+          <td>Trust deed or trustee certificate + POA</td>
+        </tr>
+        <tr>
+          <td><strong>Joint Ownership</strong></td>
+          <td>Lead Customer only</td>
+          <td>Non-lead JO member</td>
+          <td>Signed letter from all JO members</td>
+        </tr>
+        <tr>
+          <td><strong>Estate</strong></td>
+          <td>Legal representative only</td>
+          <td>Non-representative</td>
+          <td>Letters of probate/administration</td>
+        </tr>
+        <tr>
+          <td><strong>Land Tax Group</strong></td>
+          <td>Nominated Member only</td>
+          <td>Non-nominated member</td>
+          <td>Nomination letter + POA</td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="summary-section" id="customer-type-rules">
+    <h2>Customer Type Rules Consolidated</h2>
+    <div class="table-responsive">
+      <table style="font-size:12px;">
+        <tr style="background:#003a8f;color:white;">
+          <th>Type</th>
+          <th>Auto-Auth</th>
+          <th>Address Rules</th>
+          <th>Derivatives</th>
+          <th>Special Notes</th>
+        </tr>
+        <tr>
+          <td><strong>Individual</strong></td>
+          <td>Self</td>
+          <td>Direct update</td>
+          <td>None</td>
+          <td>Simplest case</td>
+        </tr>
+        <tr>
+          <td><strong>Company</strong></td>
+          <td>Officer</td>
+          <td>Registered office</td>
+          <td>None</td>
+          <td>Verify ASIC</td>
+        </tr>
+        <tr>
+          <td><strong>Trust</strong></td>
+          <td>Trustee</td>
+          <td>Derive from Trustee</td>
+          <td>Trustee → Trust derives</td>
+          <td>Update Trustee first</td>
+        </tr>
+        <tr>
+          <td><strong>JO</strong></td>
+          <td>Lead only</td>
+          <td>Lead address flows to all</td>
+          <td>All JOs must consent</td>
+          <td>Confirm mailing list</td>
+        </tr>
+        <tr>
+          <td><strong>Estate</strong></td>
+          <td>Rep only</td>
+          <td>Rep address (executor)</td>
+          <td>May involve original owner</td>
+          <td>Require probate docs</td>
+        </tr>
+        <tr>
+          <td><strong>Group</strong></td>
+          <td>Nom Member</td>
+          <td>Nom Member address</td>
+          <td>All group members updated</td>
+          <td>Confirm group list</td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="summary-section">
+    <h2>Procedure Summary</h2>
+    <ul style="font-size:13px;">
+      <li>10-step process (Q1-Q10) for processing customer change of details requests</li>
+      <li>Q1: Verify request is in scope (8 in-scope items vs 7 out-of-scope categories)</li>
+      <li>Q2: Identify request source (GEN-03, My Land Tax, written, phone) with location lookup</li>
+      <li>Q3: Confirm customer type (6 types with specific rules)</li>
+      <li>Q4: Verify authority using type-specific matrix; manage 2-week reservation if authority missing</li>
+      <li>Q5: Update address with correct format, usage type, delivery indicator; verify protocol flow</li>
+      <li>Q6: Add/amend/remove authorised representatives; update protocols if needed</li>
+      <li>Q7: Verify name changes against secondary sources (DLS, COI, docs); update contact details</li>
+      <li>Q8: Apply/remove PPR with 1 December effective date; verify residency eligibility</li>
+      <li>Q9: Update derivatives (Trust derives from Trustee, JO flows to all, Group flows to all members)</li>
+      <li>Q10: Complete action item with full documentation (9-item checklist + 15-item doc checklist)</li>
+      <li>Time standard: 7.5 minutes per item</li>
+    </ul>
+  </section>
+
+  <section class="summary-section">
+    <h2>Source of Authority</h2>
+    <ul style="font-size:13px;">
+      <li><strong>Division:</strong> Land Revenue Services</li>
+      <li><strong>Branch:</strong> Land Information Management</li>
+      <li><strong>Procedure:</strong> Change of Customer Details Procedure for Land Tax</li>
+      <li><strong>Created:</strong> 28 November 2024</li>
+      <li><strong>Revised:</strong> 28 November 2024</li>
+      <li><strong>Time Standard:</strong> 7.5 minutes per COCD item</li>
+      <li><strong>System of Record:</strong> Lotus Notes Policies and Procedures Database</li>
+    </ul>
+  </section>
+
+  <section class="summary-section" id="definitions">
+    <h2>Definitions & Acronyms</h2>
+    <p style="font-size:13px;">
+      <strong>COCD</strong> - Change of Customer Details (work item type)<br>
+      <strong>GEN-03</strong> - SmartForm for customer details change (structured web form)<br>
+      <strong>CM10 / EDRMS</strong> - Electronic Document Management System (document storage)<br>
+      <strong>e-Sys</strong> - Land Revenue system for customer and assessment management<br>
+      <strong>My Land Tax</strong> - Online self-service customer portal (auto-authenticated)<br>
+      <strong>COI</strong> - Compliance Operational Intelligence (government address/identity database)<br>
+      <strong>DLS</strong> - Driver Licensing System (Victoria drivers' address)<br>
+      <strong>RTBA</strong> - Rental Tenancy Bond Authority (rental history)<br>
+      <strong>ASIC</strong> - Australian Securities and Investments Commission (company registry)<br>
+      <strong>PPR</strong> - Principal Place of Residence (land tax exemption for owner-occupiers)<br>
+      <strong>POA</strong> - Power of Attorney (legal authority document)<br>
+      <strong>JO</strong> - Joint Ownership (multiple customers own one property)<br>
+      <strong>Lead Customer</strong> - Primary contact for JO (only Lead can authorize changes)<br>
+      <strong>Nominated Member</strong> - Contact for Land Tax Group (only Nom Member can authorize)<br>
+      <strong>Trustee</strong> - Legal owner of trust; responsible for land tax obligations
+    </p>
+  </section>
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(function(e){e.style.display='none'});
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(function(e){e.style.display='block'});document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(function(e){e.style.display='block'});document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

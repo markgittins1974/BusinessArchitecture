@@ -59,52 +59,6 @@
       z-index: 9999;
     }
 
-    /* ═══════════════════════════════════════════════
-       FLOATING SHAPES
-    ═══════════════════════════════════════════════ */
-    .shape {
-      position: absolute;
-      border-radius: 9999px;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0;
-      transform: translateY(-80px) rotate(var(--rot-start));
-      animation: shapeEnter 2.4s cubic-bezier(0.23, 0.86, 0.39, 0.96) forwards,
-                 shapeFloat 14s ease-in-out infinite;
-    }
-    .shape-inner {
-      width: 100%; height: 100%;
-      border-radius: 9999px;
-      border: 2px solid rgba(255,255,255,0.12);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.15), inset 0 0 60px rgba(255,255,255,0.05);
-      position: relative; overflow: hidden;
-    }
-    .shape-inner::after {
-      content: '';
-      position: absolute; inset: 0;
-      border-radius: 9999px;
-      background: radial-gradient(circle at 40% 40%, rgba(255,255,255,0.18), transparent 65%);
-    }
-    @keyframes shapeEnter {
-      to { opacity: 1; transform: translateY(0) rotate(var(--rot-end)); }
-    }
-    @keyframes shapeFloat {
-      0%, 100% { transform: translateY(0) rotate(var(--rot-end)); }
-      50% { transform: translateY(18px) rotate(var(--rot-end)); }
-    }
-    .shape-1 { width:520px;height:120px;left:-6%;top:12%;--rot-start:-3deg;--rot-end:12deg;animation-delay:0.3s,0.3s }
-    .shape-1 .shape-inner { background:linear-gradient(to right,rgba(99,102,241,0.18),transparent) }
-    .shape-2 { width:440px;height:100px;right:-4%;top:68%;--rot-start:-28deg;--rot-end:-15deg;animation-delay:0.5s,0.5s }
-    .shape-2 .shape-inner { background:linear-gradient(to right,rgba(244,63,94,0.14),transparent) }
-    .shape-3 { width:280px;height:70px;left:6%;bottom:8%;--rot-start:-20deg;--rot-end:-8deg;animation-delay:0.4s,0.4s }
-    .shape-3 .shape-inner { background:linear-gradient(to right,rgba(139,92,246,0.16),transparent) }
-    .shape-4 { width:180px;height:50px;right:18%;top:8%;--rot-start:5deg;--rot-end:20deg;animation-delay:0.6s,0.6s }
-    .shape-4 .shape-inner { background:linear-gradient(to right,rgba(245,192,78,0.15),transparent) }
-    .shape-5 { width:140px;height:38px;left:22%;top:4%;--rot-start:-38deg;--rot-end:-25deg;animation-delay:0.7s,0.7s }
-    .shape-5 .shape-inner { background:linear-gradient(to right,rgba(109,211,251,0.15),transparent) }
-    .shape-6 { width:320px;height:80px;right:8%;bottom:22%;--rot-start:8deg;--rot-end:18deg;animation-delay:0.9s,0.9s }
-    .shape-6 .shape-inner { background:linear-gradient(to right,rgba(195,182,255,0.12),transparent) }
-
 
     /* ═══════════════════════════════════════════════
        LAYOUT

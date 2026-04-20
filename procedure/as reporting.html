@@ -1,0 +1,526 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Land Tax AOS Exemption Reports Procedure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit;font-size:13px}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    h4{font-size:14px;color:#003a8f;margin:16px 0 8px 0}
+    ul,ol{margin-left:22px;font-size:13px;line-height:1.6}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px;font-size:13px;line-height:1.5}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly,.specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;font-size:13px}
+    .detail-toggle-text{font-weight:700;color:#1e3a8a;flex:1}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s;margin-left:12px}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px;font-size:13px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:13px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p,.detail-panel li{font-size:13px;color:#475569;line-height:1.5;margin-bottom:6px}
+    .detail-panel ul{margin-left:18px}
+    .node{padding:14px 20px;border-radius:10px;font-size:12px;font-weight:600;text-align:center;min-width:160px;max-width:280px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:20px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .table-responsive{overflow-x:auto;margin:12px 0}
+    table{width:100%;border-collapse:collapse;font-size:12px;margin:12px 0}
+    table th,table td{padding:9px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600;color:#1f2937}
+    .highlight{background:#fffbeb;border-left:5px solid #f59e0b;padding:12px;margin:12px 0;font-size:13px}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Land Tax Absentee Owner Surcharge Exemption Reports Procedure</h1>
+  <p>Division: Policy Advisory and Legal Services &bull; Branch: Technical Advice and Review &bull; Revised: 5 February 2025</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#overview">Overview</a>
+    <a href="#q1">Q1 Extract Data</a>
+    <a href="#q2">Q2 Calculate Counts</a>
+    <a href="#q3">Q3 Prepare Documents</a>
+    <a href="#q4">Q4 Submit & Publish</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#mc988" onclick="showView('spec');setTimeout(()=>location.hash='mc988',100);">MC988 Report</a>
+    <a href="#timeline" onclick="showView('spec');setTimeout(()=>location.hash='timeline',100);">Timeline</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(()=>location.hash='definitions',100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary</button>
+    </div>
+
+<div id="questionFlow">
+
+<!-- OVERVIEW -->
+
+<section id="overview">
+<h2>Land Tax AOS Exemption Reports - Procedure Overview</h2>
+<div class="staff">
+<h3>Purpose</h3>
+<p style="font-size:13px;">Compile and present AOS exemption data to meet the Treasurer's statutory obligation to report to Parliament on exemptions granted under the Land Tax Act.</p>
+
+<h3>Background</h3>
+<ul style="font-size:13px;">
+<li><strong>AOS (Absentee Owner Surcharge):</strong> 0.5% surcharge (2016), 1.5% (2017-2019), 2.0% (2020+) on absentee-owned land</li>
+<li><strong>Exemption Authority:</strong> Treasurer can exempt corporations (s3B(2)), trusts can be exempt (s3BA(2)) from 2018</li>
+<li><strong>Reporting Requirement:</strong> Treasurer must report exemptions to Parliament every 6 months (minimum)</li>
+<li><strong>TARB Role:</strong> Technical Advice and Review Branch handles all exemption applications and reporting</li>
+</ul>
+
+<h3>Two Annual Reports</h3>
+<ol style="font-size:13px;">
+<li><strong>Half-Year Report (March):</strong> Period 1 July - 31 December (tabled in Parliament)</li>
+<li><strong>Full Year Report (September):</strong> Full financial year (tabled in Parliament)</li>
+</ol>
+
+<div class="ref"><strong>Authority:</strong> Division: Policy Advisory and Legal Services | Branch: Technical Advice and Review | <strong>Revised:</strong> 5 February 2025</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> e-Sys MC988 reports (exemption data), Objections Summary Report</div>
+<div class="block"><strong>Process:</strong> Q1-Q4: Extract → Calculate → Prepare → Submit & Publish</div>
+<div class="block"><strong>Decision:</strong> Data correct? Exemptions unique? Rolled-over accounted? Parliament tabling deadline met?</div>
+<div class="block"><strong>Output:</strong> Ministerial brief, Parliamentary letters, exemptions schedule (tabled and published)</div>
+</div>
+</div>
+</section>
+
+<!-- Q1 EXTRACT DATA -->
+
+<section id="q1">
+<h2>Q1 - Extract Exemption Data from e-Sys</h2>
+<div class="staff">
+<h3>MC988 Report Generation</h3>
+<ol style="font-size:13px;">
+<li>Navigate to: H:\TechnicalAdviceReview\Review\COMMON\Esys\Reports\[month]</li>
+<li>Locate MC988 report (auto-generated end of each month)</li>
+<li>Report extracts ALL AOS exemptions with following data:
+   <ul style="margin-left:20px;margin-top:6px;">
+   <li>Customer ID and name</li>
+   <li>TARB decision date</li>
+   <li>TARB file reference</li>
+   <li>Exemption start and end dates</li>
+   <li>Land tax group indicator</li>
+   <li>Taxable land value (current + prior 4 years)</li>
+   <li>Tax foregone (current + prior 4 years)</li>
+   <li>Indicator if no taxable landholdings</li>
+   </ul>
+</li>
+</ol>
+
+<h3>Objections Summary Report</h3>
+<ol style="font-size:13px;">
+<li>Generate from e-Sys 'ML-240' screen</li>
+<li>Use criteria:
+   <ul style="margin-left:20px;margin-top:6px;">
+   <li>Rev Line: Land Tax</li>
+   <li>Grounds: Ltx – Absentee Owner Surcharge – Treasurer's discretion</li>
+   <li>Date Resolved: [as required]</li>
+   </ul>
+</li>
+<li>Report shows all closed TARB files</li>
+<li>Cross-check against MC988 to ensure all decisions actioned in e-Sys</li>
+</ol>
+
+<div class="stop">CRITICAL: If TARB decisions NOT yet actioned by Operations, escalate to Land Revenue Branch Team Leader immediately.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: MC988 Report Location and Contents</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>MC988 Report Path</h4>
+<p style="font-size:13px;">H:\TechnicalAdviceReview\Review\COMMON\Esys\Reports\[month]</p>
+<p style="font-size:13px;">File is auto-generated at end of each month in this directory</p>
+
+<h4>Data Elements in MC988</h4>
+<ul style="font-size:13px;">
+<li>Customer ID (unique identifier)</li>
+<li>Customer name (full name as recorded)</li>
+<li>TARB decision date (date exemption approved)</li>
+<li>TARB file reference (unique file ID)</li>
+<li>Exemption start date (when exemption begins)</li>
+<li>Exemption end date (if exemption expires)</li>
+<li>Land tax group indicator (Y/N if in group)</li>
+<li>Land tax group customer ID (if applicable)</li>
+<li>Taxable land value (current year and prior 4 years)</li>
+<li>Land tax foregone (current year and prior 4 years)</li>
+<li>Indicator if no taxable landholdings</li>
+</ul>
+
+<h4>Data Availability Note</h4>
+<p style="font-size:13px;">Tax foregone and land values only populated for years where exemption granted. Prior years show zero if exemption didn't apply in those years.</p>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> e-Sys MC988 report (auto-generated monthly), Objections Summary Report</div>
+<div class="block"><strong>Process:</strong> Extract exemption records, verify all TARB decisions actioned in Operations</div>
+<div class="block"><strong>Decision:</strong> All records extracted? All decisions actioned? Objections report matches?</div>
+<div class="block"><strong>Output:</strong> Clean dataset ready for Q2 processing</div>
+</div>
+</div>
+</section>
+
+<!-- Q2 CALCULATE COUNTS AND VALUES -->
+
+<section id="q2">
+<h2>Q2 - Calculate Exemption Counts and Values</h2>
+<div class="staff">
+<h3>Establishing Number of Exemptions Granted</h3>
+<p style="font-size:13px;"><strong>Key Concept:</strong> One exemption may affect multiple customers (land tax groups). Each year counts as a new exemption (rolled-over annually unless material change notified).</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">FOR HALF-YEAR REPORT (1 July - 31 Dec):</h4>
+<ol style="font-size:13px;">
+<li>From MC988 report, identify all exemptions with 'TARB decision date' within the period</li>
+<li>Remove duplicates: Keep only one per 'TARB file reference' (prefer removing zero tax foregone)</li>
+<li>Count total number of years with tax foregone > 0</li>
+<li>Cross-check against Objections Summary Report (ensure all TARB files actioned on e-Sys)</li>
+<li>If gaps found, escalate to Land Revenue Branch Team Leader</li>
+</ol>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">FOR FULL YEAR REPORT (Full Financial Year):</h4>
+<p style="font-size:13px;">PLUS account for "rolled-over" exemptions (granted prior year, still active current year):</p>
+<ol style="font-size:13px;">
+<li>Identify all exemptions with 'TARB decision date' BEFORE the period</li>
+<li>Remove duplicates: Keep only one per 'TARB file reference'</li>
+<li>Count exemptions where current year tax foregone > 0</li>
+<li>Add to new exemptions count from steps above</li>
+<li>Cross-check against Objections Summary Report</li>
+</ol>
+
+<h3>Establishing Value of Exemptions Granted</h3>
+<p style="font-size:13px;">Value = total tax foregone (land tax waived due to exemption).</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">FOR HALF-YEAR REPORT:</h4>
+<ol style="font-size:13px;">
+<li>From MC988 report, identify all exemptions with 'TARB decision date' within period</li>
+<li>Add up total tax foregone for current year and prior 4 years (for those exemptions)</li>
+</ol>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">FOR FULL YEAR REPORT:</h4>
+<p style="font-size:13px;">PLUS add rolled-over exemption value:</p>
+<ol style="font-size:13px;">
+<li>Identify exemptions with 'TARB decision date' BEFORE the period</li>
+<li>Add up total tax foregone for CURRENT YEAR ONLY (for those exemptions)</li>
+<li>Add to new exemptions value from steps above</li>
+</ol>
+
+<div class="highlight"><strong>Important:</strong> Preference for removing duplicates should be given to exemptions with zero tax foregone.</div>
+
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> MC988 dataset, Objections Summary Report</div>
+<div class="block"><strong>Process:</strong> Count new exemptions, identify rolled-over, calculate total tax foregone value</div>
+<div class="block"><strong>Decision:</strong> All duplicates removed? All rolled-over accounted? Values calculated correctly?</div>
+<div class="block"><strong>Output:</strong> Number of exemptions and total value for reporting period</div>
+</div>
+</div>
+</section>
+
+<!-- Q3 PREPARE DOCUMENTS -->
+
+<section id="q3">
+<h2>Q3 - Prepare Parliamentary Documentation</h2>
+<div class="staff">
+<h3>Four Documents Required</h3>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">1. Ministerial Brief to Treasurer</h4>
+<ul style="font-size:13px;">
+<li>Signature by: Branch Manager, Executive Director, Deputy Commissioner</li>
+<li>Template available from: PLB (Parliamentary Liaison Branch)</li>
+<li>Contains: Exemption count, total value, reporting period</li>
+</ul>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">2. Letter to Clerk of Legislative Council</h4>
+<ul style="font-size:13px;">
+<li>Check current details on Parliamentary website</li>
+<li>Transmits: Exemptions schedule for tabling</li>
+</ul>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">3. Letter to Clerk of Legislative Assembly</h4>
+<ul style="font-size:13px;">
+<li>Check current details on Parliamentary website</li>
+<li>Transmits: Exemptions schedule for tabling</li>
+</ul>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">4. Two Copies of Exemptions Schedule</h4>
+<ul style="font-size:13px;">
+<li>Lists all exemptions granted in reporting period</li>
+<li><strong>CRITICAL:</strong> Schedule must NOT identify any particular customer</li>
+<li>Contains only: Exemption count, total value, no customer names or details</li>
+</ul>
+
+<div class="stop">CRITICAL: None of the documentation should identify any particular customer by name, address, or ID.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Exemptions Schedule Format</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Exemptions Schedule Contents</h4>
+<p style="font-size:13px;">The schedule tabled in Parliament contains aggregate information only:</p>
+<ul style="font-size:13px;">
+<li>Period covered (e.g., 1 July 2024 - 31 December 2024)</li>
+<li>Number of exemptions granted</li>
+<li>Total value of exemptions (land tax foregone)</li>
+<li>No individual customer details, names, or addresses</li>
+<li>No property information</li>
+<li>Aggregate data only</li>
+</ul>
+
+<h4>Format Example</h4>
+<p style="font-size:13px;">Schedule for period 1 July - 31 December 2024:<br>
+Number of exemptions granted: [X]<br>
+Total value of land tax foregone: $[Amount]</p>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Exemption count, total value from Q2</div>
+<div class="block"><strong>Process:</strong> Prepare ministerial brief, Parliamentary letters, exemptions schedule</div>
+<div class="block"><strong>Decision:</strong> All documents complete? No customer identifiers? Treasurer signature ready?</div>
+<div class="block"><strong>Output:</strong> Complete documentation package ready for submission</div>
+</div>
+</div>
+</section>
+
+<!-- Q4 SUBMIT AND PUBLISH -->
+
+<section id="q4">
+<h2>Q4 - Submit to Parliament and Publish</h2>
+<div class="staff">
+<h3>Timing Requirements</h3>
+<p style="font-size:13px;"><strong>Critical Deadlines:</strong></p>
+<ul style="font-size:13px;">
+<li><strong>Half-Year Report (1 Jul - 31 Dec):</strong> Forward to Treasurer by mid-March</li>
+<li><strong>Full Year Report (Full FY):</strong> Forward to Treasurer by mid-September</li>
+<li>Documentation must reach Treasurer with sufficient time for Parliament tabling</li>
+</ul>
+
+<h3>Parliament Tabling Process</h3>
+<ol style="font-size:13px;">
+<li>Ministerial brief submitted to Treasurer for signature (Branch Manager, Executive Director, Deputy Commissioner)</li>
+<li>Treasurer tables copies of exemptions schedule in both Houses of Parliament</li>
+<li>Schedule becomes part of Parliamentary record</li>
+</ol>
+
+<h3>Publishing on SRO Website</h3>
+<ol style="font-size:13px;">
+<li>Once exemptions schedule tabled in Parliament, advise Corporate Affairs</li>
+<li>Corporate Affairs publishes schedules on SRO website</li>
+<li>Information becomes publicly available</li>
+</ol>
+
+<div class="highlight"><strong>Timeline Note:</strong> Ensure documentation forwarded to Treasurer early enough for tabling within statutory timeframe. Mid-March for half-year, mid-September for full year.</div>
+
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Complete documentation package (brief, letters, schedules)</div>
+<div class="block"><strong>Process:</strong> Forward to Treasurer, tabled in Parliament, published on website</div>
+<div class="block"><strong>Decision:</strong> Deadline met? Corporate Affairs notified? Website updated?</div>
+<div class="block"><strong>Output:</strong> Report tabled in Parliament, information published, statutory obligation met</div>
+</div>
+</div>
+</section>
+
+</div>
+
+<!-- SYSTEM INTERACTION -->
+
+<div class="systemsOnly">
+<section>
+<h2>System Interaction - AOS Exemption Reporting Process</h2>
+<div class="flow">
+<div class="flow-title">Q1-Q4 Complete Cycle</div>
+<div class="node n-amber">Reporting Period Ends (31 Dec or 30 June)</div>
+<div class="arr"></div>
+<div class="node n-blue">Q1: Extract MC988 Report from e-Sys</div>
+<div class="arr"></div>
+<div class="node n-blue">Generate Objections Summary Report</div>
+<div class="arr"></div>
+<div class="node n-amber">Verify All TARB Decisions Actioned</div>
+<div class="arr"></div>
+<div class="node n-blue">Q2: Calculate Exemption Count</div>
+<div class="arr"></div>
+<div class="node n-blue">Calculate Total Tax Foregone Value</div>
+<div class="arr"></div>
+<div class="node n-amber">Account for New vs Rolled-Over Exemptions</div>
+<div class="arr"></div>
+<div class="node n-blue">Q3: Prepare Ministerial Brief</div>
+<div class="arr"></div>
+<div class="node n-blue">Prepare Parliamentary Letters</div>
+<div class="arr"></div>
+<div class="node n-blue">Prepare Exemptions Schedule (No Customer ID)</div>
+<div class="arr"></div>
+<div class="node n-amber">Branch Manager/ED/Deputy Commissioner Sign-off</div>
+<div class="arr"></div>
+<div class="node n-blue">Q4: Submit to Treasurer by Mid-March or Mid-September</div>
+<div class="arr"></div>
+<div class="node n-amber">Treasurer Tables in Parliament</div>
+<div class="arr"></div>
+<div class="node n-blue">Corporate Affairs Publishes on SRO Website</div>
+<div class="arr"></div>
+<div class="node n-gray">Reporting Obligation Complete</div>
+</div>
+</section>
+</div>
+
+<!-- SUMMARY -->
+
+<div class="specOnly">
+
+<section class="summary-section" id="mc988">
+<h2>MC988 Report Reference</h2>
+<h3>Location</h3>
+<p style="font-size:13px;">H:\TechnicalAdviceReview\Review\COMMON\Esys\Reports\[month]</p>
+<p style="font-size:13px;">Auto-generated at end of each month by e-Sys</p>
+
+<h3>Key Data Elements Extracted</h3>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Data Element</th>
+<th>Purpose</th>
+</tr>
+<tr><td>Customer ID & Name</td><td>Identifies exemption holder</td></tr>
+<tr><td>TARB Decision Date</td><td>When exemption approved (determines if new or rolled-over)</td></tr>
+<tr><td>TARB File Reference</td><td>Unique ID for removing duplicates</td></tr>
+<tr><td>Exemption Start/End Dates</td><td>Period exemption active</td></tr>
+<tr><td>Land Tax Group Indicator</td><td>Whether customer in group</td></tr>
+<tr><td>Taxable Land Value</td><td>Property value (current + prior 4 years)</td></tr>
+<tr><td>Tax Foregone</td><td>Land tax waived (current + prior 4 years)</td></tr>
+<tr><td>No Taxable Landholdings</td><td>Indicator if customer has no qualifying property</td></tr>
+</table>
+</div>
+</section>
+
+<section class="summary-section" id="timeline">
+<h2>Reporting Timeline</h2>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Report Type</th>
+<th>Period Covered</th>
+<th>Submission Deadline</th>
+<th>Tabled In Parliament</th>
+</tr>
+<tr><td><strong>Half-Year</strong></td><td>1 July - 31 Dec</td><td>Mid-March</td><td>March/April</td></tr>
+<tr><td><strong>Full Year</strong></td><td>1 July - 30 June</td><td>Mid-September</td><td>September/October</td></tr>
+</table>
+</div>
+
+<h3>Key Dates</h3>
+<ul style="font-size:13px;">
+<li><strong>31 December:</strong> Half-year period ends</li>
+<li><strong>Mid-March:</strong> Submit half-year report to Treasurer</li>
+<li><strong>30 June:</strong> Full financial year ends</li>
+<li><strong>Mid-September:</strong> Submit full year report to Treasurer</li>
+<li><strong>Tabling:</strong> Treasurer tables in both Houses of Parliament</li>
+<li><strong>Publishing:</strong> Corporate Affairs publishes on SRO website</li>
+</ul>
+</section>
+
+<section class="summary-section">
+<h2>Procedure Summary</h2>
+<ul style="font-size:13px;">
+<li><strong>Q1:</strong> Extract MC988 report from e-Sys, generate Objections Summary, verify all TARB decisions actioned</li>
+<li><strong>Q2:</strong> Calculate number of exemptions granted (new + rolled-over), calculate total tax foregone value</li>
+<li><strong>Q3:</strong> Prepare ministerial brief, Parliamentary letters, exemptions schedule (NO customer IDs)</li>
+<li><strong>Q4:</strong> Submit to Treasurer by deadline, tabled in Parliament, published on website</li>
+<li><strong>Critical:</strong> Documentation must not identify any particular customer</li>
+<li><strong>Deadlines:</strong> Half-year by mid-March, Full year by mid-September</li>
+<li><strong>Responsibility:</strong> Technical Advice and Review Branch (TARB) compiles and presents</li>
+</ul>
+</section>
+
+<section class="summary-section">
+<h2>Source of Authority</h2>
+<ul style="font-size:13px;">
+<li><strong>Division:</strong> Policy Advisory and Legal Services</li>
+<li><strong>Branch:</strong> Technical Advice and Review</li>
+<li><strong>Legislation:</strong> Land Tax Act 2005, section 3B(1)</li>
+<li><strong>Created:</strong> 1 July 2018</li>
+<li><strong>Revised:</strong> 5 February 2025</li>
+<li><strong>Requirement:</strong> Schedule must be laid before Parliament at least once every 6 months</li>
+</ul>
+</section>
+
+<section class="summary-section" id="definitions">
+<h2>Definitions & Acronyms</h2>
+<p style="font-size:13px;">
+<strong>SRO</strong> - State Revenue Office<br>
+<strong>TARB</strong> - Technical Advice and Review Branch<br>
+<strong>AOS</strong> - Absentee Owner Surcharge<br>
+<strong>MC988</strong> - e-Sys report extracting all AOS exemptions<br>
+<strong>Treasurer's Discretion</strong> - Authority to exempt from AOS under Land Tax Act<br>
+<strong>Tax Foregone</strong> - Land tax waived due to granted exemption<br>
+<strong>Rolled-Over Exemption</strong> - Exemption granted in prior year, still active in current year<br>
+<strong>Exemption Schedule</strong> - Parliamentary document showing aggregate exemptions (no customer IDs)<br>
+<strong>TARB File Reference</strong> - Unique ID for each exemption decision<br>
+<strong>Absentee Owner</strong> - Corporation with absentee controlling interest OR trust with absentee beneficiary<br>
+<strong>Land Tax Group</strong> - Multiple customers assessed as one entity (affects exemption count)
+</p>
+</section>
+
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(e=>e.style.display='none');
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(e=>e.style.display='block');document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(e=>e.style.display='block');document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p){p.classList.toggle('open')}if(a){a.classList.toggle('open')}}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

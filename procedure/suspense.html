@@ -1,0 +1,703 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Suspense Management and Refund Procedure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    ul,ol{margin-left:22px;font-size:13px;line-height:1.6}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px;font-size:13px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .table-responsive{overflow-x:auto;margin:12px 0}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Suspense Management and Refund Procedure</h1>
+  <p>Division: Land Revenue Services &bull; Branch: Land Revenue Administration &bull; Created: 2024</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#overview">Overview</a>
+    <a href="#q1">Q1 Allocate Suspense</a>
+    <a href="#q2">Q2 Check Eligibility</a>
+    <a href="#q3">Q3 Determine Refund Type</a>
+    <a href="#q4">Q4 Calculate Amount</a>
+    <a href="#q5">Q5 Process Refund</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#refund-types" onclick="showView('spec');setTimeout(()=>location.hash='refund-types',100);">Refund Types</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(()=>location.hash='definitions',100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+<div id="questionFlow">
+
+<!-- OVERVIEW -->
+
+<section id="overview">
+<h2>Suspense Management and Refund Procedure Overview</h2>
+<div class="staff">
+<h3>Purpose</h3>
+<p style="font-size:13px;">Determine appropriate actions for suspense payments and process refunds when customers have overpaid land tax or when amendments result in overpayments.</p>
+
+<h3>Key Performance Indicator (KPI)</h3>
+<p style="font-size:13px;font-weight:600;">Refund applications must be completed within 60 days (in accordance with Balanced Scorecard)</p>
+
+<h3>Scope</h3>
+<ul style="font-size:13px;">
+<li>Suspense payments awaiting allocation to customer liabilities</li>
+<li>Overpayment refunds under three sections: 90AA, 24A, 19</li>
+<li>Interest calculations for refunds from formal objections</li>
+<li>Refund approval levels and responsibilities</li>
+<li>Retrospective policy application</li>
+</ul>
+
+<h3>Two Main Paths</h3>
+<ul style="font-size:13px;">
+<li><strong>Path A: Allocate Suspense</strong> - Suspense payment allocated to outstanding liabilities (no refund issued)</li>
+<li><strong>Path B: Issue Refund</strong> - Customer entitled to refund due to overpayment or amendment (refund issued)</li>
+</ul>
+
+<div class="ref"><strong>Authority:</strong> Land Tax Act 1958, Taxation Administration Act 1997 | <strong>KPI:</strong> 60 days | <strong>Source:</strong> Land Revenue Services</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Suspense payment received or refund application received</div>
+<div class="block"><strong>Process:</strong> Determine if suspense should be allocated to liability or if refund should be processed</div>
+<div class="block"><strong>Decision:</strong> Allocate to liability OR issue refund? Which refund type (s90AA, s24A, s19)?</div>
+<div class="block"><strong>Output:</strong> Suspense allocated, or refund processed with interest (if applicable), KPI within 60 days</div>
+</div>
+</div>
+</section>
+
+<!-- Q1 ALLOCATE SUSPENSE -->
+
+<section id="q1">
+<h2>Q1 - Can Suspense Be Allocated to Outstanding Liabilities?</h2>
+<div class="staff">
+<h3>Suspense Allocation Process</h3>
+<p style="font-size:13px;">When a suspense payment is received, determine if it can be allocated to outstanding liabilities before issuing a refund.</p>
+
+<h3>Allocation Rules</h3>
+<ul style="font-size:13px;">
+<li>Overpayments should be allocated to outstanding liabilities (prior years or future years)</li>
+<li>Can allocate to future year if assessment will be issued that year</li>
+<li>Customer identity must be certain and unambiguous</li>
+<li>Check for "Under Investigation" NII - if present, DO NOT allocate</li>
+</ul>
+
+<h3>Transfers Between Trusts/Trustees/Beneficiaries</h3>
+<p style="font-size:13px;"><strong>Generally, suspense payments should NOT be transferred between trusts/trustees/beneficiaries WITHOUT permission</strong></p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Can Transfer WITHOUT Permission:</h4>
+<ul style="font-size:13px;">
+<li>Trustee to Trust (same entity)</li>
+<li>Trust to Trustee (same entity)</li>
+</ul>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">CANNOT Transfer WITHOUT Permission:</h4>
+<ul style="font-size:13px;">
+<li>Joint Ownership to Individual</li>
+<li>One trust to different trust</li>
+<li>One trustee to different trustee</li>
+<li>Beneficiary transfers between entities</li>
+</ul>
+
+<h3>Special Cases</h3>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Estate Executor</h4>
+<p style="font-size:13px;">If executor of estate contacts SRO regarding suspense payment on deceased's account, can allocate to beneficiary accounts per executor direction (with proper authority/documentation).</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Deregistered Company</h4>
+<p style="font-size:13px;">If company deregistered in ASIC, transfer suspense to the Principal Place of Business (not registered office). Consider allocating to group if company was member of LTX group.</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">S105 Certificate</h4>
+<p style="font-size:13px;">If suspense payment made on S105 certificate where no land tax assessment issued, transfer to Treasury Trust.</p>
+
+<div class="stop">If customer under "Under Investigation" NII: DO NOT allocate suspense. Wait for investigation to conclude.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Allocating Payment to Liability in e-Sys, Treasury Trust Transfers & Group Transfers</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>How to Allocate Payment in e-Sys</h4>
+<ol style="font-size:13px;">
+<li>Locate suspense transaction in customer record</li>
+<li>Go to Liabilities node</li>
+<li>Select liability to allocate payment to</li>
+<li>Click Allocate Payment button</li>
+<li>Select suspense payment from available funds</li>
+<li>Enter allocation amount</li>
+<li>Select liability year if paying multiple years</li>
+<li>Click Save</li>
+<li>Payment allocated; update action item notes with outcome</li>
+</ol>
+
+<h4>Treasury Trust Transfer</h4>
+<p style="font-size:13px;">When transferring suspense to Treasury Trust, document:</p>
+<ul style="font-size:13px;">
+<li>Original payment details</li>
+<li>S105 certificate number</li>
+<li>Date payment received</li>
+<li>Reason for transfer (no assessment issued)</li>
+</ul>
+
+<h4>LTX Group Transfer</h4>
+<p style="font-size:13px;">If deregistered company was member of LTX group:</p>
+<ol style="font-size:13px;">
+<li>Identify group parent company</li>
+<li>Allocate suspense to parent company outstanding liabilities</li>
+<li>Document group relationship in notes</li>
+</ol>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Suspense payment with customer/property details</div>
+<div class="block"><strong>Process:</strong> Check customer identity, check for investigations, check for outstanding liabilities</div>
+<div class="block"><strong>Decision:</strong> Can suspense be allocated to liability? Are there transfer permission restrictions?</div>
+<div class="block"><strong>Output:</strong> Suspense allocated to liability, or proceed to Q2 for refund path</div>
+</div>
+</div>
+</section>
+
+<!-- Q2 CHECK ELIGIBILITY -->
+
+<section id="q2">
+<h2>Q2 - Is Customer Eligible for Refund?</h2>
+<div class="staff">
+<h3>Refund Eligibility Criteria</h3>
+<p style="font-size:13px;">Customer is eligible for refund if:</p>
+<ol style="font-size:13px;">
+<li>Customer has overpaid land tax (paid more than assessment)</li>
+<li>Assessment has been amended (due to objection, request, or internal error)</li>
+<li>Amendment resulted in reduced liability or overpayment</li>
+<li>Minimum refund amount met (varies by refund type)</li>
+<li>Refund amount calculated correctly with interest (if applicable)</li>
+</ol>
+
+<h3>Investigation Flag Check</h3>
+<p style="font-size:13px;"><strong>CRITICAL:</strong> If customer has "Under Investigation" NII for ANY revenue matter, consult Senior Officer before proceeding with refund.</p>
+
+<h3>Retrospective Policy and Section 19 of TAA</h3>
+<p style="font-size:13px;"><strong>SRO Retrospective Policy:</strong> Refunds of overpaid land tax can be made for payments allocated to assessment years, looking back a full retrospective period (typically 5 years) from date of refund request.</p>
+
+<p style="font-size:13px;"><strong>Section 19 of TAA:</strong> Commissioner may refund overpayments made on or after 1 June (of the contact year - 5 years).</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Example: Retrospective Policy Application</h4>
+<p style="font-size:13px;">Customer contacts SRO on 1 June 2023 advising they have been paying land tax on property that is their PPR:</p>
+<ul style="font-size:13px;">
+<li><strong>Retrospective Policy:</strong> Can apply PPR exemption from 1 December 2018 (system wide retrospective period)</li>
+<li><strong>TAA Section 19:</strong> Can refund overpayments made on or after 1 June 2018 (5 years back from contact date)</li>
+<li><strong>Prior to 1 June 2018:</strong> Would need to assess if any earlier overpayments eligible outside TAA s19 scope</li>
+</ul>
+
+<div class="ref"><strong>Reference:</strong> Taxation Administration Act 1997 s19, SRO Retrospective Policy</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Refund Responsibilities, Refund Approval Levels & Handover Procedures</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Refund Responsibilities</h4>
+<p style="font-size:13px;"><strong>Staff member allocated refund request:</strong></p>
+<ul style="font-size:13px;">
+<li>Takes full responsibility for evaluation and decision</li>
+<li>Monitors progress and ensures timely follow-up</li>
+<li>Informs customer of unexpected delays</li>
+<li>Ensures refund request completed satisfactorily</li>
+<li>Ensures all due processes completed</li>
+</ul>
+
+<p style="font-size:13px;"><strong>Can refer specific issues to:</strong></p>
+<ul style="font-size:13px;">
+<li>TARB for formal objection decisions</li>
+<li>Valuation team for property valuation issues</li>
+<li>Other specialists for technical matters</li>
+<li>Referred area assumes responsibility for that specific issue only</li>
+</ul>
+
+<h4>Refund Approval Levels</h4>
+<p style="font-size:13px;"><strong>Grade 2/3/4 Mentor approval required for:</strong></p>
+<ul style="font-size:13px;">
+<li>First refund request by staff member</li>
+<li>Complex or unusual refund scenarios</li>
+<li>Refunds involving interest calculations</li>
+<li>Refunds requiring policy interpretation</li>
+</ul>
+
+<p style="font-size:13px;"><strong>Mentor responsibilities:</strong></p>
+<ul style="font-size:13px;">
+<li>Ensure policies and procedures adhered to</li>
+<li>Provide formal written decision</li>
+<li>Ensure adequate documentation on file</li>
+<li>Formally notify staff member of decision</li>
+</ul>
+
+<h4>Handover Between Staff Members</h4>
+<p style="font-size:13px;">If necessary to transfer responsibility:</p>
+<ol style="font-size:13px;">
+<li>Original staff member documents full context in action item notes</li>
+<li>New staff member assumes full responsibility from that point</li>
+<li>Mentor approves transition</li>
+<li>Clear documentation required for audit trail</li>
+</ol>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Customer refund request, assessment history, payment history</div>
+<div class="block"><strong>Process:</strong> Check eligibility (overpaid, assessment amended, minimum met), check investigation status</div>
+<div class="block"><strong>Decision:</strong> Is customer eligible for refund? Apply retrospective policy/TAA s19?</div>
+<div class="block"><strong>Output:</strong> If YES - proceed to Q3; If NO - explain to customer, close request</div>
+</div>
+</div>
+</section>
+
+<!-- Q3 DETERMINE REFUND TYPE -->
+
+<section id="q3">
+<h2>Q3 - Which Refund Type Applies?</h2>
+<div class="staff">
+<h3>Three Refund Types</h3>
+<p style="font-size:13px;">Refunds are categorized under sections of Land Tax Act 1958:</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Section 90AA - Overpayment (Double Payment or Over-Payment)</h4>
+<p style="font-size:13px;"><strong>Scenario:</strong> No amendment; overpaid liability only (double payment or payment above amount due)</p>
+<p style="font-size:13px;"><strong>Minimum refund amount:</strong></p>
+<ul style="font-size:13px;">
+<li>$5 if requested by customer</li>
+<li>$20 if identified internally with no preceding customer request</li>
+</ul>
+<p style="font-size:13px;"><strong>Interest:</strong> Does not apply</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Section 24A - Refund from Objection or Amendment Request</h4>
+<p style="font-size:13px;"><strong>Scenario:</strong> Amendment made in response to customer request (objection, valuation review, etc.)</p>
+<p style="font-size:13px;"><strong>Minimum refund amount:</strong> $5</p>
+<p style="font-size:13px;"><strong>Interest:</strong> May apply (e.g., successful formal objection or valuation objection)</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Section 19 - Refund from Internal Amendment</h4>
+<p style="font-size:13px;"><strong>Scenario:</strong> Amendment made internally by identifying and rectifying error; no preceding customer request</p>
+<p style="font-size:13px;"><strong>Minimum refund amount:</strong> $20</p>
+<p style="font-size:13px;"><strong>Interest:</strong> Does not apply</p>
+
+<h3>Selection Criteria</h3>
+<ol style="font-size:13px;">
+<li>Was assessment amended (section 24A or 19) or is it overpayment only (section 90AA)?</li>
+<li>Was amendment result of customer objection/request (section 24A) or internal finding (section 19)?</li>
+<li>Is refund amount above minimum threshold for that type?</li>
+<li>Does formal objection apply? If YES → Interest applies (section 24A only)</li>
+</ol>
+
+<div class="ref"><strong>Reference:</strong> Land Tax Act 1958 sections 19, 24A, 90AA</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Refund Type Decision Matrix & Section 19 TAA Scope Limits</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Refund Type Decision Matrix</h4>
+<div class="table-responsive">
+<table style="font-size:12px;">
+<tr style="background:#003a8f;color:white;">
+<th>Scenario</th>
+<th>Amendment?</th>
+<th>Customer Initiated?</th>
+<th>Refund Type</th>
+<th>Minimum</th>
+<th>Interest</th>
+</tr>
+<tr>
+<td>Double payment</td>
+<td>NO</td>
+<td>N/A</td>
+<td>s90AA</td>
+<td>$5/$20</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Over-payment (no amendment)</td>
+<td>NO</td>
+<td>N/a</td>
+<td>s90AA</td>
+<td>$5/$20</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Successful objection</td>
+<td>YES</td>
+<td>YES</td>
+<td>s24A</td>
+<td>$5</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>Customer request amendment</td>
+<td>YES</td>
+<td>YES</td>
+<td>s24A</td>
+<td>$5</td>
+<td>NO</td>
+</tr>
+<tr>
+<td>Internal error correction</td>
+<td>YES</td>
+<td>NO</td>
+<td>s19</td>
+<td>$20</td>
+<td>NO</td>
+</tr>
+</table>
+</div>
+
+<h4>Section 19 TAA Scope Limits</h4>
+<p style="font-size:13px;">TAA s19 limits refund scope to 5 years prior to contact date. Example:</p>
+<ul style="font-size:13px;">
+<li>Customer contacts 1 June 2023</li>
+<li>TAA s19 scope: 1 June 2018 back</li>
+<li>Prior years (before 1 June 2018): May need separate assessment under retrospective policy</li>
+</ul>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Assessment amendment history, customer initiation status</div>
+<div class="block"><strong>Process:</strong> Determine if s90AA (no amendment), s24A (customer amendment), or s19 (internal amendment)</div>
+<div class="block"><strong>Decision:</strong> Which refund type? Interest applicable?</div>
+<div class="block"><strong>Output:</strong> Refund type determined, minimum amount verified, interest eligibility determined</div>
+</div>
+</div>
+</section>
+
+<!-- Q4 CALCULATE AMOUNT -->
+
+<section id="q4">
+<h2>Q4 - What Is the Refund Amount Including Interest?</h2>
+<div class="staff">
+<h3>Base Refund Calculation</h3>
+<ol style="font-size:13px;">
+<li>Identify overpaid amount (payment minus amended assessment)</li>
+<li>Verify refund amount exceeds minimum for refund type</li>
+<li>If partially allocated to multiple years, allocate most recent payments first</li>
+<li>Calculate each year's refund separately if multi-year</li>
+</ol>
+
+<h3>Interest Calculations</h3>
+<p style="font-size:13px;"><strong>Interest applies ONLY to refunds resulting from formal objection (section 24A)</strong></p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Interest Calculation Rules</h4>
+<ul style="font-size:13px;">
+<li>Interest calculated at market rate per section 25 TAA</li>
+<li>Interest period: From date of payment (overpaid amount) to either:
+  <ul style="margin-left:20px;margin-top:6px;">
+  <li>Date of payment of amount overpaid, OR</li>
+  <li>Date Commissioner made assessment subject to objection/review</li>
+  </ul>
+</li>
+<li>Interest applies ONLY to payments against relevant year of assessment</li>
+<li><strong>Partial allocations:</strong> Most recent payments applied first; interest recalculated for partial refunds</li>
+<li><strong>Minimum $0.50:</strong> No interest payable if less than $0.50 (section 25 TAA)</li>
+</ul>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Example: Interest Calculation</h4>
+<p style="font-size:13px;">Customer paid 2023 assessment on 15 June 2023 ($5,000). Formal objection successful 15 January 2024, reducing assessment by $1,000. Refund = $1,000 + interest from 15 June 2023 to 15 January 2024 (7 months approx.) at market rate.</p>
+
+<div class="stop">Interest ONLY applies to section 24A refunds from successful formal objection. NOT for section 90AA or section 19 refunds.</div>
+
+<div class="ref"><strong>Reference:</strong> Taxation Administration Act 1997 section 25 (market rate)</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Interest Rate Determination, Multi-Year Refunds & Rounding Rules</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Interest Rate (Section 25 TAA)</h4>
+<p style="font-size:13px;">Refer to current market rate determined by Commissioner under TAA s25. Rates update periodically.</p>
+
+<h4>Multi-Year Refunds with Interest</h4>
+<p style="font-size:13px;">When refund spans multiple assessment years:</p>
+<ol style="font-size:13px;">
+<li>Calculate refund for each year separately</li>
+<li>Calculate interest for each year based on payment dates and objection result date</li>
+<li>Combine total refund + total interest</li>
+</ol>
+
+<h4>Rounding Rules</h4>
+<ul style="font-size:13px;">
+<li>Round interest to nearest cent (round $0.005 up to $0.01)</li>
+<li>If interest less than $0.50, interest = $0</li>
+<li>Show refund amount and interest amount separately on refund advice</li>
+</ul>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Refund type, overpaid amount, assessment amendment date, payment date(s), formal objection date (if applicable)</div>
+<div class="block"><strong>Process:</strong> Calculate base refund, determine if interest applies, calculate interest if eligible</div>
+<div class="block"><strong>Decision:</strong> What is total refund amount (base + interest)? Meets minimum threshold?</div>
+<div class="block"><strong>Output:</strong> Refund amount calculated and verified, interest amount (if applicable) calculated</div>
+</div>
+</div>
+</section>
+
+<!-- Q5 PROCESS REFUND -->
+
+<section id="q5">
+<h2>Q5 - How Should the Refund Be Processed?</h2>
+<div class="staff">
+<h3>Refund Processing Steps</h3>
+<ol style="font-size:13px;">
+<li>Verify all calculations correct (base amount, interest, total)</li>
+<li>Confirm refund type and minimum threshold met</li>
+<li>Obtain mentor approval if required (first refund, complex, interest)</li>
+<li>Generate refund advice letter for customer</li>
+<li>Allocate any remaining balance to future liabilities (if applicable)</li>
+<li>Process refund payment in e-Sys (bank transfer, cheque, etc.)</li>
+<li>Document outcome in action item notes</li>
+<li>Close action item and ensure within 60-day KPI</li>
+</ol>
+
+<h3>Refund Advice Letter</h3>
+<p style="font-size:13px;">Letter should include:</p>
+<ul style="font-size:13px;">
+<li>Refund amount (base)</li>
+<li>Interest amount (if applicable)</li>
+<li>Total refund amount</li>
+<li>Refund type and basis (s90AA, s24A, s19)</li>
+<li>Payment method and estimated delivery date</li>
+<li>Reference to assessment amendment (if applicable)</li>
+</ul>
+
+<h3>KPI Compliance</h3>
+<p style="font-size:13px;"><strong>Time standard: 60 days from refund request received to refund processed</strong></p>
+<p style="font-size:13px;">Note: If refund created as result of objection/amendment request, KPI may be extended due to time required for review processes.</p>
+
+<div class="ref"><strong>Reference:</strong> Balanced Scorecard KPI, Suspense Management and Refund Procedure</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: e-Sys Refund Processing, Payment Methods & Exemption Scenarios</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>e-Sys Refund Processing</h4>
+<ol style="font-size:13px;">
+<li>Navigate to customer Refunds node</li>
+<li>Click Create Refund</li>
+<li>Select refund type (90AA, 24A, or 19)</li>
+<li>Enter refund amount (base)</li>
+<li>Enter interest amount (if applicable)</li>
+<li>Select payment method</li>
+<li>Add customer notes with calculation basis</li>
+<li>Obtain mentor approval (if required)</li>
+<li>Click Process Refund</li>
+<li>System generates refund advice letter</li>
+<li>Refund appears as processed/pending payment</li>
+</ol>
+
+<h4>Payment Methods</h4>
+<ul style="font-size:13px;">
+<li>Bank transfer (most common) - fastest method</li>
+<li>Cheque - if customer requests or bank details unavailable</li>
+<li>Offset against future liability (if customer agrees)</li>
+</ul>
+
+<h4>Exemption Scenarios</h4>
+<p style="font-size:13px;"><strong>PPR Exemption Applied Retrospectively:</strong> If PPR exemption applied to past years, recalculate assessment and refund accordingly. Ensure calculation goes back to system-wide retrospective period date.</p>
+
+<p style="font-size:13px;"><strong>Group Membership Changes:</strong> If customer was/is member of LTX group, may affect liability calculations and refund scope. Confirm group membership status for all relevant years.</p>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Verified refund amount, interest (if applicable), mentor approval status</div>
+<div class="block"><strong>Process:</strong> Process refund in e-Sys, select payment method, generate refund advice</div>
+<div class="block"><strong>Decision:</strong> Payment method selected? Mentor approval obtained? KPI compliance verified?</div>
+<div class="block"><strong>Output:</strong> Refund processed, advice sent to customer, action item closed within 60-day KPI</div>
+</div>
+</div>
+</section>
+
+</div>
+
+<!-- SYSTEM INTERACTION VIEW -->
+
+<div class="systemsOnly">
+<section>
+<h2>System Interaction - Suspense and Refund Processing Flow</h2>
+<div class="flow">
+<div class="flow-title">Q1-Q5 Suspense and Refund Processing</div>
+<div class="node n-amber">Suspense Payment or Refund Request Received</div>
+<div class="arr"></div>
+<div class="node n-blue">Q1: Can Suspense Be Allocated to Liability?</div>
+<div class="arr"></div>
+<div class="node n-amber">Allocate or Refund?</div>
+<div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+<div><div class="node n-gray">ALLOCATE: Complete</div></div>
+<div><div class="node n-blue">REFUND: Proceed</div></div>
+</div>
+<div class="arr"></div>
+<div class="node n-blue">Q2: Check Refund Eligibility</div>
+<div class="arr"></div>
+<div class="node n-blue">Q3: Determine Refund Type (90AA, 24A, or 19)</div>
+<div class="arr"></div>
+<div class="node n-blue">Q4: Calculate Refund Amount + Interest</div>
+<div class="arr"></div>
+<div class="node n-blue">Q5: Process Refund, Issue Advice, Close (60-day KPI)</div>
+<div class="arr"></div>
+<div class="node n-gray">Suspense/Refund Processing Complete</div>
+</div>
+</section>
+</div>
+
+<!-- SUMMARY VIEW -->
+
+<div class="specOnly">
+<section class="summary-section" id="refund-types">
+<h2>Three Refund Types Summary</h2>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Section</th>
+<th>Scenario</th>
+<th>Minimum Amount</th>
+<th>Interest</th>
+</tr>
+<tr>
+<td><strong>90AA</strong></td>
+<td>Overpayment, no amendment</td>
+<td>$5 (customer request) / $20 (internal)</td>
+<td>NO</td>
+</tr>
+<tr>
+<td><strong>24A</strong></td>
+<td>Amendment from customer request/objection</td>
+<td>$5</td>
+<td>YES (formal objection)</td>
+</tr>
+<tr>
+<td><strong>19</strong></td>
+<td>Amendment from internal error</td>
+<td>$20</td>
+<td>NO</td>
+</tr>
+</table>
+</div>
+</section>
+
+<section class="summary-section">
+<h2>Procedure Summary</h2>
+<ul style="font-size:13px;">
+<li>Purpose: Manage suspense payments and process refunds for overpaid land tax</li>
+<li>Two paths: Allocate suspense to liability OR process refund</li>
+<li>Q1: Check if suspense can be allocated (avoid refund if possible)</li>
+<li>Q2: Verify customer eligible (overpaid, amendment made, minimum met)</li>
+<li>Q3: Determine refund type (90AA, 24A, or 19) based on circumstances</li>
+<li>Q4: Calculate refund amount, determine if interest applies (24A formal objection only)</li>
+<li>Q5: Process refund, issue advice letter, close within 60-day KPI</li>
+<li>Retrospective policy allows refunds for payments up to 5 years back (TAA s19 scope)</li>
+<li>Interest applies ONLY to section 24A refunds from formal objections</li>
+<li>Key escalations: Investigation NII, complex scenarios, mentor approval</li>
+</ul>
+</section>
+
+<section class="summary-section">
+<h2>Source of Authority</h2>
+<ul style="font-size:13px;">
+<li><strong>Division:</strong> Land Revenue Services</li>
+<li><strong>Branch:</strong> Land Revenue Administration</li>
+<li><strong>Legislation:</strong> Land Tax Act 1958 (sections 19, 24A, 90AA), Taxation Administration Act 1997 (section 19, 25)</li>
+<li><strong>KPI:</strong> 60 days (Balanced Scorecard)</li>
+<li><strong>Retrospective Policy:</strong> SRO policy on refund scope for amendments</li>
+</ul>
+</section>
+
+<section class="summary-section" id="definitions">
+<h2>Definitions & Acronyms</h2>
+<p style="font-size:13px;">
+<strong>KPI</strong> - Key Performance Indicator (60 days for refund applications)<br>
+<strong>NII</strong> - Non-Issue Indicator (e.g., "Under Investigation")<br>
+<strong>TAA</strong> - Taxation Administration Act 1997<br>
+<strong>TARB</strong> - Technical Advice and Review Branch<br>
+<strong>s90AA</strong> - Section 90AA, Land Tax Act 1958 (overpayment refund)<br>
+<strong>s24A</strong> - Section 24A, Land Tax Act 1958 (refund from amendment/objection)<br>
+<strong>s19</strong> - Section 19, Land Tax Act 1958 (refund from internal amendment)<br>
+<strong>s19 TAA</strong> - Section 19, Taxation Administration Act 1997 (Commissioner may refund overpayments)<br>
+<strong>s25 TAA</strong> - Section 25, Taxation Administration Act 1997 (interest rate determination)<br>
+<strong>Suspense</strong> - Payment received where customer cannot be definitively identified or allocated to liability<br>
+<strong>Overpayment</strong> - Customer paid more than land tax assessment requires<br>
+<strong>S105</strong> - Section 105 certificate of unencumbered title<br>
+<strong>PPR</strong> - Principal Place of Residence exemption<br>
+<strong>LTX Group</strong> - Land Tax Group (grouped properties for assessment purposes)<br>
+<strong>Formal Objection</strong> - Customer objection heard by TARB or Commissioner, resulting in assessment amendment
+</p>
+</section>
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(e=>e.style.display='none');
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(e=>e.style.display='block');document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(e=>e.style.display='block');document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

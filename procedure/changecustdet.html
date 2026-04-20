@@ -1,0 +1,744 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Change of Customer Details Procedure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit;font-size:13px}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    h4{font-size:14px;color:#003a8f;margin:16px 0 8px 0}
+    ul,ol{margin-left:22px;font-size:13px;line-height:1.6}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px;font-size:13px;line-height:1.5}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly,.specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;font-size:13px}
+    .detail-toggle-text{font-weight:700;color:#1e3a8a;flex:1}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s;margin-left:12px}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px;font-size:13px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:13px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p,.detail-panel li{font-size:13px;color:#475569;line-height:1.5;margin-bottom:6px}
+    .detail-panel ul{margin-left:18px}
+    .node{padding:14px 20px;border-radius:10px;font-size:12px;font-weight:600;text-align:center;min-width:160px;max-width:280px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:20px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .table-responsive{overflow-x:auto;margin:12px 0}
+    table{width:100%;border-collapse:collapse;font-size:12px;margin:12px 0}
+    table th,table td{padding:9px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600;color:#1f2937}
+    .highlight{background:#fffbeb;border-left:5px solid #f59e0b;padding:12px;margin:12px 0;font-size:13px}
+    .auth{background:#f0fdf4;border-left:5px solid #22c55e;padding:12px;margin:12px 0;font-size:13px}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Change of Customer Details Procedure</h1>
+  <p>Division: Land Information Management &bull; Revised: November 2024 &bull; Time Standard: 7.5 minutes per item</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#overview">Overview</a>
+    <a href="#q1">Q1 Launch Item</a>
+    <a href="#q2">Q2 Determine Authority</a>
+    <a href="#q3">Q3 Extract Request</a>
+    <a href="#q4">Q4 Update Records</a>
+    <a href="#q5">Q5 Complete Item</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#sources" onclick="showView('spec');setTimeout(()=>location.hash='sources',100);">Source Types</a>
+    <a href="#authorized" onclick="showView('spec');setTimeout(()=>location.hash='authorized',100);">Authorised Contacts</a>
+    <a href="#customer" onclick="showView('spec');setTimeout(()=>location.hash='customer',100);">Customer Types</a>
+    <a href="#ppr" onclick="showView('spec');setTimeout(()=>location.hash='ppr',100);">PPR Rules</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(()=>location.hash='definitions',100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary</button>
+    </div>
+
+<div id="questionFlow">
+
+<!-- OVERVIEW -->
+
+<section id="overview">
+<h2>Change of Customer Details - Procedure Overview</h2>
+<div class="staff">
+<h3>Purpose</h3>
+<p style="font-size:13px;">Identify and describe the process to complete a Change of Customer Details (COCD) work item for land tax. Involves validating, authorizing, and updating customer information in e-Sys to ensure accurate assessment issuance.</p>
+
+<h3>Why It Matters</h3>
+<ul style="font-size:13px;">
+<li>Accurate land tax assessments minimize need for amendments, phone calls, and returned unclaimed assessments</li>
+<li>Timely processing keeps customer records current</li>
+<li>Proper authority verification protects customer interests</li>
+</ul>
+
+<h3>Types of Changes Handled</h3>
+<ul style="font-size:13px;">
+<li>Change of postal address</li>
+<li>Change of name</li>
+<li>Change of contact information (phone, email)</li>
+<li>Addition or change of authorised representative</li>
+<li>Change of property details (street name/number)</li>
+<li>Principal Place of Residence (PPR) amendments</li>
+</ul>
+
+<h3>Five Basic Steps (Q1-Q5)</h3>
+<ol style="font-size:13px;">
+<li><strong>Q1:</strong> Launch the COCD work item from e-Sys workflow</li>
+<li><strong>Q2:</strong> Determine if requester is authorised contact</li>
+<li><strong>Q3:</strong> Extract and read the change request</li>
+<li><strong>Q4:</strong> Update customer record in e-Sys</li>
+<li><strong>Q5:</strong> Complete and close the action item</li>
+</ol>
+
+<div class="ref"><strong>Time Standard:</strong> 7.5 minutes per item | <strong>Revised:</strong> November 2024</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> COCD work item in e-Sys workflow, customer request (form/call/email/letter)</div>
+<div class="block"><strong>Process:</strong> Q1-Q5: Launch → Authorize → Extract → Update → Complete</div>
+<div class="block"><strong>Decision:</strong> Is requester authorised? Is change valid? Does PPR apply?</div>
+<div class="block"><strong>Output:</strong> Updated customer record in e-Sys, completed action item</div>
+</div>
+</div>
+</section>
+
+<!-- Q1 LAUNCH ITEM -->
+
+<section id="q1">
+<h2>Q1 - Launch COCD Work Item</h2>
+<div class="staff">
+<h3>Accessing the Work Item</h3>
+<ol style="font-size:13px;">
+<li>Select your work tray in the e-Sys tree (usually in your Home or Tray section)</li>
+<li>Locate the COCD action item in your tray</li>
+<li>Double-click the item OR select it and click "Launch"</li>
+<li>Action item opens in edit mode and customer is loaded into the tree</li>
+</ol>
+
+<h3>Identifying the Source</h3>
+<p style="font-size:13px;">While action item is open:</p>
+<ol style="font-size:13px;">
+<li>Select the <strong>Enquiry tab</strong> at the top</li>
+<li>Look for the <strong>red circle icon</strong> which indicates the source type</li>
+<li>Source types help determine where to find the actual request (see Summary section for details)</li>
+</ol>
+
+<h3>Source Types at a Glance</h3>
+<ul style="font-size:13px;">
+<li><strong>SmartForm (Gen 03):</strong> Change of Customer Details form submitted via web</li>
+<li><strong>My Land Tax:</strong> Update submitted through customer portal</li>
+<li><strong>Written:</strong> Letter or written correspondence</li>
+<li><strong>Phone:</strong> Request made via telephone</li>
+</ul>
+
+<div class="highlight"><strong>Note:</strong> If the COCD item type is incorrect (e.g., request is for something other than above), refer to a Senior Officer as the work item type may need changing and redirecting.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Understanding Action Item Source Icons</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Enquiry Tab Information</h4>
+<p style="font-size:13px;">The Enquiry tab shows the source of the work item via a red circle icon:</p>
+<ul style="font-size:13px;">
+<li><strong>Form icon:</strong> SmartForm (Gen 03) submission</li>
+<li><strong>Website icon:</strong> My Land Tax submission</li>
+<li><strong>Letter icon:</strong> Written correspondence</li>
+<li><strong>Phone icon:</strong> Phone call inquiry</li>
+</ul>
+
+<h4>Importance of Identifying Source</h4>
+<p style="font-size:13px;">The source type determines where to locate the customer's original request—in e-Sys document management (CM10), My Land Tax records, correspondence file, or call notes.</p>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> COCD work item in staff member's e-Sys workflow tray</div>
+<div class="block"><strong>Process:</strong> Staff launches item from tray, e-Sys loads customer into tree</div>
+<div class="block"><strong>Decision:</strong> Is work item correct type? Is source identifiable?</div>
+<div class="block"><strong>Output:</strong> Action item open, source type identified, ready for Q2</div>
+</div>
+</div>
+</section>
+
+<!-- Q2 DETERMINE AUTHORITY -->
+
+<section id="q2">
+<h2>Q2 - Determine if Requester is Authorised</h2>
+<div class="staff">
+<h3>Authority Determination Process</h3>
+<p style="font-size:13px;"><strong>Key Rule:</strong> Only customers and automatically authorised contacts can request changes. All other parties need written authority from the customer.</p>
+
+<h3>Step 1: Determine Customer Type</h3>
+<p style="font-size:13px;">In e-Sys, navigate to <strong>Maintain Customer screen</strong> to check customer type:</p>
+<ul style="font-size:13px;">
+<li><strong>Individual:</strong> The person whose name appears on the account</li>
+<li><strong>Company:</strong> Registered business entity (ABN/ACN)</li>
+<li><strong>Trust:</strong> Trustee-held entity</li>
+<li><strong>Joint Ownership (JO):</strong> Multiple customers sharing ownership</li>
+<li><strong>Estate:</strong> Deceased person's property</li>
+<li><strong>Land Tax Group:</strong> Related companies with common directors</li>
+</ul>
+
+<h3>Step 2: Check if Requester is Automatically Authorised</h3>
+<p style="font-size:13px;"><strong>AUTOMATICALLY AUTHORISED:</strong></p>
+<ul style="font-size:13px;">
+<li>The Taxpayer/Customer (or any JO member)</li>
+<li>Legal Personal Representatives (Executors, Power of Attorney holders)</li>
+<li>Company Senior Officers (Directors, Secretaries, CFOs, Managers)</li>
+<li>Company Officer with relevant company email address</li>
+<li>Trustee (Individual or Company)</li>
+<li>Previously listed authorised representatives (check Contact tab)</li>
+</ul>
+
+<p style="font-size:13px;"><strong>NOT AUTOMATICALLY AUTHORISED (Need written authority):</strong></p>
+<ul style="font-size:13px;">
+<li>Personal Accountant</li>
+<li>External Accountant</li>
+<li>Solicitor/Lawyer</li>
+<li>Managing Agent</li>
+<li>Real Estate Agent</li>
+<li>Family Members</li>
+</ul>
+
+<h3>Step 3: Check for Previously Authorised Representatives</h3>
+<p style="font-size:13px;">In e-Sys:</p>
+<ol style="font-size:13px;">
+<li>Navigate to <strong>Land Taxpayer node</strong></li>
+<li>Select <strong>Contact tab</strong></li>
+<li>Review list of previously authorised representatives</li>
+<li>If requester is listed, they are authorised</li>
+</ol>
+
+<div class="stop">CRITICAL: If requester is NOT automatically authorised AND NOT previously listed, you MUST have written signed authority from customer before proceeding with any changes.</div>
+
+<div class="auth"><strong>Authority Letter Requirements:</strong> Must be signed and dated by customer/director, state representative is authorised to interact with SRO, and acknowledge all properties now and in future included in land tax notices.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Authority Letter Handling</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>If Unauthorised Representative Provides Authority Letter</h4>
+<p style="font-size:13px;">Proceed with the request. Authority letter may be attached to SmartForm or included separately.</p>
+
+<h4>If Unauthorised Representative Does NOT Provide Authority Letter</h4>
+<p style="font-size:13px;">1. Email representative requesting authority letter (template at end of procedure)</p>
+<p style="font-size:13px;">2. Reserve the action item for 2 weeks</p>
+<p style="font-size:13px;">3. If no reply within 2 weeks, complete action item WITHOUT making requested update</p>
+
+<h4>What We Do NOT Accept</h4>
+<p style="font-size:13px;">Management Authority documents are NOT accepted as authority letters for COCD requests.</p>
+
+<h4>Adding Previously Unauthorised Representative to Contact List</h4>
+<p style="font-size:13px;">If authority letter provided and representative is new:</p>
+<ol style="font-size:13px;">
+<li>Navigate to Land Taxpayer Node</li>
+<li>Click Edit icon</li>
+<li>Select Contact tab</li>
+<li>Right-click and select "Add Contact"</li>
+<li>Enter: Name, Organisation, Position/Role, Contact Type, Phone, Email</li>
+<li>Tick the "Gen 03" box</li>
+<li>Click OK and Save</li>
+</ol>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Customer type, requester identity, source of request</div>
+<div class="block"><strong>Process:</strong> Assess if requester is automatically authorised; if not, check for written authority</div>
+<div class="block"><strong>Decision:</strong> Is requester authorised to make changes?</div>
+<div class="block"><strong>Output:</strong> AUTHORISED (proceed) or UNAUTHORISED (request authority or close item)</div>
+</div>
+</div>
+</section>
+
+<!-- Q3 EXTRACT REQUEST -->
+
+<section id="q3">
+<h2>Q3 - Extract and Read Change Request</h2>
+<div class="staff">
+<h3>Finding the Request (By Source Type)</h3>
+
+<h4>SmartForm (Gen 03) Requests</h4>
+<p style="font-size:13px;"><strong>Best Practice Method:</strong></p>
+<ol style="font-size:13px;">
+<li>Cancel out of the COCD action item</li>
+<li>Select the <strong>CM10 icon</strong> on e-Sys tree (document management)</li>
+<li>Select the <strong>Land Tax folder</strong> (identified by customer number/LTX)</li>
+<li>Right-click on the relevant document(s)</li>
+<li>Select <strong>View</strong> from menu to open SmartForm</li>
+</ol>
+
+<p style="font-size:13px;"><strong>Alternative:</strong> Open action item, select <strong>Other tab</strong> to view document directly.</p>
+
+<h4>My Land Tax Requests</h4>
+<p style="font-size:13px;">Access the My Land Tax system to locate customer's submission and review changes requested.</p>
+
+<h4>Written Correspondence</h4>
+<p style="font-size:13px;">Check correspondence files or attached documents in e-Sys document management for letter.</p>
+
+<h4>Phone Call Requests</h4>
+<p style="font-size:13px;">Review call notes in action item or customer record notes.</p>
+
+<h3>Reading SmartForm</h3>
+<p style="font-size:13px;"><strong>Page 1:</strong> Declaration (customer agreement—no relevant information needed)</p>
+<p style="font-size:13px;"><strong>Page 2:</strong> Person completing form details (confirm email/phone with e-Sys records)</p>
+<p style="font-size:13px;"><strong>Page 3:</strong> Customer details and change request (what changes are being requested)</p>
+<p style="font-size:13px;"><strong>Attachments:</strong> Authority letters or supporting documents</p>
+
+<h3>Key Information to Extract</h3>
+<ul style="font-size:13px;">
+<li>What change is being requested? (address, name, phone, email, representative, property details)</li>
+<li>Which revenue lines does this apply to?</li>
+<li>Is this request from customer or representative?</li>
+<li>Are there any authority letters attached?</li>
+<li>Is a PPR (Principal Place of Residence) amendment being requested or affected?</li>
+</ul>
+
+<div class="highlight"><strong>Note:</strong> If customer selected multiple revenue lines in form, you can process normally. If customer has additional revenue lines not selected, consult Senior Officer about whether to update those as well.</div>
+
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Source type (form/call/letter/My LTX), document location</div>
+<div class="block"><strong>Process:</strong> Locate and retrieve original customer request, extract key change details</div>
+<div class="block"><strong>Decision:</strong> Are all requested changes identifiable and documented?</div>
+<div class="block"><strong>Output:</strong> Clear understanding of what changes customer is requesting</div>
+</div>
+</div>
+</section>
+
+<!-- Q4 UPDATE RECORDS -->
+
+<section id="q4">
+<h2>Q4 - Update Customer Record in e-Sys</h2>
+<div class="staff">
+<h3>Update Contact Information</h3>
+<p style="font-size:13px;">If person completing form provided phone or email:</p>
+<ol style="font-size:13px;">
+<li>Navigate to <strong>Maintain Customer screen</strong></li>
+<li>Click the <strong>Edit icon</strong> (yellow pencil)</li>
+<li>Update phone and/or email fields</li>
+<li>Click <strong>Save icon</strong> (yellow floppy disc)</li>
+</ol>
+
+<h3>Verify Customer Details</h3>
+<p style="font-size:13px;">If customer is Individual: Check date of birth against form</p>
+<p style="font-size:13px;">If customer is Company/Trust: Check ACN/ABN matches, verify in ASIC if needed and update</p>
+
+<h3>Update Mailing Address</h3>
+<p style="font-size:13px;">Updating mailing address varies by customer type:</p>
+<ul style="font-size:13px;">
+<li><strong>Individual:</strong> Update address in Maintain Customer screen</li>
+<li><strong>Company:</strong> Update address in Maintain Customer screen</li>
+<li><strong>Trust:</strong> Update address in appropriate trust screen</li>
+<li><strong>Joint Ownership:</strong> May need to update for specific JO member</li>
+<li><strong>Estate:</strong> Update per estate-specific procedures</li>
+<li><strong>Land Tax Group:</strong> Update for group as defined</li>
+</ul>
+
+<h3>Adding New Authorised Representative</h3>
+<p style="font-size:13px;">If customer requested addition of new representative:</p>
+<ol style="font-size:13px;">
+<li>Navigate to <strong>Land Taxpayer Node</strong></li>
+<li>Click <strong>Edit icon</strong></li>
+<li>Select <strong>Contact tab</strong></li>
+<li>Right-click and select <strong>Add Contact</strong></li>
+<li>Enter: Name, Organisation, Position/Role, Contact Type, Phone, Email</li>
+<li>Tick the <strong>"Gen 03" box</strong> in corner</li>
+<li>Click <strong>OK and Save</strong></li>
+</ol>
+
+<h3>Principal Place of Residence (PPR) Amendments</h3>
+<p style="font-size:13px;"><strong>Applying PPR:</strong> ALL criteria must be met:</p>
+<ul style="font-size:13px;">
+<li>Property is owned by customer</li>
+<li>Property Classification eligible for PPR exemption</li>
+<li>Customer updated residential address with VicRoads (COI/DLS)</li>
+<li>No active RTBA bond on property</li>
+<li>Apply from 1 December current year (exemption effective next year)</li>
+</ul>
+
+<p style="font-size:13px;"><strong>Removing PPR:</strong> Must verify customer not residing at property:</p>
+<ul style="font-size:13px;">
+<li>If RTBA bond exists: Remove from 1/12 current year</li>
+<li>If no bond: Check VicRoads (COI/DLS) address updated. If yes, remove from 1/12</li>
+<li>Remove from 1/12 current year so exemption doesn't apply to next year's assessment</li>
+</ul>
+
+<div class="stop">CRITICAL: Be certain customer not residing at property before removing PPR. Check VicRoads residential address first.</div>
+
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Requested changes from customer (address, name, contact info, representative, PPR)</div>
+<div class="block"><strong>Process:</strong> Update appropriate e-Sys screens based on customer type and change type</div>
+<div class="block"><strong>Decision:</strong> Are all changes entered correctly? PPR criteria met?</div>
+<div class="block"><strong>Output:</strong> Updated customer record in e-Sys</div>
+</div>
+</div>
+</section>
+
+<!-- Q5 COMPLETE ITEM -->
+
+<section id="q5">
+<h2>Q5 - Complete and Close Action Item</h2>
+<div class="staff">
+<h3>Final Verification</h3>
+<p style="font-size:13px;">Before closing, verify:</p>
+<ul style="font-size:13px;">
+<li>All requested changes have been entered in e-Sys</li>
+<li>Changes match what customer requested</li>
+<li>PPR criteria verified (if applicable)</li>
+<li>All contact information updated</li>
+<li>New representatives added (if applicable)</li>
+</ul>
+
+<h3>Completing the Action Item</h3>
+<ol style="font-size:13px;">
+<li>Navigate back to the COCD action item</li>
+<li>Review all changes one final time</li>
+<li>Add any notes to the action item explaining changes made</li>
+<li>Set status to <strong>Completed</strong> or <strong>Closed</strong> (depending on e-Sys workflow)</li>
+<li>Click <strong>Save and Close</strong> or <strong>Complete</strong> button</li>
+</ol>
+
+<h3>Action Item Completion Note</h3>
+<p style="font-size:13px;">Document in the action item notes what was changed, for example:</p>
+<ul style="font-size:13px;">
+<li>"Updated mailing address to [new address]"</li>
+<li>"Added John Smith as authorised representative"</li>
+<li>"Applied PPR exemption from 1/12/2024"</li>
+<li>"Verified authority letter from xyz"</li>
+</ul>
+
+<div class="highlight"><strong>Time Standard Met:</strong> Action completed within 7.5 minutes (7 minutes 30 seconds) from launch to close.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Items Requiring Senior Officer Referral</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Situations to Escalate</h4>
+<p style="font-size:13px;">If any of the following occur, refer to Senior Officer BEFORE completing:</p>
+<ul style="font-size:13px;">
+<li>COCD work item type appears incorrect</li>
+<li>Requester not automatically authorised and no authority letter provided</li>
+<li>Conflicting information across different sources</li>
+<li>Customer has additional revenue lines not selected on request</li>
+<li>PPR criteria not fully met but customer expecting exemption</li>
+<li>Concerns about validity of authority letter</li>
+</ul>
+
+<h4>How to Escalate</h4>
+<p style="font-size:13px;">1. Add detailed notes to action item explaining issue</p>
+<p style="font-size:13px;">2. Leave item in "Pending Review" or "On Hold" status</p>
+<p style="font-size:13px;">3. Email Senior Officer with item reference number and details</p>
+<p style="font-size:13px;">4. Await guidance before completing</p>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Updated e-Sys records with all changes entered</div>
+<div class="block"><strong>Process:</strong> Final verification of changes, documentation of actions taken</div>
+<div class="block"><strong>Decision:</strong> Are all changes correct and complete?</li>
+<div class="block"><strong>Output:</strong> Completed action item, closed in e-Sys workflow, customer records updated</div>
+</div>
+</div>
+</section>
+
+</div>
+
+<!-- SYSTEM INTERACTION -->
+
+<div class="systemsOnly">
+<section>
+<h2>System Interaction - COCD Processing Workflow</h2>
+<div class="flow">
+<div class="flow-title">Q1-Q5 Complete COCD Cycle</div>
+<div class="node n-amber">COCD Work Item Received</div>
+<div class="arr"></div>
+<div class="node n-blue">Q1: Launch Item from Workflow Tray</div>
+<div class="arr"></div>
+<div class="node n-amber">Identify Source Type (Form/Call/Letter/My LTX)</div>
+<div class="arr"></div>
+<div class="node n-blue">Q2: Determine Customer Type</div>
+<div class="arr"></div>
+<div class="node n-blue">Check if Requester Authorised</div>
+<div class="arr"></div>
+<div class="node n-amber">Authorised?</div>
+<div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+<div><div class="node n-gray" style="min-width:140px;">NO: Request Authority</div><div class="node n-gray" style="min-width:140px;margin-top:8px;">Or Close Item</div></div>
+<div><div class="node n-blue" style="min-width:140px;">YES: Proceed</div></div>
+</div>
+<div class="arr"></div>
+<div class="node n-blue">Q3: Locate & Extract Request</div>
+<div class="arr"></div>
+<div class="node n-amber">Identify Changes Requested</div>
+<div class="arr"></div>
+<div class="node n-blue">Q4: Update e-Sys Records</div>
+<div class="arr"></div>
+<div class="node n-blue">Update Address, Contact, PPR, Representative</div>
+<div class="arr"></div>
+<div class="node n-blue">Q5: Verify All Changes Complete</div>
+<div class="arr"></div>
+<div class="node n-amber">Complete & Close Action Item</div>
+<div class="arr"></div>
+<div class="node n-gray">COCD Processing Complete</div>
+</div>
+</section>
+</div>
+
+<!-- SUMMARY -->
+
+<div class="specOnly">
+
+<section class="summary-section" id="sources">
+<h2>Source Types</h2>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Source Type</th>
+<th>Description</th>
+<th>Where to Find Request</th>
+</tr>
+<tr>
+<td><strong>SmartForm (Gen 03)</strong></td>
+<td>Change of Customer Details form submitted via website</td>
+<td>CM10 document management (Land Tax folder)</td>
+</tr>
+<tr>
+<td><strong>My Land Tax</strong></td>
+<td>Update submitted through customer portal</td>
+<td>My Land Tax system records</td>
+</tr>
+<tr>
+<td><strong>Written</strong></td>
+<td>Letter or written correspondence</td>
+<td>Correspondence files, document management</td>
+</tr>
+<tr>
+<td><strong>Phone</strong></td>
+<td>Request made via telephone</td>
+<td>Call notes in action item or customer record</td>
+</tr>
+</table>
+</div>
+</section>
+
+<section class="summary-section" id="authorized">
+<h2>Authorised Contacts</h2>
+
+<h3>AUTOMATICALLY AUTHORISED (No Additional Authority Needed)</h3>
+<ul style="font-size:13px;">
+<li>The Taxpayer/Customer (or any Joint Ownership member)</li>
+<li>Legal Personal Representatives (Executors, Power of Attorney holders)</li>
+<li>Company Senior Officers: Directors, Secretaries, CEOs, CFOs, or positions with "Manager" in title</li>
+<li>Company Officer with relevant company email address who submitted form</li>
+<li>Trustee (Individual or Company)</li>
+<li>Previously authorised representatives (listed in Contact tab)</li>
+</ul>
+
+<h3>NOT AUTOMATICALLY AUTHORISED (Require Written Authority)</h3>
+<ul style="font-size:13px;">
+<li>Personal Accountant</li>
+<li>External Accountant</li>
+<li>Solicitor/Lawyer</li>
+<li>Managing Agent</li>
+<li>Real Estate Agent</li>
+<li>Family Members</li>
+</ul>
+
+<h3>Authority Letter Requirements</h3>
+<p style="font-size:13px;">Must include:</p>
+<ul style="font-size:13px;">
+<li>Signed and dated by customer/director</li>
+<li>State representative authorised to interact with SRO on customer's behalf</li>
+<li>Acknowledge all properties (now and future) included in land tax notices</li>
+</ul>
+
+<h3>What We Do NOT Accept</h3>
+<p style="font-size:13px;">Management Authority documents are NOT acceptable authority letters for COCD requests.</p>
+</section>
+
+<section class="summary-section" id="customer">
+<h2>Customer Types</h2>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Customer Type</th>
+<th>Description</th>
+<th>Authorised Contacts</th>
+</tr>
+<tr>
+<td><strong>Individual</strong></td>
+<td>Single person on account</td>
+<td>Customer + previously authorised reps</td>
+</tr>
+<tr>
+<td><strong>Company</strong></td>
+<td>Registered business entity (ABN/ACN)</td>
+<td>Senior officers, directors, secretaries, managers + previously authorised reps</td>
+</tr>
+<tr>
+<td><strong>Trust</strong></td>
+<td>Trustee-held property</td>
+<td>Trustee (individual or company) + previously authorised reps</td>
+</tr>
+<tr>
+<td><strong>Joint Ownership (JO)</strong></td>
+<td>Multiple customers sharing ownership</td>
+<td>Any JO member + previously authorised reps</td>
+</tr>
+<tr>
+<td><strong>Estate</strong></td>
+<td>Deceased person's property</td>
+<td>Legal representatives (executors, POA holders)</td>
+</tr>
+<tr>
+<td><strong>Land Tax Group</strong></td>
+<td>Related companies with common directors</td>
+<td>Senior officers/managers of any company in group + previously authorised reps</td>
+</tr>
+</table>
+</div>
+</section>
+
+<section class="summary-section" id="ppr">
+<h2>Principal Place of Residence (PPR) Rules</h2>
+
+<h3>Applying PPR Exemption</h3>
+<p style="font-size:13px;"><strong>ALL the following criteria MUST be met:</strong></p>
+<ul style="font-size:13px;">
+<li>Property is owned by customer</li>
+<li>Property Classification code eligible for PPR exemption</li>
+<li>Customer updated residential address with VicRoads (COI/DLS)</li>
+<li>No active RTBA bond data on property</li>
+<li>Apply from 1 December current year (exemption takes effect following year)</li>
+</ul>
+
+<p style="font-size:13px;"><strong>Example:</strong> If customer contacts on 3 March 2024, PPR applied from 1/12/2024, exemption effective 2025 assessment.</p>
+
+<h3>Removing PPR Exemption</h3>
+<p style="font-size:13px;"><strong>Critical Rule:</strong> Be very sure customer is NOT residing at property before removing PPR.</p>
+
+<p style="font-size:13px;"><strong>If property has active RTBA bond:</strong></p>
+<ul style="font-size:13px;">
+<li>Remove PPR from 1/12 current year</li>
+<li>Exemption does not apply to following year's assessment</li>
+</ul>
+
+<p style="font-size:13px;"><strong>If property has NO active bond:</strong></p>
+<ul style="font-size:13px;">
+<li>Check if VicRoads (COI/DLS) residential address updated</li>
+<li>If updated, remove PPR from 1/12 current year</li>
+<li>Exemption does not apply to following year's assessment</li>
+</ul>
+</section>
+
+<section class="summary-section">
+<h2>Procedure Summary</h2>
+<ul style="font-size:13px;">
+<li><strong>Purpose:</strong> Process Change of Customer Details (COCD) work items for land tax</li>
+<li><strong>Steps:</strong> Q1 Launch → Q2 Authorize → Q3 Extract → Q4 Update → Q5 Complete</li>
+<li><strong>Changes handled:</strong> Address, name, contact info, representatives, property details, PPR amendments</li>
+<li><strong>Authority check:</strong> Verify requester is automatically authorised or has written authority</li>
+<li><strong>Time standard:</strong> 7.5 minutes per item</li>
+<li><strong>Outcome:</strong> Updated customer record in e-Sys, completed action item</li>
+</ul>
+</section>
+
+<section class="summary-section">
+<h2>Source of Authority</h2>
+<ul style="font-size:13px;">
+<li><strong>Division:</strong> Land Information Management</li>
+<li><strong>Revised:</strong> November 2024</li>
+<li><strong>System of Record:</strong> Lotus Notes Policies and Procedures Database</li>
+<li><strong>Time Standard:</strong> 7.5 minutes per item</li>
+</ul>
+</section>
+
+<section class="summary-section" id="definitions">
+<h2>Definitions & Acronyms</h2>
+<p style="font-size:13px;">
+<strong>SRO</strong> - State Revenue Office<br>
+<strong>LTX</strong> - Land Tax<br>
+<strong>COCD</strong> - Change of Customer Details<br>
+<strong>PPR</strong> - Principal Place of Residence (tax exemption)<br>
+<strong>Gen 03</strong> - General Form 03 (SmartForm for COCD)<br>
+<strong>ASIC</strong> - Australian Securities and Investments Commission<br>
+<strong>ABN</strong> - Australian Business Number<br>
+<strong>ACN</strong> - Australian Company Number<br>
+<strong>JO</strong> - Joint Ownership<br>
+<strong>RTBA</strong> - Residential Tenancies Bond Authority<br>
+<strong>COI/DLS</strong> - VicRoads database systems<br>
+<strong>CM10</strong> - e-Sys document management module<br>
+<strong>BTO</strong> - Branch Technical Officer<br>
+</p>
+
+<h3>Key Terms</h3>
+<p style="font-size:13px;">
+<strong>Authorised Contact:</strong> Person with authority to request changes on customer's behalf (customer, legal rep, company officer, trustee, or previously authorised rep)<br>
+<strong>Unauthorised Party:</strong> Person without automatic authority (accountant, solicitor, agent, family) who needs written customer authority<br>
+<strong>Authority Letter:</strong> Signed document from customer permitting another person to interact with SRO on their behalf<br>
+<strong>PPR Exemption:</strong> Tax exemption for principal place of residence (main home)<br>
+<strong>Revenue Lines:</strong> Different tax types customer may be assessed for (e.g., LTX, VRLT)<br>
+</p>
+</section>
+
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(e=>e.style.display='none');
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(e=>e.style.display='block');document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(e=>e.style.display='block');document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p){p.classList.toggle('open')}if(a){a.classList.toggle('open')}}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

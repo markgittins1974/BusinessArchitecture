@@ -1,1 +1,682 @@
 
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Property Clearance Certificate Procedure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit;font-size:13px}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    h4{font-size:14px;color:#003a8f;margin:16px 0 8px 0}
+    ul,ol{margin-left:22px;font-size:13px;line-height:1.6}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px;font-size:13px;line-height:1.5}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .warning{background:#fef3c7;border-left:5px solid #d97706;padding:12px;margin-top:12px;font-size:13px}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly,.specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;font-size:13px}
+    .detail-toggle-text{font-weight:700;color:#1e3a8a;flex:1}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s;margin-left:12px}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px;font-size:13px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:13px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p,.detail-panel li{font-size:13px;color:#475569;line-height:1.5;margin-bottom:6px}
+    .detail-panel ul{margin-left:18px}
+    .node{padding:14px 20px;border-radius:10px;font-size:12px;font-weight:600;text-align:center;min-width:160px;max-width:280px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .n-red{background:#fee2e2;border:2px solid #dc2626;color:#991b1b}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:20px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .table-responsive{overflow-x:auto;margin:12px 0}
+    table{width:100%;border-collapse:collapse;font-size:12px;margin:12px 0}
+    table th,table td{padding:9px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600;color:#1f2937}
+    .highlight{background:#fffbeb;border-left:5px solid #f59e0b;padding:12px;margin:12px 0;font-size:13px}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Property Clearance Certificate Procedure</h1>
+  <p>Division: Operations &bull; Branch: Land Revenue &bull; Revised: March 2025 &bull; Time Standard: 6 minutes per item</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#overview">Overview</a>
+    <a href="#q1">Q1 Launch PIA</a>
+    <a href="#q2">Q2 Validate Property</a>
+    <a href="#q3">Q3 Process Details</a>
+    <a href="#q4">Q4 Generate Certificate</a>
+    <a href="#q5">Q5 Handle Warnings</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#pia" onclick="showView('spec');setTimeout(()=>location.hash='pia',100);">PIA Warnings</a>
+    <a href="#prorata" onclick="showView('spec');setTimeout(()=>location.hash='prorata',100);">Pro Rata Rules</a>
+    <a href="#vendor" onclick="showView('spec');setTimeout(()=>location.hash='vendor',100);">Vendor Validation</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(()=>location.hash='definitions',100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary</button>
+    </div>
+
+<div id="questionFlow">
+
+<!-- OVERVIEW -->
+
+<section id="overview">
+<h2>Property Clearance Certificate - Procedure Overview</h2>
+<div class="staff">
+<h3>Purpose</h3>
+<p style="font-size:13px;">Guide Customer Service Officers (CSOs) to identify correct property/vendor, process Property Inquiry Applications (PIAs), and generate Property Clearance Certificates (PCCs) consistently and accurately.</p>
+
+<h3>What is a Property Clearance Certificate?</h3>
+<ul style="font-size:13px;">
+<li><strong>PCC Definition:</strong> Details the amount of tax secured by a charge on land</li>
+<li><strong>What it includes:</strong> Land tax owed for current year + outstanding liabilities from prior years + Windfall Gains Tax (WGT) + Commercial & Industrial Property Tax (CIPT) + Vacant Residential Land Tax (VRLT) + deferral interest</li>
+<li><strong>NOT a Tax Assessment:</strong> It's a "snapshot" of liabilities on customer's file at time of issuance</li>
+<li><strong>Right Person/Right Property Rule:</strong> Ensure certificate reflects correct property and correct person/entity</li>
+</ul>
+
+<h3>Key Facts</h3>
+<ul style="font-size:13px;">
+<li>~300,000 PCC applications received annually via e-Business</li>
+<li>Fee: $18.90 (increases 1.16 fee units on 1 July annually)</li>
+<li>Turnaround time: 10 working days (24 hours if no issues hold-up)</li>
+<li>Reissues allowed: Unlimited within 90 days of original issuance</li>
+<li>Automation applies to many applications via e-Sys rules</li>
+<li>Manual intervention required for complex cases with warnings</li>
+</ul>
+
+<h3>Time Standard: 6 minutes per item</h3>
+
+<div class="ref"><strong>Key Principle:</strong> Ensure certificate reflects "right person/right property" — correct property identified and correct owner/entity on certificate</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Property Inquiry Application (PIA) via e-Business, with property/vendor/owner details</div>
+<div class="block"><strong>Process:</strong> Q1-Q5: Launch → Validate → Process → Generate → Resolve</div>
+<div class="block"><strong>Decision:</strong> Is property correct? Is vendor correct? Are warnings resolved? Pro rata required?</div>
+<div class="block"><strong>Output:</strong> Property Clearance Certificate issued or manual intervention required</div>
+</div>
+</div>
+</section>
+
+<!-- Q1 LAUNCH PIA -->
+
+<section id="q1">
+<h2>Q1 - Launch PIA Work Item</h2>
+<div class="staff">
+<h3>Accessing PIA from Workflow</h3>
+<ol style="font-size:13px;">
+<li>Open PIA work item from CSO workflow tray</li>
+<li>Review Details Tab for application information</li>
+<li>Verify source: e-Business (registered/non-registered user), agency (Landata, Dye & Durham, Infotrack)</li>
+<li>Note applicant name and application reference</li>
+<li>Identify vendor (owner) on application</li>
+</ol>
+
+<h3>Understanding PIA Sources</h3>
+<ul style="font-size:13px;">
+<li><strong>e-Business applicants:</strong> Direct SRO website submissions (registered or non-registered)</li>
+<li><strong>Agency applications:</strong> Landata, Dye & Durham (Anstat), Infotrack lodge on behalf of applicants</li>
+<li><strong>Details tab:</strong> Shows applicant name/email, address, reference number</li>
+</ul>
+
+<h3>Critical Information to Extract</h3>
+<ul style="font-size:13px;">
+<li>Property address and references (from "Property Search" section)</li>
+<li>Vendor name (owner)</li>
+<li>Applicant requesting certificate (may be purchaser, mortgagee, agent)</li>
+<li>Any property clarification already noted</li>
+</ul>
+
+<div class="highlight"><strong>Note:</strong> If PIA shows property location is not rateable (e.g., Crown land, exempt property), return to applicant for clarification or reject application.</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> PIA work item in CSO workflow tray</div>
+<div class="block"><strong>Process:</strong> CSO launches item, reviews Details tab and property references</div>
+<div class="block"><strong>Decision:</strong> Is property information visible and identifiable?</div>
+<div class="block"><strong>Output:</strong> PIA details extracted, ready for Q2</div>
+</div>
+</div>
+</section>
+
+<!-- Q2 VALIDATE PROPERTY -->
+
+<section id="q2">
+<h2>Q2 - Validate Property and Vendor</h2>
+<div class="staff">
+<h3>Property Validation Process</h3>
+<p style="font-size:13px;">The flowchart process requires confirming:</p>
+<ol style="font-size:13px;">
+<li><strong>Property Search:</strong> Search for property by references (plan number, LID, address)</li>
+<li><strong>Match Assessment:</strong> Do first two property references match the property and owner on application?</li>
+<li><strong>Clarification Required:</strong> If mismatch, contact applicant to clarify vendor name and property details</li>
+</ol>
+
+<h3>Three Possible Outcomes:</h3>
+<ul style="font-size:13px;">
+<li><strong>Both first two references match:</strong> Proceed to vendor clarification</li>
+<li><strong>Only one of first two references matches:</strong> Contact applicant for clarification and edit as requested</li>
+<li><strong>None of references match:</strong> Contact applicant for clarification and edit as requested</li>
+</ul>
+
+<h3>Vendor Clarification</h3>
+<p style="font-size:13px;">Acceptable vendors for PCC:</p>
+<ul style="font-size:13px;">
+<li>Current Registered Proprietor on title</li>
+<li>Purchaser (must have Current Registered Proprietor name on application)</li>
+<li>Mortgagee in possession (e.g., Major Bank)</li>
+<li>Power of Attorney</li>
+<li>Executor of deceased estate</li>
+<li>On-seller</li>
+<li>Company Director &amp; Crown Legal Interests</li>
+</ul>
+
+<p style="font-size:13px;">For non-matching vendors, add comment to PIA: "Vendor is current proprietor" or clarify with applicant.</p>
+
+<div class="stop">CRITICAL: Certificate cannot be issued if vendor does not match one of the acceptable categories above. If vendor is not identifiable or not acceptable, redirect PIA to Manual Certificate Tray or request clarification.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Property Search Methods</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Searching by Property References</h4>
+<p style="font-size:13px;">In e-Sys, use Search tools:</p>
+<ul style="font-size:13px;">
+<li><strong>Plan number:</strong> Search for plans folder, request copy from applicant</li>
+<li><strong>LID:</strong> Land Identification number (unique property identifier)</li>
+<li><strong>Address:</strong> Street address and suburb</li>
+<li><strong>COI (Compliance Operational Intelligence):</strong> Title search for vendor details</li>
+</ul>
+
+<h4>Handling Missing or Unclear References</h4>
+<p style="font-size:13px;">If references missing, options:</p>
+<ul style="font-size:13px;">
+<li>Request from applicant</li>
+<li>Search new plans folder if property is newly subdivided</li>
+<li>Refer to Senior CSO if unsure</li>
+</ul>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Property details from PIA (address, references, vendor name)</div>
+<div class="block"><strong>Process:</strong> Search e-Sys for property, verify vendor matches acceptable category</div>
+<div class="block"><strong>Decision:</strong> Do property references match? Is vendor acceptable?</div>
+<div class="block"><strong>Output:</strong> Property/vendor validated OR clarification required</div>
+</div>
+</div>
+</section>
+
+<!-- Q3 PROCESS DETAILS -->
+
+<section id="q3">
+<h2>Q3 - Process Pro Rata and Area Entitlement</h2>
+<div class="staff">
+<h3>Pro Rata - Area or Unit Entitlement Decision</h3>
+<p style="font-size:13px;">Determine whether property is part of subdivided land requiring pro rata calculations:</p>
+
+<h4>Three Scenarios:</h4>
+<ul style="font-size:13px;">
+<li><strong>Scenario 1: Property in Parcel</strong> — Part of subdivided land with multiple properties (pro rata required)</li>
+<li><strong>Scenario 2: No Child Area/Unit Entitlement</strong> — Issue certificate on parent property with comment: "Certificate has been issued on the parent property"</li>
+<li><strong>Scenario 3: Child Properties with Unit Entitlements</strong> — Issue certificate without pro rata but add comment: "Certificate has been issued on the parent property"</li>
+</ul>
+
+<h3>60/40 Rule for Pro Rata Scenarios</h3>
+<p style="font-size:13px;">If new plan has roads or common property:</p>
+<ul style="font-size:13px;">
+<li><strong>Apply 60/40 rule:</strong> Parent Area Discount factors in roads/common property so tax applies when all child properties sold</li>
+<li><strong>Not all scenarios use 60/40:</strong> Check plan design first</li>
+<li><strong>Examples provided:</strong> When 60/40 applies vs. when it doesn't</li>
+</ul>
+
+<h3>Pro Rata Calculation Process</h3>
+<ol style="font-size:13px;">
+<li>Determine parent property liabilities</li>
+<li>Calculate pro rata based on area/unit entitlement</li>
+<li>Select area for pro rata (must use area as if available)</li>
+<li>Select parent property and enter child area</li>
+<li>Check other sources for area (electronic plan, other certificates)</li>
+<li>Can area be found? If yes, continue; if no, escalate</li>
+<li>Click OK for pro rata calculation</li>
+<li>If multiple parent properties with different liability dates, perform separate pro rata for each</li>
+<li>Continue online PIA process and issue certificate</li>
+</ol>
+
+<div class="warning"><strong>Complex Areas:</strong> If property appears in parcel, plan has complex structure, or pro rata seems ambiguous, escalate to senior staff. Accuracy critical for pro rata calculations.</div>
+
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Property details, plan information, area measurements</div>
+<div class="block"><strong>Process:</strong> Identify if pro rata required, apply 60/40 rule if applicable, calculate area/unit entitlement split</div>
+<div class="block"><strong>Decision:</strong> Is pro rata needed? Is 60/40 rule applicable? Are area calculations correct?</div>
+<div class="block"><strong>Output:</strong> Pro rata applied (or not), certificate ready for issuance with correct liability split</div>
+</div>
+</div>
+</section>
+
+<!-- Q4 GENERATE CERTIFICATE -->
+
+<section id="q4">
+<h2>Q4 - Generate and Issue Certificate</h2>
+<div class="staff">
+<h3>Copy of Plan Requirements</h3>
+<p style="font-size:13px;">Full copy of plan required when property is in e-Sys. Process:</p>
+<ol style="font-size:13px;">
+<li>Check if property located in e-Sys: YES → Load property to tree</li>
+<li>If NO → Search for property using references (plan number, address)</li>
+<li>Attempt to locate in "temporary folder"</li>
+<li>If temporary folder not open, select "Search New Plans Folder"</li>
+<li>Right-click plan number (field) and select "view electronic plan"</li>
+<li>If did temporary folder exist? If NO, search new plans</li>
+<li>Was plan located? If NO, contact applicant for plan copy or refer to escalation</li>
+<li>If plan located, copy to PIA tree</li>
+<li>Add note to PIA: "Requested copy of plan, (request date) and use LID"</li>
+</ol>
+
+<h3>Certificate Generation</h3>
+<ol style="font-size:13px;">
+<li>Once property/vendor/pro rata validated, system can auto-generate</li>
+<li>If all details clear and matching, click "Generate B97 Certificate Button"</li>
+<li>Warning or message appears: Review and resolve before issuance (see Q5)</li>
+</ol>
+
+<h3>Automation vs. Manual Processing</h3>
+<ul style="font-size:13px;">
+<li><strong>Auto-issue (24 hours):</strong> Application matches e-Sys records, no objections, nothing holding up file</li>
+<li><strong>Manual (requires CSO action):</strong> Warnings exist, vendor clarification needed, property hold-ups, complex cases</li>
+</ul>
+
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Validated property/vendor, pro rata calculated, plan copy located</div>
+<div class="block"><strong>Process:</strong> Generate certificate in e-Sys, system produces B97 Certificate number</div>
+<div class="block"><strong>Decision:</strong> Are all warnings resolved? Is certificate ready to issue?</div>
+<div class="block"><strong>Output:</strong> Certificate generated with reference number</div>
+</div>
+</div>
+</section>
+
+<!-- Q5 HANDLE WARNINGS -->
+
+<section id="q5">
+<h2>Q5 - Resolve Warnings and Complete</h2>
+<div class="staff">
+<h3>PIA Warning Flowchart</h3>
+<p style="font-size:13px;">When certificate generation triggers warnings, CSO must resolve before issuance. Warning types:</p>
+
+<h4>Warning Categories:</h4>
+<ul style="font-size:13px;">
+<li><strong>Property Warning:</strong> Property details mismatched or unclear</li>
+<li><strong>Vendor Warning:</strong> Vendor name doesn't match title or is not acceptable</li>
+<li><strong>Liability Warning:</strong> Outstanding liabilities, zero value, or recovery issues</li>
+<li><strong>Other Warnings:</strong> Settlement dates, commissions, duplicate issues, customer warnings</li>
+</ul>
+
+<h3>Common Manual Intervention Cases</h3>
+
+<h4>Vendor Clarification (See Q2 for Details)</h4>
+<ul style="font-size:13px;">
+<li>Contact applicant for clarification on vendor identity</li>
+<li>Request written authority if vendor is not current proprietor</li>
+<li>Verify vendor on COI or title documents</li>
+<li>Update application once clarified</li>
+</ul>
+
+<h4>Liability or Recovery Issues</h4>
+<ul style="font-size:13px;">
+<li><strong>Zero value on property:</strong> If vendor is statutory body (e.g., Director of Housing), may override warning. Otherwise escalate.</li>
+<li><strong>Write off required:</strong> Liability <$50 and economically unviable to chase — request manual certificate or refer to management</li>
+<li><strong>Recovery non-issue:</strong> Liability ceased prior to 31 Dec of prior year — manual certificate required</li>
+</ul>
+
+<h4>Change of Ownership</h4>
+<ul style="font-size:13px;">
+<li><strong>Owner Unknown:</strong> Vendor doesn't match e-Sys — escalate to Land Ownership tray for BTO action</li>
+<li><strong>COI Issues:</strong> Vendor match check via Volume/Folio or title details</li>
+<li><strong>Dates impact:</strong> If vendor is registered proprietor before/on 31 Dec of current year — process normally. If after, may impact assessment year.</li>
+<li><strong>Estates:</strong> Check if property has transmission application; if yes and dealing type is transmission, may need Death or Estate tray action</li>
+</ul>
+
+<h3>Escalations and Manual Certificates</h3>
+<p style="font-size:13px;">Cases requiring escalation or manual certificate:</p>
+<ul style="font-size:13px;">
+<li>Vendor not acceptable for PCC</li>
+<li>Complex ownership (trusts, multiple parties, deceased estates)</li>
+<li>Liability or write-off issues</li>
+<li>PIA has open action items (Land Ownership, Assessing escalations)</li>
+<li>Property parcel or subdivision complexities</li>
+</ul>
+
+<div class="stop">CRITICAL: Never issue certificate with unresolved warnings unless explicitly documented in application notes and approved by Senior CSO. Each warning must be addressed.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Requesting Further Clarification</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Agency Clarification Request</h4>
+<p style="font-size:13px;">For applications via Landata, Dye & Durham, Infotrack:</p>
+<ul style="font-size:13px;">
+<li>Send email to relevant agency with application number and User ID</li>
+<li>Specify vendor name clarification needed or property details required</li>
+<li>Note: Agencies may have multiple hours to respond</li>
+</ul>
+
+<h4>e-Business Applicant Clarification</h4>
+<p style="font-size:13px;">For direct website submissions:</p>
+<ul style="font-size:13px;">
+<li>Contact applicant directly via phone if number available</li>
+<li>Ask to clarify vendor name and/or property details</li>
+<li>If multiple attempts unsuccessful, send email using template</li>
+<li>Place note in PIA: "Vendor Clarification requested, [date] and user ID"</li>
+<li>Place PIA in reserve for 2 weeks</li>
+<li>If no reply within 2 weeks, complete item without making requested changes</li>
+</ul>
+
+<h4>Property Clarification</h4>
+<p style="font-size:13px;">If first two property references don't match property and owner:</p>
+<ul style="font-size:13px;">
+<li>Contact applicant</li>
+<li>Request clarification of which property references correct</li>
+<li>Edit application once applicant confirms</li>
+<li>Proceed to certificate generation</li>
+</ul>
+</div>
+
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Generated certificate with warnings, unresolved issues</div>
+<div class="block"><strong>Process:</strong> Review each warning, resolve through clarification/escalation/override/manual certificate</div>
+<div class="block"><strong>Decision:</strong> Can warning be resolved? Does it require escalation? Is manual certificate needed?</div>
+<div class="block"><strong>Output:</strong> Certificate issued OR escalated to appropriate tray/manual process</div>
+</div>
+</div>
+</section>
+
+</div>
+
+<!-- SYSTEM INTERACTION -->
+
+<div class="systemsOnly">
+<section>
+<h2>System Interaction - PCC Processing Workflow</h2>
+<div class="flow">
+<div class="flow-title">Q1-Q5 Complete PCC Generation Cycle</div>
+<div class="node n-amber">PIA Received in CSO Workflow</div>
+<div class="arr"></div>
+<div class="node n-blue">Q1: Launch PIA, Extract Details</div>
+<div class="arr"></div>
+<div class="node n-amber">Property Address & Vendor Identified</div>
+<div class="arr"></div>
+<div class="node n-blue">Q2: Validate Property & Vendor</div>
+<div class="arr"></div>
+<div class="node n-amber">Match Assessment</div>
+<div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+<div><div class="node n-red" style="min-width:140px;">No Match: Contact Applicant</div></div>
+<div><div class="node n-blue" style="min-width:140px;">Match: Proceed</div></div>
+</div>
+<div class="arr"></div>
+<div class="node n-blue">Q3: Determine Pro Rata Required?</div>
+<div class="arr"></div>
+<div class="node n-amber">Pro Rata Calculation / Area Entitlement</div>
+<div class="arr"></div>
+<div class="node n-blue">Q4: Generate Certificate (B97)</div>
+<div class="arr"></div>
+<div class="node n-amber">Review Warnings & Clarifications</div>
+<div class="arr"></div>
+<div class="node n-blue">Q5: Resolve Warnings or Escalate</div>
+<div class="arr"></div>
+<div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+<div><div class="node n-gray" style="min-width:140px;">Issue Certificate</div></div>
+<div><div class="node n-red" style="min-width:140px;">Escalate/Manual</div></div>
+</div>
+<div class="arr"></div>
+<div class="node n-gray">PCC Generated & Issued</div>
+</div>
+</section>
+</div>
+
+<!-- SUMMARY -->
+
+<div class="specOnly">
+
+<section class="summary-section" id="pia">
+<h2>PIA Warning Types & Responses</h2>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Warning Type</th>
+<th>Meaning</th>
+<th>CSO Response</th>
+</tr>
+<tr>
+<td><strong>Property Warning</strong></td>
+<td>Property details on PIA don't match e-Sys or COI records</td>
+<td>Contact applicant for clarification; verify property references (plan, LID, address)</td>
+</tr>
+<tr>
+<td><strong>Vendor Warning</strong></td>
+<td>Vendor name doesn't match title or is not acceptable for PCC</td>
+<td>Contact applicant; verify vendor is current proprietor or acceptable category; update application</td>
+</tr>
+<tr>
+<td><strong>Settlement Date Warning</strong></td>
+<td>Settlement date affects liability year determination</td>
+<td>Confirm settlement date; may impact which assessment year liabilities apply to</td>
+</tr>
+<tr>
+<td><strong>Liability Warning</strong></td>
+<td>Outstanding liabilities, disputes, or recovery issues</td>
+<td>Review liability details; escalate if recovery issues or disputes exist</td>
+</tr>
+<tr>
+<td><strong>Zero Value Warning</strong></td>
+<td>No value on property or statutory body ownership</td>
+<td>If statutory body, may override. Otherwise escalate for senior CSO decision</td>
+</tr>
+<tr>
+<td><strong>Duplicate Warning</strong></td>
+<td>Multiple properties with same details in parcel</td>
+<td>Clarify which property correct; ensure certificate addresses correct property only</td>
+</tr>
+<tr>
+<td><strong>Customer Warning</strong></td>
+<td>Customer record flags or issues</td>
+<td>Review customer details; may require additional verification</td>
+</tr>
+<tr>
+<td><strong>Liability Warning (Recovery)</strong></td>
+<td>Liability ceased or write-off eligible</td>
+<td>If <$50 and uneconomical, refer for manual certificate or write-off consideration</td>
+</tr>
+</table>
+</div>
+</section>
+
+<section class="summary-section" id="prorata">
+<h2>Pro Rata Calculation Rules</h2>
+
+<h3>When Pro Rata is Required</h3>
+<p style="font-size:13px;">Property is part of subdivided land (parcel) with multiple child properties. Liabilities must be split proportionally by area or unit entitlement.</p>
+
+<h3>60/40 Rule (Parent Area Discount)</h3>
+<p style="font-size:13px;">Apply when new plan of subdivision has roads or common property:</p>
+<ul style="font-size:13px;">
+<li>Calculation factors in roads and common property</li>
+<li>When all child properties sold, land tax applies to roads/common property</li>
+<li><strong>Not all subdivisions use 60/40:</strong> Check plan design</li>
+<li><strong>Examples:</strong> Plans with clear roads/common property apply rule; isolated properties don't</li>
+</ul>
+
+<h3>Unit Entitlement (Apartments/Units)</h3>
+<p style="font-size:13px;">If property has unit entitlements (e.g., apartments in building):</p>
+<ul style="font-size:13px;">
+<li>Issue certificate on parent property with comment: "Certificate has been issued on the parent property"</li>
+<li>If child properties with unit entitlements and other child properties with square meters, issue without pro rata but add comment</li>
+</ul>
+
+<h3>Pro Rata Calculation Steps</h3>
+<ol style="font-size:13px;">
+<li>Identify parent property liabilities</li>
+<li>Calculate child's share: (Child area / Parent area) × Parent liability</li>
+<li>Check electronic plans or certificates for area information</li>
+<li>If area cannot be found, escalate to senior CSO</li>
+<li>Enter child area and parent property into pro rata calculation</li>
+<li>Click OK; system calculates split</li>
+<li>If multiple parents with different liability dates, perform separate pro rata for each</li>
+</ol>
+</section>
+
+<section class="summary-section" id="vendor">
+<h2>Vendor Validation & Acceptable Vendors</h2>
+
+<h3>Acceptable Vendors for PCC</h3>
+<ul style="font-size:13px;">
+<li>Current Registered Proprietor on title</li>
+<li>Purchaser (must have Current Registered Proprietor name on application)</li>
+<li>Mortgagee in possession (e.g., Major Bank)</li>
+<li>Power of Attorney (legally appointed)</li>
+<li>Executor of deceased estate (with probate)</li>
+<li>On-seller</li>
+<li>Company Director & Crown Legal Interests</li>
+</ul>
+
+<h3>Vendor Clarification Required</h3>
+<p style="font-size:13px;">If vendor does NOT match current proprietor or acceptable category:</p>
+<ul style="font-size:13px;">
+<li>Contact applicant (phone or email)</li>
+<li>Request clarification of vendor identity</li>
+<li>Confirm vendor is acceptable for PCC</li>
+<li>Update PIA application once clarified</li>
+<li>If applicant cannot verify, cannot issue certificate</li>
+</ul>
+
+<h3>Non-Acceptable Vendors</h3>
+<p style="font-size:13px;">If vendor is real estate agent, financial advisor, or other non-acceptable party:</p>
+<ul style="font-size:13px;">
+<li>Cannot issue certificate</li>
+<li>Redirect PIA to Cancellation Tray or Manual Certificate Tray</li>
+<li>Notify applicant of requirement</li>
+</ul>
+
+<h3>Vendor Protected by Prior Certificate</h3>
+<p style="font-size:13px;">Special circumstance: Vendor is protected from prior year tax liabilities if they purchased with prior year certificate.</p>
+<ul style="font-size:13px;">
+<li>Request copy of original certificate</li>
+<li>Confirm payment received for prior certificate liability</li>
+<li>Include prior years on new certificate (or note which years covered by prior cert)</li>
+</ul>
+</section>
+
+<section class="summary-section">
+<h2>Procedure Summary</h2>
+<ul style="font-size:13px;">
+<li><strong>Purpose:</strong> Process Property Inquiry Applications and generate Property Clearance Certificates</li>
+<li><strong>Steps:</strong> Q1 Launch → Q2 Validate → Q3 Pro Rata → Q4 Generate → Q5 Resolve Warnings</li>
+<li><strong>Key Principle:</strong> Ensure "right person/right property" — correct property and correct owner</li>
+<li><strong>Automation:</strong> Applications with no issues auto-issue in 24 hours; others require manual action</li>
+<li><strong>Warnings:</strong> Must resolve before issuance (property, vendor, liability, settlement, duplicates, etc.)</li>
+<li><strong>Pro Rata:</strong> Required for subdivided land; 60/40 rule applies when roads/common property present</li>
+<li><strong>Escalations:</strong> Complex cases, vendor issues, write-offs, ownership disputes go to appropriate tray</li>
+<li><strong>Time Standard:</strong> 6 minutes per item</li>
+</ul>
+</section>
+
+<section class="summary-section">
+<h2>Source of Authority</h2>
+<ul style="font-size:13px;">
+<li><strong>Division:</strong> Operations</li>
+<li><strong>Branch:</strong> Land Revenue</li>
+<li><strong>Created:</strong> 28 August 2019</li>
+<li><strong>Revised:</strong> 17 March 2025</li>
+<li><strong>Legislation:</strong> Land Tax Act 2005, Taxation Administration Act 1997, Privacy Act 1988</li>
+<li><strong>Fee:</strong> $18.90 (increases 1.16 units on 1 July annually)</li>
+<li><strong>Turnaround:</strong> 10 working days (24 hours if no issues)</li>
+</ul>
+</section>
+
+<section class="summary-section" id="definitions">
+<h2>Definitions & Acronyms</h2>
+<p style="font-size:13px;">
+<strong>PIA</strong> - Property Inquiry Application<br>
+<strong>PCC</strong> - Property Clearance Certificate<br>
+<strong>CSO</strong> - Customer Service Officer<br>
+<strong>WGT</strong> - Windfall Gains Tax<br>
+<strong>CIPT</strong> - Commercial and Industrial Property Tax<br>
+<strong>VRLT</strong> - Vacant Residential Land Tax<br>
+<strong>LID</strong> - Land Identification number<br>
+<strong>COI</strong> - Compliance Operational Intelligence (title search)<br>
+<strong>MPN</strong> - Municipal Property Number<br>
+<strong>UE</strong> - Unit Entitlements<br>
+<strong>BTO</strong> - Branch Technical Officer<br>
+<strong>e-Business</strong> - Online PCC application system<br>
+<strong>Right Person/Right Property:</strong> Ensure certificate reflects correct property and correct owner/entity<br>
+<strong>Parcel:</strong> Folder where multiple properties are grouped under one MPN<br>
+<strong>Pro Rata:</strong> Proportional split of liability based on area or unit entitlement<br>
+<strong>60/40 Rule:</strong> Parent Area Discount for subdivisions with roads/common property<br>
+<strong>Vendor:</strong> The owner on certificate (must be acceptable category)<br>
+<strong>Applicant:</strong> Person requesting certificate (often purchaser, mortgagee, or agent)<br>
+</p>
+</section>
+
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(e=>e.style.display='none');
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(e=>e.style.display='block');document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(e=>e.style.display='block');document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p){p.classList.toggle('open')}if(a){a.classList.toggle('open')}}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

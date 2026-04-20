@@ -1,0 +1,477 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Supplementary Valuations Administration Procedure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit;font-size:13px}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    h4{font-size:14px;color:#003a8f;margin:16px 0 8px 0}
+    ul,ol{margin-left:22px;font-size:13px;line-height:1.6}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px;font-size:13px;line-height:1.5}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .gap{background:#fef3c7;border-left:5px solid #f59e0b;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly,.specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;font-size:13px}
+    .detail-toggle-text{font-weight:700;color:#1e3a8a;flex:1}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s;margin-left:12px}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px;font-size:13px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:13px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p,.detail-panel li{font-size:13px;color:#475569;line-height:1.5;margin-bottom:6px}
+    .detail-panel ul{margin-left:18px}
+    .node{padding:14px 20px;border-radius:10px;font-size:12px;font-weight:600;text-align:center;min-width:160px;max-width:280px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:20px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .table-responsive{overflow-x:auto;margin:12px 0}
+    table{width:100%;border-collapse:collapse;font-size:12px;margin:12px 0}
+    table th,table td{padding:9px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600;color:#1f2937}
+    .highlight{background:#fffbeb;border-left:5px solid #f59e0b;padding:12px;margin:12px 0;font-size:13px}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Supplementary Valuations - Administration Procedure</h1>
+  <p>Division: Operations &bull; Branch: Land Revenue &bull; Revised: 21 July 2023</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#overview">Overview</a>
+    <a href="#q1">Q1 Confirmation Email</a>
+    <a href="#q2">Q2 Store Files</a>
+    <a href="#q3">Q3 Register & Track</a>
+    <a href="#q4">Q4 Report Status</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#tables" onclick="showView('spec');setTimeout(()=>location.hash='tables',100);">Register Tables</a>
+    <a href="#gaps" onclick="showView('spec');setTimeout(()=>location.hash='gaps',100);">Critical Gaps</a>
+    <a href="#defs" onclick="showView('spec');setTimeout(()=>location.hash='defs',100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary</button>
+    </div>
+
+<div id="questionFlow">
+
+<!-- OVERVIEW -->
+
+<section id="overview">
+<h2>Supplementary Valuations - Administration Overview</h2>
+<div class="staff">
+<h3>Purpose</h3>
+<p style="font-size:13px;">Record, store, register, and report on supplementary valuations (supps) data received from the Valuer General Victoria (VGV).</p>
+
+<h3>What Are Supplementary Valuations?</h3>
+<ul style="font-size:13px;">
+<li>Changes to land: Subdivision, buildings erected, etc.</li>
+<li>Corrections: Incorrect area, AVPCC, other errors</li>
+<li>Submitted by Valuation Authorities between general revaluations</li>
+<li>Certified by VGV before delivery to SRO</li>
+</ul>
+
+<h3>Two Email Types</h3>
+<ol style="font-size:13px;">
+<li><strong>'Confirmation of Receipt':</strong> VGV notifies batch received for certification (file for reference)</li>
+<li><strong>'Supplementary Valuations Certified/Processed':</strong> VGV delivers certified data (process and store)</li>
+</ol>
+
+<div class="ref"><strong>Authority:</strong> Division: Operations | Branch: Land Revenue | Revised: 21 July 2023</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Two types of VGV emails with certified supp data</div>
+<div class="block"><strong>Process:</strong> Q1-Q4 workflow: receipt → storage → registration → reporting</div>
+<div class="block"><strong>Decision:</strong> Correct folder? Data captured? Match rates acceptable?</div>
+<div class="block"><strong>Output:</strong> Files accessible for formatting/testing, progress reported</div>
+</div>
+</div>
+</section>
+
+<!-- Q1 -->
+
+<section id="q1">
+<h2>Q1 - Handle Confirmation of Receipt Emails</h2>
+<div class="staff">
+<h3>Process</h3>
+<ol style="font-size:13px;">
+<li>Navigate to Valuations inbox in Outlook</li>
+<li>Locate email titled 'Confirmation of Receipt'</li>
+<li>File email into appropriate folder</li>
+<li>Email retained for reference (batch in VGV certification queue)</li>
+<li>No further action until Certified/Processed email arrives</li>
+</ol>
+
+<h3>Purpose</h3>
+<p style="font-size:13px;">Confirmation emails track which batches are awaiting VGV certification. Retained for audit trail and to follow up if batches go missing.</p>
+
+<div class="highlight"><strong>Key Point:</strong> Confirmation of Receipt = FILE FOR REFERENCE ONLY. Actual work begins with Certified/Processed email.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: VGV Communication Timeline</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Step 1: Council Submits to VGV</h4>
+<p style="font-size:13px;">Valuation Authority submits supplementary valuations for certification</p>
+
+<h4>Step 2: VGV Sends Confirmation of Receipt</h4>
+<p style="font-size:13px;">Email notifies SRO batch received. File for reference.</p>
+
+<h4>Step 3: VGV Processes and Certifies</h4>
+<p style="font-size:13px;">VGV reviews and certifies the data</p>
+
+<h4>Step 4: VGV Sends Certified/Processed Email</h4>
+<p style="font-size:13px;">Email with certified data files. Process and store (Q2-Q4).</p>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> VGV 'Confirmation of Receipt' email</div>
+<div class="block"><strong>Process:</strong> File email in designated folder for reference</div>
+<div class="block"><strong>Decision:</strong> Email filed? Awaiting Certified/Processed email?</div>
+<div class="block"><strong>Output:</strong> Confirmation stored, batch tracked</div>
+</div>
+</div>
+</section>
+
+<!-- Q2 -->
+
+<section id="q2">
+<h2>Q2 - Store Supplementary Valuations Files</h2>
+<div class="staff">
+<h3>Email Subject Format</h3>
+<p style="font-size:13px;">[Email Type] – [Municipality] – [VGV Reference]</p>
+<p style="font-size:13px;"><strong>Example:</strong> Supplementary Valuations Certified – Alpine – AL25.SP.01</p>
+
+<h3>VGV Reference Format</h3>
+<p style="font-size:13px;">AL25.SP.01 = AL (Alpine) + 25 (2025 level) + SP (Supplementary) + .01 (sequence)</p>
+
+<h3>File Storage - TWO PATHS Based on Timeframe</h3>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">IF WITHIN TIMEFRAME:</h4>
+<ol style="font-size:13px;">
+<li>Open VGV 'Supplementary Valuations Certified/Processed' email</li>
+<li>Highlight all files (Excel and Word)</li>
+<li>Right-click → Save all data</li>
+<li>Locate council folder on OneDrive</li>
+<li>Create new folder, rename to "yyyy-mm-dd"</li>
+<li>Paste data into folder</li>
+<li>Move email from 'Registered' to 'Supplementary Valuations Data' folder</li>
+</ol>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">IF OUTSIDE TIMEFRAME:</h4>
+<ol style="font-size:13px;">
+<li>Highlight all files in email</li>
+<li>Right-click → Save all data</li>
+<li>Locate council folder on OneDrive</li>
+<li>Go to 'Unable to apply' subfolder</li>
+<li>Create new folder within 'Unable to apply', rename to "yyyy-mm-dd"</li>
+<li>Paste data into folder</li>
+<li>Move email to 'return date after 31/12/xxxx' folder in Outlook</li>
+</ol>
+
+<div class="stop">CRITICAL: File path depends on timeframe. Wrong path = data not accessible. Define "timeframe" with management.</div>
+
+<div class="gap"><strong>⚠️ GAP:</strong> Procedure doesn't define what "timeframe" means. Calendar year? Financial year? Get clarification from management before using this procedure.</div>
+
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> VGV 'Certified/Processed' email with file attachments</div>
+<div class="block"><strong>Process:</strong> Extract files, create dated folder on OneDrive (path depends on timeframe)</div>
+<div class="block"><strong>Decision:</strong> Within or outside timeframe? Correct council folder?</div>
+<div class="block"><strong>Output:</strong> Files stored on OneDrive, organized by date</div>
+</div>
+</div>
+</section>
+
+<!-- Q3 -->
+
+<section id="q3">
+<h2>Q3 - Register and Track Supplementary Valuations</h2>
+<div class="staff">
+<h3>Two Register Tables</h3>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Table 1: Receipt/Certification Register</h4>
+<p style="font-size:13px;">Complete when VGV email received:</p>
+<ul style="font-size:13px;">
+<li>Type (C/M): Country or Metro</li>
+<li>Council: Municipality name</li>
+<li>Return Date: From Excel certified tab</li>
+<li>VGV Reference: From email subject</li>
+<li>Date Email Received: VGV email arrival date</li>
+<li>Number Props Certified: From VGV summary</li>
+<li>Props Not Subject to Cert: From VGV summary</li>
+<li>Returned to Council: From VGV summary</li>
+</ul>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Table 2: Versions Register</h4>
+<p style="font-size:13px;">Complete as file progresses through formatting/testing/QA/production:</p>
+<ul style="font-size:13px;">
+<li>Version Number: Batch version ID</li>
+<li>VGV References: All refs in batch</li>
+<li>Date Formatted/Tested: Completion date</li>
+<li>Allocated for QA: Officer assigned</li>
+<li>Date Quality Checked: QA completion</li>
+<li>Date Signed Off: Approval date</li>
+<li>Date Loaded to Production: Load completion</li>
+<li><strong>Test Match Rate %:</strong> (1 - test mismatches/properties)</li>
+<li><strong>Actual Match Rate %:</strong> (1 - actual mismatches/properties) ✓ Must be ≥85%</li>
+</ul>
+
+<h3>Match Rate Requirement</h3>
+<p style="font-size:13px;"><strong>Test Match Rate:</strong> Keep > 85% (smaller supp files can vary)</p>
+<p style="font-size:13px;"><strong>Actual Match Rate:</strong> Must be ≥ 85% (CRITICAL - e-Sys typically higher than test)</p>
+
+<div class="ref"><strong>Register Location:</strong> OneDrive > State Revenue Office > LGAT - Supps Formatting > [Current Year]</div>
+
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> VGV certified data, formatting/testing/QA completion dates</div>
+<div class="block"><strong>Process:</strong> Update Receipt table, track through Versions table as file progresses</div>
+<div class="block"><strong>Decision:</strong> All data captured? Match rates acceptable?</div>
+<div class="block"><strong>Output:</strong> Progress tracked, files registered</div>
+</div>
+</div>
+</section>
+
+<!-- Q4 -->
+
+<section id="q4">
+<h2>Q4 - Report Supplementary Valuations Progress</h2>
+<div class="staff">
+<h3>End of Month Report Content</h3>
+<ol style="font-size:13px;">
+<li><strong>Total Files Received and Loaded:</strong> Count entries in modified tab (received), count with load date (loaded)</li>
+<li><strong>Receipt from Each Council:</strong> Check pivot tables tab, escalate to VGV if council missing by January</li>
+<li><strong>Version 1 Batches Outstanding:</strong> Calculate in Batch 1 table in Supps Schedule tab</li>
+<li><strong>Current Test Match Rate:</strong> Average Test Match Rate in cell N2 (modified tab)</li>
+<li><strong>Actual Match Rate:</strong> Actual Match Rate in cell R2 (modified tab) - MUST be ≥85%</li>
+</ol>
+
+<h3>Report Recipients</h3>
+<ul style="font-size:13px;">
+<li>LGA Team Leader</li>
+<li>LRB Branch Manager</li>
+<li>Timing: End of each calendar month</li>
+</ul>
+
+<h3>Data Sources in Register</h3>
+<ul style="font-size:13px;">
+<li>'Modified' Tab: Test and actual match rates (cells N2, R2)</li>
+<li>'Supps Schedule' Tab: Batch 1 table (v1 batches outstanding)</li>
+<li>'Pivot Tables' Tab: Council receipt tracking</li>
+<li>'Graphs' Tab: Supplementary data loaded graph</li>
+</ul>
+
+<div class="highlight"><strong>Automated Data Flow:</strong> Supp files loaded daily automatically entered into register, data flows to graphs tab automatically.</div>
+
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Supps register data (all tabs)</div>
+<div class="block"><strong>Process:</strong> Extract metrics, compile summary, identify missing councils</div>
+<div class="block"><strong>Decision:</strong> Data current? Match rates acceptable? All councils covered?</div>
+<div class="block"><strong>Output:</strong> End of month report to leadership</div>
+</div>
+</div>
+</section>
+
+</div>
+
+<!-- SYSTEM INTERACTION -->
+
+<div class="systemsOnly">
+<section>
+<h2>System Interaction - Supplementary Valuations Workflow</h2>
+<div class="flow">
+<div class="flow-title">Q1-Q4 Complete Cycle</div>
+<div class="node n-amber">Council Submits Supps to VGV</div>
+<div class="arr"></div>
+<div class="node n-blue">Q1: VGV Sends Confirmation of Receipt</div>
+<div class="arr"></div>
+<div class="node n-gray">File Email for Reference</div>
+<div class="arr"></div>
+<div class="node n-blue">VGV Processes and Certifies</div>
+<div class="arr"></div>
+<div class="node n-blue">Q2: VGV Sends Certified/Processed Email</div>
+<div class="arr"></div>
+<div class="node n-blue">Extract Files, Create Dated Folder (OneDrive)</div>
+<div class="arr"></div>
+<div class="node n-amber">Store to OneDrive (Within vs Outside Timeframe Path)</div>
+<div class="arr"></div>
+<div class="node n-blue">Q3: Register in Receipt Table</div>
+<div class="arr"></div>
+<div class="node n-amber">Format, Test, QA, Sign Off</div>
+<div class="arr"></div>
+<div class="node n-blue">Update Versions Table (All stages)</div>
+<div class="arr"></div>
+<div class="node n-blue">Q4: Extract Data for Monthly Report</div>
+<div class="arr"></div>
+<div class="node n-gray">Report to Leadership: Files Loaded, Match Rates, Council Coverage</div>
+</div>
+</section>
+</div>
+
+<!-- SUMMARY -->
+
+<div class="specOnly">
+
+<section class="summary-section" id="tables">
+<h2>Register Tables Reference</h2>
+<h3>Receipt/Certification Register Columns</h3>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Column</th>
+<th>Example</th>
+</tr>
+<tr><td>Type (C/M)</td><td>C = Country</td></tr>
+<tr><td>Council</td><td>Alpine</td></tr>
+<tr><td>Return Date</td><td>20/05/2025</td></tr>
+<tr><td>VGV Reference</td><td>AL25.SP.01</td></tr>
+<tr><td>Date Email Received</td><td>02/07/2025</td></tr>
+<tr><td>Number Props Certified</td><td>21</td></tr>
+<tr><td>Props Not Subject to Cert</td><td>2</td></tr>
+<tr><td>Returned to Council</td><td>0</td></tr>
+</table>
+</div>
+
+<h3>Versions Register Key Columns</h3>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Column</th>
+<th>Purpose</th>
+</tr>
+<tr><td>Version Number</td><td>Batch version ID</td></tr>
+<tr><td>VGV References</td><td>All VGV refs in batch</td></tr>
+<tr><td>Date Formatted/Tested</td><td>Completion date</td></tr>
+<tr><td>Date Quality Checked</td><td>QA completion</td></tr>
+<tr><td>Date Signed Off</td><td>Approval date</td></tr>
+<tr><td>Date Loaded to Production</td><td>Load completion</td></tr>
+<tr><td>Test Match Rate %</td><td>Must be >85%</td></tr>
+<tr><td>Actual Match Rate %</td><td>Must be ≥85%</td></tr>
+</table>
+</div>
+</section>
+
+<section class="summary-section" id="gaps">
+<h2>Critical Gaps Identified - 7 Issues</h2>
+
+<div class="gap"><strong>🔴 GAP 1 (HIGH):</strong> "Timeframe" UNDEFINED - Procedure says store "within timeframe" vs "outside timeframe" but never defines it. Calendar year? Financial year? Assessment cycle? Staff may route files to wrong folder.</div>
+
+<div class="gap"><strong>🔴 GAP 2 (HIGH):</strong> AUTOMATION FAILURE HANDLING MISSING - Procedure mentions "automation processed with error" but no fallback procedure documented. No error resolution. No escalation.</div>
+
+<div class="gap"><strong>🟡 GAP 3 (MEDIUM):</strong> MATCH RATE RELATIONSHIP UNEXPLAINED - Actual match rate usually higher than test match rate, but why? E-Sys "more up to date" than test DB but relationship not clear. Staff confused during QA.</div>
+
+<div class="gap"><strong>🟡 GAP 4 (MEDIUM):</strong> COUNCIL FOLLOW-UP VAGUE - "By January if no files from council, follow up with VGV" but who? How? When? No documentation template or escalation process.</div>
+
+<div class="gap"><strong>🟡 GAP 5 (MEDIUM):</strong> WEBMAIL FALLBACK NOT EXPLAINED - Check Webmail if files missing from desktop Outlook, but when? Why? No sync process documented.</div>
+
+<div class="gap"><strong>🟠 GAP 6 (LOW):</strong> NRNL NOT DEFINED - "Total Props Loaded (NRNLs removed)" but acronym not explained. Non-Rateable Non-Leviable? Why removed? New staff confused.</div>
+
+<div class="gap"><strong>🟠 GAP 7 (LOW):</strong> ONEDRIVE AUTOMATION INCOMPLETE - How does automation work? What triggers it? Error conditions? Recovery steps? Not documented.</div>
+</section>
+
+<section class="summary-section">
+<h2>Procedure Summary</h2>
+<ul style="font-size:13px;">
+<li><strong>Q1:</strong> File Confirmation of Receipt emails for reference (batch in VGV queue)</li>
+<li><strong>Q2:</strong> Extract Certified/Processed data, store to OneDrive with date folder (path depends on timeframe)</li>
+<li><strong>Q3:</strong> Register in Receipt table, track through Versions table, maintain match rates >85% test, ≥85% actual</li>
+<li><strong>Q4:</strong> Report monthly: files loaded, council coverage, match rates to leadership</li>
+<li><strong>Critical Threshold:</strong> Actual match rate MUST be ≥85%</li>
+<li><strong>Register Location:</strong> OneDrive > State Revenue Office > LGAT - Supps Formatting</li>
+<li><strong>Related:</strong> Formatting, Testing, Notes & Anecdotes procedures</li>
+</ul>
+</section>
+
+<section class="summary-section">
+<h2>Source of Authority</h2>
+<ul style="font-size:13px;">
+<li><strong>Division:</strong> Operations</li>
+<li><strong>Branch:</strong> Land Revenue</li>
+<li><strong>Created:</strong> 5 April 2022</li>
+<li><strong>Revised:</strong> 21 July 2023</li>
+</ul>
+</section>
+
+<section class="summary-section" id="defs">
+<h2>Definitions & Acronyms</h2>
+<p style="font-size:13px;">
+<strong>SRO</strong> - State Revenue Office<br>
+<strong>VGV</strong> - Valuer General's Office of Victoria<br>
+<strong>Supps</strong> - Supplementary Valuations<br>
+<strong>NRNL</strong> - Non-Rateable Non-Leviable (not assessed)<br>
+<strong>AVPCC</strong> - Apparent Value Per Component of Construction<br>
+<strong>BTO</strong> - Branch Technical Officer<br>
+<strong>TL</strong> - Team Leader<br>
+<strong>Test Match Rate</strong> - Percentage match during testing phase (>85%)<br>
+<strong>Actual Match Rate</strong> - Percentage match after production load (≥85%)<br>
+<strong>Mismatch A/I</strong> - Action Item when property doesn't match expected data
+</p>
+</section>
+
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(e=>e.style.display='none');
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(e=>e.style.display='block');document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(e=>e.style.display='block');document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p){p.classList.toggle('open')}if(a){a.classList.toggle('open')}}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

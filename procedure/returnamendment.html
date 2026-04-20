@@ -1,0 +1,647 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Returned Unclaimed Amendments Procedure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    ul,ol{margin-left:22px;font-size:13px;line-height:1.6}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px;font-size:13px}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly{display:none}
+    .specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px}
+    .detail-toggle-text{font-size:13px;font-weight:700;color:#1e3a8a}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:14px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p{font-size:13px;color:#475569;line-height:1.6;margin-bottom:8px}
+    .detail-panel ul{font-size:13px;color:#475569;line-height:1.6;margin-left:18px;margin-bottom:8px}
+    .detail-panel li{margin-bottom:4px}
+    .node{padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;min-width:180px;max-width:300px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:24px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .table-responsive{overflow-x:auto;margin:12px 0}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+    table th,table td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600}
+    .decision-table{font-size:12px}
+    .decision-table th{background:#003a8f;color:white}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Returned Unclaimed Amendments Procedure</h1>
+  <p>Division: Land Revenue Services &bull; Branch: Land Information Management &bull; Created: April 2024</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#overview">Overview</a>
+    <a href="#q1">Q1 Check Investigation</a>
+    <a href="#q2">Q2 Identify RTU Type</a>
+    <a href="#q3">Q3 Research Address</a>
+    <a href="#q4">Q4 Update Records</a>
+    <a href="#q5">Q5 Complete</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#decision-tables" onclick="showView('spec');setTimeout(()=>location.hash='decision-tables',100);">Decision Tables</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(()=>location.hash='definitions',100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary and Review</button>
+    </div>
+
+<div id="questionFlow">
+
+<!-- OVERVIEW -->
+
+<section id="overview">
+<h2>Returned Unclaimed Amendments Procedure Overview</h2>
+<div class="staff">
+<h3>Purpose</h3>
+<p style="font-size:13px;">Identify and process returned unclaimed (RTU) Land Tax assessments and correspondence by locating current addresses, updating e-Sys records, and reissuing assessments or correspondence as needed.</p>
+
+<h3>Time Standard</h3>
+<p style="font-size:13px;font-weight:600;">15 minutes per RTU item</p>
+
+<h3>Key Steps</h3>
+<ul style="font-size:13px;">
+<li>Cross-reference resources to locate current address and identify PPR exemption</li>
+<li>Update information in e-Sys database</li>
+<li>Check correctness of land tax liabilities and assessments</li>
+<li>Cancel, amend, or recalculate liabilities as needed</li>
+<li>Issue correspondence if necessary</li>
+</ul>
+
+<h3>RTU Action Items Created For</h3>
+<ul style="font-size:13px;">
+<li>Land Tax Assessment Notices</li>
+<li>Land Tax Instalment Notices</li>
+<li>Correspondence from SRO staff to customers</li>
+<li>Debt Management Services (DMS) letters</li>
+<li>Auto-generated letters from the Commissioner</li>
+</ul>
+
+<div class="ref"><strong>Authority:</strong> Land Tax Act 2005 | <strong>Branch:</strong> Land Information Management | <strong>Source:</strong> April 2024</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> RTU action item (scanned mail returned unclaimed) from Business Support Team</div>
+<div class="block"><strong>Process:</strong> Research customer/property, locate current address, update e-Sys, issue/cancel assessments</div>
+<div class="block"><strong>Decision:</strong> Which scenario applies (Individual/Joint, Company/Trust, PPR, DMS, Unable to Locate, Cancel)?</div>
+<div class="block"><strong>Output:</strong> RTU action item complete with updated records and reissued correspondence</div>
+</div>
+</div>
+</section>
+
+<!-- Q1 CHECK INVESTIGATION -->
+
+<section id="q1">
+<h2>Q1 - Is Customer Under Investigation?</h2>
+<div class="staff">
+<h3>Investigation Check</h3>
+<p style="font-size:13px;"><strong>CRITICAL:</strong> Before proceeding, check if customer is under investigation by checking e-Sys for non-issue "Under Investigation".</p>
+<p style="font-size:13px;"><strong>If Under Investigation:</strong> DO NOT process RTU amendment. Escalate to Investigation Branch.</p>
+
+<h3>Non-Issue Indicators</h3>
+<ul style="font-size:13px;">
+<li>Red exclamation mark (!) next to customer number</li>
+<li>Non-issue type: "Under Investigation"</li>
+<li>Investigation number (prefixed IC)</li>
+</ul>
+
+<div class="stop">Do NOT update records or reissue assessments for customers under investigation. Escalate immediately.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Escalation Process for Investigation Customers</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Investigation Escalation</h4>
+<ol style="font-size:13px;">
+<li>Identify investigation number (IC prefix)</li>
+<li>Document investigation number in RTU action item notes</li>
+<li>Reassign RTU action item to Investigations Branch</li>
+<li>Close action item with note: "Under investigation - refer to Investigations"</li>
+</ol>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> RTU action item with customer details</div>
+<div class="block"><strong>Process:</strong> Check e-Sys non-issue indicators for investigation status</div>
+<div class="block"><strong>Decision:</strong> Is customer under investigation?</div>
+<div class="block"><strong>Output:</strong> If YES - escalate to Investigations; If NO - proceed to Q2</div>
+</div>
+</div>
+</section>
+
+<!-- Q2 IDENTIFY RTU TYPE -->
+
+<section id="q2">
+<h2>Q2 - What Type of RTU Scenario Applies?</h2>
+<div class="staff">
+<h3>Seven RTU Scenarios</h3>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Scenario</th>
+<th>Customer Type</th>
+<th>Primary Action</th>
+</tr>
+<tr>
+<td><strong>Individual/Joint Ownership</strong></td>
+<td>Individual or joint customer</td>
+<td>Locate current address, update e-Sys, reissue</td>
+</tr>
+<tr>
+<td><strong>Company/Trust</strong></td>
+<td>Company or trust registered as owner</td>
+<td>Verify ABN/ACN, locate address, update e-Sys</td>
+</tr>
+<tr>
+<td><strong>PPR Exemption</strong></td>
+<td>Customer claiming PPR exemption</td>
+<td>Verify PPR claims, check prior liabilities</td>
+</tr>
+<tr>
+<td><strong>Debt Management (DMS)</strong></td>
+<td>Customer in debt recovery</td>
+<td>Verify receipt, update address, coordinate with DMS</td>
+</tr>
+<tr>
+<td><strong>Unable to Locate Address</strong></td>
+<td>No alternative address found</td>
+<td>Continue research via multiple sources</td>
+</tr>
+<tr>
+<td><strong>Cancel Assessment</strong></td>
+<td>Assessment never received by customer</td>
+<td>Determine if cancellation appropriate, cancel if needed</td>
+</tr>
+<tr>
+<td><strong>Managing Agent</strong></td>
+<td>Property has active managing agent</td>
+<td>Locate agent, redirect assessment to agent</td>
+</tr>
+</table>
+</div>
+
+<h3>How to Determine Scenario</h3>
+<ol style="font-size:13px;">
+<li>Review RTU action item details (customer type, property, assessment type)</li>
+<li>Check e-Sys for special flags (PPR, Debt Recovery, Managing Agent)</li>
+<li>Review correspondence type (assessment, instalment, DMS letter)</li>
+<li>Select appropriate scenario from decision tables below (Q3)</li>
+</ol>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Scenario Selection Decision Tree</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Decision Tree for Scenario Selection</h4>
+<p style="font-size:13px;background:#f0fdf4;padding:12px;border-radius:6px;margin:8px 0;">
+<strong>START: Check Customer Type</strong><br>
+↓<br>
+Individual/Joint Ownership? → YES → Individual/Joint Scenario<br>
+↓ NO<br>
+Company/Trust? → YES → Company/Trust Scenario<br>
+↓ NO<br>
+Check Customer Flags:<br>
+- PPR exemption indicated? → PPR Scenario<br>
+- Debt Management flag? → DMS Scenario<br>
+- Managing agent on property? → Managing Agent Scenario<br>
+↓<br>
+Check if Address Located:<br>
+- Alternative address found? → Process using relevant scenario<br>
+- No address found? → Unable to Locate Address Scenario<br>
+↓<br>
+Check Assessment Status:<br>
+- Assessment never received? → Cancel Assessment Scenario<br>
+- Can be reissued? → Process using relevant scenario
+</p>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> RTU action item details (customer type, property, assessment)</div>
+<div class="block"><strong>Process:</strong> Review customer type and flags, classify into scenario</div>
+<div class="block"><strong>Decision:</strong> Which of 7 scenarios applies?</div>
+<div class="block"><strong>Output:</strong> Scenario identified, proceed to Q3 with decision table</div>
+</div>
+</div>
+</section>
+
+<!-- Q3 RESEARCH ADDRESS -->
+
+<section id="q3">
+<h2>Q3 - What Address and Data Research Should Be Conducted?</h2>
+<div class="staff">
+<h3>Seven Decision Tables by Scenario</h3>
+<p style="font-size:13px;">Use the decision table matching your RTU scenario identified in Q2. Each table provides: Consideration → Research → Tools → Answer → Outcome</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:16px;">Table 1: Individual/Joint Ownership</h4>
+<div class="table-responsive">
+<table class="decision-table">
+<tr><th>Consideration</th><th>Research</th><th>Tools</th><th>Outcome</th></tr>
+<tr>
+<td>Is customer MLT registrant? Locate current address</td>
+<td>Check My Land Tax registration, Muni Returns for current council data</td>
+<td>Muni Returns, Live DLS, Landata, RTBA, COI</td>
+<td>Assessment issued by post, update address in e-Sys, reissue</td>
+</tr>
+</table>
+</div>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:16px;">Table 2: Company/Trust</h4>
+<div class="table-responsive">
+<table class="decision-table">
+<tr><th>Consideration</th><th>Research</th><th>Tools</th><th>Outcome</th></tr>
+<tr>
+<td>Verify ABN/ACN listed against e-Sys customer</td>
+<td>Verify company registration with ASIC, check if registered address matches current</td>
+<td>ASIC, Muni Returns, ASIC Connect, COI Australian Business</td>
+<td>Assessment issued, company/trust address updated, reissue assessment</td>
+</tr>
+</table>
+</div>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:16px;">Table 3: PPR Exemption</h4>
+<div class="table-responsive">
+<table class="decision-table">
+<tr><th>Consideration</th><th>Research</th><th>Tools</th><th>Outcome</th></tr>
+<tr>
+<td>Have previous liabilities been paid? Has customer changed address from PPR property?</td>
+<td>Check for outstanding liability years, check DLS for address history</td>
+<td>e-Sys, Landata, Live DLS, RTBA, Muni Returns</td>
+<td>Update DLS data, apply/amend PPR, recalculate liability, reissue assessment</td>
+</tr>
+</table>
+</div>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:16px;">Table 4: Debt Management (DMS)</h4>
+<div class="table-responsive">
+<table class="decision-table">
+<tr><th>Consideration</th><th>Research</th><th>Tools</th><th>Outcome</th></tr>
+<tr>
+<td>Is customer MLT registrant? Have prior liabilities been assessed? Does customer have alternative address?</td>
+<td>Determine if customer received assessment, confirm current address</td>
+<td>e-Sys, DLS, Muni Returns, ASIC, COI title</td>
+<td>Alternative address located, update in e-Sys, notify DMS, potentially resolve recovery</td>
+</tr>
+</table>
+</div>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:16px;">Table 5: Unable to Locate Alternative Address</h4>
+<div class="table-responsive">
+<table class="decision-table">
+<tr><th>Consideration</th><th>Research</th><th>Tools</th><th>Outcome</th></tr>
+<tr>
+<td>Has customer lodged Gen Form 03 or recent NOA? Check DLS for updated address history</td>
+<td>Confirm DLS address updates, check Landata, search Section 105 records</td>
+<td>Live DLS, COI, Landata, Muni Returns, S105</td>
+<td>If no alternative address located, place NII on customer account; consult Senior Officer</td>
+</tr>
+</table>
+</div>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:16px;">Table 6: Cancel Assessment</h4>
+<div class="table-responsive">
+<table class="decision-table">
+<tr><th>Consideration</th><th>Research</th><th>Tools</th><th>Outcome</th></tr>
+<tr>
+<td>Did customer receive assessment? Have any payments been made? Check correspondence type</td>
+<td>Determine if customer never received assessment, confirm via DLS/DMS records</td>
+<td>Live DLS, COI DLS, e-Sys, ASIC, CM9</td>
+<td>Assessment NOT Received: Cancel assessment, place NII, consider waiving penalties</td>
+</tr>
+</table>
+</div>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:16px;">Table 7: Managing Agent</h4>
+<div class="table-responsive">
+<table class="decision-table">
+<tr><th>Consideration</th><th>Research</th><th>Tools</th><th>Outcome</th></tr>
+<tr>
+<td>Is there active bond on property? Locate managing agent contact details</td>
+<td>Confirm via RTBA/ATO records, search real estate databases for agent contact</td>
+<td>COI-RTBA, Google Real Estate, Real Estate Agent Directories</td>
+<td>Contact agent to confirm active status, redirect assessment to agent, update e-Sys</td>
+</tr>
+</table>
+</div>
+
+<div class="stop">Use decision tables to guide research. Complete all considerations for your scenario before proceeding to Q4.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Research Tools Explained & Search Sequence</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Primary Research Tools</h4>
+<ul style="font-size:13px;">
+<li><strong>e-Sys:</strong> Check customer records, property ownership, liability status</li>
+<li><strong>My Land Tax (MLT):</strong> Check if customer registered for online portal</li>
+<li><strong>Muni Returns:</strong> Municipal valuation data for address verification</li>
+<li><strong>Live DLS:</strong> Current Driver License address (requires privacy check)</li>
+<li><strong>Landata:</strong> Land title information from Titles Office</li>
+<li><strong>COI (Compliance Operational Intelligence):</strong> Customer/property/title data warehouse</li>
+<li><strong>ASIC:</strong> Company/trust registration verification</li>
+<li><strong>RTBA:</strong> Real estate bond information and agent registration</li>
+</ul>
+
+<h4>Recommended Search Sequence</h4>
+<ol style="font-size:13px;">
+<li>e-Sys for current customer/property records</li>
+<li>Muni Returns for council valuation address</li>
+<li>Landata for title reference verification</li>
+<li>COI for consolidated customer data</li>
+<li>Live DLS if customer consent confirmed</li>
+<li>If company/trust: ASIC verification</li>
+</ol>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> RTU scenario identified in Q2</div>
+<div class="block"><strong>Process:</strong> Use decision table to research customer/address/property details</div>
+<div class="block"><strong>Decision:</strong> What address/data research is needed? Which tools to use?</div>
+<div class="block"><strong>Output:</strong> Research complete, address located or alternative approach determined</div>
+</div>
+</div>
+</section>
+
+<!-- Q4 UPDATE RECORDS -->
+
+<section id="q4">
+<h2>Q4 - What e-Sys Records Should Be Updated?</h2>
+<div class="staff">
+<h3>Update Actions by Scenario Outcome</h3>
+<p style="font-size:13px;">Based on decision table outcome from Q3, perform following updates in e-Sys:</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Standard Updates (All Scenarios)</h4>
+<ul style="font-size:13px;">
+<li>Update customer mailing address to current/alternative address</li>
+<li>Update any corrections to property address or references</li>
+<li>Remove or add No Postal Address NII if appropriate</li>
+<li>Document RTU action in customer notes with date and resolution</li>
+</ul>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Scenario-Specific Updates</h4>
+<ul style="font-size:13px;">
+<li><strong>PPR:</strong> Apply/amend PPR exemption, recalculate liability</li>
+<li><strong>DMS:</strong> Update address, notify Debt Management Services, may resolve recovery</li>
+<li><strong>Managing Agent:</strong> Add managing agent to property records, redirect correspondence</li>
+<li><strong>Cancel Assessment:</strong> Cancel assessment, add NII "Assessment Not Received", consider penalty waiver</li>
+<li><strong>Penalty Created:</strong> DO NOT cancel yourself; escalate to Senior Officer</li>
+</ul>
+
+<h3>Reissuing Assessments/Correspondence</h3>
+<ol style="font-size:13px;">
+<li>After updating e-Sys, determine if assessment/correspondence should be reissued</li>
+<li>If assessment prior to current year: Create "ASSESSMENT – LATE ISSUE OF" letter</li>
+<li>Generate new assessment or copy correspondence letter</li>
+<li>Issue to updated address (postal or new mailing address)</li>
+<li>Document reissuance in action item notes</li>
+</ol>
+
+<div class="stop">If penalty item created by amendments, DO NOT cancel. Escalate to Senior Officer immediately for penalty tax review.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Penalty Handling, NII Management & Late Assessment Letters</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Penalty Tax Items</h4>
+<p style="font-size:13px;">If your updates create a penalty tax item (shown in Penalties node), you cannot cancel it yourself.</p>
+<ol style="font-size:13px;">
+<li>Document item in action item notes</li>
+<li>Escalate to Senior Officer for penalty tax review/cancellation</li>
+<li>Do NOT proceed with assessment reissuance until penalty resolved</li>
+</ol>
+
+<h4>Non-Issue Indicator (NII) Management</h4>
+<ul style="font-size:13px;">
+<li><strong>No Postal Address:</strong> Add NII if address cannot be located after exhaustive search</li>
+<li><strong>Assessment Not Received:</strong> Add NII if assessment cancelled due to non-receipt</li>
+<li><strong>Cease/Remove:</strong> Remove NII when alternative address located and updated</li>
+</ul>
+
+<h4>Late Assessment Letter</h4>
+<p style="font-size:13px;">If assessment is prior to current year and being reissued:</p>
+<ol style="font-size:13px;">
+<li>Create letter: "ASSESSMENT – LATE ISSUE OF [YEAR]"</li>
+<li>Explain why assessment is being reissued (RTU resolved)</li>
+<li>Include current payment arrangements and due dates</li>
+<li>Send with reissued assessment</li>
+</ol>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Research outcome from Q3, decision table result</div>
+<div class="block"><strong>Process:</strong> Update e-Sys records (address, PPR, NII, etc.)</div>
+<div class="block"><strong>Decision:</strong> Which records to update? Generate late letter?</div>
+<div class="block"><strong>Output:</strong> e-Sys updated, assessments/correspondence generated for reissuance</div>
+</div>
+</div>
+</section>
+
+<!-- Q5 COMPLETE TASK -->
+
+<section id="q5">
+<h2>Q5 - How Should the RTU Action Item Be Completed?</h2>
+<div class="staff">
+<h3>Action Item Completion Steps</h3>
+<ol style="font-size:13px;">
+<li>Ensure all e-Sys updates complete (address, property refs, PPR, etc.)</li>
+<li>Generate new assessment/correspondence letter (if required)</li>
+<li>Verify new mailing address in e-Sys</li>
+<li>Document outcome in RTU action item notes</li>
+<li>Mark action item as complete</li>
+<li>File reissued correspondence in scan system</li>
+</ol>
+
+<h3>Completion Documentation</h3>
+<p style="font-size:13px;"><strong>In RTU action item notes, document:</strong></p>
+<ul style="font-size:13px;">
+<li>Research conducted and tools used (e.g., "Verified via Muni Returns and COI")</li>
+<li>Alternative address located: [Address]</li>
+<li>e-Sys updates applied (address, PPR, NII removal, etc.)</li>
+<li>If assessment cancelled: reason why (e.g., "Never received by customer")</li>
+<li>If reissued: assessment type and reissue date</li>
+<li>If unable to locate: note "Exhaustive search complete, NII applied"</li>
+<li>Any escalations: Senior Officer review for penalties, Investigations, etc.</li>
+</ul>
+
+<h3>When Unable to Complete</h3>
+<p style="font-size:13px;">If unable to locate address after decision table research:</p>
+<ul style="font-size:13px;">
+<li>Place "No Postal Address" NII on customer account</li>
+<li>Document search efforts in notes</li>
+<li>Consult Senior Officer before escalating further</li>
+<li>Escalate RTU action item if requiring further investigation</li>
+</ul>
+
+<div class="ref"><strong>Reference:</strong> Returned Unclaimed Procedure; Time Standard 15 minutes per item</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Completed e-Sys updates, reissued correspondence</div>
+<div class="block"><strong>Process:</strong> Document outcome, mark action item complete</div>
+<div class="block"><strong>Decision:</strong> Action item complete or requires escalation?</div>
+<div class="block"><strong>Output:</strong> RTU action item closed, customer updated with new/reissued correspondence</div>
+</div>
+</div>
+</section>
+
+</div>
+
+<!-- SYSTEM INTERACTION VIEW -->
+
+<div class="systemsOnly">
+<section>
+<h2>System Interaction - Returned Unclaimed Processing Flow</h2>
+<div class="flow">
+<div class="flow-title">Q1-Q5 RTU Processing</div>
+<div class="node n-amber">RTU Action Item Received from Business Support</div>
+<div class="arr"></div>
+<div class="node n-blue">Q1: Check Customer Investigation Status</div>
+<div class="arr"></div>
+<div class="node n-amber">Under Investigation?</div>
+<div style="display:flex;gap:40px;margin:20px 0;justify-content:center;">
+<div><div class="node n-gray">YES: Escalate to Investigations</div></div>
+<div><div class="node n-blue">NO: Continue</div></div>
+</div>
+<div class="arr"></div>
+<div class="node n-blue">Q2: Identify RTU Scenario (7 options)</div>
+<div class="arr"></div>
+<div class="node n-blue">Q3: Research Address Using Decision Table & Tools</div>
+<div class="arr"></div>
+<div class="node n-blue">Q4: Update e-Sys Records (address, PPR, NII, etc.)</div>
+<div class="arr"></div>
+<div class="node n-amber">Generate Reissued Assessment/Correspondence</div>
+<div class="arr"></div>
+<div class="node n-blue">Q5: Complete RTU Action Item</div>
+<div class="arr"></div>
+<div class="node n-gray">RTU Processing Complete</div>
+</div>
+</section>
+</div>
+
+<!-- SUMMARY VIEW -->
+
+<div class="specOnly">
+<section class="summary-section" id="decision-tables">
+<h2>Decision Tables Summary</h2>
+<p style="font-size:13px;">Seven decision tables guide research for different RTU scenarios. Each table shows: Consideration → Research → Tools → Outcome</p>
+<ul style="font-size:13px;">
+<li><strong>Individual/Joint Ownership:</strong> Check MLT registration, locate current address, update e-Sys, reissue</li>
+<li><strong>Company/Trust:</strong> Verify ABN/ACN, confirm registration with ASIC, locate address, update records</li>
+<li><strong>PPR Exemption:</strong> Verify PPR claims, check address history, apply/amend exemption, recalculate liability</li>
+<li><strong>Debt Management (DMS):</strong> Verify receipt, locate alternative address, update DMS coordination, potentially resolve recovery</li>
+<li><strong>Unable to Locate Address:</strong> Exhaustive search via multiple sources, place NII if address cannot be found, consult Senior Officer</li>
+<li><strong>Cancel Assessment:</strong> Determine if never received, confirm via DLS/DMS, cancel if appropriate, waive penalties if needed</li>
+<li><strong>Managing Agent:</strong> Confirm active bond, locate agent contact, contact agent, redirect assessment/update e-Sys</li>
+</ul>
+</section>
+
+<section class="summary-section">
+<h2>Procedure Summary</h2>
+<ul style="font-size:13px;">
+<li>Purpose: Process returned unclaimed mail by locating current addresses and reissuing assessments/correspondence</li>
+<li>Q1: Check if customer under investigation (escalate if YES)</li>
+<li>Q2: Identify which of 7 RTU scenarios applies</li>
+<li>Q3: Use decision table to research customer/address/property details</li>
+<li>Q4: Update e-Sys records (address, PPR, NII, etc.) and generate reissued correspondence</li>
+<li>Q5: Complete RTU action item with documented outcome</li>
+<li>Time standard: 15 minutes per RTU item</li>
+<li>Critical escalations: Investigation customers, penalties, unable to locate address</li>
+</ul>
+</section>
+
+<section class="summary-section">
+<h2>Source of Authority</h2>
+<ul style="font-size:13px;">
+<li><strong>Division:</strong> Land Revenue Services</li>
+<li><strong>Branch:</strong> Land Information Management</li>
+<li><strong>Created:</strong> April 2024</li>
+<li><strong>Time Standard:</strong> 15 minutes per RTU item</li>
+<li><strong>Legislation:</strong> Land Tax Act 2005</li>
+</ul>
+</section>
+
+<section class="summary-section" id="definitions">
+<h2>Definitions & Acronyms</h2>
+<p style="font-size:13px;">
+<strong>RTU</strong> - Returned Unclaimed (mail returned to SRO unable to be delivered)<br>
+<strong>DMS</strong> - Debt Management Services<br>
+<strong>PPR</strong> - Principal Place of Residence exemption<br>
+<strong>MLT</strong> - My Land Tax (online customer portal)<br>
+<strong>DLS</strong> - Driver Licensing System<br>
+<strong>NII</strong> - Non-Issue Indicator<br>
+<strong>ASIC</strong> - Australian Securities & Investments Commission<br>
+<strong>RTBA</strong> - Real Estate Transaction Based Arrangements<br>
+<strong>COI</strong> - Compliance Operational Intelligence<br>
+<strong>ABN</strong> - Australian Business Number<br>
+<strong>ACN</strong> - Australian Company Number<br>
+<strong>AI</strong> - Action Item<br>
+<strong>Landata</strong> - Land titles information system<br>
+<strong>Muni Returns</strong> - Municipal Revaluation Files (council valuation data)<br>
+<strong>S105</strong> - Section 105 Land Tax assessment form/records
+</p>
+</section>
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(e=>e.style.display='none');
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(e=>e.style.display='block');document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(e=>e.style.display='block');document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p)p.classList.toggle('open');if(a)a.classList.toggle('open')}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

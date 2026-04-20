@@ -1,0 +1,630 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Land Tax Procedures - Glossary of Terms</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 40px 20px;
+        min-height: 100vh;
+    }
+    
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px;
+        text-align: center;
+    }
+    
+    .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+    
+    .header p {
+        font-size: 1.1em;
+        opacity: 0.95;
+    }
+    
+    .content {
+        padding: 40px;
+    }
+    
+    .search-box {
+        margin-bottom: 30px;
+        display: flex;
+        gap: 10px;
+    }
+    
+    .search-box input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 1em;
+        transition: border-color 0.3s;
+    }
+    
+    .search-box input:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+    
+    .stats {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 6px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-around;
+        text-align: center;
+    }
+    
+    .stat-item h3 {
+        color: #667eea;
+        font-size: 2em;
+        margin-bottom: 5px;
+    }
+    
+    .stat-item p {
+        color: #666;
+        font-size: 0.95em;
+    }
+    
+    .glossary {
+        display: grid;
+        gap: 20px;
+    }
+    
+    .term-entry {
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        padding: 20px;
+        transition: all 0.3s ease;
+        background: #fafbfc;
+    }
+    
+    .term-entry:hover {
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        border-color: #667eea;
+        background: #f5f8ff;
+    }
+    
+    .term-title {
+        font-size: 1.3em;
+        font-weight: 700;
+        color: #667eea;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+    }
+    
+    .term-description {
+        color: #555;
+        margin-bottom: 12px;
+        line-height: 1.7;
+        font-size: 0.98em;
+    }
+    
+    .synonyms-label {
+        font-weight: 600;
+        color: #666;
+        font-size: 0.85em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+    }
+    
+    .synonyms {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .synonym-tag {
+        display: inline-block;
+        background: #e8eef7;
+        color: #667eea;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        border: 1px solid #d0d9e8;
+        transition: all 0.2s;
+    }
+    
+    .synonym-tag:hover {
+        background: #d0d9e8;
+        border-color: #667eea;
+    }
+    
+    .footer {
+        background: #f8f9fa;
+        padding: 20px 40px;
+        text-align: center;
+        color: #999;
+        font-size: 0.9em;
+        border-top: 1px solid #e0e0e0;
+    }
+    
+    @media (max-width: 768px) {
+        .header h1 {
+            font-size: 1.8em;
+        }
+        
+        .stats {
+            flex-direction: column;
+        }
+        
+        .term-entry {
+            padding: 15px;
+        }
+    }
+    
+    .alphabet-nav {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 6px;
+    }
+    
+    .alphabet-nav a {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #667eea;
+        font-weight: 600;
+        font-size: 0.9em;
+        transition: all 0.2s;
+    }
+    
+    .alphabet-nav a:hover {
+        background: #667eea;
+        color: white;
+        border-color: #667eea;
+    }
+    
+    .no-results {
+        text-align: center;
+        padding: 40px;
+        color: #999;
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Land Tax Procedures</h1>
+            <p>Comprehensive Glossary of Terms & Definitions</p>
+        </div>
+
+```
+    <div class="content">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search terms, descriptions, or synonyms..." onkeyup="filterGlossary()">
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <h3>62</h3>
+                <p>Terms Defined</p>
+            </div>
+            <div class="stat-item">
+                <h3>110</h3>
+                <p>Synonyms Indexed</p>
+            </div>
+            <div class="stat-item">
+                <h3>33</h3>
+                <p>Artifacts Reviewed</p>
+            </div>
+        </div>
+        
+        <div class="alphabet-nav" id="alphabetNav"></div>
+        
+        <div class="glossary" id="glossary">
+            <div class="term-entry" data-term="aos">
+                <div class="term-title">AOS</div>
+                <div class="term-description">Absentee Owner Surcharge - A surcharge applied to land tax for properties where the owner is not an Australian resident</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Absentee Owner Surcharge</span></div>
+            </div>
+            <div class="term-entry" data-term="amendment">
+                <div class="term-title">Amendment</div>
+                <div class="term-description">Correction or modification to an assessment, customer details, or other recorded information</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Correction</span><span class="synonym-tag">Modification</span></div>
+            </div>
+            <div class="term-entry" data-term="assessment">
+                <div class="term-title">Assessment</div>
+                <div class="term-description">Official determination of the value of a property for land tax purposes</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Valuation</span><span class="synonym-tag">Land Assessment</span></div>
+            </div>
+            <div class="term-entry" data-term="bto">
+                <div class="term-title">BTO</div>
+                <div class="term-description">Branch Technical Officer - Technical support role within branch operations</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Branch Technical Officer</span></div>
+            </div>
+            <div class="term-entry" data-term="btr">
+                <div class="term-title">BTR</div>
+                <div class="term-description">Build to Rent - A development program for residential properties built specifically for rental purposes</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Build to Rent</span></div>
+            </div>
+            <div class="term-entry" data-term="cid">
+                <div class="term-title">CID</div>
+                <div class="term-description">Customer ID - Unique identifier assigned to each customer in the system</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Customer ID</span><span class="synonym-tag">Customer Identifier</span></div>
+            </div>
+            <div class="term-entry" data-term="cm10">
+                <div class="term-title">CM10</div>
+                <div class="term-description">Content Manager 10 - Document management system used for storing and managing procedural documents</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Content Manager</span><span class="synonym-tag">CM</span></div>
+            </div>
+            <div class="term-entry" data-term="cm9">
+                <div class="term-title">CM9</div>
+                <div class="term-description">Content Manager 9 - Previous version of the Content Manager document management system</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Content Manager 9</span></div>
+            </div>
+            <div class="term-entry" data-term="cocd">
+                <div class="term-title">COCD</div>
+                <div class="term-description">Change of Customer Details - Procedure for updating customer information in the system</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Change of Customer Details</span></div>
+            </div>
+            <div class="term-entry" data-term="coi">
+                <div class="term-title">COI</div>
+                <div class="term-description">Compliance Operational Intelligence - System for monitoring compliance metrics and operational performance</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Compliance Operational Intelligence</span></div>
+            </div>
+            <div class="term-entry" data-term="das">
+                <div class="term-title">DAS</div>
+                <div class="term-description">Document and Dealing Records System - System for recording and managing property dealing documents</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Document Management System</span><span class="synonym-tag">Dealing Records System</span></div>
+            </div>
+            <div class="term-entry" data-term="dtf">
+                <div class="term-title">DTF</div>
+                <div class="term-description">Department of Treasury and Finance - State government department overseeing financial policy</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Department of Treasury and Finance</span><span class="synonym-tag">Treasury and Finance</span></div>
+            </div>
+            <div class="term-entry" data-term="determination">
+                <div class="term-title">Determination</div>
+                <div class="term-description">Official decision made by an authority such as TARB regarding a land tax matter</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Decision</span><span class="synonym-tag">Ruling</span></div>
+            </div>
+            <div class="term-entry" data-term="duplication">
+                <div class="term-title">Duplication</div>
+                <div class="term-description">Erroneous creation of duplicate customer or property records in the system</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Duplicate Record</span></div>
+            </div>
+            <div class="term-entry" data-term="entity">
+                <div class="term-title">Entity</div>
+                <div class="term-description">Organization, individual, company, or other legal structure that can own property or hold liability</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Legal Entity</span><span class="synonym-tag">Organization</span></div>
+            </div>
+            <div class="term-entry" data-term="exemption">
+                <div class="term-title">Exemption</div>
+                <div class="term-description">Relief from liability to pay land tax based on specific criteria such as principal place of residence or primary production land</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Tax Exemption</span><span class="synonym-tag">Relief</span></div>
+            </div>
+            <div class="term-entry" data-term="exemption application">
+                <div class="term-title">Exemption Application</div>
+                <div class="term-description">Formal request to claim exemption from land tax based on specific qualifying criteria</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Exemption Claim</span><span class="synonym-tag">Exemption Request</span></div>
+            </div>
+            <div class="term-entry" data-term="ftl">
+                <div class="term-title">FTL</div>
+                <div class="term-description">First Time Liability - Initial land tax assessment for a property entering the land tax system</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">First Time Liability</span><span class="synonym-tag">First Assessment</span></div>
+            </div>
+            <div class="term-entry" data-term="gaps">
+                <div class="term-title">GAPS</div>
+                <div class="term-description">Guidelines and Procedures System - Framework for standardizing operational procedures</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Guidelines and Procedures System</span></div>
+            </div>
+            <div class="term-entry" data-term="grouping">
+                <div class="term-title">Grouping</div>
+                <div class="term-description">Combination of multiple land parcels into a single assessment for land tax purposes</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Group Assessment</span><span class="synonym-tag">Land Grouping</span></div>
+            </div>
+            <div class="term-entry" data-term="ip">
+                <div class="term-title">IP</div>
+                <div class="term-description">Insolvency Practitioner - Licensed professional appointed to manage insolvency matters</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Insolvency Practitioner</span></div>
+            </div>
+            <div class="term-entry" data-term="insolvency">
+                <div class="term-title">Insolvency</div>
+                <div class="term-description">State of being unable to pay debts as they fall due; legal process for managing financial distress</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Bankruptcy</span><span class="synonym-tag">Financial Distress</span></div>
+            </div>
+            <div class="term-entry" data-term="kpi">
+                <div class="term-title">KPI</div>
+                <div class="term-description">Key Performance Indicator - Measurable metrics used to evaluate performance and productivity</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Key Performance Indicator</span><span class="synonym-tag">Performance Metric</span></div>
+            </div>
+            <div class="term-entry" data-term="lat">
+                <div class="term-title">LAT</div>
+                <div class="term-description">Land Assessing Team - Team responsible for valuation and assessment of land properties</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Land Assessing Team</span><span class="synonym-tag">Assessment Team</span></div>
+            </div>
+            <div class="term-entry" data-term="lga">
+                <div class="term-title">LGA</div>
+                <div class="term-description">Local Government Authority - Municipal council or local government body</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Local Government Authority</span><span class="synonym-tag">Council</span><span class="synonym-tag">Local Authority</span></div>
+            </div>
+            <div class="term-entry" data-term="lgat">
+                <div class="term-title">LGAT</div>
+                <div class="term-description">Local Government Authority Team - Team representing or coordinating with local government authorities</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Local Government Authority Team</span></div>
+            </div>
+            <div class="term-entry" data-term="loan">
+                <div class="term-title">LOAN</div>
+                <div class="term-description">Land Ownership Amendment Notification - System for processing and recording changes to land ownership</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Land Ownership Amendment Notification</span><span class="synonym-tag">Ownership System</span></div>
+            </div>
+            <div class="term-entry" data-term="lra">
+                <div class="term-title">LRA</div>
+                <div class="term-description">Land Revenue Administration - Branch responsible for administering land tax revenue and assessments</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Land Revenue Administration</span><span class="synonym-tag">Revenue Administration</span></div>
+            </div>
+            <div class="term-entry" data-term="lrs">
+                <div class="term-title">LRS</div>
+                <div class="term-description">Land Revenue Services - Services division providing support for land revenue operations</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Land Revenue Services</span></div>
+            </div>
+            <div class="term-entry" data-term="ltx">
+                <div class="term-title">LTX</div>
+                <div class="term-description">Land Tax - Annual tax levied on the value of land owned in Victoria</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Land Tax</span><span class="synonym-tag">Land Tax Assessment</span></div>
+            </div>
+            <div class="term-entry" data-term="liability">
+                <div class="term-title">Liability</div>
+                <div class="term-description">Obligation to pay land tax on a property based on ownership and other criteria</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Tax Liability</span><span class="synonym-tag">Tax Obligation</span></div>
+            </div>
+            <div class="term-entry" data-term="mc953">
+                <div class="term-title">MC953</div>
+                <div class="term-description">e-Sys report code for specific land tax or revenue reporting function</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Report MC953</span></div>
+            </div>
+            <div class="term-entry" data-term="mc988">
+                <div class="term-title">MC988</div>
+                <div class="term-description">e-Sys report code for specific land tax or revenue reporting function</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Report MC988</span></div>
+            </div>
+            <div class="term-entry" data-term="mlt">
+                <div class="term-title">MLT</div>
+                <div class="term-description">My Land Tax - Customer-facing online portal for managing land tax accounts and payments</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">My Land Tax</span><span class="synonym-tag">Customer Portal</span></div>
+            </div>
+            <div class="term-entry" data-term="mpn">
+                <div class="term-title">MPN</div>
+                <div class="term-description">Municipal Property Number - Unique identifier assigned to properties by local governments</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Municipal Property Number</span><span class="synonym-tag">Property Number</span></div>
+            </div>
+            <div class="term-entry" data-term="nii">
+                <div class="term-title">NII</div>
+                <div class="term-description">Non-Issue Indicator - Flag used in system to mark assessments or documents not requiring issuance</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Non-Issue Indicator</span></div>
+            </div>
+            <div class="term-entry" data-term="noa">
+                <div class="term-title">NOA</div>
+                <div class="term-description">Notice of Acquisition - Notification issued when a property ownership is acquired</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Notice of Acquisition</span></div>
+            </div>
+            <div class="term-entry" data-term="objection">
+                <div class="term-title">Objection</div>
+                <div class="term-description">Formal challenge to a property valuation or land tax assessment</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Valuation Objection</span><span class="synonym-tag">Assessment Challenge</span></div>
+            </div>
+            <div class="term-entry" data-term="ownership">
+                <div class="term-title">Ownership</div>
+                <div class="term-description">Legal right and control of a property</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Property Ownership</span><span class="synonym-tag">Title</span></div>
+            </div>
+            <div class="term-entry" data-term="pcc">
+                <div class="term-title">PCC</div>
+                <div class="term-description">Property Clearance Certificate - Certificate confirming payment of all outstanding land tax obligations on a property</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Property Clearance Certificate</span><span class="synonym-tag">Clearance Certificate</span></div>
+            </div>
+            <div class="term-entry" data-term="pia">
+                <div class="term-title">PIA</div>
+                <div class="term-description">Property Inquiry Application - Application to request information about a specific property</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Property Inquiry Application</span><span class="synonym-tag">Property Inquiry</span></div>
+            </div>
+            <div class="term-entry" data-term="ppl">
+                <div class="term-title">PPL</div>
+                <div class="term-description">Primary Production Land - Land used primarily for agricultural, horticultural, or pastoral purposes</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Primary Production Land</span><span class="synonym-tag">Agricultural Land</span><span class="synonym-tag">Farming Land</span></div>
+            </div>
+            <div class="term-entry" data-term="ppr">
+                <div class="term-title">PPR</div>
+                <div class="term-description">Principal Place of Residence - Primary residential dwelling of an individual, typically exempt from land tax</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Principal Place of Residence</span><span class="synonym-tag">Primary Residence</span><span class="synonym-tag">Main Residence</span></div>
+            </div>
+            <div class="term-entry" data-term="ptx">
+                <div class="term-title">PTX</div>
+                <div class="term-description">Payroll Tax - State tax on wages and salaries paid by employers</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Payroll Tax</span></div>
+            </div>
+            <div class="term-entry" data-term="qa">
+                <div class="term-title">QA</div>
+                <div class="term-description">Quality Assurance - Process of reviewing and verifying work quality and compliance with standards</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Quality Assurance</span><span class="synonym-tag">Quality Control</span></div>
+            </div>
+            <div class="term-entry" data-term="rtu">
+                <div class="term-title">RTU</div>
+                <div class="term-description">Returned/Unclaimed - Mail or documents returned undelivered or unclaimed by recipient</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Returned Unclaimed</span><span class="synonym-tag">Return to Sender</span></div>
+            </div>
+            <div class="term-entry" data-term="refund">
+                <div class="term-title">Refund</div>
+                <div class="term-description">Return of overpaid land tax amount to the taxpayer</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Tax Refund</span><span class="synonym-tag">Payment Refund</span></div>
+            </div>
+            <div class="term-entry" data-term="spi">
+                <div class="term-title">SPI</div>
+                <div class="term-description">Spatial Property Identifier - Unique geographic identifier for land parcels used in property information systems</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Spatial Property Identifier</span><span class="synonym-tag">Property Identifier</span></div>
+            </div>
+            <div class="term-entry" data-term="sro">
+                <div class="term-title">SRO</div>
+                <div class="term-description">State Revenue Office - Victorian government agency responsible for administering land tax and related revenue</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">State Revenue Office</span><span class="synonym-tag">Revenue Office</span></div>
+            </div>
+            <div class="term-entry" data-term="suspense">
+                <div class="term-title">Suspense</div>
+                <div class="term-description">Holding account used to temporarily store payments or amounts pending further action or allocation</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Suspense Account</span><span class="synonym-tag">Holding Account</span></div>
+            </div>
+            <div class="term-entry" data-term="tarb">
+                <div class="term-title">TARB</div>
+                <div class="term-description">Technical Advice and Review Branch - Branch providing technical guidance and reviewing complex land tax matters</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Technical Advice and Review Branch</span><span class="synonym-tag">Technical Review</span></div>
+            </div>
+            <div class="term-entry" data-term="tol">
+                <div class="term-title">TOL</div>
+                <div class="term-description">Transfer of Land - Document and process recording change of property ownership</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Transfer of Land</span><span class="synonym-tag">Property Transfer</span></div>
+            </div>
+            <div class="term-entry" data-term="trust">
+                <div class="term-title">Trust</div>
+                <div class="term-description">Legal arrangement where property is held by trustees for the benefit of beneficiaries</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Trust Estate</span><span class="synonym-tag">Discretionary Trust</span></div>
+            </div>
+            <div class="term-entry" data-term="vcat">
+                <div class="term-title">VCAT</div>
+                <div class="term-description">Victorian Civil and Administrative Tribunal - Independent tribunal hearing disputes and appeals in Victoria</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Victorian Civil and Administrative Tribunal</span><span class="synonym-tag">Tribunal</span></div>
+            </div>
+            <div class="term-entry" data-term="vcoo">
+                <div class="term-title">VCOO</div>
+                <div class="term-description">Verify Change of Ownership - Process or system for confirming and validating ownership changes</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Verify Change of Ownership</span><span class="synonym-tag">Ownership Verification</span></div>
+            </div>
+            <div class="term-entry" data-term="vec">
+                <div class="term-title">VEC</div>
+                <div class="term-description">Victorian Electoral Commission - Government agency managing electoral matters in Victoria</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Victorian Electoral Commission</span><span class="synonym-tag">Electoral Commission</span></div>
+            </div>
+            <div class="term-entry" data-term="vgv">
+                <div class="term-title">VGV</div>
+                <div class="term-description">Valuer General Victoria - Senior valuation officer responsible for property valuations in Victoria</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Valuer General Victoria</span><span class="synonym-tag">Valuer General</span></div>
+            </div>
+            <div class="term-entry" data-term="vrlt">
+                <div class="term-title">VRLT</div>
+                <div class="term-description">Vacant Residential Land Tax - Tax on vacant residential land above a certain value threshold</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Vacant Residential Land Tax</span></div>
+            </div>
+            <div class="term-entry" data-term="vt920">
+                <div class="term-title">VT920</div>
+                <div class="term-description">e-Sys report code for valuation or property reporting function</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Report VT920</span></div>
+            </div>
+            <div class="term-entry" data-term="valuation">
+                <div class="term-title">Valuation</div>
+                <div class="term-description">Professional determination of the market value of land and property</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Property Valuation</span><span class="synonym-tag">Value Assessment</span></div>
+            </div>
+            <div class="term-entry" data-term="wgt">
+                <div class="term-title">WGT</div>
+                <div class="term-description">Windfall Gains Tax - Tax on unearned gains from property value increases due to government decisions</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Windfall Gains Tax</span></div>
+            </div>
+            <div class="term-entry" data-term="e-sys">
+                <div class="term-title">e-Sys</div>
+                <div class="term-description">Electronic Assessment and Revenue System - Primary system used by SRO for managing land tax assessments and revenue</div>
+                <div class="synonyms-label">Also Known As:</div><div class="synonyms"><span class="synonym-tag">Electronic System</span><span class="synonym-tag">Assessment System</span><span class="synonym-tag">eSys</span></div>
+            </div>
+        </div>
+        
+        <div class="no-results" id="noResults" style="display:none;">
+            No terms found matching your search.
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>State Revenue Office (SRO) Land Tax Procedures Documentation | Last Updated: April 2026</p>
+    </div>
+</div>
+
+<script>
+    // Build alphabet navigation
+    const glossary = document.getElementById('glossary');
+    const terms = Array.from(glossary.querySelectorAll('.term-entry')).map(el => el.dataset.term);
+    const firstLetters = new Set(terms.map(t => t[0].toUpperCase()));
+    const alphabetNav = document.getElementById('alphabetNav');
+    
+    Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ').forEach(letter => {
+        const link = document.createElement('a');
+        link.href = '#';
+        link.textContent = letter;
+        link.style.opacity = firstLetters.has(letter) ? '1' : '0.4';
+        link.style.cursor = firstLetters.has(letter) ? 'pointer' : 'default';
+        if (firstLetters.has(letter)) {
+            link.onclick = (e) => {
+                e.preventDefault();
+                const filtered = terms.filter(t => t[0].toUpperCase() === letter);
+                document.getElementById('searchInput').value = '';
+                filterGlossary(letter);
+            };
+        }
+        alphabetNav.appendChild(link);
+    });
+    
+    function filterGlossary(letter = null) {
+        const input = document.getElementById('searchInput').value.toLowerCase();
+        const entries = document.querySelectorAll('.term-entry');
+        let visibleCount = 0;
+        
+        entries.forEach(entry => {
+            const term = entry.dataset.term;
+            const text = entry.textContent.toLowerCase();
+            let match = false;
+            
+            if (letter) {
+                match = term[0].toUpperCase() === letter;
+            } else {
+                match = term.includes(input) || text.includes(input);
+            }
+            
+            entry.style.display = match ? 'block' : 'none';
+            if (match) visibleCount++;
+        });
+        
+        document.getElementById('noResults').style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+</script>
+```
+
+</body>
+</html>

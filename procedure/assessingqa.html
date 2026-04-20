@@ -1,0 +1,777 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Assessing Quality Procedure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit;font-size:13px}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    h4{font-size:14px;color:#003a8f;margin:16px 0 8px 0}
+    ul,ol{margin-left:22px;font-size:13px;line-height:1.6}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px;font-size:13px;line-height:1.5}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly,.specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;font-size:13px}
+    .detail-toggle-text{font-weight:700;color:#1e3a8a;flex:1}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s;margin-left:12px}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px;font-size:13px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:13px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p,.detail-panel li{font-size:13px;color:#475569;line-height:1.5;margin-bottom:6px}
+    .detail-panel ul{margin-left:18px}
+    .node{padding:14px 20px;border-radius:10px;font-size:12px;font-weight:600;text-align:center;min-width:160px;max-width:280px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:20px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .table-responsive{overflow-x:auto;margin:12px 0}
+    table{width:100%;border-collapse:collapse;font-size:12px;margin:12px 0}
+    table th,table td{padding:9px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600;color:#1f2937}
+    .highlight{background:#fffbeb;border-left:5px solid #f59e0b;padding:12px;margin:12px 0;font-size:13px}
+    .pass{background:#f0fdf4;border-left:5px solid #22c55e;padding:12px;margin:12px 0;font-size:13px}
+    .fail{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin:12px 0;font-size:13px}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Assessing Quality Procedure</h1>
+  <p>Division: Land Revenue Services &bull; Branch: Land Revenue Administration &bull; Revised: 4 December 2025</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#overview">Overview</a>
+    <a href="#q1">Q1 Submit Refunds</a>
+    <a href="#q2">Q2 Select Sample</a>
+    <a href="#q3">Q3 Check Quality</a>
+    <a href="#q4">Q4 Record Results</a>
+    <a href="#q5">Q5 Provide Feedback</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#checklist" onclick="showView('spec');setTimeout(()=>location.hash='checklist',100);">Quality Checklist</a>
+    <a href="#sample" onclick="showView('spec');setTimeout(()=>location.hash='sample',100);">Sample Calculation</a>
+    <a href="#timeline" onclick="showView('spec');setTimeout(()=>location.hash='timeline',100);">Monthly Timeline</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(()=>location.hash='definitions',100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary</button>
+    </div>
+
+<div id="questionFlow">
+
+<!-- OVERVIEW -->
+
+<section id="overview">
+<h2>Assessing Quality - Procedure Overview</h2>
+<div class="staff">
+<h3>Purpose</h3>
+<p style="font-size:13px;">Detail the process Land Assessing Team (LAT) staff should undertake when quality checking tasks completed by colleagues to ensure consistent, equitable results for taxpayers and maximised front-end compliance.</p>
+
+<h3>Background</h3>
+<ul style="font-size:13px;">
+<li><strong>Who performs QA:</strong> Grade 3 and Grade 4 LAT staff only</li>
+<li><strong>What's checked:</strong> All refund items >$10,000 PLUS random sample of 5 items per staff member per month</li>
+<li><strong>Special threshold:</strong> Items >$99,999 must be checked by Grade 4 Branch Technical Officer (BTO)</li>
+<li><strong>Pass/Fail threshold:</strong> 95% or above = PASS; 94% or below = FAIL</li>
+<li><strong>Monthly KPI:</strong> Minimum acceptable accuracy is 95%</li>
+</ul>
+
+<h3>Key Process Steps (Q1-Q5)</h3>
+<ol style="font-size:13px;">
+<li><strong>Q1 (Monthly):</strong> Quality Checkers submit refund QA >$10,000 to Quality Check Form</li>
+<li><strong>Q2 (1st Business Day):</strong> Team Leaders extract MC953 and VT920 reports, select random sample</li>
+<li><strong>Q3 (First Week):</strong> Quality Checkers assess items against Quality Checklist, record results</li>
+<li><strong>Q4 (By Day 5 Next Month):</strong> Team Leaders confirm results, calculate team metrics</li>
+<li><strong>Q5 (Monthly 1:1):</strong> Team Leaders provide feedback and results to staff members</li>
+</ol>
+
+<div class="ref"><strong>Authority:</strong> Division: Land Revenue Services | Branch: Land Revenue Administration | <strong>Revised:</strong> 4 December 2025 | <strong>Effective:</strong> 1 January 2024</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Completed action items (refunds, amendments), MC953/VT920 reports, random sample</div>
+<div class="block"><strong>Process:</strong> Q1-Q5: Submit → Select → Check → Record → Feedback</div>
+<div class="block"><strong>Decision:</strong> Does item meet 95%+ threshold? Is sample valid? Are results captured correctly?</div>
+<div class="block"><strong>Output:</strong> QA results (PASS/FAIL), feedback provided, monthly team KPI calculated</div>
+</div>
+</div>
+</section>
+
+<!-- Q1 SUBMIT REFUNDS -->
+
+<section id="q1">
+<h2>Q1 - Submit Refund QA (Items >$10,000)</h2>
+<div class="staff">
+<h3>Monthly Submission Timeframe</h3>
+<p style="font-size:13px;"><strong>Due:</strong> 1st to last business day of each month</p>
+<p style="font-size:13px;"><strong>Who:</strong> Quality Checker (Grade 3 or 4)</p>
+
+<h3>Process Steps</h3>
+<ol style="font-size:13px;">
+<li>Complete QA on all action items resulting in refunds >$10,000 during the month</li>
+<li>For each item, assess against Quality Checklist (see Q3 and Summary section)</li>
+<li>Insert details into <strong>Quality Check Form</strong> (Microsoft Form link provided in e-Sys)</li>
+<li>For each item, record:
+   <ul style="margin-left:20px;margin-top:6px;">
+   <li>Staff member name</li>
+   <li>QA reason: "Refund"</li>
+   <li>Customer number</li>
+   <li>Action Item (A/I) type (e.g., PPR, PPL, Land Ownership, Refund)</li>
+   <li>Quality assessment (YES/NO for each checklist item)</li>
+   <li>QA comments</li>
+   </ul>
+</li>
+<li>Submit form (option to request email receipt for staff feedback)</li>
+</ol>
+
+<div class="highlight"><strong>Note:</strong> Refund approvals under $10,000 do NOT require QA submission (these involve confirmation of EFT details only).</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Quality Check Form</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Form Location and Access</h4>
+<p style="font-size:13px;">Quality Check Form is a Microsoft Form accessible via e-Sys link or direct URL.</p>
+
+<h4>Form Fields</h4>
+<ul style="font-size:13px;">
+<li>Staff member name (dropdown)</li>
+<li>QA reason (Refund or Random)</li>
+<li>Customer number</li>
+<li>Action Item (A/I) type</li>
+<li>Quality assessment checkpoints (YES/NO)</li>
+<li>QA comments (text field)</li>
+</ul>
+
+<h4>Form Submission Options</h4>
+<ul style="font-size:13px;">
+<li>Standard: Submit form, results go to secure spreadsheet</li>
+<li>Receipt: Request "Receipt of response" to email staff member immediately</li>
+<li>FAIL results: PDF receipt should be provided to staff, CC Team Leader</li>
+</ul>
+
+<h4>Data Storage</h4>
+<p style="font-size:13px;">Results stored in secure, password-protected Excel spreadsheet. Access restricted to LAT Team Leaders and nominated coaches/mentors.</p>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> Completed action items (refund amount >$10,000), quality assessment results</div>
+<div class="block"><strong>Process:</strong> Quality Checker evaluates item against checklist, submits via Form</div>
+<div class="block"><strong>Decision:</strong> Item meets 95%+ standard (PASS) or not (FAIL)</div>
+<div class="block"><strong>Output:</strong> QA result recorded in Form and secure spreadsheet</div>
+</div>
+</div>
+</section>
+
+<!-- Q2 SELECT SAMPLE -->
+
+<section id="q2">
+<h2>Q2 - Select Random Sample (MC953 & VT920)</h2>
+<div class="staff">
+<h3>Monthly Timing</h3>
+<p style="font-size:13px;"><strong>Due:</strong> First business day of each month</p>
+<p style="font-size:13px;"><strong>Who:</strong> Team Leader</p>
+
+<h3>Process Steps</h3>
+<ol style="font-size:13px;">
+<li><strong>Obtain MC953 Report:</strong>
+   <ul style="margin-left:20px;margin-top:6px;">
+   <li>Navigate: H:\LandTax\Common\Land_tax\Esys\Reports\*month*</li>
+   <li>File name: esysprod_mc953m_Part_A_LTX_[date].csv</li>
+   <li><strong>IMPORTANT:</strong> Report for November appears in December folder</li>
+   <li>Contains: All LTX action items completed during month</li>
+   </ul>
+</li>
+<li><strong>Obtain VT920 Report:</strong>
+   <ul style="margin-left:20px;margin-top:6px;">
+   <li>File name: esysprod_VT920A_Completed_VLT_WorkItemsReport_[date].csv</li>
+   <li>Weekly report: consolidate into monthly summary</li>
+   <li>Contains: All VRLT work items completed</li>
+   </ul>
+</li>
+<li><strong>Extract Random Sample:</strong>
+   <ul style="margin-left:20px;margin-top:6px;">
+   <li>For each staff member (Grade 2, 3, 4): randomly select 5 items</li>
+   <li>Exclude items already checked as "Refund" (>$10,000)</li>
+   <li>Sample represents diverse work types completed that month</li>
+   </ul>
+</li>
+<li><strong>Save to Quality Assurance:</strong>
+   <ul style="margin-left:20px;margin-top:6px;">
+   <li>Save sample list to Quality Assurance SharePoint folder</li>
+   <li>Email quality checkers advising data available for QA</li>
+   </ul>
+</li>
+</ol>
+
+<div class="stop">CRITICAL: Ensure items being checked are completed in the CORRECT MONTH. Items completed in February must be checked for February; don't carry January items forward.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Report Locations and Naming</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>MC953 Report Details</h4>
+<p style="font-size:13px;"><strong>What it contains:</strong> All LTX action items completed in the month</p>
+<p style="font-size:13px;"><strong>Location:</strong> H:\LandTax\Common\Land_tax\Esys\Reports\[MONTH FOLDER]</p>
+<p style="font-size:13px;"><strong>File naming:</strong> esysprod_mc953m_Part_A_LTX_[timestamp].csv</p>
+<p style="font-size:13px;"><strong>Generated:</strong> Last calendar day of month</p>
+<p style="font-size:13px;"><strong>IMPORTANT NOTE:</strong> The November report will appear in the December folder (not November folder). Always check the following month's folder if not found.</p>
+
+<h4>VT920A Report Details</h4>
+<p style="font-size:13px;"><strong>What it contains:</strong> All VRLT (Vacant Residential Land Tax) work items</p>
+<p style="font-size:13px;"><strong>Frequency:</strong> Weekly report (consolidated monthly)</p>
+<p style="font-size:13px;"><strong>File naming:</strong> esysprod_VT920A_Completed_VLT_WorkItemsReport_[timestamp].csv</p>
+
+<h4>Report Consolidation</h4>
+<p style="font-size:13px;">Multiple weekly VT920A reports must be consolidated into one monthly summary for sampling purposes.</p>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> MC953 and VT920A reports for the month</div>
+<div class="block"><strong>Process:</strong> Team Leader extracts reports, selects 5 random items per staff member</div>
+<div class="block"><strong>Decision:</strong> Is sample statistically valid? Are items from correct month?</div>
+<div class="block"><strong>Output:</strong> Random sample list saved, quality checkers notified</div>
+</div>
+</div>
+</section>
+
+<!-- Q3 CHECK QUALITY -->
+
+<section id="q3">
+<h2>Q3 - Assess Quality Against Checklist</h2>
+<div class="staff">
+<h3>Assessment Timing</h3>
+<p style="font-size:13px;"><strong>Due:</strong> First week of month (completed random sample checks)</p>
+<p style="font-size:13px;"><strong>Who:</strong> Quality Checker (Grade 3 or 4)</p>
+
+<h3>Quality Assessment Process</h3>
+<ol style="font-size:13px;">
+<li>Work through list of random items provided by Team Leader</li>
+<li>For each item, assess against Quality Checklist (see Summary section for full checklist)</li>
+<li>Quality Checklist has 9 components with weightings totalling 100 points:
+   <ul style="margin-left:20px;margin-top:6px;">
+   <li><strong>Procedures (15 pts):</strong> Amendment in line with relevant procedure</li>
+   <li><strong>Available Details (10 pts):</strong> MC100 and MC219 updated</li>
+   <li><strong>Related Parties (10 pts):</strong> Third parties attended to</li>
+   <li><strong>Workflow & Notes (15 pts):</strong> Adequate notes provided</li>
+   <li><strong>Assessments Issued (5 pts):</strong> A/I manually completed where required</li>
+   <li><strong>Suspense Managed (10 pts):</strong> Per Refund Procedure</li>
+   <li><strong>Payee Details (10 pts):</strong> Refund details correct</li>
+   <li><strong>Correspondence Channel (10 pts):</strong> Appropriate method used</li>
+   <li><strong>Correspondence Content (10 pts):</strong> Accuracy of key details</li>
+   <li><strong>Correspondence Style (5 pts):</strong> SRO Style Guide compliance</li>
+   </ul>
+</li>
+<li>Mark each component: YES (full points) or NO (0 points for that component)</li>
+<li>Calculate total score: Maximum 100 points</li>
+<li>Determine result: ≥95% = <span style="color:green;font-weight:bold;">PASS</span> | ≤94% = <span style="color:red;font-weight:bold;">FAIL</span></li>
+<li>Record results in Quality Check Form</li>
+<li>Record results in e-Sys 'QA' tab of action item (ALWAYS record as PASS in e-Sys)</li>
+<li>Convey results to staff member via Response email or 1:1 feedback</li>
+</ol>
+
+<div class="pass"><strong>PASS Threshold:</strong> 95% or greater = PASS (minimum KPI). This is the required accuracy standard.</div>
+<div class="fail"><strong>FAIL Handling:</strong> If FAIL recorded, staff member makes corrections in e-Sys, quality checker confirms updates before passing.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Scoring & Weighting Logic</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Weighting System</h4>
+<p style="font-size:13px;">Percentage points are deducted when criteria not met. Total score = 100 minus deductions.</p>
+<p style="font-size:13px;">There is NO apportionment: either a component is fully completed (full points) or not (zero points). No partial credit.</p>
+
+<h4>Scoring Example</h4>
+<p style="font-size:13px;">If an item has the following errors:</p>
+<ul style="font-size:13px;">
+<li>Procedures incomplete (−15 points)</li>
+<li>Workflow notes inadequate (−15 points)</li>
+<li>All other components correct</li>
+</ul>
+<p style="font-size:13px;"><strong>Total Score:</strong> 100 − 15 − 15 = <strong>70%</strong> = <strong>FAIL</strong></p>
+
+<h4>Result Determination</h4>
+<p style="font-size:13px;"><strong>≥95%:</strong> PASS — Meets KPI standard</p>
+<p style="font-size:13px;"><strong>≤94%:</strong> FAIL — Does not meet standard, corrections required</p>
+
+<h4>Monthly Result Calculation</h4>
+<p style="font-size:13px;">Individual monthly result = Average of all items checked (refund + random sample)</p>
+<p style="font-size:13px;">If average ≥95% = Monthly PASS; if ≤94% = Monthly FAIL</p>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> List of items to check (refund >$10,000 + random sample), original action items in e-Sys</div>
+<div class="block"><strong>Process:</strong> Quality Checker evaluates each item against 9-component Quality Checklist, assigns points</div>
+<div class="block"><strong>Decision:</strong> Item scores ≥95% (PASS) or ≤94% (FAIL)?</div>
+<div class="block"><strong>Output:</strong> QA score for each item, results submitted to Form and e-Sys</div>
+</div>
+</div>
+</section>
+
+<!-- Q4 RECORD RESULTS -->
+
+<section id="q4">
+<h2>Q4 - Record Results in Forms & e-Sys</h2>
+<div class="staff">
+<h3>Dual Recording Required</h3>
+<p style="font-size:13px;">QA results MUST be recorded in TWO places: Quality Check Form and e-Sys.</p>
+
+<h3>Quality Check Form Recording</h3>
+<ol style="font-size:13px;">
+<li>Access Quality Check Form (Microsoft Form)</li>
+<li>For each assessed item, enter:
+   <ul style="margin-left:20px;margin-top:6px;">
+   <li>Staff member name</li>
+   <li>QA reason ("Random" for sample items, "Refund" for >$10,000)</li>
+   <li>Customer number</li>
+   <li>A/I type</li>
+   <li>Quality assessment (YES/NO for each of 9 checklist items)</li>
+   <li>QA comments (any issues noted)</li>
+   </ul>
+</li>
+<li>Submit form</li>
+<li>Results stored in secure, password-protected Excel spreadsheet</li>
+<li>If FAIL: Request "Receipt of response", provide PDF to staff member + Team Leader</li>
+</ol>
+
+<h3>e-Sys Recording (QA Tab)</h3>
+<ol style="font-size:13px;">
+<li>Open relevant action item in e-Sys</li>
+<li>Navigate to 'QA' tab</li>
+<li>Record:
+   <ul style="margin-left:20px;margin-top:6px;">
+   <li>QA date (date QA completed)</li>
+   <li>QA team member (who performed the QA)</li>
+   <li>Result: <strong>ALWAYS record as PASS</strong> (even if actual result was FAIL)</li>
+   </ul>
+</li>
+<li>If FAIL was recorded in Form: Staff member makes corrections in e-Sys, quality checker confirms updates</li>
+<li>Once corrections verified, QA marked as PASS in e-Sys</li>
+</ol>
+
+<div class="stop">CRITICAL RULE: In e-Sys, QA tab must ALWAYS show PASS (regardless of actual assessment result). If item fails QA, staff member corrects in e-Sys first, then marked as PASS once verified.</div>
+
+<h3>Timeline for Recording</h3>
+<p style="font-size:13px;"><strong>By 5th business day of following month:</strong> Team Leader confirms all results captured in QA Spreadsheet and team results calculated.</p>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Adjusting Results</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Result Adjustment Process</h4>
+<p style="font-size:13px;">If a FAIL result is adjusted to PASS following discussion with staff member:</p>
+<ul style="font-size:13px;">
+<li>Quality checker advises relevant Team Leader</li>
+<li>Team Leader adjusts source data in secure spreadsheet</li>
+<li>Original FAIL result is superseded by adjusted PASS</li>
+</ul>
+
+<h4>Important Note</h4>
+<p style="font-size:13px;">Adjustments should only occur after staff member makes corrections and quality checker verifies accuracy.</p>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> QA assessment results (scores and PASS/FAIL decisions)</div>
+<div class="block"><strong>Process:</strong> Record in Quality Check Form and e-Sys QA tab simultaneously</div>
+<div class="block"><strong>Decision:</strong> Are results captured in both systems? Is e-Sys showing PASS? Are corrections verified?</div>
+<div class="block"><strong>Output:</strong> Results in secure spreadsheet, e-Sys updated, staff member notified</div>
+</div>
+</div>
+</section>
+
+<!-- Q5 PROVIDE FEEDBACK -->
+
+<section id="q5">
+<h2>Q5 - Provide Feedback & Monthly Results</h2>
+<div class="staff">
+<h3>Feedback Timing & Responsibility</h3>
+<p style="font-size:13px;"><strong>Due:</strong> By 5th business day of following month (via monthly 1:1 meeting)</p>
+<p style="font-size:13px;"><strong>Who:</strong> Team Leader (supported by Quality Checker for technical details)</p>
+
+<h3>Immediate Feedback (For FAIL Results)</h3>
+<ol style="font-size:13px;">
+<li>Quality Checker provides PDF receipt of FAIL result to staff member</li>
+<li>Email to staff member (CC Team Leader)</li>
+<li>Specifies: What was wrong, what needs correction, deadline for re-submission</li>
+<li>Staff member makes corrections in e-Sys</li>
+<li>Quality Checker confirms corrections are accurate</li>
+</ol>
+
+<h3>Monthly 1:1 Feedback Meeting</h3>
+<p style="font-size:13px;"><strong>Topics covered:</strong></p>
+<ul style="font-size:13px;">
+<li>Individual monthly QA result (%) and PASS/FAIL status</li>
+<li>Team monthly QA results (aggregate) and PASS/FAIL</li>
+<li>Items assessed during month (refund + random sample)</li>
+<li>Common errors or trends identified</li>
+<li>Positive performance acknowledgement</li>
+<li>Areas for improvement going forward</li>
+<li>Any coaching or mentoring needed</li>
+</ul>
+
+<h3>Monthly Report</h3>
+<p style="font-size:13px;">Team Leader provides written monthly report showing:</p>
+<ul style="font-size:13px;">
+<li>Individual staff QA results (name, %, PASS/FAIL)</li>
+<li>Team aggregate QA results</li>
+<li>Trend analysis (improving/declining)</li>
+<li>Action items for staff needing support</li>
+</ul>
+
+<div class="highlight"><strong>Key:</strong> Feedback should be provided immediately for FAIL results AND reinforced through monthly 1:1 meetings and written reports. Constructive approach focusing on improvement.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Feedback Best Practices</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Immediate Feedback (FAIL Items)</h4>
+<p style="font-size:13px;">Provide specific details: which checklist items failed, why, and what the staff member needs to do to correct.</p>
+
+<h4>Positive Feedback</h4>
+<p style="font-size:13px;">Acknowledge items that scored 100% (no errors). Reinforce correct processes.</p>
+
+<h4>Trend Recognition</h4>
+<p style="font-size:13px;">If same errors recurring (e.g., always missing notes, always incomplete procedures), address pattern in 1:1 meeting and provide targeted coaching.</p>
+
+<h4>Monthly 1:1 Meeting Timing</h4>
+<p style="font-size:13px;">Conduct by 5th business day of following month to allow time for staff member to review results and prepare questions.</p>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> QA results spreadsheet, individual and team monthly scores</div>
+<div class="block"><strong>Process:</strong> Team Leader calculates metrics, provides immediate feedback for FAILs, conducts 1:1 meeting</div>
+<div class="block"><strong>Decision:</strong> Is feedback constructive? Does staff understand what to improve? Are results documented?</div>
+<div class="block"><strong>Output:</strong> Staff member receives feedback, results recorded, trends identified</div>
+</div>
+</div>
+</section>
+
+</div>
+
+<!-- SYSTEM INTERACTION -->
+
+<div class="systemsOnly">
+<section>
+<h2>System Interaction - Quality Assurance Monthly Cycle</h2>
+<div class="flow">
+<div class="flow-title">Q1-Q5 Complete Monthly QA Process</div>
+<div class="node n-amber">Month Ends (Items Completed)</div>
+<div class="arr"></div>
+<div class="node n-blue">Q1: Submit Refund QA (>$10,000)</div>
+<div class="arr"></div>
+<div class="node n-amber">Form Records Refund Results</div>
+<div class="arr"></div>
+<div class="node n-blue">Q2: Extract MC953 & VT920 Reports (1st Business Day)</div>
+<div class="arr"></div>
+<div class="node n-blue">Select Random Sample (5 items per staff)</div>
+<div class="arr"></div>
+<div class="node n-amber">Sample Saved to SharePoint</div>
+<div class="arr"></div>
+<div class="node n-blue">Q3: Assess Sample Against Checklist (Week 1)</div>
+<div class="arr"></div>
+<div class="node n-amber">Calculate Scores (≥95% PASS, ≤94% FAIL)</div>
+<div class="arr"></div>
+<div class="node n-blue">Q4: Record in Quality Check Form</div>
+<div class="arr"></div>
+<div class="node n-blue">Record in e-Sys QA Tab (Always PASS)</div>
+<div class="arr"></div>
+<div class="node n-amber">If FAIL: Staff Corrects, QC Verifies</div>
+<div class="arr"></div>
+<div class="node n-blue">Q5: Provide Immediate Feedback (FAIL Items)</div>
+<div class="arr"></div>
+<div class="node n-blue">Conduct Monthly 1:1 Meeting (By Day 5)</div>
+<div class="arr"></div>
+<div class="node n-gray">Monthly QA Cycle Complete</div>
+</div>
+</section>
+</div>
+
+<!-- SUMMARY -->
+
+<div class="specOnly">
+
+<section class="summary-section" id="checklist">
+<h2>Quality Checklist & Weightings</h2>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Component</th>
+<th>Checklist Item</th>
+<th>Expectation</th>
+<th>Weighting</th>
+</tr>
+<tr>
+<td rowspan="3"><strong>Procedures</strong></td>
+<td>Procedure Compliance</td>
+<td>Amendment completed in line with relevant procedure (PPR, PPL, L/O, Refund, etc.). MLT Assisted Digital used for basic assessments.</td>
+<td>15</td>
+</tr>
+<tr>
+<td>Available Details Updated</td>
+<td>MC100 (Name, Title, DOB, email, phone) and MC219 (Address) updated</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Related Parties Attended</td>
+<td>Matters for related/third parties addressed per procedure</td>
+<td>10</td>
+</tr>
+<tr>
+<td><strong>Documentation</strong></td>
+<td>Workflow & Notes</td>
+<td>Adequate notes in Comments field (Reference tab): what done, result, money allocated, assessment effect, correspondence method, user ID, date</td>
+<td>15</td>
+</tr>
+<tr>
+<td><strong>Assessment</strong></td>
+<td>Assessments Issued</td>
+<td>Assessments issued where A/I manually completed</td>
+<td>5</td>
+</tr>
+<tr>
+<td rowspan="2"><strong>Suspense</strong></td>
+<td>Suspense Managed</td>
+<td>Suspense allocated to liabilities, transferred (with authority), refunded (with interest if applicable), or transferred to treasury trust</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Payee Details Confirmed</td>
+<td>Payee details correct, delivery address/EFT details correct, A/I reference populated in refund W/I</td>
+<td>10</td>
+</tr>
+<tr>
+<td rowspan="3"><strong>Correspondence</strong></td>
+<td>Appropriate Channel</td>
+<td>Email for MLT registrants and electronic lodgements</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Content Accuracy</td>
+<td>Correct person, dates, properties, years, refund amounts, interest, legislation</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Style & Grammar</td>
+<td>SRO Style Guide compliant, correct spelling/grammar, Land Revenue Administration Branch referenced</td>
+<td>5</td>
+</tr>
+<tr style="background:#f3f4f6;">
+<td colspan="3"><strong>TOTAL POINTS</strong></td>
+<td><strong>100</strong></td>
+</tr>
+</table>
+</div>
+
+<h3>Scoring Rules</h3>
+<ul style="font-size:13px;">
+<li>YES for component = Full points | NO for component = 0 points (no partial credit)</li>
+<li>Total score = 100 minus deductions for NO responses</li>
+<li>≥95% = PASS | ≤94% = FAIL</li>
+<li>Minimum acceptable accuracy KPI: 95%</li>
+</ul>
+</section>
+
+<section class="summary-section" id="sample">
+<h2>Sample Calculation Examples</h2>
+
+<h3>Example 1: Staff Member 'A' - PASS Result</h3>
+<div class="pass">
+<p style="font-size:13px;"><strong>Refund Items (>$10,000):</strong> 10 completed, all 10 correct = 100%</p>
+<p style="font-size:13px;"><strong>Random Sample:</strong> 5 items selected, all 5 correct = 100%</p>
+<p style="font-size:13px;"><strong>Monthly Result:</strong> (100% + 100%) / 2 = <strong>100% = PASS</strong></p>
+</div>
+
+<h3>Example 2: Staff Member 'B' - FAIL Result</h3>
+<div class="fail">
+<p style="font-size:13px;"><strong>Refund Items (>$10,000):</strong> 6 completed, 5 correct = 83.3%</p>
+<p style="font-size:13px;"><strong>Random Sample:</strong> 5 items selected, all 5 correct = 100%</p>
+<p style="font-size:13px;"><strong>Monthly Result:</strong> (83.3% + 100%) / 2 = <strong>91.65% = FAIL</strong></p>
+<p style="font-size:13px;">Action: Provide coaching, identify what went wrong in the 1 failed refund item, reinforce procedures.</p>
+</div>
+
+<h3>Example 3: Single Item Scoring</h3>
+<p style="font-size:13px;"><strong>Item has errors in:</strong> Procedures (−15), Workflow Notes (−15), all others correct</p>
+<p style="font-size:13px;"><strong>Score:</strong> 100 − 15 − 15 = <strong>70% = FAIL</strong></p>
+<p style="font-size:13px;"><strong>Feedback:</strong> "Procedures not followed correctly and notes inadequate. Please review the PPR/PPL procedure and re-do with full documentation."</p>
+</section>
+
+<section class="summary-section" id="timeline">
+<h2>Monthly QA Timeline</h2>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Dates</th>
+<th>Step</th>
+<th>Responsibility</th>
+<th>Task</th>
+</tr>
+<tr>
+<td>1st-Last Business Day</td>
+<td>Q1</td>
+<td>Quality Checker</td>
+<td>Submit refund QA (>$10,000) to Quality Check Form</td>
+</tr>
+<tr>
+<td>1st Business Day</td>
+<td>Q2</td>
+<td>Team Leader</td>
+<td>Extract MC953 & VT920 reports, select random sample (5 per staff)</td>
+</tr>
+<tr>
+<td>1st Business Day</td>
+<td>Q2</td>
+<td>Team Leader</td>
+<td>Save sample to SharePoint, email quality checkers</td>
+</tr>
+<tr>
+<td>First Week</td>
+<td>Q3</td>
+<td>Quality Checker</td>
+<td>Complete QA assessment of random items against checklist</td>
+</tr>
+<tr>
+<td>First Week</td>
+<td>Q3</td>
+<td>Quality Checker</td>
+<td>Record results in Quality Check Form and e-Sys QA tab</td>
+</tr>
+<tr>
+<td>First Week (Immediate)</td>
+<td>Q3</td>
+<td>Quality Checker</td>
+<td>Provide feedback to staff members (FAIL items)</td>
+</tr>
+<tr>
+<td>By 5th Business Day</td>
+<td>Q4</td>
+<td>Team Leader</td>
+<td>Confirm all results captured, calculate team metrics</td>
+</tr>
+<tr>
+<td>By 5th Business Day</td>
+<td>Q5</td>
+<td>Team Leader</td>
+<td>Conduct monthly 1:1 meeting, provide feedback & monthly report</td>
+</tr>
+</table>
+</div>
+</section>
+
+<section class="summary-section">
+<h2>Procedure Summary</h2>
+<ul style="font-size:13px;">
+<li><strong>Purpose:</strong> Quality check tasks completed by LAT colleagues to ensure consistent, equitable results and front-end compliance</li>
+<li><strong>Who checks:</strong> Grade 3 and Grade 4 LAT staff only</li>
+<li><strong>What's checked:</strong> All refund items >$10,000 PLUS random sample of 5 items per staff per month</li>
+<li><strong>Threshold:</strong> Grade 4 BTO required for items >$99,999</li>
+<li><strong>Pass/Fail:</strong> ≥95% = PASS | ≤94% = FAIL</li>
+<li><strong>KPI:</strong> Minimum acceptable accuracy is 95% monthly</li>
+<li><strong>Tools:</strong> Quality Check Form (Microsoft Form) + e-Sys QA tab</li>
+<li><strong>Feedback:</strong> Immediate for FAILs, reinforced in monthly 1:1 meetings</li>
+<li><strong>Records:</strong> Secure password-protected Excel spreadsheet (Team Leader/coach access only)</li>
+<li><strong>Effective Date:</strong> 1 January 2024</li>
+</ul>
+</section>
+
+<section class="summary-section">
+<h2>Source of Authority</h2>
+<ul style="font-size:13px;">
+<li><strong>Division:</strong> Land Revenue Services</li>
+<li><strong>Branch:</strong> Land Revenue Administration</li>
+<li><strong>Original Creation Date:</strong> 8 September 2015</li>
+<li><strong>Latest Revision Date:</strong> 4 December 2025</li>
+<li><strong>Effective From:</strong> 1 January 2024</li>
+<li><strong>System of Record:</strong> Lotus Notes Policies and Procedures Database</li>
+<li><strong>Currency:</strong> Always check electronic version for latest updates</li>
+</ul>
+</section>
+
+<section class="summary-section" id="definitions">
+<h2>Definitions & Acronyms</h2>
+<p style="font-size:13px;">
+<strong>SRO</strong> - State Revenue Office<br>
+<strong>LTX</strong> - Land Tax<br>
+<strong>VRLT</strong> - Vacant Residential Land Tax<br>
+<strong>QA</strong> - Quality Assurance<br>
+<strong>LAT</strong> - Land Assessing Team<br>
+<strong>BTO</strong> - Branch Technical Officer (Grade 4)<br>
+<strong>PPR</strong> - Principal Place of Residence<br>
+<strong>PPL</strong> - Primary Production Land<br>
+<strong>L/O</strong> - Land Ownership<br>
+<strong>MC100</strong> - e-Sys Customer Details screen<br>
+<strong>MC219</strong> - e-Sys Customer Address screen<br>
+<strong>MC953</strong> - Monthly LTX Action Items report<br>
+<strong>VT920</strong> - Weekly VRLT Work Items report<br>
+<strong>A/I</strong> - Action Item<br>
+<strong>W/I</strong> - Work Item<br>
+<strong>EFT</strong> - Electronic Funds Transfer<br>
+<strong>MLT</strong> - My Land Tax (digital lodgement system)<br>
+</p>
+
+<h3>Key Terms</h3>
+<p style="font-size:13px;">
+<strong>Refund Item:</strong> Any completed amendment resulting in a refund >$10,000<br>
+<strong>Random Sample:</strong> 5 items per staff member per month (randomly selected from all completed items)<br>
+<strong>Quality Checklist:</strong> 9-component assessment tool with 100 total weighting points<br>
+<strong>PASS:</strong> Item scores ≥95% on Quality Checklist<br>
+<strong>FAIL:</strong> Item scores ≤94% on Quality Checklist; requires correction and re-checking<br>
+<strong>KPI:</strong> Key Performance Indicator; 95% minimum acceptable monthly accuracy<br>
+</p>
+</section>
+
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(e=>e.style.display='none');
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(e=>e.style.display='block');document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(e=>e.style.display='block');document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p){p.classList.toggle('open')}if(a){a.classList.toggle('open')}}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

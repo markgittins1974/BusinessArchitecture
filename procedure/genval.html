@@ -1,0 +1,716 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>General Valuations Administration Procedure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f7fa;color:#1f2937}
+    header{background:#003a8f;color:#fff;padding:28px 36px}
+    header h1{margin:0;font-size:32px}
+    header p{margin-top:8px;font-weight:600}
+    .layout{display:flex;gap:28px;padding:28px}
+    .sidebar{width:260px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,.08);position:sticky;top:24px;max-height:90vh;overflow-y:auto}
+    .sidebar a{display:block;text-decoration:none;color:#003a8f;font-size:14px;margin-bottom:8px}
+    .content{max-width:1250px;width:100%}
+    .toggle{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .toggle button{border:1px solid #ccc;border-radius:22px;padding:8px 18px;cursor:pointer;background:#fff;font-family:inherit;font-size:13px}
+    .toggle button.active{background:#003a8f;color:#fff}
+    section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    h2{margin-top:0;font-size:22px}
+    h3{font-size:16px;margin-top:20px;color:#003a8f;border-bottom:2px solid #003a8f;padding-bottom:8px}
+    h4{font-size:14px;color:#003a8f;margin:16px 0 8px 0}
+    ul,ol{margin-left:22px;font-size:13px;line-height:1.6}
+    .staff,.architect{display:none}
+    .arch{background:#f9fafb;border-left:5px solid #003a8f;padding:16px;margin-top:14px;font-size:14px}
+    .block{margin-bottom:14px;font-size:13px;line-height:1.5}
+    .stop{background:#fef2f2;border-left:5px solid #b91c1c;padding:12px;margin-top:12px;font-weight:600;font-size:13px}
+    .ref{background:#eef2f7;border-left:5px solid #6366f1;padding:12px;margin-top:12px;font-size:13px}
+    .systemsOnly,.specOnly{display:none}
+    .summary-section{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px;margin-bottom:28px}
+    .detail-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;cursor:pointer;margin-top:16px;font-size:13px}
+    .detail-toggle-text{font-weight:700;color:#1e3a8a;flex:1}
+    .detail-toggle-arrow{font-size:16px;color:#1e3a8a;transition:transform 0.2s;margin-left:12px}
+    .detail-toggle-arrow.open{transform:rotate(180deg)}
+    .detail-panel{display:none;background:#f8faff;border:1px solid #e0e7ff;border-top:none;border-radius:0 0 8px 8px;padding:16px;font-size:13px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{font-size:13px;font-weight:700;color:#1e3a8a;margin:12px 0 6px}
+    .detail-panel h4:first-child{margin-top:0}
+    .detail-panel p,.detail-panel li{font-size:13px;color:#475569;line-height:1.5;margin-bottom:6px}
+    .detail-panel ul{margin-left:18px}
+    .node{padding:14px 20px;border-radius:10px;font-size:12px;font-weight:600;text-align:center;min-width:160px;max-width:280px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:inline-block;margin:4px}
+    .n-blue{background:#dbeafe;border:2px solid #1e3a8a;color:#1e3a8a}
+    .n-amber{background:#fef3c7;border:2px solid #d97706;color:#92400e}
+    .n-gray{background:#f3f4f6;border:2px solid #6b7280;color:#374151}
+    .n-green{background:#dcfce7;border:2px solid #16a34a;color:#15803d}
+    .flow{display:flex;flex-direction:column;align-items:center;max-width:900px;margin:0 auto}
+    .flow-title{font-size:20px;font-weight:800;margin-bottom:24px;text-align:center}
+    .arr{width:2px;height:20px;background:#94a3b8;margin:0 auto;position:relative}
+    .arr::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94a3b8}
+    .table-responsive{overflow-x:auto;margin:12px 0}
+    table{width:100%;border-collapse:collapse;font-size:12px;margin:12px 0}
+    table th,table td{padding:9px;text-align:left;border-bottom:1px solid #e5e7eb}
+    table th{background:#f3f4f6;font-weight:600;color:#1f2937}
+    .highlight{background:#fffbeb;border-left:5px solid #f59e0b;padding:12px;margin:12px 0;font-size:13px}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>General Valuations - Administration Procedure</h1>
+  <p>Division: Operations &bull; Branch: Land Revenue &bull; Revised: 21 July 2023</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Procedure Steps</strong>
+    <a href="#overview">Overview</a>
+    <a href="#q1">Q1 Receive VGV Data</a>
+    <a href="#q2">Q2 Store Files</a>
+    <a href="#q3">Q3 Format & Test</a>
+    <a href="#q4">Q4 Report Status</a>
+    <hr style="margin:12px 0;border:none;border-top:1px solid #e5e7eb;">
+    <strong style="font-size:12px;color:#666;text-transform:uppercase;">Resources</strong>
+    <a href="#register-table" onclick="showView('spec');setTimeout(()=>location.hash='register-table',100);">Register Table</a>
+    <a href="#definitions" onclick="showView('spec');setTimeout(()=>location.hash='definitions',100);">Definitions</a>
+  </aside>
+
+  <main class="content">
+    <div class="toggle">
+      <button id="btnStaff" class="active" onclick="showView('staff')">Staff</button>
+      <button id="btnArch" onclick="showView('architect')">Architect</button>
+      <button id="btnSys" onclick="showView('systems')">System Interaction</button>
+      <button id="btnSpec" onclick="showView('spec')">Summary</button>
+    </div>
+
+<div id="questionFlow">
+
+<!-- OVERVIEW -->
+
+<section id="overview">
+<h2>General Valuations - Administration Procedure Overview</h2>
+<div class="staff">
+<h3>Purpose</h3>
+<p style="font-size:13px;">Provide instruction on how to record, store, register, and report on certified general revaluation data received from the Valuer General Victoria (VGV).</p>
+
+<h3>Scope</h3>
+<ul style="font-size:13px;">
+<li>Recording VGV advice on receipt of general revaluations</li>
+<li>Storing data in appropriate network locations for processing</li>
+<li>Registering general revaluations in the administration register</li>
+<li>Tracking file status through formatting, testing, QA, and production load</li>
+<li>Reporting on revaluation progress via end of month reports</li>
+</ul>
+
+<h3>Scope Exclusions</h3>
+<ul style="font-size:13px;">
+<li>Does NOT explain how to use revaluation data (i.e., load to Production)</li>
+<li>Does NOT cover all exceptional circumstances (use discretion)</li>
+<li>Related procedures: Formatting, Testing, Notes and Anecdotes procedures</li>
+</ul>
+
+<h3>User Assumptions</h3>
+<ul style="font-size:13px;">
+<li>User has access to Valuations inbox (Outlook)</li>
+<li>User has access to S: network drive locations</li>
+<li>User has basic Excel skills</li>
+<li>User has awareness of overall valuations process</li>
+</ul>
+
+<h3>Key Annual Cycle</h3>
+<p style="font-size:13px;">Every year, Victoria's Valuation Authority undertakes general revaluations on all rateable and non-rateable leviable land within their municipality. Valuation authority submits data to VGV for certification, then VGV forwards certified data to SRO via email for recording and processing.</p>
+
+<div class="ref"><strong>Authority:</strong> Division: Operations | Branch: Land Revenue | <strong>Created:</strong> 5 April 2022 | <strong>Revised:</strong> 21 July 2023</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> VGV email with certified general revaluation data</div>
+<div class="block"><strong>Process:</strong> Q1-Q4: Receive, store, track, and report on revaluation files</div>
+<div class="block"><strong>Decision:</strong> Correct municipality folder? Data stored properly? Register updated?</div>
+<div class="block"><strong>Output:</strong> Files accessible for formatting/testing/production load, progress reported monthly</div>
+</div>
+</div>
+</section>
+
+<!-- Q1 RECEIVE VGV DATA -->
+
+<section id="q1">
+<h2>Q1 - How to Receive and Record VGV Certified Data?</h2>
+<div class="staff">
+<h3>Receiving Process</h3>
+<ol style="font-size:13px;">
+<li>Navigate to the Valuations inbox folder in Outlook</li>
+<li>Open the email titled <strong>'20XX General Valuation Certified Data'</strong></li>
+<li>Note: Subject line contains important information</li>
+</ol>
+
+<h3>Email Subject Line Format (Legend)</h3>
+<p style="font-size:13px;"><strong>Format:</strong> [Valuation Level] – [Email Type] – [Municipality] – [VGV Reference]</p>
+<p style="font-size:13px;"><strong>Example:</strong> Level 2022 – Type 1 – Ballarat – VGV-2022-BAL-001</p>
+
+<h3>Recording Receipt Date</h3>
+<ol style="font-size:13px;">
+<li>Note the date the VGV email was RECEIVED in the Valuations inbox</li>
+<li>Open the '20XX General Valuation Register' spreadsheet located at:
+  <br><strong>H:\LandTax\Common\Land_tax\Valuations Team\Administration\General Reval 20XX</strong>
+</li>
+<li>Record the received date in the register</li>
+</ol>
+
+<h3>Counting Properties</h3>
+<p style="font-size:13px;">To determine the number of properties:</p>
+<ol style="font-size:13px;">
+<li>Open the Type 1 file received in the email (unzip the file)</li>
+<li>Count the number of individual lines in the file</li>
+<li>Record this count in the 'Number of properties' field in the register</li>
+</ol>
+
+<div class="stop">CRITICAL: The date recorded is the date the VGV email was received, NOT the date the data was processed or uploaded.</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Email Subject Line Breakdown & File Types</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Email Subject Line Components</h4>
+<p style="font-size:13px;"><strong>Valuation Level:</strong> The assessment year (e.g., Level 2022, Level 2023)</p>
+<p style="font-size:13px;"><strong>Email Type:</strong> Type 1 = Full data set, Type 2 = Amendment/Update</p>
+<p style="font-size:13px;"><strong>Municipality:</strong> Council name (e.g., Ballarat, Melbourne, Geelong)</p>
+<p style="font-size:13px;"><strong>VGV Reference:</strong> Unique reference number assigned by VGV</p>
+
+<h4>File Types in Attachment</h4>
+<ul style="font-size:13px;">
+<li><strong>Type 1 File:</strong> Complete revaluation data for the municipality</li>
+<li><strong>Type 2 File:</strong> Amendment file with updates/corrections</li>
+<li>Files are compressed in a ZIP archive within the email</li>
+<li>Unzip to access individual text files</li>
+</ul>
+
+<h4>Register Location Reference</h4>
+<p style="font-size:13px;">General Valuation Register location:</p>
+<p style="font-size:13px;"><strong>H:\LandTax\Common\Land_tax\Valuations Team\Administration\General Reval 20XX</strong></p>
+<ul style="font-size:13px;">
+<li>Replace '20XX' with actual year (e.g., General Reval 2023)</li>
+<li>File contains 'Register-Format and test' tab for data entry</li>
+<li>File contains 'Reval schedule' tab for progress tracking</li>
+<li>File contains 'Burndown chart' tab for reporting</li>
+</ul>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> VGV email with subject '20XX General Valuation Certified Data'</div>
+<div class="block"><strong>Process:</strong> Open email, record receipt date, count properties from Type 1 file</div>
+<div class="block"><strong>Decision:</strong> Email format correct? Receipt date recorded?</div>
+<div class="block"><strong>Output:</strong> Receipt date and property count recorded in General Valuation Register</div>
+</div>
+</div>
+</section>
+
+<!-- Q2 STORE FILES -->
+
+<section id="q2">
+<h2>Q2 - Where and How Should Files Be Stored?</h2>
+<div class="staff">
+<h3>File Storage Locations</h3>
+<p style="font-size:13px;">Files must be stored in TWO locations: S: network drive AND TRIM document management system.</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Location 1: S: Network Drive</h4>
+<p style="font-size:13px;"><strong>Path:</strong> S:\FTP\Val_Returns\Level XXXX\[Municipality]\received</strong></p>
+<p style="font-size:13px;"><strong>Example:</strong> S:\FTP\Val_Returns\Level 2022\Ballarat\received</p>
+
+<h3>Step-by-Step Storage Process</h3>
+<ol style="font-size:13px;">
+<li>Open the ZIP file attached to the VGV email</li>
+<li>Select all relevant text files</li>
+<li>Locate the correct council file within the correct valuation level folder on S: drive</li>
+<li>Example structure: S:\FTP\Val_Returns\Level 2022\Ballarat</li>
+<li><strong>CREATE a new folder</strong> titled 'received' inside the council folder</li>
+<li>Copy and paste the files into the 'received' folder</li>
+<li>Verify files successfully copied (check file count and sizes)</li>
+</ol>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Location 2: TRIM Document Management</h4>
+<ol style="font-size:13px;">
+<li>Once files saved to S: drive, save the EMAIL (not the files) to TRIM</li>
+<li>Save email to relevant council folder in TRIM</li>
+<li>Example: TRIM\Valuations\2022\Ballarat\General Revaluation</li>
+</ol>
+
+<h3>Email Folder Management (Outlook)</h3>
+<ol style="font-size:13px;">
+<li>After saving email to TRIM, move email from 'Revaluation Data' folder to 'completed' folder in Outlook</li>
+<li>This marks the receipt process as complete</li>
+</ol>
+
+<div class="stop">CRITICAL: Files go to S: drive 'received' folder. EMAIL goes to TRIM. Do NOT save files to TRIM, only the email.</div>
+
+<div class="highlight">
+<strong>Folder Structure Required:</strong>
+S:\FTP\Val_Returns\Level [YEAR]\[MUNICIPALITY]\<strong>received</strong>\
+[VGV data files go here]
+</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: File Path Examples & Folder Structure</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Example File Paths for Different Municipalities and Years</h4>
+<p style="font-size:13px;">2022 Revaluations:</p>
+<ul style="font-size:13px;">
+<li>S:\FTP\Val_Returns\Level 2022\Ballarat\received\</li>
+<li>S:\FTP\Val_Returns\Level 2022\Melbourne\received\</li>
+<li>S:\FTP\Val_Returns\Level 2022\Geelong\received\</li>
+</ul>
+
+<p style="font-size:13px;margin-top:12px;">2023 Revaluations:</p>
+<ul style="font-size:13px;">
+<li>S:\FTP\Val_Returns\Level 2023\Ballarat\received\</li>
+<li>S:\FTP\Val_Returns\Level 2023\Melbourne\received\</li>
+</ul>
+
+<h4>TRIM Folder Hierarchy</h4>
+<p style="font-size:13px;">Email saved to:</p>
+<ul style="font-size:13px;">
+<li>TRIM > Valuations > [YEAR] > [MUNICIPALITY] > General Revaluation > [Emails]</li>
+</ul>
+
+<h4>File Naming Conventions</h4>
+<p style="font-size:13px;">Files from VGV email typically named:</p>
+<ul style="font-size:13px;">
+<li>Type 1: [YEAR]_[MUNICIPALITY]_Type1.txt</li>
+<li>Type 2: [YEAR]_[MUNICIPALITY]_Type2.txt</li>
+<li>Do NOT rename files when saving to S: drive</li>
+</ul>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> VGV email with ZIP file attachment containing text files</div>
+<div class="block"><strong>Process:</strong> Unzip files, copy to S:\FTP\Val_Returns\Level\[Municipality]\received, save email to TRIM</div>
+<div class="block"><strong>Decision:</strong> Correct level folder? Correct municipality? Received folder created?</div>
+<div class="block"><strong>Output:</strong> Files stored on S: drive, email saved to TRIM, Outlook folder updated</div>
+</div>
+</div>
+</section>
+
+<!-- Q3 FORMAT & TEST -->
+
+<section id="q3">
+<h2>Q3 - How to Track Formatting, Testing, and QA Progress?</h2>
+<div class="staff">
+<h3>Register Table Updates</h3>
+<p style="font-size:13px;">As files are formatted, tested, QA checked, and loaded to production, update the 'Reval schedule' tab of the General Valuation Register with the following information:</p>
+
+<h4 style="color:#003a8f;font-weight:600;margin-top:12px;">Register Columns and Data Entry</h4>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Column Name</th>
+<th>Data to Enter</th>
+<th>Completed By</th>
+</tr>
+<tr>
+<td>Municipality</td>
+<td>Council name</td>
+<td>Pre-loaded to register</td>
+</tr>
+<tr>
+<td>Date Received</td>
+<td>Date VGV email received in Valuations inbox</td>
+<td>Formula (from Register-Format tab)</td>
+</tr>
+<tr>
+<td>File Status</td>
+<td>Formatted OR Tested</td>
+<td>Formula (from Register-Format tab)</td>
+</tr>
+<tr>
+<td>Week Assigned</td>
+<td>Date file assigned for formatting/testing</td>
+<td>Grade 3 co-ordinating revaluation</td>
+</tr>
+<tr>
+<td>Assigned for QA</td>
+<td>Name of officer allocated for QA check</td>
+<td>Grade 3 co-ordinating revaluation</td>
+</tr>
+<tr>
+<td>QA Completed</td>
+<td>Yes/No</td>
+<td>QA officer</td>
+</tr>
+<tr>
+<td>Final Sign Off</td>
+<td>Name of officer for final approval</td>
+<td>BTO or Team Leader</td>
+</tr>
+<tr>
+<td>Number of Properties</td>
+<td>Count of properties to be updated</td>
+<td>Formatting officer</td>
+</tr>
+<tr>
+<td>2022 Production Run Time</td>
+<td>Time file took to run previous year (indicator)</td>
+<td>Pre-loaded to register</td>
+</tr>
+<tr>
+<td>Load Week</td>
+<td>Week file planned to be loaded to production</td>
+<td>Grade 3 co-ordinating revaluation</td>
+</tr>
+<tr>
+<td>Loaded</td>
+<td>Date file was loaded to production</td>
+<td>Grade 3 co-ordinating revaluation</td>
+</tr>
+</table>
+</div>
+
+<h3>Production Load Planning</h3>
+<p style="font-size:13px;">Grade 3 co-ordinating the revaluation cycle uses the space at bottom of 'Reval schedule' tab to plan weekly loading:</p>
+<ul style="font-size:13px;">
+<li><strong>Typical load:</strong> 3-4 files loaded each day</li>
+<li><strong>Maximum run time:</strong> 45 minutes per load cycle</li>
+<li>Schedule accounts for system capacity and overnight processing</li>
+</ul>
+
+<h3>Related Procedures</h3>
+<p style="font-size:13px;">Use in conjunction with:</p>
+<ul style="font-size:13px;">
+<li><strong>LGA – Valuations Data – Formatting Procedure</strong> DOC/20/589114</li>
+<li><strong>LGA – Valuations Data – Testing Procedure</strong> DOC/20/588843</li>
+<li><strong>LGA – Formatting & Testing – Notes and Anecdotes Procedure</strong> DOC/20/588772</li>
+</ul>
+
+<div class="highlight">
+<strong>Key Dates and Status Fields:</strong><br>
+Date Received → Week Assigned → Formatting starts → QA Assigned → QA Completed → Final Sign Off → Load Week → Loaded Date
+</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Register Tab Structure & Formula Examples</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>General Valuation Register Sheet Tabs</h4>
+<ul style="font-size:13px;">
+<li><strong>'Register-Format and test' tab:</strong> Data entry point for formatting/testing progress</li>
+<li><strong>'Reval schedule' tab:</strong> Summary table with formulas pulling from Register-Format tab</li>
+<li><strong>'Burndown chart' tab:</strong> Graph showing progress for monthly reporting</li>
+</ul>
+
+<h4>Formula Fields</h4>
+<p style="font-size:13px;">The following columns use Excel formulas to pull data automatically:</p>
+<ul style="font-size:13px;">
+<li><strong>Date Received:</strong> Formula pulls from 'Register-Format and test' tab</li>
+<li><strong>File Status:</strong> Formula pulls Formatted/Tested status from 'Register-Format and test' tab</li>
+</ul>
+
+<h4>Manual Entry Responsibilities</h4>
+<p style="font-size:13px;">Grade 3 co-ordinating revaluation manually enters:</p>
+<ul style="font-size:13px;">
+<li>Week Assigned (date formatting work begins)</li>
+<li>Assigned for QA (officer name)</li>
+<li>Load Week (planned week for production)</li>
+<li>Loaded (actual date loaded to production)</li>
+</ul>
+
+<h4>Production Run Time Reference</h4>
+<p style="font-size:13px;">Column '2022 Production Run Time' shows prior year run time as indicator for planning. Use this to estimate scheduling and system load capacity.</p>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> File formatting/testing completion, QA results, production load date</div>
+<div class="block"><strong>Process:</strong> Update Reval schedule table with status, dates, officer names</div>
+<div class="block"><strong>Decision:</strong> All required fields entered? Status correct? Dates logical?</div>
+<div class="block"><strong>Output:</strong> Register updated, progress tracked, ready for reporting</div>
+</div>
+</div>
+</section>
+
+<!-- Q4 REPORT STATUS -->
+
+<section id="q4">
+<h2>Q4 - How to Report Revaluation Progress in Monthly Reports?</h2>
+<div class="staff">
+<h3>End of Month Report Content</h3>
+<p style="font-size:13px;">Information is provided to LGA team leader and LRB branch manager through the end of month report to provide a status update of general revaluation files.</p>
+
+<h3>Data Source</h3>
+<p style="font-size:13px;">Open the General Valuation Register:</p>
+<p style="font-size:13px;"><strong>H:\LandTax\Common\Land_tax\Valuations Team\Administration\General Reval 20XX</strong></p>
+
+<h3>Report Components</h3>
+<ol style="font-size:13px;">
+<li><strong>Burndown Chart Graph</strong> - From 'Burndown chart' tab
+  <ul style="margin-left:20px;margin-top:6px;">
+  <li>Visual representation of files loaded vs. remaining</li>
+  <li>Included in end of month report</li>
+  <li>Shows progress trajectory</li>
+  </ul>
+</li>
+<li><strong>Summary Text</strong>
+  <ul style="margin-left:20px;margin-top:6px;">
+  <li>Number of files loaded (completed)</li>
+  <li>Number of files remaining (to be loaded)</li>
+  <li>Overall progress percentage</li>
+  <li>Expected completion date</li>
+  </ul>
+</li>
+</ol>
+
+<h3>Report Delivery</h3>
+<ul style="font-size:13px;">
+<li>Report delivered to LGA Team Leader</li>
+<li>Report delivered to LRB Branch Manager</li>
+<li>Timing: End of each calendar month</li>
+<li>Includes snapshot of revaluation load status at time of reporting</li>
+</ul>
+
+<h3>Data Extraction Process</h3>
+<ol style="font-size:13px;">
+<li>Open General Revaluation Register (year-specific file)</li>
+<li>Go to 'Burndown chart' tab</li>
+<li>Copy the graph image</li>
+<li>Include in monthly report document</li>
+<li>Compile text summary from Reval schedule table (count files loaded vs. remaining)</li>
+<li>Provide narrative on progress and any issues</li>
+</ol>
+
+<div class="highlight">
+<strong>Key Reporting Metrics:</strong><br>
+✓ Total municipalities/councils in level<br>
+✓ Files loaded to date<br>
+✓ Files remaining<br>
+✓ Percentage complete<br>
+✓ Expected completion date<br>
+✓ Any delays or issues
+</div>
+
+<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: Burndown Chart Interpretation & Report Format</span><span class="detail-toggle-arrow">▼</span></div>
+<div class="detail-panel">
+<h4>Burndown Chart Purpose</h4>
+<p style="font-size:13px;">Visual chart showing:</p>
+<ul style="font-size:13px;">
+<li>X-axis: Time period (weeks or dates)</li>
+<li>Y-axis: Number of files loaded</li>
+<li>Shows cumulative progress of files loaded</li>
+<li>Slope indicates loading velocity</li>
+</ul>
+
+<h4>Chart Interpretation</h4>
+<ul style="font-size:13px;">
+<li><strong>Steep slope:</strong> Files loading quickly, on schedule</li>
+<li><strong>Flat slope:</strong> Few files loaded, potential delays</li>
+<li><strong>Remaining gap:</strong> Files still to be processed</li>
+</ul>
+
+<h4>Report Format</h4>
+<p style="font-size:13px;">End of month report includes:</p>
+<ul style="font-size:13px;">
+<li>Burndown chart graph (from Register)</li>
+<li>Summary table: Loaded vs. Remaining count</li>
+<li>Narrative: Progress update, issues, expected completion</li>
+<li>Distribution: LGA TL, LRB BM</li>
+</ul>
+</div>
+</div>
+<div class="architect">
+<div class="arch">
+<div class="block"><strong>Input:</strong> General Valuation Register with Reval schedule and Burndown chart data</div>
+<div class="block"><strong>Process:</strong> Extract graph and metrics, compile summary text, format report</div>
+<div class="block"><strong>Decision:</strong> Data current? Graph clear? All metrics included?</div>
+<div class="block"><strong>Output:</strong> End of month report to LGA TL and LRB BM with progress snapshot</div>
+</div>
+</div>
+</section>
+
+</div>
+
+<!-- SYSTEM INTERACTION VIEW -->
+
+<div class="systemsOnly">
+<section>
+<h2>System Interaction - General Valuations Administration Workflow</h2>
+<div class="flow">
+<div class="flow-title">Q1-Q4 Revaluation Administration Cycle</div>
+<div class="node n-amber">VGV Email Received: '20XX General Valuation Certified Data'</div>
+<div class="arr"></div>
+<div class="node n-blue">Q1: Record Receipt Date & Count Properties</div>
+<div class="arr"></div>
+<div class="node n-blue">Q2: Store Files to S: Drive 'received' Folder</div>
+<div class="arr"></div>
+<div class="node n-blue">Save Email to TRIM, Move to 'completed' Folder</div>
+<div class="arr"></div>
+<div class="node n-blue">Q3: Update Register - Formatting/Testing Progress</div>
+<div class="arr"></div>
+<div class="node n-amber">Formatting Officer: Format & Test File</div>
+<div class="arr"></div>
+<div class="node n-amber">QA Officer: Quality Check Complete</div>
+<div class="arr"></div>
+<div class="node n-amber">Grade 3: Approve Final Sign Off</div>
+<div class="arr"></div>
+<div class="node n-blue">Grade 3: Plan Load Week (3-4 files/day, max 45 min)</div>
+<div class="arr"></div>
+<div class="node n-green">Production Load Complete (Update Register)</div>
+<div class="arr"></div>
+<div class="node n-blue">Q4: Extract Data for End of Month Report</div>
+<div class="arr"></div>
+<div class="node n-gray">Report to LGA TL & LRB BM: Burndown Chart + Summary</div>
+</div>
+</section>
+</div>
+
+<!-- SUMMARY VIEW -->
+
+<div class="specOnly">
+
+<section class="summary-section" id="register-table">
+<h2>General Valuation Register - Column Reference</h2>
+<div class="table-responsive">
+<table>
+<tr style="background:#003a8f;color:white;">
+<th>Column</th>
+<th>Data to Enter</th>
+<th>Entered By</th>
+<th>Source/Notes</th>
+</tr>
+<tr>
+<td><strong>Municipality</strong></td>
+<td>Council name</td>
+<td>Pre-loaded</td>
+<td>Pre-populated list</td>
+</tr>
+<tr>
+<td><strong>Date Received</strong></td>
+<td>VGV email receipt date</td>
+<td>Formula</td>
+<td>From Register-Format tab</td>
+</tr>
+<tr>
+<td><strong>File Status</strong></td>
+<td>Formatted OR Tested</td>
+<td>Formula</td>
+<td>From Register-Format tab</td>
+</tr>
+<tr>
+<td><strong>Week Assigned</strong></td>
+<td>Assignment date</td>
+<td>Grade 3</td>
+<td>Start of formatting work</td>
+</tr>
+<tr>
+<td><strong>Assigned for QA</strong></td>
+<td>Officer name</td>
+<td>Grade 3</td>
+<td>QA responsibility</td>
+</tr>
+<tr>
+<td><strong>QA Completed</strong></td>
+<td>Yes/No</td>
+<td>QA Officer</td>
+<td>Quality assurance status</td>
+</tr>
+<tr>
+<td><strong>Final Sign Off</strong></td>
+<td>Officer name</td>
+<td>BTO or TL</td>
+<td>Approval for production</td>
+</tr>
+<tr>
+<td><strong>Number of Properties</strong></td>
+<td>Property count</td>
+<td>Formatting Officer</td>
+<td>From Type 1 file</td>
+</tr>
+<tr>
+<td><strong>2022 Run Time</strong></td>
+<td>Minutes</td>
+<td>Pre-loaded</td>
+<td>Prior year indicator</td>
+</tr>
+<tr>
+<td><strong>Load Week</strong></td>
+<td>Scheduled week</td>
+<td>Grade 3</td>
+<td>Production load plan</td>
+</tr>
+<tr>
+<td><strong>Loaded</strong></td>
+<td>Completion date</td>
+<td>Grade 3</td>
+<td>Actual load date</td>
+</tr>
+</table>
+</div>
+</section>
+
+<section class="summary-section">
+<h2>Procedure Summary</h2>
+<ul style="font-size:13px;">
+<li><strong>Q1:</strong> Receive VGV email titled '20XX General Valuation Certified Data', record receipt date and property count from Type 1 file</li>
+<li><strong>Q2:</strong> Store files to S:\FTP\Val_Returns\Level\[Municipality]\received folder, save email to TRIM, move email to 'completed' folder</li>
+<li><strong>Q3:</strong> Track formatting, testing, QA, and production load progress in General Valuation Register - Reval schedule tab</li>
+<li><strong>Q4:</strong> Extract Burndown chart and summary metrics from register for end of month reporting to LGA TL and LRB BM</li>
+<li><strong>Annual Cycle:</strong> VGV certifies and emails data → SRO records and stores → Files formatted/tested → Loaded to production → Progress reported</li>
+<li><strong>Related Procedures:</strong> Formatting Procedure (DOC/20/589114), Testing Procedure (DOC/20/588843), Notes/Anecdotes (DOC/20/588772)</li>
+<li><strong>Loading Constraints:</strong> 3-4 files/day maximum, 45-minute maximum run time per load</li>
+<li><strong>User Access Required:</strong> Outlook Valuations inbox, S: network drive, TRIM system, Excel register</li>
+</ul>
+</section>
+
+<section class="summary-section">
+<h2>Source of Authority</h2>
+<ul style="font-size:13px;">
+<li><strong>Division:</strong> Operations</li>
+<li><strong>Branch:</strong> Land Revenue</li>
+<li><strong>Original Created:</strong> 5 April 2022</li>
+<li><strong>Last Revised:</strong> 21 July 2023</li>
+<li><strong>Scope Note:</strong> Does NOT cover revaluation data loading to production or all exceptional circumstances</li>
+</ul>
+</section>
+
+<section class="summary-section" id="definitions">
+<h2>Definitions & Acronyms</h2>
+<p style="font-size:13px;">
+<strong>SRO</strong> - State Revenue Office<br>
+<strong>LTX</strong> - Land Tax<br>
+<strong>LGA</strong> - Local Government Administration<br>
+<strong>LRB</strong> - Land Revenue Branch<br>
+<strong>VGV</strong> - Valuer General's Office of Victoria<br>
+<strong>BTO</strong> - Branch Technical Officer<br>
+<strong>TL</strong> - Team Leader<br>
+<strong>TRIM</strong> - Document management system (Records management)<br>
+<strong>General Revaluation</strong> - Annual property valuation update by Valuation Authority<br>
+<strong>Type 1 File</strong> - Complete revaluation data set<br>
+<strong>Type 2 File</strong> - Amendment or update file<br>
+<strong>Certified Data</strong> - Revaluation data approved by VGV before delivery to SRO
+</p>
+</section>
+
+</div>
+
+  </main>
+</div>
+
+<script>
+function showView(view){
+  document.getElementById('questionFlow').style.display='block';
+  document.querySelector('.systemsOnly').style.display='none';
+  document.querySelector('.specOnly').style.display='none';
+  document.querySelectorAll('.staff,.architect').forEach(e=>e.style.display='none');
+  document.getElementById('btnStaff').classList.remove('active');
+  document.getElementById('btnArch').classList.remove('active');
+  document.getElementById('btnSys').classList.remove('active');
+  document.getElementById('btnSpec').classList.remove('active');
+  if(view==='staff'){document.querySelectorAll('.staff').forEach(e=>e.style.display='block');document.getElementById('btnStaff').classList.add('active')}
+  if(view==='architect'){document.querySelectorAll('.architect').forEach(e=>e.style.display='block');document.getElementById('btnArch').classList.add('active')}
+  if(view==='systems'){document.getElementById('questionFlow').style.display='none';document.querySelector('.systemsOnly').style.display='block';document.getElementById('btnSys').classList.add('active')}
+  if(view==='spec'){document.getElementById('questionFlow').style.display='none';document.querySelector('.specOnly').style.display='block';document.getElementById('btnSpec').classList.add('active')}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('.detail-toggle');
+  if(t){var p=t.nextElementSibling;var a=t.querySelector('.detail-toggle-arrow');if(p){p.classList.toggle('open')}if(a){a.classList.toggle('open')}}
+});
+showView('staff');
+</script>
+
+</body>
+</html>

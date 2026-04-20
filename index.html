@@ -105,53 +105,6 @@
     .shape-6 { width:320px;height:80px;right:8%;bottom:22%;--rot-start:8deg;--rot-end:18deg;animation-delay:0.9s,0.9s }
     .shape-6 .shape-inner { background:linear-gradient(to right,rgba(195,182,255,0.12),transparent) }
 
-    /* ═══════════════════════════════════════════════
-       AMBIENT GLOWS – JS-animated floating blobs
-    ═══════════════════════════════════════════════ */
-    .page-wrap {
-      position: relative;
-      min-height: 100vh;
-      overflow: hidden;
-      background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
-    }
-
-    .blob {
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .blob-1 {
-      width: 55vmax; height: 55vmax;
-      top: -15%; left: -12%;
-      background: radial-gradient(circle at center, rgba(99,102,241,0.35), rgba(99,102,241,0.12) 45%, transparent 70%);
-    }
-    .blob-2 {
-      width: 50vmax; height: 50vmax;
-      bottom: -18%; right: -10%;
-      background: radial-gradient(circle at center, rgba(195,182,255,0.3), rgba(195,182,255,0.1) 45%, transparent 70%);
-    }
-    .blob-3 {
-      width: 40vmax; height: 40vmax;
-      top: 35%; left: 40%;
-      background: radial-gradient(circle at center, rgba(245,192,78,0.22), rgba(245,192,78,0.06) 45%, transparent 70%);
-    }
-    .blob-4 {
-      width: 35vmax; height: 35vmax;
-      top: 5%; right: -5%;
-      background: radial-gradient(circle at center, rgba(109,211,251,0.2), rgba(109,211,251,0.05) 45%, transparent 70%);
-    }
-
-    .vignette {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      background: linear-gradient(to bottom,rgba(15,43,100,0.5) 0%,transparent 15%,transparent 85%,rgba(75,44,94,0.6) 100%);
-    }
 
     /* ═══════════════════════════════════════════════
        LAYOUT

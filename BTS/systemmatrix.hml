@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Systems Matrix Audit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        line-height: 1.6;
+        color: #2c3e50;
+        background: #f8f9fa;
+        padding: 20px;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        padding: 40px;
+    }
+    
+    header {
+        border-bottom: 3px solid #003a8f;
+        padding-bottom: 30px;
+        margin-bottom: 40px;
+    }
+    
+    h1 {
+        font-size: 2.5em;
+        color: #003a8f;
+        margin-bottom: 10px;
+    }
+    
+    .subtitle {
+        font-size: 1em;
+        color: #666;
+        font-weight: normal;
+    }
+    
+    h2 {
+        font-size: 1.8em;
+        color: #003a8f;
+        margin-top: 50px;
+        margin-bottom: 25px;
+        border-left: 5px solid #003a8f;
+        padding-left: 15px;
+    }
+    
+    h3 {
+        font-size: 1.3em;
+        color: #2c3e50;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+    
+    .system-card {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 25px;
+        margin-bottom: 25px;
+        border-left: 5px solid #003a8f;
+    }
+    
+    .system-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .system-name {
+        font-size: 1.4em;
+        font-weight: 700;
+        color: #003a8f;
+    }
+    
+    .system-refs {
+        background: #e3f2fd;
+        color: #003a8f;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+    }
+    
+    .system-desc {
+        color: #555;
+        font-size: 0.95em;
+        margin: 10px 0;
+        font-style: italic;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 0.95em;
+    }
+    
+    thead {
+        background: #f0f4f8;
+    }
+    
+    th {
+        padding: 12px 15px;
+        text-align: left;
+        font-weight: 600;
+        color: #003a8f;
+        border-bottom: 2px solid #003a8f;
+    }
+    
+    td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    tbody tr:hover {
+        background: #f9fafb;
+    }
+    
+    .capability-list {
+        margin: 20px 0;
+    }
+    
+    .capability-item {
+        padding: 10px 15px;
+        margin: 8px 0;
+        background: white;
+        border-left: 3px solid #28a745;
+        border-radius: 4px;
+    }
+    
+    .capability-item strong {
+        color: #003a8f;
+        display: block;
+        margin-bottom: 4px;
+    }
+    
+    .capability-item span {
+        color: #666;
+        font-size: 0.95em;
+    }
+    
+    .gap-alert {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-left: 5px solid #ff9800;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 4px;
+    }
+    
+    .gap-alert strong {
+        color: #ff6f00;
+    }
+    
+    .success-badge {
+        background: #d4edda;
+        color: #155724;
+        padding: 2px 8px;
+        border-radius: 3px;
+        font-size: 0.85em;
+        font-weight: 600;
+    }
+    
+    .warning-badge {
+        background: #fff3cd;
+        color: #856404;
+        padding: 2px 8px;
+        border-radius: 3px;
+        font-size: 0.85em;
+        font-weight: 600;
+    }
+    
+    .danger-badge {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 2px 8px;
+        border-radius: 3px;
+        font-size: 0.85em;
+        font-weight: 600;
+    }
+    
+    .qa-section {
+        background: #f0f7ff;
+        border: 1px solid #b3d9ff;
+        border-radius: 6px;
+        padding: 25px;
+        margin: 30px 0;
+    }
+    
+    .qa-section h3 {
+        margin-top: 0;
+        color: #003a8f;
+    }
+    
+    .findings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 25px 0;
+    }
+    
+    .finding-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 20px;
+    }
+    
+    .finding-card h4 {
+        color: #003a8f;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+    }
+    
+    .summary-box {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border: 2px solid #003a8f;
+        border-radius: 8px;
+        padding: 30px;
+        margin: 30px 0;
+        text-align: center;
+    }
+    
+    .summary-box h2 {
+        border: none;
+        padding: 0;
+        margin-top: 0;
+    }
+    
+    .stat {
+        font-size: 2em;
+        font-weight: 700;
+        color: #003a8f;
+        display: block;
+        margin: 15px 0 5px 0;
+    }
+    
+    .stat-label {
+        font-size: 0.9em;
+        color: #555;
+    }
+    
+    ul, ol {
+        margin: 15px 0 15px 25px;
+    }
+    
+    li {
+        margin: 8px 0;
+        line-height: 1.6;
+    }
+    
+    .nav-tabs {
+        display: flex;
+        gap: 10px;
+        margin: 30px 0;
+        border-bottom: 2px solid #e5e7eb;
+        flex-wrap: wrap;
+    }
+    
+    .nav-tabs button {
+        background: none;
+        border: none;
+        padding: 12px 20px;
+        font-size: 1em;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        color: #555;
+        transition: all 0.3s;
+    }
+    
+    .nav-tabs button.active {
+        color: #003a8f;
+        border-bottom-color: #003a8f;
+        font-weight: 600;
+    }
+    
+    .nav-tabs button:hover {
+        color: #003a8f;
+    }
+    
+    .footer {
+        margin-top: 50px;
+        padding-top: 30px;
+        border-top: 1px solid #e5e7eb;
+        color: #666;
+        font-size: 0.9em;
+        text-align: center;
+    }
+    
+    code {
+        background: #f4f4f4;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+        color: #d73a49;
+    }
+    
+    .table-wrapper {
+        overflow-x: auto;
+        margin: 20px 0;
+    }
+    
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 1.8em;
+        }
+        
+        h2 {
+            font-size: 1.4em;
+        }
+        
+        .findings-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        table {
+            font-size: 0.85em;
+        }
+        
+        th, td {
+            padding: 8px 10px;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Systems Matrix Audit</h1>
+            <p class="subtitle">23 Systems & Capabilities Analysis Across 33 Land Tax Administration Procedures</p>
+            <p style="margin-top: 15px; color: #666;"><strong>Quality Check:</strong> All systems mapped to stated capabilities | <strong>Date:</strong> April 2026</p>
+        </header>
+
+<h2>SYSTEMS INVENTORY</h2>
+
+<h3>1. **e-Sys** (Primary LTA System)</h3>
+<p><strong>References:</strong> 509 mentions across procedures  </p>
+<p><strong>Primary Responsibility:</strong> Land tax assessment, registration, and liability management</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Registration lookup</td>
+<td>Identify existing registrations before creating new ones</td>
+</tr>
+<tr>
+<td>Partial rate calculation</td>
+<td>Calculate absentee owner surcharge for partial ownership</td>
+</tr>
+<tr>
+<td>Parcel creation & property association</td>
+<td>Link properties to customer accounts in grouping/duplicate scenarios</td>
+</tr>
+<tr>
+<td>Customer records management</td>
+<td>Store customer type, contact, authority details</td>
+</tr>
+<tr>
+<td>Assessment generation & issuance</td>
+<td>Create and issue new assessments</td>
+</tr>
+<tr>
+<td>Liability recalculation</td>
+<td>Recalculate liabilities when exemptions/registrations change</td>
+</tr>
+<tr>
+<td>Flag management</td>
+<td>Set/clear investigation, absentee, PPR, PPL flags</td>
+</tr>
+<tr>
+<td>MC301 group management</td>
+<td>Create/manage Land Tax Groups for trustees</td>
+</tr>
+<tr>
+<td>MC988 exemption reports</td>
+<td>Generate exemption audit reports</td>
+</tr>
+<tr>
+<td>Property lookup</td>
+<td>Search and retrieve property records</td>
+</tr>
+<tr>
+<td>Address validation & flow</td>
+<td>Validate addresses during customer/property updates</td>
+</tr>
+<tr>
+<td>Notification status lookup</td>
+<td>Check if customer has active notification preferences</td>
+</tr>
+<tr>
+<td>Protocol routing</td>
+<td>Route correspondence based on customer preference (digital/postal)</td>
+</tr>
+<tr>
+<td>Investigation flag management</td>
+<td>Mark investigations, assign to investigators</td>
+</tr>
+<tr>
+<td>Record trust subtype</td>
+<td>Document discretionary/unit/fixed trust classification</td>
+</tr>
+<tr>
+<td>Penalty entry & application</td>
+<td>Enter and apply late amendment penalties</td>
+</tr>
+<tr>
+<td>Field clearing & end-dating</td>
+<td>Cease registrations and remove exemptions</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>System Gaps:</strong> No data warehousing, no external API for direct third-party integration</p>
+
+<p>---</p>
+
+<h3>2. **CM10 / EDRMS** (Document Management)</h3>
+<p><strong>References:</strong> 57 (CM10) + 11 (EDRMS) = 68 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Correspondence filing, decision documentation</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Document storage</td>
+<td>Save correspondence, decisions, TARB determinations</td>
+</tr>
+<tr>
+<td>Investigation file retrieval</td>
+<td>Access historical investigation reports</td>
+</tr>
+<tr>
+<td>TARB decision history</td>
+<td>Retrieve TARB determinations and objection files</td>
+</tr>
+<tr>
+<td>Letter storage & retrieval</td>
+<td>Archive issued correspondence to customers</td>
+</tr>
+<tr>
+<td>Folder structure (VF/24/41)</td>
+<td>Organize documents by procedure area and date</td>
+</tr>
+<tr>
+<td>TRIM integration</td>
+<td>Cross-system storage with TRIM (legacy reference)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>System Gaps:</strong> No workflow automation, no OCR capability, manual filing required</p>
+
+<p>---</p>
+
+<h3>3. **TARB** (Technical Advice & Review Branch)</h3>
+<p><strong>References:</strong> 116 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Exemption determination and objection resolution  </p>
+<p><strong>Note:</strong> TARB is an organizational unit, not a software system, but has decision records</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exemption determination (s3B, s3BA)</td>
+<td>Approve/deny controlling interest & beneficiary exemptions</td>
+</tr>
+<tr>
+<td>Formal Objection decisions</td>
+<td>Rule on taxpayer challenges to assessments</td>
+</tr>
+<tr>
+<td>Private Ruling issuance</td>
+<td>Issue rulings on ambiguous eligibility questions</td>
+</tr>
+<tr>
+<td>File reference generation</td>
+<td>Create unique TARB file ID for tracking</td>
+</tr>
+<tr>
+<td>Objections Summary Report</td>
+<td>Produce audit of all active TARB files</td>
+</tr>
+<tr>
+<td>Communications</td>
+<td>Issue determination notices and decision memos</td>
+</tr>
+<tr>
+<td>Decision date recording</td>
+<td>Document when determination was made</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Integration Points:</strong>  </p>
+<p>- Decisions recorded in <strong>e-Sys</strong> (exemption outcome field)</p>
+<p>- Documents stored in <strong>CM10</strong></p>
+<p>- Copy sent to SRO for publishing on <strong>SRO website</strong></p>
+
+<p><strong>System Gaps:</strong> No automated intake system, manual allocation, paper-based workflow</p>
+
+<p>---</p>
+
+<h3>4. **ASIC** (Australian Securities & Investments Commission)</h3>
+<p><strong>References:</strong> 88 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Verify corporate ownership and director information</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Company type verification</td>
+<td>Confirm if entity is Australian, Foreign, or Non-Company</td>
+</tr>
+<tr>
+<td>Corporation verification</td>
+<td>Look up company registration status</td>
+</tr>
+<tr>
+<td>Director verification</td>
+<td>Check if director is Australian resident</td>
+</tr>
+<tr>
+<td>Shareholder identification</td>
+<td>Determine controlling interest ownership</td>
+</tr>
+<tr>
+<td>Search tools (via e-Sys)</td>
+<td>Access ASIC database through e-Sys interface</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Access Method:</strong> Staff use "Tools → View ASIC Files" from e-Sys customer screen</p>
+
+<p><strong>System Gaps:</strong> One-way integration (query only), no bidirectional sync</p>
+
+<p>---</p>
+
+<h3>5. **COI** (Corporate Registry - Company Info)</h3>
+<p><strong>References:</strong> 140 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Corporate ownership, directorship, business entity verification</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Corporate data lookup</td>
+<td>Retrieve company registration, shareholder info</td>
+</tr>
+<tr>
+<td>Director identification</td>
+<td>Identify company directors and their details</td>
+</tr>
+<tr>
+<td>Property data (land ownership)</td>
+<td>Link companies to property ownership</td>
+</tr>
+<tr>
+<td>ABN/ACN verification</td>
+<td>Verify business entity registration</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Relationship to ASIC:</strong> COI provides Victorian-level corporate registry; ASIC is federal</p>
+
+<p><strong>System Gaps:</strong> No automated notification of director/shareholder changes</p>
+
+<p>---</p>
+
+<h3>6. **DAS** (Data & Analytics Services)</h3>
+<p><strong>References:</strong> 82 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Land transfer records and title data</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transfer records</td>
+<td>Access Torrens title transfer history</td>
+</tr>
+<tr>
+<td>Title chain verification</td>
+<td>Verify ownership transitions</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Data Source:</strong> Provides Torrens title data to verify land ownership changes</p>
+
+<p><strong>System Gaps:</strong> Appears to be read-only; no update capability documented</p>
+
+<p>---</p>
+
+<h3>7. **Landata**</h3>
+<p><strong>References:</strong> 77 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Land register queries and title certificate generation</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Title history</td>
+<td>Retrieve historical Torrens title records</td>
+</tr>
+<tr>
+<td>Lot list generation</td>
+<td>Generate property lot lists for grouping/land transfer scenarios</td>
+</tr>
+<tr>
+<td>Certificate generation</td>
+<td>Produce title certificates for verification</td>
+</tr>
+<tr>
+<td>Address verification</td>
+<td>Confirm property addresses</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Access Method:</strong> Manual credential management; staff download certificates and save to CM10</p>
+
+<p><strong>System Gaps:</strong> No API integration; manual download process required</p>
+
+<p>---</p>
+
+<h3>8. **VGV** (Victorian Geospatial Data Service - assumed)</h3>
+<p><strong>References:</strong> 79 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Property location and planning zone verification</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Property location mapping</td>
+<td>Determine if property is within Victoria (SRO jurisdiction)</td>
+</tr>
+<tr>
+<td>Planning zone lookup</td>
+<td>Identify planning zones (e.g., agricultural, residential)</td>
+</tr>
+<tr>
+<td>Property boundary data</td>
+<td>Support grouping/duplication assessment</td>
+</tr>
+<tr>
+<td>Breakdown generation</td>
+<td>Generate zone breakdowns if requested</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>System Gaps:</strong> No direct API call documented; appears to be reference-only</p>
+
+<p>---</p>
+
+<h3>9. **Register** (Registration System)</h3>
+<p><strong>References:</strong> 57 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Formal registration tracking</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Registration tracking</td>
+<td>Maintain formal record of all registrations</td>
+</tr>
+<tr>
+<td>Status management</td>
+<td>Track registration active/ceased status</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Note:</strong> Possibly refers to e-Sys registration module; unclear if separate system</p>
+
+<p><strong>System Gaps:</strong> Function overlaps with e-Sys; unclear separation of duties</p>
+
+<p>---</p>
+
+<h3>10. **TaxNet** (SRO's Internal System)</h3>
+<p><strong>References:</strong> 69 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Land tax and PCC assessment management</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Assessment configuration</td>
+<td>Set up assessment rules and tax calculations</td>
+</tr>
+<tr>
+<td>Assessment recalculation</td>
+<td>Trigger assessment recalcs when rates or exemptions change</td>
+</tr>
+<tr>
+<td>Customer communication</td>
+<td>Send notifications and correspondence templates</td>
+</tr>
+<tr>
+<td>Fee unit determination</td>
+<td>Publish annual fee unit values (coordination with DTF)</td>
+</tr>
+<tr>
+<td>System updates & coordination</td>
+<td>Manage updates across SRO system estate</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>System Gaps:</strong> Role appears to partially duplicate e-Sys; unclear division of labor</p>
+
+<p>---</p>
+
+<h3>11. **SRO Website** (Public Portal)</h3>
+<p><strong>References:</strong> 106 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Customer-facing public portal and notifications</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Absentee Owner Notification Portal</td>
+<td>Customer declarations of absentee status</td>
+</tr>
+<tr>
+<td>Exemption publication</td>
+<td>Publish exemption schedules (5 URLs)</td>
+</tr>
+<tr>
+<td>Website updates</td>
+<td>Coordinate updates across multiple SRO pages</td>
+</tr>
+<tr>
+<td>Customer information</td>
+<td>Publish requirements for documentation/submission</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Publishing Responsibility:</strong> <strong>KMB (Kauri Management Branch)</strong> coordinates publication to SRO website</p>
+
+<p><strong>System Gaps:</strong> No integration with e-Sys; manual publishing process</p>
+
+<p>---</p>
+
+<h3>12. **Assisted Digital (AD) / My Land Tax (MLT)**</h3>
+<p><strong>References:</strong> 34 (AD) + 71 (MLT) = 105 combined  </p>
+<p><strong>Primary Responsibility:</strong> Digital correspondence and customer portal</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Amendment submissions</td>
+<td>Accept customer amendments via online form</td>
+</tr>
+<tr>
+<td>Email notifications</td>
+<td>Send digital correspondence (preferred to postal)</td>
+</tr>
+<tr>
+<td>Auto-authentication</td>
+<td>Customer logs in via digital identity</td>
+</tr>
+<tr>
+<td>Communications Manager integration</td>
+<td>Deliver correspondence templates</td>
+</tr>
+<tr>
+<td>MyGov integration</td>
+<td>Link with MyGov for authentication</td>
+</tr>
+<tr>
+<td>Portal responses</td>
+<td>Accept Contact Us/Smart Form submissions</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Communication Flow:</strong> AD/MLT → <strong>Communications Manager</strong> → delivery engine</p>
+
+<p><strong>System Gaps:</strong> No offline correspondence support; postal fallback required</p>
+
+<p>---</p>
+
+<h3>13. **LetterPro**</h3>
+<p><strong>References:</strong> 6 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Postal correspondence generation</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Postal letter generation</td>
+<td>Print and prepare correspondence for postal delivery</td>
+</tr>
+<tr>
+<td>Template integration</td>
+<td>Use One Note templates for letter content</td>
+</tr>
+<tr>
+<td>Print extraction</td>
+<td>Generate print files for external printing</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Access Method:</strong> Program > Correspondence > Letter type > CID > Send</p>
+
+<p><strong>System Gaps:</strong> Manual process; no automatic printing</p>
+
+<p>---</p>
+
+<h3>14. **Communications Manager**</h3>
+<p><strong>References:</strong> 6 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Digital correspondence delivery</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Digital delivery routing</td>
+<td>Send correspondence via AD/MLT</td>
+</tr>
+<tr>
+<td>Template management</td>
+<td>Manage correspondence templates</td>
+</tr>
+<tr>
+<td>Email notification</td>
+<td>Trigger email notifications to customers</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Integration:</strong> Receives input from AD/MLT or LetterPro</p>
+
+<p><strong>System Gaps:</strong> Limited visibility into delivery status</p>
+
+<p>---</p>
+
+<h3>15. **VCAT** (Victorian Civil & Administrative Tribunal)</h3>
+<p><strong>References:</strong> 81 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Legal appeal authority (not a software system; legal body)</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Order generation</td>
+<td>Issue binding orders on land tax disputes</td>
+</tr>
+<tr>
+<td>Order documentation</td>
+<td>Create VCAT orders requiring system updates</td>
+</tr>
+<tr>
+<td>Authority</td>
+<td>Final authority on certain land tax appeals</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>System Integration:</strong>  </p>
+<p>- VCAT orders stored in <strong>CM10</strong> with <strong>EDRMS</strong> reference</p>
+<ul>
+<li>Outcomes trigger e-Sys updates</li>
+<ul>
+<li>Process: LRA staff acknowledge → update e-Sys → issue assessment</li>
+</ul>
+<p><strong>System Gaps:</strong> No automated order intake; manual processing required</p>
+
+<p>---</p>
+
+<h3>16. **CM9** (Investigation Management)</h3>
+<p><strong>References:</strong> 26 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Investigation case tracking</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Investigation flag & reference</td>
+<td>Record investigation status and IC-prefix reference number</td>
+</tr>
+<tr>
+<td>Investigation detail</td>
+<td>Store investigation history and outcomes</td>
+</tr>
+<tr>
+<td>Investigator assignment</td>
+<td>Allocate cases to investigators</td>
+</tr>
+<tr>
+<td>Visual check</td>
+<td>Display investigation status in customer records</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Relationship to e-Sys:</strong> CM9 data referenced in e-Sys; appears to be separate investigation system</p>
+
+<p><strong>System Gaps:</strong> No bidirectional sync with e-Sys</p>
+
+<p>---</p>
+
+<h3>17. **DMS** (Document Management System)</h3>
+<p><strong>References:</strong> 28 mentions  </p>
+<p><strong>Primary Responsibility:</strong> NII (Non-Issue Indicator) recovery tracking</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NII recovery</td>
+<td>Track recovery of non-issue indicators</td>
+</tr>
+<tr>
+<td>Decommissioning</td>
+<td>Process customer decommissioning</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>System Gaps:</strong> Very limited documentation of role; possible overlap with CM10</p>
+
+<p>---</p>
+
+<h3>18. **VEC** (Victorian Electoral Commission)</h3>
+<p><strong>References:</strong> 6 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Individual eligibility verification</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Residency verification</td>
+<td>Verify individual Australian residency</td>
+</tr>
+<tr>
+<td>Electoral roll lookup</td>
+<td>Confirm individual is on electoral roll</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Access Method:</strong> Staff conduct lookups during absentee assessment</p>
+
+<p><strong>System Gaps:</strong> Read-only; no system integration documented</p>
+
+<p>---</p>
+
+<h3>19. **Land Channel**</h3>
+<p><strong>References:</strong> 18 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Property data provision</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Property data lookup</td>
+<td>Retrieve property details for assessments</td>
+</tr>
+<tr>
+<td>Address verification</td>
+<td>Verify property addresses</td>
+</tr>
+<tr>
+<td>Property location confirmation</td>
+<td>Confirm property location within Victoria</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>System Gaps:</strong> Appears to be reference data; no update capability</p>
+
+<p>---</p>
+
+<h3>20. **Lassi** (Land and Sustainability Systems Implementation)</h3>
+<p><strong>References:</strong> 32 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Property address validation and coordination</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Address validation</td>
+<td>Verify property addresses</td>
+</tr>
+<tr>
+<td>Coordinate with Land Channel</td>
+<td>Provide property data from Land Channel</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Integration:</strong> Works with Land Channel for property address confirmation</p>
+
+<p><strong>System Gaps:</strong> Function overlaps with Land Channel; unclear separation</p>
+
+<p>---</p>
+
+<h3>21. **MyGov** (Australian Government Portal)</h3>
+<p><strong>References:</strong> 9 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Customer authentication and notifications</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Authentication</td>
+<td>Federated login for My Land Tax</td>
+</tr>
+<tr>
+<td>Notification delivery</td>
+<td>Send correspondence via MyGov inbox</td>
+</tr>
+<tr>
+<td>Account validation</td>
+<td>Identify active MyGov registrations</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>System Gaps:</strong> Authentication only; no transaction processing</p>
+
+<p>---</p>
+
+<h3>22. **BPay** (Payment System)</h3>
+<p><strong>References:</strong> 3 mentions  </p>
+<p><strong>Primary Responsibility:</strong> Bill payment platform</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Assessment viewing</td>
+<td>Display assessments via BPay View</td>
+</tr>
+<tr>
+<td>Payment processing</td>
+<td>Accept bill payments</td>
+</tr>
+<tr>
+<td>Payment notification</td>
+<td>Notify customers of assessments and payments</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>System Gaps:</strong> Payment processing only; no assessment generation</p>
+
+<p>---</p>
+
+<h3>23. **Additional Systems Referenced**</h3>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>References</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>**OneDrive**</td>
+<td>22</td>
+<td>One Note template storage for correspondence</td>
+</tr>
+<tr>
+<td>**TextPad**</td>
+<td>9</td>
+<td>File insertion tool for text-based amendments</td>
+</tr>
+<tr>
+<td>**TRIM**</td>
+<td>26</td>
+<td>Legacy document management (EDRMS successor)</td>
+</tr>
+<tr>
+<td>**DTF/Treasury**</td>
+<td>18</td>
+<td>Fee unit determination & policy setting</td>
+</tr>
+<tr>
+<td>**KMB**</td>
+<td>13</td>
+<td>Kauri Management Branch (coordination role)</td>
+</tr>
+<tr>
+<td>**LGAT**</td>
+<td>12</td>
+<td>Local Government Assessing Team</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>---</p>
+
+<h2>QUALITY ASSURANCE FINDINGS</h2>
+
+<h3>✅ Systems WITH Documented Capabilities</h3>
+<p>- <strong>e-Sys</strong> – 17 documented capabilities (primary system)</p>
+<p>- <strong>CM10/EDRMS</strong> – 6 capabilities (document storage)</p>
+<p>- <strong>ASIC/COI</strong> – 5 capabilities (verification)</p>
+<p>- <strong>DAS/Landata</strong> – 6 capabilities (land data)</p>
+<p>- <strong>TARB</strong> – 7 capabilities (exemption decisions)</p>
+<p>- <strong>TaxNet</strong> – 5 capabilities (assessment management)</p>
+<p>- <strong>Assisted Digital/MLT</strong> – 6 capabilities (customer portal)</p>
+
+<h3>⚠️ Systems WITH UNCLEAR or LIMITED Capabilities</h3>
+<p>- <strong>Register</strong> (57 refs) – Function unclear; possible e-Sys subset</p>
+<p>- <strong>VGV</strong> (79 refs) – Mostly reference-only; no documented integration</p>
+<p>- <strong>Lassi</strong> (32 refs) – Overlaps with Land Channel; unclear separation</p>
+<p>- <strong>TaxNet</strong> (69 refs) – Role partially duplicates e-Sys</p>
+<p>- <strong>DMS</strong> (28 refs) – Limited documentation; possible overlap with CM10</p>
+
+<h3>❌ Systems WITHOUT Associated Capability Documents</h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>References</th>
+<th>Issue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>**VCAT**</td>
+<td>81</td>
+<td>Legal authority, not software system</td>
+</tr>
+<tr>
+<td>**TARB** (as unit)</td>
+<td>116</td>
+<td>Organizational unit; decisions stored elsewhere</td>
+</tr>
+<tr>
+<td>**SRO** (as org)</td>
+<td>106</td>
+<td>Organizational reference; systems listed separately</td>
+</tr>
+<tr>
+<td>**KMB**</td>
+<td>13</td>
+<td>Coordination role; no system capability</td>
+</tr>
+<tr>
+<td>**LGAT**</td>
+<td>12</td>
+<td>Team reference; no system capability</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>🚨 CAPABILITY GAPS IDENTIFIED</h3>
+
+<p>1. <strong>No API/Integration Layer</strong>  </p>
+<p>   - e-Sys cannot directly query ASIC, COI, Landata, DAS  </p>
+<p>   - Manual staff lookups required for each verification</p>
+<p>   - No automated sync between CM10 and e-Sys</p>
+
+<p>2. <strong>No Data Warehouse</strong>  </p>
+<p>   - TaxNet and e-Sys reporting overlap undefined</p>
+<p>   - MC988 reports generated manually from e-Sys</p>
+<p>   - No cross-system analytics capability</p>
+
+<p>3. <strong>Manual Document Publishing</strong>  </p>
+<p>   - TARB decisions stored in CM10 but SRO website updated manually</p>
+<p>   - No automated exemption schedule publication</p>
+<p>   - No document versioning/audit trail</p>
+
+<p>4. <strong>No Automated Investigation Workflow</strong>  </p>
+<p>   - CM9 investigation flags not auto-synced to e-Sys</p>
+<p>   - Investigation eligibility gates require manual review</p>
+<p>   - No escalation automation</p>
+
+<p>5. <strong>No Customer Portal System</strong>  </p>
+<p>   - My Land Tax (MLT) submissions flow unclear</p>
+<p>   - Smart Form integration appears ad hoc</p>
+<p>   - No confirmation of automated routing to work queues</p>
+
+<p>6. <strong>Missing Workflow Orchestration</strong>  </p>
+<p>   - No documented system managing TARB referral intake</p>
+<p>   - Objection/Private Ruling routing appears manual</p>
+<p>   - VCAT order processing requires manual e-Sys update</p>
+
+<p>---</p>
+
+<h2>SYSTEMS REQUIRING CAPABILITY VERIFICATION</h2>
+
+<p><strong>Request confirmation on the following:</strong></p>
+
+<p>1. <strong>Is "Register" a separate system from e-Sys, or an e-Sys module?</strong>  </p>
+<p>   - 57 references to "registration" but no distinct Register system defined</p>
+
+<p>2. <strong>What is the division of labor between TaxNet and e-Sys?</strong>  </p>
+<p>   - Both appear to handle assessment configuration and recalculation</p>
+<p>   - Unclear which is primary for liability calculation</p>
+
+<p>3. <strong>Does an integration API exist between e-Sys and external systems?</strong>  </p>
+<p>   - Procedures reference ASIC/COI/VEC lookups as manual; is automation available?</p>
+
+<p>4. <strong>Who manages TARB intake workflow?</strong>  </p>
+<p>   - Procedures show decisions; no intake system documented</p>
+<p>   - How do objections/rulings enter the system?</p>
+
+<p>5. <strong>Is Lassi a distinct system or an interface to Land Channel?</strong>  </p>
+<p>   - 32 references to Lassi; 18 to Land Channel; appears to duplicate function</p>
+
+<p>---</p>
+
+<h2>SUMMARY</h2>
+
+<p><strong>Total Systems Identified:</strong> 23  </p>
+<p><strong>Systems with Full Capability Documentation:</strong> 7  </p>
+<p><strong>Systems with Partial Documentation:</strong> 9  </p>
+<p><strong>Systems without Software Capability Documentation:</strong> 7  </p>
+
+<p><strong>Conclusion:</strong>  </p>
+<p>The 33 procedures reference systems in use, but <strong>capability documentation is incomplete</strong>. Critical gaps exist in:</p>
+<ul>
+<li>Workflow automation (TARB intake, objection routing)</li>
+<ul>
+<li>System integration (no documented APIs)</li>
+<ul>
+<li>Data governance (manual document publishing)</li>
+</ul>
+<p><strong>Recommendation:</strong> Conduct system architecture review to clarify:</p>
+<ol>
+<li>Primary vs. secondary system roles</li>
+<ol>
+<li>Data integration points</li>
+<ol>
+<li>Workflow automation opportunities</li>
+</ol>
+
+```
+    <div class="footer">
+        <p>Systems Matrix Audit Report | Extracted from 33 Land Tax Administration Procedures</p>
+        <p>Quality assurance performed on all system references and documented capabilities</p>
+    </div>
+</div>
+```
+
+</body>
+</html>

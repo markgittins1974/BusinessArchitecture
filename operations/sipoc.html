@@ -1,0 +1,1126 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIPOC Diagrams - All 18 Business Processes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        header { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 30px; border-radius: 8px; margin-bottom: 30px; text-align: center; }
+        header h1 { font-size: 2em; margin-bottom: 10px; }
+        header p { opacity: 0.9; }
+        .controls { margin-bottom: 20px; text-align: center; }
+        .controls select { padding: 10px 15px; font-size: 1em; border: 2px solid #2a5298; border-radius: 4px; cursor: pointer; }
+        .sipoc-wrapper { background: white; border-radius: 8px; padding: 20px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .sipoc-title { font-size: 1.5em; font-weight: 700; color: #1e3c72; margin-bottom: 20px; text-align: center; padding-bottom: 15px; border-bottom: 3px solid #2a5298; }
+        .sipoc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 0; border: 3px solid #333; }
+        .sipoc-cell { padding: 20px; min-height: 200px; display: flex; flex-direction: column; border-right: 3px solid #333; position: relative; overflow-y: auto; }
+        .sipoc-cell:last-child { border-right: none; }
+        .sipoc-header { font-weight: 700; font-size: 0.95em; text-transform: uppercase; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid rgba(0,0,0,0.3); }
+        .sipoc-content { font-size: 0.9em; line-height: 1.5; }
+        .sipoc-item { margin-bottom: 8px; padding: 6px; border-radius: 3px; background: rgba(255,255,255,0.5); }
+
+```
+    /* Swimlane Colors */
+    .suppliers { background: linear-gradient(135deg, #ffcccb 0%, #ffb6b6 100%); color: #5c2020; }
+    .suppliers .sipoc-header { color: #8b3a3a; border-bottom-color: #8b3a3a; }
+    .suppliers .sipoc-item { background: rgba(255,200,200,0.7); }
+    
+    .inputs { background: linear-gradient(135deg, #ffe8b6 0%, #ffd89b 100%); color: #5c4020; }
+    .inputs .sipoc-header { color: #8b6914; border-bottom-color: #8b6914; }
+    .inputs .sipoc-item { background: rgba(255,220,170,0.7); }
+    
+    .processes { background: linear-gradient(135deg, #b6e6b6 0%, #9cde9c 100%); color: #204020; }
+    .processes .sipoc-header { color: #3d7d3d; border-bottom-color: #3d7d3d; }
+    .processes .sipoc-item { background: rgba(176,220,176,0.7); }
+    
+    .outputs { background: linear-gradient(135deg, #b6d7ff 0%, #9cccff 100%); color: #1f3a5c; }
+    .outputs .sipoc-header { color: #0d47a1; border-bottom-color: #0d47a1; }
+    .outputs .sipoc-item { background: rgba(173,216,230,0.7); }
+    
+    .customers { background: linear-gradient(135deg, #d8b6ff 0%, #c49cff 100%); color: #3d2360; }
+    .customers .sipoc-header { color: #6a0dad; border-bottom-color: #6a0dad; }
+    .customers .sipoc-item { background: rgba(216,191,216,0.7); }
+    
+    .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 30px 0; }
+    .legend-item { padding: 15px; border-radius: 6px; font-weight: 600; text-align: center; }
+    .legend-item.s { background: linear-gradient(135deg, #ffcccb 0%, #ffb6b6 100%); color: #5c2020; }
+    .legend-item.i { background: linear-gradient(135deg, #ffe8b6 0%, #ffd89b 100%); color: #5c4020; }
+    .legend-item.p { background: linear-gradient(135deg, #b6e6b6 0%, #9cde9c 100%); color: #204020; }
+    .legend-item.o { background: linear-gradient(135deg, #b6d7ff 0%, #9cccff 100%); color: #1f3a5c; }
+    .legend-item.c { background: linear-gradient(135deg, #d8b6ff 0%, #c49cff 100%); color: #3d2360; }
+    
+    footer { text-align: center; color: #666; margin-top: 40px; padding-top: 20px; border-top: 2px solid #ddd; }
+    
+    @media (max-width: 1200px) {
+        .sipoc-grid { grid-template-columns: 1fr; }
+        .sipoc-cell { border-right: none; border-bottom: 3px solid #333; }
+        .sipoc-cell:last-child { border-bottom: none; }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SIPOC Diagrams - Land Tax System</h1>
+            <p>All 18 Valid Business Processes</p>
+        </header>
+
+```
+    <div class="controls">
+        <label for="processSelect" style="font-weight: 600; margin-right: 10px; color: #1e3c72;">Select Process:</label>
+        <select id="processSelect" onchange="showProcess(this.value)">
+            <option value="">-- Select a Process --</option>
+            <option value="p1">1. New Property Owner Onboarding</option>
+            <option value="p2">2. Generate Annual Assessments & Issue Demands</option>
+            <option value="p3">3. Process Assessment Amendments</option>
+            <option value="p4">4. Issue Payment Demands</option>
+            <option value="p5">5. Process Customer Payments</option>
+            <option value="p6">6. Manage Payment Suspense & Refunds</option>
+            <option value="p7">7. Handle Returned Correspondence</option>
+            <option value="p8">8. Recover Unpaid Land Tax</option>
+            <option value="p9">9. Process Exemption Applications</option>
+            <option value="p10">10. Create & Manage Land Groupings</option>
+            <option value="p11">11. Register Build-to-Rent Properties</option>
+            <option value="p12">12. Resolve Valuation Objections</option>
+            <option value="p13">13. Resolve Customer Duplicates</option>
+            <option value="p14">14. Resolve Property Data Conflicts</option>
+            <option value="p15">15. Issue Property Clearance Certificates</option>
+            <option value="p16">16. Process Trust Amendments</option>
+            <option value="p17">17. Manage Customer Insolvency</option>
+            <option value="p18">18. Obtain Technical Tax Rulings</option>
+        </select>
+    </div>
+    
+    <div class="legend">
+        <div class="legend-item s">🔴 SUPPLIERS - Who supplies inputs?</div>
+        <div class="legend-item i">🟠 INPUTS - What inputs are required?</div>
+        <div class="legend-item p">🟢 PROCESSES - What are the steps?</div>
+        <div class="legend-item o">🔵 OUTPUTS - What are the outputs?</div>
+        <div class="legend-item c">🟣 CUSTOMERS - Who receives outputs?</div>
+    </div>
+    
+    <!-- PROCESS 1 -->
+    <div class="sipoc-wrapper" id="p1" style="display:none;">
+        <div class="sipoc-title">1. New Property Owner Onboarding</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">🏛️ Land Registry</div>
+                    <div class="sipoc-item">🔍 COI</div>
+                    <div class="sipoc-item">📋 ASIC</div>
+                    <div class="sipoc-item">📱 DLS</div>
+                    <div class="sipoc-item">📄 DAS</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">📮 NOA notification</div>
+                    <div class="sipoc-item">👤 Party details</div>
+                    <div class="sipoc-item">🏘️ Property location</div>
+                    <div class="sipoc-item">📋 Title reference</div>
+                    <div class="sipoc-item">✓ Ownership verification</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Link/create CID</div>
+                    <div class="sipoc-item">2. Verify party</div>
+                    <div class="sipoc-item">3. Match property</div>
+                    <div class="sipoc-item">4. Execute transfer</div>
+                    <div class="sipoc-item">5. Generate demand</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">✓ Customer ID created</div>
+                    <div class="sipoc-item">📊 Property linked</div>
+                    <div class="sipoc-item">💰 Assessment issued</div>
+                    <div class="sipoc-item">📬 Demand notice</div>
+                    <div class="sipoc-item">📝 Documentation</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 New property owner</div>
+                    <div class="sipoc-item">🏢 Treasury</div>
+                    <div class="sipoc-item">📊 Management</div>
+                    <div class="sipoc-item">💼 Finance</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- PROCESS 2 -->
+    <div class="sipoc-wrapper" id="p2" style="display:none;">
+        <div class="sipoc-title">2. Generate Annual Assessments & Issue Demands</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">🏛️ Valuer-General</div>
+                    <div class="sipoc-item">💻 e-Sys</div>
+                    <div class="sipoc-item">✓ Assessment system</div>
+                    <div class="sipoc-item">📮 Post/MLT</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">📊 Valuation data file</div>
+                    <div class="sipoc-item">🔢 Property values</div>
+                    <div class="sipoc-item">✓ Exemption data</div>
+                    <div class="sipoc-item">🏷️ Assessment rules</div>
+                    <div class="sipoc-item">📋 Customer list</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Validate data</div>
+                    <div class="sipoc-item">2. Calculate assessment</div>
+                    <div class="sipoc-item">3. Apply rules</div>
+                    <div class="sipoc-item">4. QA check</div>
+                    <div class="sipoc-item">5. Generate demands</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">💰 Assessments (100%)</div>
+                    <div class="sipoc-item">📬 Demands issued</div>
+                    <div class="sipoc-item">✓ QA reports</div>
+                    <div class="sipoc-item">📊 Exception reports</div>
+                    <div class="sipoc-item">💼 Finance reports</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👥 All customers</div>
+                    <div class="sipoc-item">🏢 Treasury</div>
+                    <div class="sipoc-item">📊 Finance</div>
+                    <div class="sipoc-item">📈 Management</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- PROCESS 3 -->
+    <div class="sipoc-wrapper" id="p3" style="display:none;">
+        <div class="sipoc-title">3. Process Assessment Amendments</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">💻 e-Sys</div>
+                    <div class="sipoc-item">🔍 Investigation system</div>
+                    <div class="sipoc-item">📋 Document system</div>
+                    <div class="sipoc-item">🏦 Banking</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">📝 Amendment triggers</div>
+                    <div class="sipoc-item">✓ Exemption changes</div>
+                    <div class="sipoc-item">🏘️ Property updates</div>
+                    <div class="sipoc-item">👤 Ownership changes</div>
+                    <div class="sipoc-item">⚠️ Error corrections</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Identify amendment</div>
+                    <div class="sipoc-item">2. Impact analysis</div>
+                    <div class="sipoc-item">3. Recalculate</div>
+                    <div class="sipoc-item">4. QA review</div>
+                    <div class="sipoc-item">5. Issue amended assess</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">💰 Amended assessment</div>
+                    <div class="sipoc-item">💵 Refund advice</div>
+                    <div class="sipoc-item">📬 Customer notice</div>
+                    <div class="sipoc-item">✓ System updates</div>
+                    <div class="sipoc-item">📝 Documentation</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Affected customers</div>
+                    <div class="sipoc-item">🏢 Treasury</div>
+                    <div class="sipoc-item">📊 Finance</div>
+                    <div class="sipoc-item">✓ Stakeholders</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS 4 -->
+    <div class="sipoc-wrapper" id="p4" style="display:none;">
+        <div class="sipoc-title">4. Issue Payment Demands</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">💻 e-Sys</div>
+                    <div class="sipoc-item">🏢 Treasury</div>
+                    <div class="sipoc-item">📮 Post/MLT</div>
+                    <div class="sipoc-item">📋 Address system</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">💰 Assessment data</div>
+                    <div class="sipoc-item">👤 Customer details</div>
+                    <div class="sipoc-item">📍 Address info</div>
+                    <div class="sipoc-item">📅 Due date</div>
+                    <div class="sipoc-item">💳 Payment methods</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Extract assessment</div>
+                    <div class="sipoc-item">2. Verify address</div>
+                    <div class="sipoc-item">3. Format demand</div>
+                    <div class="sipoc-item">4. Select delivery</div>
+                    <div class="sipoc-item">5. Dispatch</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">📬 Demand notice</div>
+                    <div class="sipoc-item">💳 Payment options</div>
+                    <div class="sipoc-item">📅 Due date notice</div>
+                    <div class="sipoc-item">✓ Delivery confirmation</div>
+                    <div class="sipoc-item">📊 Dispatch report</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">🏢 Treasury</div>
+                    <div class="sipoc-item">📊 Finance</div>
+                    <div class="sipoc-item">📮 Post office</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS 5 -->
+    <div class="sipoc-wrapper" id="p5" style="display:none;">
+        <div class="sipoc-title">5. Process Customer Payments</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">🏦 Banks</div>
+                    <div class="sipoc-item">💳 Payment processors</div>
+                    <div class="sipoc-item">💻 e-Sys</div>
+                    <div class="sipoc-item">👥 Customers</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">💰 Payment received</div>
+                    <div class="sipoc-item">👤 Customer ID</div>
+                    <div class="sipoc-item">💵 Amount</div>
+                    <div class="sipoc-item">📅 Payment date</div>
+                    <div class="sipoc-item">💳 Payment method</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Receive payment</div>
+                    <div class="sipoc-item">2. Validate</div>
+                    <div class="sipoc-item">3. Match customer</div>
+                    <div class="sipoc-item">4. Allocate</div>
+                    <div class="sipoc-item">5. Reconcile</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">✓ Payment allocated</div>
+                    <div class="sipoc-item">💰 Balance updated</div>
+                    <div class="sipoc-item">📜 Receipt issued</div>
+                    <div class="sipoc-item">✓ Reconciliation</div>
+                    <div class="sipoc-item">📊 Transaction report</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">🏢 Treasury</div>
+                    <div class="sipoc-item">🏦 Finance</div>
+                    <div class="sipoc-item">📊 Accounting</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS 6 -->
+    <div class="sipoc-wrapper" id="p6" style="display:none;">
+        <div class="sipoc-title">6. Manage Payment Suspense & Refunds</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">💰 Suspense payments</div>
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">💻 e-Sys</div>
+                    <div class="sipoc-item">🏦 Banking</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">❓ Suspense detected</div>
+                    <div class="sipoc-item">🔍 Customer inquiry</div>
+                    <div class="sipoc-item">💵 Refund request</div>
+                    <div class="sipoc-item">📋 Payment details</div>
+                    <div class="sipoc-item">✓ Verification info</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Investigate</div>
+                    <div class="sipoc-item">2. Determine allocation</div>
+                    <div class="sipoc-item">3. Decide allocate/refund</div>
+                    <div class="sipoc-item">4. Authorize</div>
+                    <div class="sipoc-item">5. Process</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">💰 Allocation made</div>
+                    <div class="sipoc-item">💵 Refund issued</div>
+                    <div class="sipoc-item">📧 Notification sent</div>
+                    <div class="sipoc-item">✓ Documentation</div>
+                    <div class="sipoc-item">📊 Report</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">🏢 Treasury</div>
+                    <div class="sipoc-item">🏦 Finance</div>
+                    <div class="sipoc-item">✓ Management</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS 7 -->
+    <div class="sipoc-wrapper" id="p7" style="display:none;">
+        <div class="sipoc-title">7. Handle Returned Correspondence</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">📮 Australia Post</div>
+                    <div class="sipoc-item">📍 Lassi (address)</div>
+                    <div class="sipoc-item">🗳️ VEC</div>
+                    <div class="sipoc-item">💻 e-Sys</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">📬 Returned mail</div>
+                    <div class="sipoc-item">🏷️ Return reason</div>
+                    <div class="sipoc-item">👤 Customer details</div>
+                    <div class="sipoc-item">📍 Address info</div>
+                    <div class="sipoc-item">📄 Original document</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Receipt return</div>
+                    <div class="sipoc-item">2. Analyze reason</div>
+                    <div class="sipoc-item">3. Lookup address</div>
+                    <div class="sipoc-item">4. Re-issue/contact</div>
+                    <div class="sipoc-item">5. Arrange delivery</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">📬 Re-issue mail</div>
+                    <div class="sipoc-item">📍 Updated address</div>
+                    <div class="sipoc-item">✓ Delivery confirmed</div>
+                    <div class="sipoc-item">📞 Customer contact</div>
+                    <div class="sipoc-item">📊 Report</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">📮 Post office</div>
+                    <div class="sipoc-item">✓ Operations</div>
+                    <div class="sipoc-item">📊 Compliance</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS 8 -->
+    <div class="sipoc-wrapper" id="p8" style="display:none;">
+        <div class="sipoc-title">8. Recover Unpaid Land Tax</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">💻 e-Sys</div>
+                    <div class="sipoc-item">⚖️ Legal system</div>
+                    <div class="sipoc-item">👮 Enforcement</div>
+                    <div class="sipoc-item">👥 Customers</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">⚠️ Overdue assessment</div>
+                    <div class="sipoc-item">📅 Payment due date</div>
+                    <div class="sipoc-item">💰 Amount owed</div>
+                    <div class="sipoc-item">👤 Customer info</div>
+                    <div class="sipoc-item">📋 Contact details</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Identify overdue</div>
+                    <div class="sipoc-item">2. Send reminder</div>
+                    <div class="sipoc-item">3. Escalate</div>
+                    <div class="sipoc-item">4. Negotiate arrangement</div>
+                    <div class="sipoc-item">5. Enforce/write-off</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">💰 Payment received</div>
+                    <div class="sipoc-item">💳 Arrangement agreed</div>
+                    <div class="sipoc-item">⚖️ Legal action taken</div>
+                    <div class="sipoc-item">✓ Write-off approved</div>
+                    <div class="sipoc-item">📊 Report</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">🏢 Treasury</div>
+                    <div class="sipoc-item">⚖️ Legal</div>
+                    <div class="sipoc-item">👮 Enforcement</div>
+                    <div class="sipoc-item">📊 Finance</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS 9 -->
+    <div class="sipoc-wrapper" id="p9" style="display:none;">
+        <div class="sipoc-title">9. Process Exemption Applications</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">🔍 Investigator</div>
+                    <div class="sipoc-item">💻 e-Sys</div>
+                    <div class="sipoc-item">📋 Document system</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">📋 Application form</div>
+                    <div class="sipoc-item">📄 Supporting docs</div>
+                    <div class="sipoc-item">✓ Eligibility claims</div>
+                    <div class="sipoc-item">👤 Customer details</div>
+                    <div class="sipoc-item">🏘️ Property info</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Intake & check</div>
+                    <div class="sipoc-item">2. Verify docs</div>
+                    <div class="sipoc-item">3. Investigate</div>
+                    <div class="sipoc-item">4. Determine eligibility</div>
+                    <div class="sipoc-item">5. Grant/deny & register</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">✓ Decision letter</div>
+                    <div class="sipoc-item">📝 Registration</div>
+                    <div class="sipoc-item">💰 Amended assessment</div>
+                    <div class="sipoc-item">📞 Notification</div>
+                    <div class="sipoc-item">📊 Report</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">📊 Assessment</div>
+                    <div class="sipoc-item">✓ Management</div>
+                    <div class="sipoc-item">📋 Compliance</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS 10 -->
+    <div class="sipoc-wrapper" id="p10" style="display:none;">
+        <div class="sipoc-title">10. Create & Manage Land Groupings</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">💻 e-Sys</div>
+                    <div class="sipoc-item">📊 Assessment system</div>
+                    <div class="sipoc-item">🏢 Organization</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">📝 Grouping request</div>
+                    <div class="sipoc-item">🏘️ Property list</div>
+                    <div class="sipoc-item">👤 Owner details</div>
+                    <div class="sipoc-item">✓ Eligibility data</div>
+                    <div class="sipoc-item">💰 Assessment values</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Receive request</div>
+                    <div class="sipoc-item">2. Verify eligibility</div>
+                    <div class="sipoc-item">3. Select member</div>
+                    <div class="sipoc-item">4. Create group</div>
+                    <div class="sipoc-item">5. Generate assessment</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">✓ Group created</div>
+                    <div class="sipoc-item">💰 Group assessment</div>
+                    <div class="sipoc-item">✓ Confirmation letter</div>
+                    <div class="sipoc-item">📊 Apportionment calc</div>
+                    <div class="sipoc-item">📊 Report</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">📊 Assessment</div>
+                    <div class="sipoc-item">✓ Operations</div>
+                    <div class="sipoc-item">📋 Records</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS 11 -->
+    <div class="sipoc-wrapper" id="p11" style="display:none;">
+        <div class="sipoc-title">11. Register Build-to-Rent Properties</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">🏛️ Government</div>
+                    <div class="sipoc-item">💻 e-Sys</div>
+                    <div class="sipoc-item">📋 BTR registry</div>
+                    <div class="sipoc-item">🏘️ Properties</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">🏘️ BTR identification</div>
+                    <div class="sipoc-item">✓ Eligibility criteria</div>
+                    <div class="sipoc-item">📄 Documentation</div>
+                    <div class="sipoc-item">📊 Property data</div>
+                    <div class="sipoc-item">💰 Assessment info</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Identify BTR</div>
+                    <div class="sipoc-item">2. Verify eligibility</div>
+                    <div class="sipoc-item">3. Register in system</div>
+                    <div class="sipoc-item">4. Apply BTR treatment</div>
+                    <div class="sipoc-item">5. Issue assessment</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">✓ BTR registered</div>
+                    <div class="sipoc-item">💰 BTR assessment</div>
+                    <div class="sipoc-item">✓ Confirmation</div>
+                    <div class="sipoc-item">📊 Report</div>
+                    <div class="sipoc-item">📋 Documentation</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👨‍💼 Developers</div>
+                    <div class="sipoc-item">🏛️ Government</div>
+                    <div class="sipoc-item">📊 Assessment</div>
+                    <div class="sipoc-item">✓ Policy</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS 12 -->
+    <div class="sipoc-wrapper" id="p12" style="display:none;">
+        <div class="sipoc-title">12. Resolve Valuation Objections</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">📊 Valuation system</div>
+                    <div class="sipoc-item">⚖️ TARB</div>
+                    <div class="sipoc-item">💻 e-Sys</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">📝 Objection form</div>
+                    <div class="sipoc-item">📄 Supporting evidence</div>
+                    <div class="sipoc-item">💰 Valuation disputed</div>
+                    <div class="sipoc-item">📍 Property details</div>
+                    <div class="sipoc-item">📅 Objection date</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Receive objection</div>
+                    <div class="sipoc-item">2. Check deadline</div>
+                    <div class="sipoc-item">3. Assess merit</div>
+                    <div class="sipoc-item">4. Decide/refer TARB</div>
+                    <div class="sipoc-item">5. Implement decision</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">✓ Decision letter</div>
+                    <div class="sipoc-item">💰 Amended/rejected</div>
+                    <div class="sipoc-item">⚖️ TARB referral</div>
+                    <div class="sipoc-item">📊 Report</div>
+                    <div class="sipoc-item">📋 Documentation</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">⚖️ TARB</div>
+                    <div class="sipoc-item">📊 Assessment</div>
+                    <div class="sipoc-item">✓ Compliance</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS 13 -->
+    <div class="sipoc-wrapper" id="p13" style="display:none;">
+        <div class="sipoc-title">13. Resolve Customer Duplicates</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">💻 e-Sys</div>
+                    <div class="sipoc-item">🔍 Investigator</div>
+                    <div class="sipoc-item">🔐 Identity system</div>
+                    <div class="sipoc-item">📋 LOAN system</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">❓ Duplicate detected</div>
+                    <div class="sipoc-item">👤 Customer details</div>
+                    <div class="sipoc-item">💰 Liability data</div>
+                    <div class="sipoc-item">📍 Property info</div>
+                    <div class="sipoc-item">📋 Historical records</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Detect duplicate</div>
+                    <div class="sipoc-item">2. Verify</div>
+                    <div class="sipoc-item">3. Investigate history</div>
+                    <div class="sipoc-item">4. Decide merge/split</div>
+                    <div class="sipoc-item">5. Consolidate & recalc</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">✓ Resolved (merge/split)</div>
+                    <div class="sipoc-item">💰 Recalculated</div>
+                    <div class="sipoc-item">📧 Notification</div>
+                    <div class="sipoc-item">✓ Updated records</div>
+                    <div class="sipoc-item">📊 Report</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">📊 Data quality</div>
+                    <div class="sipoc-item">✓ Assessment</div>
+                    <div class="sipoc-item">📋 Records</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS 14 -->
+    <div class="sipoc-wrapper" id="p14" style="display:none;">
+        <div class="sipoc-title">14. Resolve Property Data Conflicts</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">💻 e-Sys</div>
+                    <div class="sipoc-item">📋 LOAN system</div>
+                    <div class="sipoc-item">🏛️ Land Registry</div>
+                    <div class="sipoc-item">📍 Landata</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">❓ Conflict detected</div>
+                    <div class="sipoc-item">🏘️ Property details</div>
+                    <div class="sipoc-item">👤 Ownership data</div>
+                    <div class="sipoc-item">📋 Title references</div>
+                    <div class="sipoc-item">📍 Boundary info</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Detect conflict</div>
+                    <div class="sipoc-item">2. Analyze type</div>
+                    <div class="sipoc-item">3. Verify ownership chain</div>
+                    <div class="sipoc-item">4. Decide resolution</div>
+                    <div class="sipoc-item">5. Execute & recalc</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">✓ Resolved (sep/consol)</div>
+                    <div class="sipoc-item">💰 Recalculated</div>
+                    <div class="sipoc-item">📧 Notification</div>
+                    <div class="sipoc-item">✓ Updated records</div>
+                    <div class="sipoc-item">📊 Report</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">📊 Data quality</div>
+                    <div class="sipoc-item">✓ Assessment</div>
+                    <div class="sipoc-item">📋 Records</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS 15 -->
+    <div class="sipoc-wrapper" id="p15" style="display:none;">
+        <div class="sipoc-title">15. Issue Property Clearance Certificates</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">💻 e-Sys</div>
+                    <div class="sipoc-item">📍 Landata</div>
+                    <div class="sipoc-item">📮 Post/MLT</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">📋 Application</div>
+                    <div class="sipoc-item">🏘️ Property ID</div>
+                    <div class="sipoc-item">💰 Assessment data</div>
+                    <div class="sipoc-item">✓ Liability status</div>
+                    <div class="sipoc-item">⚠️ Warning checks</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Receive request</div>
+                    <div class="sipoc-item">2. Verify property</div>
+                    <div class="sipoc-item">3. Apply warnings</div>
+                    <div class="sipoc-item">4. Generate PCC</div>
+                    <div class="sipoc-item">5. Deliver</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">✓ PCC/plans issued</div>
+                    <div class="sipoc-item">⚠️ Warnings shown</div>
+                    <div class="sipoc-item">📊 Delivery confirmed</div>
+                    <div class="sipoc-item">📞 Notification</div>
+                    <div class="sipoc-item">📊 Report</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">⚖️ Lawyers</div>
+                    <div class="sipoc-item">📞 Professionals</div>
+                    <div class="sipoc-item">✓ Service users</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS 16 -->
+    <div class="sipoc-wrapper" id="p16" style="display:none;">
+        <div class="sipoc-title">16. Process Trust Amendments</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👥 Trustees</div>
+                    <div class="sipoc-item">💻 e-Sys</div>
+                    <div class="sipoc-item">🔍 Investigator</div>
+                    <div class="sipoc-item">📋 Document system</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">📝 Amendment notice</div>
+                    <div class="sipoc-item">👥 Trustee change</div>
+                    <div class="sipoc-item">✓ Structure change</div>
+                    <div class="sipoc-item">📄 Documentation</div>
+                    <div class="sipoc-item">📍 Affected properties</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Receive amendment</div>
+                    <div class="sipoc-item">2. Classify trust</div>
+                    <div class="sipoc-item">3. Verify amendment</div>
+                    <div class="sipoc-item">4. Multi-calc impact</div>
+                    <div class="sipoc-item">5. Issue amended assess</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">✓ Amendment processed</div>
+                    <div class="sipoc-item">💰 Recalculated (all)</div>
+                    <div class="sipoc-item">📬 All parties notified</div>
+                    <div class="sipoc-item">⚠️ Penalty (if TND)</div>
+                    <div class="sipoc-item">📊 Report</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👥 Trustees</div>
+                    <div class="sipoc-item">👤 Trust customers</div>
+                    <div class="sipoc-item">📊 Assessment</div>
+                    <div class="sipoc-item">✓ Compliance</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS 17 -->
+    <div class="sipoc-wrapper" id="p17" style="display:none;">
+        <div class="sipoc-title">17. Manage Customer Insolvency</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">💻 e-Sys</div>
+                    <div class="sipoc-item">⚖️ Courts</div>
+                    <div class="sipoc-item">👨‍⚖️ Liquidator</div>
+                    <div class="sipoc-item">👥 Creditors</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">⚠️ Insolvency detected</div>
+                    <div class="sipoc-item">📋 Customer status</div>
+                    <div class="sipoc-item">💰 Amount owed</div>
+                    <div class="sipoc-item">👨‍⚖️ Liquidator info</div>
+                    <div class="sipoc-item">📍 Property details</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Detect insolvency</div>
+                    <div class="sipoc-item">2. Notify liquidator</div>
+                    <div class="sipoc-item">3. File claim</div>
+                    <div class="sipoc-item">4. Coordinate admin</div>
+                    <div class="sipoc-item">5. Recovery/write-off</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">✓ Claim filed</div>
+                    <div class="sipoc-item">💰 Recovery/dividend</div>
+                    <div class="sipoc-item">✓ Write-off approved</div>
+                    <div class="sipoc-item">📞 Coordination complete</div>
+                    <div class="sipoc-item">📊 Report</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">⚖️ Courts</div>
+                    <div class="sipoc-item">👨‍⚖️ Liquidators</div>
+                    <div class="sipoc-item">🏢 Treasury</div>
+                    <div class="sipoc-item">📊 Finance</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS 18 -->
+    <div class="sipoc-wrapper" id="p18" style="display:none;">
+        <div class="sipoc-title">18. Obtain Technical Tax Rulings</div>
+        <div class="sipoc-grid">
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">SUPPLIERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">⚖️ TARB</div>
+                    <div class="sipoc-item">💻 e-Sys</div>
+                    <div class="sipoc-item">⚖️ Legal</div>
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">INPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">❓ Unique circumstance</div>
+                    <div class="sipoc-item">📝 Supporting evidence</div>
+                    <div class="sipoc-item">⚖️ Legal analysis</div>
+                    <div class="sipoc-item">💰 Assessment basis</div>
+                    <div class="sipoc-item">📋 Precedents</div>
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">PROCESSES</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">1. Identify need</div>
+                    <div class="sipoc-item">2. Prepare submission</div>
+                    <div class="sipoc-item">3. Submit to TARB</div>
+                    <div class="sipoc-item">4. Monitor TARB</div>
+                    <div class="sipoc-item">5. Implement ruling</div>
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">OUTPUTS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">⚖️ TARB determination</div>
+                    <div class="sipoc-item">✓ Tax treatment clarified</div>
+                    <div class="sipoc-item">💰 Assessment amended</div>
+                    <div class="sipoc-item">📝 Documentation</div>
+                    <div class="sipoc-item">📊 Report</div>
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">CUSTOMERS</div>
+                <div class="sipoc-content">
+                    <div class="sipoc-item">👤 Customers</div>
+                    <div class="sipoc-item">⚖️ Legal professionals</div>
+                    <div class="sipoc-item">✓ Stakeholders</div>
+                    <div class="sipoc-item">📊 Assessment</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p><strong>Land Tax System - Complete SIPOC Analysis</strong></p>
+        <p>Select a process from the dropdown to view its Supplier-Input-Process-Output-Customer diagram</p>
+        <p style="margin-top: 20px; font-size: 0.9em; color: #999;">Color coding: Red = Suppliers | Orange = Inputs | Green = Processes | Blue = Outputs | Purple = Customers</p>
+    </footer>
+</div>
+
+<script>
+    function showProcess(processId) {
+        // Hide all processes
+        const wrappers = document.querySelectorAll('.sipoc-wrapper');
+        wrappers.forEach(wrapper => wrapper.style.display = 'none');
+        
+        // Show selected process
+        if (processId) {
+            const selected = document.getElementById(processId);
+            if (selected) {
+                selected.style.display = 'block';
+                selected.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+    }
+</script>
+```
+
+</body>
+</html>

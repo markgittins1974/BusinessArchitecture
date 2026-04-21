@@ -1,0 +1,704 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master SIPOC - Land Tax System - All 18 Processes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%); padding: 20px; }
+        .container { max-width: 1600px; margin: 0 auto; }
+        header { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 30px; border-radius: 8px; margin-bottom: 30px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        header h1 { font-size: 2.2em; margin-bottom: 10px; }
+        header p { opacity: 0.9; font-size: 1.05em; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 6px; margin-bottom: 20px; font-size: 0.95em; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #2a5298; text-decoration: none; font-weight: 600; cursor: pointer; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .back-button { display: inline-block; padding: 10px 15px; background: #2a5298; color: white; border-radius: 4px; margin-bottom: 20px; cursor: pointer; text-decoration: none; font-weight: 600; }
+        .back-button:hover { background: #1e3c72; }
+
+```
+    /* Master SIPOC Styles */
+    .master-sipoc { background: white; border-radius: 8px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .sipoc-title { font-size: 1.8em; font-weight: 700; color: #1e3c72; margin-bottom: 30px; text-align: center; padding-bottom: 20px; border-bottom: 3px solid #2a5298; }
+    .sipoc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 0; border: 4px solid #333; }
+    .sipoc-cell { padding: 25px; min-height: 300px; display: flex; flex-direction: column; border-right: 4px solid #333; position: relative; overflow-y: auto; }
+    .sipoc-cell:last-child { border-right: none; }
+    .sipoc-header { font-weight: 700; font-size: 1.1em; text-transform: uppercase; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 3px solid rgba(0,0,0,0.3); }
+    .sipoc-content { flex: 1; }
+    .sipoc-item { margin-bottom: 12px; padding: 10px 12px; border-radius: 4px; background: rgba(255,255,255,0.6); font-size: 0.95em; line-height: 1.5; }
+    
+    /* Swimlane Colors */
+    .suppliers { background: linear-gradient(135deg, #ffcccb 0%, #ffb6b6 100%); color: #5c2020; }
+    .suppliers .sipoc-header { color: #8b3a3a; border-bottom-color: #8b3a3a; }
+    .suppliers .sipoc-item { background: rgba(255,200,200,0.8); }
+    
+    .inputs { background: linear-gradient(135deg, #ffe8b6 0%, #ffd89b 100%); color: #5c4020; }
+    .inputs .sipoc-header { color: #8b6914; border-bottom-color: #8b6914; }
+    .inputs .sipoc-item { background: rgba(255,220,170,0.8); }
+    
+    .processes { background: linear-gradient(135deg, #b6e6b6 0%, #9cde9c 100%); color: #204020; }
+    .processes .sipoc-header { color: #3d7d3d; border-bottom-color: #3d7d3d; }
+    .processes .sipoc-item { background: rgba(176,220,176,0.8); }
+    
+    .outputs { background: linear-gradient(135deg, #b6d7ff 0%, #9cccff 100%); color: #1f3a5c; }
+    .outputs .sipoc-header { color: #0d47a1; border-bottom-color: #0d47a1; }
+    .outputs .sipoc-item { background: rgba(173,216,230,0.8); }
+    
+    .customers { background: linear-gradient(135deg, #d8b6ff 0%, #c49cff 100%); color: #3d2360; }
+    .customers .sipoc-header { color: #6a0dad; border-bottom-color: #6a0dad; }
+    .customers .sipoc-item { background: rgba(216,191,216,0.8); }
+    
+    /* Process Grid */
+    .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin: 30px 0; }
+    .process-card { background: white; border: 3px solid #2a5298; border-radius: 8px; padding: 20px; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .process-card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(42, 82, 152, 0.3); border-color: #1e3c72; }
+    .process-card h3 { color: #1e3c72; margin-bottom: 10px; font-size: 1.1em; }
+    .process-card p { color: #666; font-size: 0.9em; line-height: 1.5; }
+    .process-number { display: inline-block; background: #2a5298; color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.85em; font-weight: 700; margin-bottom: 10px; }
+    .drill-icon { float: right; color: #2a5298; font-size: 1.5em; }
+    
+    /* Legend */
+    .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 30px 0; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .legend-item { padding: 15px; border-radius: 6px; font-weight: 600; text-align: center; }
+    .legend-item.s { background: linear-gradient(135deg, #ffcccb 0%, #ffb6b6 100%); color: #5c2020; }
+    .legend-item.i { background: linear-gradient(135deg, #ffe8b6 0%, #ffd89b 100%); color: #5c4020; }
+    .legend-item.p { background: linear-gradient(135deg, #b6e6b6 0%, #9cde9c 100%); color: #204020; }
+    .legend-item.o { background: linear-gradient(135deg, #b6d7ff 0%, #9cccff 100%); color: #1f3a5c; }
+    .legend-item.c { background: linear-gradient(135deg, #d8b6ff 0%, #c49cff 100%); color: #3d2360; }
+    
+    /* Individual Process View */
+    .individual-sipoc { display: none; }
+    .individual-sipoc.active { display: block; }
+    .process-details { background: white; border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .process-details h3 { color: #1e3c72; margin-bottom: 15px; font-size: 1.3em; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    .detail-box { padding: 15px; background: #f9f9f9; border-radius: 4px; border-left: 4px solid #2a5298; }
+    .detail-box h4 { color: #1e3c72; margin-bottom: 10px; font-size: 0.95em; text-transform: uppercase; }
+    .detail-box p { color: #333; font-size: 0.9em; line-height: 1.6; }
+    .detail-item { margin-bottom: 8px; padding: 5px 0; }
+    
+    /* Navigation */
+    .nav-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+    .nav-buttons button { padding: 10px 20px; background: #2a5298; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; }
+    .nav-buttons button:hover { background: #1e3c72; }
+    .nav-buttons button:disabled { background: #ccc; cursor: not-allowed; }
+    
+    footer { text-align: center; color: #666; margin-top: 40px; padding-top: 20px; border-top: 2px solid #ddd; }
+    
+    @media (max-width: 1200px) {
+        .sipoc-grid { grid-template-columns: 1fr; }
+        .sipoc-cell { border-right: none; border-bottom: 4px solid #333; }
+        .sipoc-cell:last-child { border-bottom: none; }
+    }
+    
+    .hidden { display: none; }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Master SIPOC Diagram</h1>
+            <p>Land Tax System - All 18 Valid Business Processes</p>
+        </header>
+
+```
+    <!-- Master View -->
+    <div id="masterView">
+        <div class="master-sipoc">
+            <div class="sipoc-title">Land Tax System - High-Level SIPOC</div>
+            <div class="sipoc-grid">
+                <div class="sipoc-cell suppliers">
+                    <div class="sipoc-header">🔴 SUPPLIERS</div>
+                    <div class="sipoc-content">
+                        <div class="sipoc-item">🏛️ Land Registry / Title Office</div>
+                        <div class="sipoc-item">🔍 COI (Compliance Operational Intelligence)</div>
+                        <div class="sipoc-item">📋 ASIC (Company Registry)</div>
+                        <div class="sipoc-item">📱 DLS (Driver License System)</div>
+                        <div class="sipoc-item">📄 DAS (Document Assessing System)</div>
+                        <div class="sipoc-item">🏛️ Valuer-General</div>
+                        <div class="sipoc-item">🏦 Banks / Payment Processors</div>
+                        <div class="sipoc-item">📮 Australia Post</div>
+                        <div class="sipoc-item">⚖️ TARB (Taxation Appeals Board)</div>
+                        <div class="sipoc-item">👨‍⚖️ Courts & Legal System</div>
+                        <div class="sipoc-item">🏛️ Government Agencies</div>
+                        <div class="sipoc-item">📍 Address & Data Services (Lassi, VEC, Landata)</div>
+                    </div>
+                </div>
+                <div class="sipoc-cell inputs">
+                    <div class="sipoc-header">🟠 INPUTS</div>
+                    <div class="sipoc-content">
+                        <div class="sipoc-item">📮 NOA (Notices of Acquisition)</div>
+                        <div class="sipoc-item">📊 Valuation Data Files</div>
+                        <div class="sipoc-item">💰 Payment Receipts</div>
+                        <div class="sipoc-item">📝 Amendment Notifications</div>
+                        <div class="sipoc-item">✓ Exemption Applications</div>
+                        <div class="sipoc-item">⚠️ Objections & Appeals</div>
+                        <div class="sipoc-item">📋 Customer Inquiries</div>
+                        <div class="sipoc-item">👤 Party & Property Details</div>
+                        <div class="sipoc-item">⚠️ Overdue Notices</div>
+                        <div class="sipoc-item">⚠️ Returned Mail</div>
+                        <div class="sipoc-item">👥 Trust Amendments</div>
+                        <div class="sipoc-item">📊 Assessment Data</div>
+                    </div>
+                </div>
+                <div class="sipoc-cell processes">
+                    <div class="sipoc-header">🟢 PROCESSES (18 Total)</div>
+                    <div class="sipoc-content">
+                        <div class="sipoc-item">1. Property Onboarding</div>
+                        <div class="sipoc-item">2. Annual Assessments</div>
+                        <div class="sipoc-item">3. Assessment Amendments</div>
+                        <div class="sipoc-item">4. Issue Demands</div>
+                        <div class="sipoc-item">5. Process Payments</div>
+                        <div class="sipoc-item">6. Manage Suspense</div>
+                        <div class="sipoc-item">7. Handle Returns</div>
+                        <div class="sipoc-item">8. Debt Recovery</div>
+                        <div class="sipoc-item">9. Exemption Processing</div>
+                        <div class="sipoc-item">10. Land Groupings</div>
+                        <div class="sipoc-item">11. BTR Registration</div>
+                        <div class="sipoc-item">12-18. Other Processes</div>
+                    </div>
+                </div>
+                <div class="sipoc-cell outputs">
+                    <div class="sipoc-header">🔵 OUTPUTS</div>
+                    <div class="sipoc-content">
+                        <div class="sipoc-item">💰 Assessments (all types)</div>
+                        <div class="sipoc-item">📬 Payment Demands</div>
+                        <div class="sipoc-item">📧 Customer Notifications</div>
+                        <div class="sipoc-item">💵 Refunds & Adjustments</div>
+                        <div class="sipoc-item">✓ PCC Certificates</div>
+                        <div class="sipoc-item">✓ Exemption Registrations</div>
+                        <div class="sipoc-item">📊 Financial Reports</div>
+                        <div class="sipoc-item">📋 Compliance Records</div>
+                        <div class="sipoc-item">💳 Payment Processing</div>
+                        <div class="sipoc-item">⚖️ Legal Documents</div>
+                        <div class="sipoc-item">📊 Management Reports</div>
+                        <div class="sipoc-item">📞 Customer Service</div>
+                    </div>
+                </div>
+                <div class="sipoc-cell customers">
+                    <div class="sipoc-header">🟣 CUSTOMERS</div>
+                    <div class="sipoc-content">
+                        <div class="sipoc-item">👤 Property Owners</div>
+                        <div class="sipoc-item">🏢 Treasury Department</div>
+                        <div class="sipoc-item">📊 Finance & Accounting</div>
+                        <div class="sipoc-item">📈 Management / Leadership</div>
+                        <div class="sipoc-item">✓ Stakeholders</div>
+                        <div class="sipoc-item">👨‍⚖️ Legal Professionals</div>
+                        <div class="sipoc-item">⚖️ TARB / Appeals Board</div>
+                        <div class="sipoc-item">👮 Enforcement Agencies</div>
+                        <div class="sipoc-item">🏦 Financial Institutions</div>
+                        <div class="sipoc-item">👨‍⚖️ Liquidators</div>
+                        <div class="sipoc-item">📮 Postal Services</div>
+                        <div class="sipoc-item">✓ Internal Operations</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item s">🔴 SUPPLIERS - External organizations providing inputs</div>
+            <div class="legend-item i">🟠 INPUTS - Data, documents, and triggers from suppliers</div>
+            <div class="legend-item p">🟢 PROCESSES - 18 core business processes</div>
+            <div class="legend-item o">🔵 OUTPUTS - Results and deliverables from processes</div>
+            <div class="legend-item c">🟣 CUSTOMERS - Internal/external recipients of outputs</div>
+        </div>
+        
+        <div class="process-grid">
+            <div class="process-card" onclick="drillDown(1)">
+                <span class="process-number">1</span>
+                <span class="drill-icon">🔍</span>
+                <h3>New Property Owner Onboarding</h3>
+                <p>NOA received → Customer established → First assessment issued</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(2)">
+                <span class="process-number">2</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Generate Annual Assessments</h3>
+                <p>Valuation data → All assessments calculated → Demands issued</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(3)">
+                <span class="process-number">3</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Process Assessment Amendments</h3>
+                <p>Amendment triggered → Liability recalculated → Amended assessment issued</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(4)">
+                <span class="process-number">4</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Issue Payment Demands</h3>
+                <p>Assessment issued → Demand formatted → Delivered to customer</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(5)">
+                <span class="process-number">5</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Process Customer Payments</h3>
+                <p>Payment received → Allocated to liability → Reconciled</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(6)">
+                <span class="process-number">6</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Manage Payment Suspense & Refunds</h3>
+                <p>Suspense detected → Investigated → Allocated or refunded</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(7)">
+                <span class="process-number">7</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Handle Returned Correspondence</h3>
+                <p>Mail returned → Address looked up → Re-delivered</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(8)">
+                <span class="process-number">8</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Recover Unpaid Land Tax</h3>
+                <p>Overdue detected → Escalated → Payment or enforcement</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(9)">
+                <span class="process-number">9</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Process Exemption Applications</h3>
+                <p>Application received → Verified → Approved/denied & registered</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(10)">
+                <span class="process-number">10</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Create & Manage Land Groupings</h3>
+                <p>Request received → Eligibility verified → Group assessment issued</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(11)">
+                <span class="process-number">11</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Register Build-to-Rent Properties</h3>
+                <p>Property identified → Registered → BTR treatment applied</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(12)">
+                <span class="process-number">12</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Resolve Valuation Objections</h3>
+                <p>Objection received → Assessed → Resolved or referred to TARB</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(13)">
+                <span class="process-number">13</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Resolve Customer Duplicates</h3>
+                <p>Duplicate detected → Verified → Resolved & recalculated</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(14)">
+                <span class="process-number">14</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Resolve Property Data Conflicts</h3>
+                <p>Conflict detected → Analyzed → Resolved & recalculated</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(15)">
+                <span class="process-number">15</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Issue Property Clearance Certificates</h3>
+                <p>Request received → Verified → PCC issued</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(16)">
+                <span class="process-number">16</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Process Trust Amendments</h3>
+                <p>Amendment received → Verified → Multi-customer recalculation</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(17)">
+                <span class="process-number">17</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Manage Customer Insolvency</h3>
+                <p>Insolvency detected → Claim filed → Recovery arranged</p>
+            </div>
+            
+            <div class="process-card" onclick="drillDown(18)">
+                <span class="process-number">18</span>
+                <span class="drill-icon">🔍</span>
+                <h3>Obtain Technical Tax Rulings</h3>
+                <p>Unique circumstance → TARB submission → Determination applied</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Individual Process Views -->
+    <div id="individualView" class="individual-sipoc">
+        <a class="back-button" onclick="backToMaster()">← Back to Master SIPOC</a>
+        
+        <div class="nav-buttons">
+            <button onclick="previousProcess()" id="prevBtn">← Previous</button>
+            <span id="processIndicator" style="flex: 1; text-align: center; font-weight: 600; color: #1e3c72;"></span>
+            <button onclick="nextProcess()" id="nextBtn">Next →</button>
+        </div>
+        
+        <div class="process-details">
+            <h3 id="processTitle"></h3>
+            <div class="detail-grid">
+                <div class="detail-box">
+                    <h4>Trigger Event</h4>
+                    <p id="trigger"></p>
+                </div>
+                <div class="detail-box">
+                    <h4>End Outcome</h4>
+                    <p id="outcome"></p>
+                </div>
+                <div class="detail-box">
+                    <h4>Business Value</h4>
+                    <p id="value"></p>
+                </div>
+                <div class="detail-box">
+                    <h4>Key Stakeholders</h4>
+                    <p id="stakeholders"></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="master-sipoc">
+            <div class="sipoc-title" id="individualTitle"></div>
+            <div id="individualSipocGrid" class="sipoc-grid"></div>
+        </div>
+    </div>
+    
+    <footer>
+        <p><strong>Click any process card to view detailed SIPOC diagram</strong></p>
+        <p style="margin-top: 15px; font-size: 0.9em; color: #999;">Land Tax System - All 18 Valid Business Processes | BPMN 2.0 / APQC Standards Compliant</p>
+    </footer>
+</div>
+
+<script>
+    const processes = [
+        {
+            id: 1,
+            name: "New Property Owner Onboarding",
+            trigger: "Notice of Acquisition (NOA) received from Land Registry",
+            outcome: "New owner receives first land tax assessment and payment demand",
+            value: "Revenue recognition, customer establishment, tax obligation creation",
+            stakeholders: "Land Registry, Property owner, Treasury, CSO, Land Officer, Assessment Officer",
+            suppliers: ["Land Registry", "COI", "ASIC", "DLS", "DAS", "Australia Post"],
+            inputs: ["NOA notification", "Party details", "Property location", "Title reference", "Ownership verification"],
+            processes: ["Link/create CID", "Verify party", "Match property", "Execute transfer", "Generate demand"],
+            outputs: ["Customer ID created", "Property linked", "Assessment issued", "Demand notice", "Documentation"],
+            customers: ["New property owner", "Treasury", "Management", "Finance"]
+        },
+        {
+            id: 2,
+            name: "Generate Annual Assessments & Issue Demands",
+            trigger: "Valuation data file received from Valuer-General",
+            outcome: "All assessable customers have current assessment and payment demand issued",
+            value: "Annual revenue cycle completion, collection initiation",
+            stakeholders: "Valuer-General, Assessment Officer, QA Team, Treasury, Customers",
+            suppliers: ["Valuer-General", "e-Sys", "Assessment system", "Post/MLT"],
+            inputs: ["Valuation data file", "Property values", "Exemption data", "Assessment rules", "Customer list"],
+            processes: ["Validate data", "Calculate assessment", "Apply rules", "QA check", "Generate demands"],
+            outputs: ["Assessments (100%)", "Demands issued", "QA reports", "Exception reports", "Finance reports"],
+            customers: ["All customers", "Treasury", "Finance", "Management"]
+        },
+        {
+            id: 3,
+            name: "Process Assessment Amendments",
+            trigger: "Amendment event (ownership, exemption, deduplication, trust, error)",
+            outcome: "Amended assessment issued, customer notified of change",
+            value: "Liability accuracy, compliance, customer service",
+            stakeholders: "Assessment Officer, QA Team, Suspense Officer, Customer",
+            suppliers: ["e-Sys", "Investigation system", "Document system", "Banking"],
+            inputs: ["Amendment triggers", "Exemption changes", "Property updates", "Ownership changes", "Error corrections"],
+            processes: ["Identify amendment", "Impact analysis", "Recalculate", "QA review", "Issue amended assess"],
+            outputs: ["Amended assessment", "Refund advice", "Customer notice", "System updates", "Documentation"],
+            customers: ["Affected customers", "Treasury", "Finance", "Stakeholders"]
+        },
+        {
+            id: 4,
+            name: "Issue Payment Demands",
+            trigger: "Assessment issued in e-Sys",
+            outcome: "Payment demand delivered to customer with payment options & due date",
+            value: "Revenue collection cycle initiated, customer billing",
+            stakeholders: "Treasury Officer, Correspondence Unit, Customer",
+            suppliers: ["e-Sys", "Treasury", "Post/MLT", "Address system"],
+            inputs: ["Assessment data", "Customer details", "Address info", "Due date", "Payment methods"],
+            processes: ["Extract assessment", "Verify address", "Format demand", "Select delivery", "Dispatch"],
+            outputs: ["Demand notice", "Payment options", "Due date notice", "Delivery confirmation", "Dispatch report"],
+            customers: ["Customers", "Treasury", "Finance", "Post office"]
+        },
+        {
+            id: 5,
+            name: "Process Customer Payments",
+            trigger: "Payment received from customer (bank/cheque/BPAY/online)",
+            outcome: "Payment allocated to customer liability, balance updated, reconciled",
+            value: "Cash collection, liability reduction, customer satisfaction",
+            stakeholders: "Banking Officer, Allocation Specialist, Reconciliation Officer",
+            suppliers: ["Banks", "Payment processors", "e-Sys", "Customers"],
+            inputs: ["Payment received", "Customer ID", "Amount", "Payment date", "Payment method"],
+            processes: ["Receive payment", "Validate", "Match customer", "Allocate", "Reconcile"],
+            outputs: ["Payment allocated", "Balance updated", "Receipt issued", "Reconciliation", "Transaction report"],
+            customers: ["Customers", "Treasury", "Finance", "Accounting"]
+        },
+        {
+            id: 6,
+            name: "Manage Payment Suspense & Refunds",
+            trigger: "Payment suspense detected OR customer requests refund",
+            outcome: "Suspense resolved (allocated/refunded) & customer notified",
+            value: "Customer satisfaction, financial accuracy, dispute resolution",
+            stakeholders: "Suspense Officer, CSO, Banking Officer, Manager",
+            suppliers: ["Suspense payments", "Customers", "e-Sys", "Banking"],
+            inputs: ["Suspense detected", "Customer inquiry", "Refund request", "Payment details", "Verification info"],
+            processes: ["Investigate", "Determine allocation", "Decide allocate/refund", "Authorize", "Process"],
+            outputs: ["Allocation made", "Refund issued", "Notification sent", "Documentation", "Report"],
+            customers: ["Customers", "Treasury", "Finance", "Management"]
+        },
+        {
+            id: 7,
+            name: "Handle Returned Correspondence",
+            trigger: "Correspondence returned as undeliverable by Australia Post",
+            outcome: "Correspondence delivered via corrected address or alternative method",
+            value: "Regulatory compliance, customer communication assurance",
+            stakeholders: "Correspondence Officer, CSO, Customer",
+            suppliers: ["Australia Post", "Lassi (address)", "VEC", "e-Sys"],
+            inputs: ["Returned mail", "Return reason", "Customer details", "Address info", "Original document"],
+            processes: ["Receipt return", "Analyze reason", "Lookup address", "Re-issue/contact", "Arrange delivery"],
+            outputs: ["Re-issue mail", "Updated address", "Delivery confirmed", "Customer contact", "Report"],
+            customers: ["Customers", "Post office", "Operations", "Compliance"]
+        },
+        {
+            id: 8,
+            name: "Recover Unpaid Land Tax",
+            trigger: "Assessment remains unpaid past due date (e.g., 60 days)",
+            outcome: "Payment received OR Arrangement agreed OR Write-off approved",
+            value: "Revenue recovery, compliance enforcement",
+            stakeholders: "Collections Officer, Manager, Legal, Banking",
+            suppliers: ["e-Sys", "Legal system", "Enforcement", "Customers"],
+            inputs: ["Overdue assessment", "Payment due date", "Amount owed", "Customer info", "Contact details"],
+            processes: ["Identify overdue", "Send reminder", "Escalate", "Negotiate arrangement", "Enforce/write-off"],
+            outputs: ["Payment received", "Arrangement agreed", "Legal action taken", "Write-off approved", "Report"],
+            customers: ["Treasury", "Legal", "Enforcement", "Finance"]
+        },
+        {
+            id: 9,
+            name: "Process Exemption Applications",
+            trigger: "Customer submits exemption application (PPR, PPL, etc.)",
+            outcome: "Exemption approved/denied, registered in e-Sys, customer notified",
+            value: "Regulatory compliance, customer service",
+            stakeholders: "Exemption Officer, Investigator, Assessment Officer, Manager",
+            suppliers: ["Customers", "Investigator", "e-Sys", "Document system"],
+            inputs: ["Application form", "Supporting docs", "Eligibility claims", "Customer details", "Property info"],
+            processes: ["Intake & check", "Verify docs", "Investigate", "Determine eligibility", "Grant/deny & register"],
+            outputs: ["Decision letter", "Registration", "Amended assessment", "Notification", "Report"],
+            customers: ["Customers", "Assessment", "Management", "Compliance"]
+        },
+        {
+            id: 10,
+            name: "Create & Manage Land Groupings",
+            trigger: "Customer requests land grouping OR automatic detection",
+            outcome: "Land group created, nominated member receives single group assessment",
+            value: "Simplified assessment administration for customers",
+            stakeholders: "Grouping Officer, Assessment Officer, CSO, Customer",
+            suppliers: ["Customers", "e-Sys", "Assessment system", "Organization"],
+            inputs: ["Grouping request", "Property list", "Owner details", "Eligibility data", "Assessment values"],
+            processes: ["Receive request", "Verify eligibility", "Select member", "Create group", "Generate assessment"],
+            outputs: ["Group created", "Group assessment", "Confirmation letter", "Apportionment calc", "Report"],
+            customers: ["Customers", "Assessment", "Operations", "Records"]
+        },
+        {
+            id: 11,
+            name: "Register Build-to-Rent Properties",
+            trigger: "Property identified as Build-to-Rent",
+            outcome: "Property registered, BTR-specific tax treatment applied",
+            value: "Government incentive policy compliance, accurate assessment",
+            stakeholders: "BTR Officer, Assessment Officer, CSO, Government",
+            suppliers: ["Government", "e-Sys", "BTR registry", "Properties"],
+            inputs: ["BTR identification", "Eligibility criteria", "Documentation", "Property data", "Assessment info"],
+            processes: ["Identify BTR", "Verify eligibility", "Register in system", "Apply BTR treatment", "Issue assessment"],
+            outputs: ["BTR registered", "BTR assessment", "Confirmation", "Report", "Documentation"],
+            customers: ["Developers", "Government", "Assessment", "Policy"]
+        },
+        {
+            id: 12,
+            name: "Resolve Valuation Objections",
+            trigger: "Customer objects to property valuation within statutory timeframe",
+            outcome: "Objection resolved (adjusted/rejected) OR referred to TARB",
+            value: "Regulatory compliance, dispute resolution",
+            stakeholders: "Valuation Officer, Manager, Assessment Officer, TARB, Customer",
+            suppliers: ["Customers", "Valuation system", "TARB", "e-Sys"],
+            inputs: ["Objection form", "Supporting evidence", "Valuation disputed", "Property details", "Objection date"],
+            processes: ["Receive objection", "Check deadline", "Assess merit", "Decide/refer TARB", "Implement decision"],
+            outputs: ["Decision letter", "Amended/rejected", "TARB referral", "Report", "Documentation"],
+            customers: ["Customers", "TARB", "Assessment", "Compliance"]
+        },
+        {
+            id: 13,
+            name: "Resolve Customer Duplicates",
+            trigger: "Duplicate customer record detected",
+            outcome: "Duplicate resolved (merged/split), liabilities recalculated, customer notified",
+            value: "Data accuracy, customer satisfaction",
+            stakeholders: "Customer Identity Officer, Investigator, Assessment Officer, Manager",
+            suppliers: ["e-Sys", "Investigator", "Identity system", "LOAN system"],
+            inputs: ["Duplicate detected", "Customer details", "Liability data", "Property info", "Historical records"],
+            processes: ["Detect duplicate", "Verify", "Investigate history", "Decide merge/split", "Consolidate & recalc"],
+            outputs: ["Resolved (merge/split)", "Recalculated", "Notification", "Updated records", "Report"],
+            customers: ["Customers", "Data quality", "Assessment", "Records"]
+        },
+        {
+            id: 14,
+            name: "Resolve Property Data Conflicts",
+            trigger: "Property duplication or ownership conflict detected",
+            outcome: "Conflict resolved (separated/consolidated), liabilities updated, customer notified",
+            value: "Data accuracy, assessment correctness",
+            stakeholders: "Property Data Officer, Investigator, Assessment Officer",
+            suppliers: ["e-Sys", "LOAN system", "Land Registry", "Landata"],
+            inputs: ["Conflict detected", "Property details", "Ownership data", "Title references", "Boundary info"],
+            processes: ["Detect conflict", "Analyze type", "Verify ownership chain", "Decide resolution", "Execute & recalc"],
+            outputs: ["Resolved (sep/consol)", "Recalculated", "Notification", "Updated records", "Report"],
+            customers: ["Customers", "Data quality", "Assessment", "Records"]
+        },
+        {
+            id: 15,
+            name: "Issue Property Clearance Certificates",
+            trigger: "Customer requests Property Clearance Certificate or plans",
+            outcome: "PCC/plans issued to customer via mail or MLT",
+            value: "Customer service, regulatory requirement",
+            stakeholders: "CSO, BTO Officer, Assessment Officer, Customer",
+            suppliers: ["Customers", "e-Sys", "Landata", "Post/MLT"],
+            inputs: ["Application", "Property ID", "Assessment data", "Liability status", "Warning checks"],
+            processes: ["Receive request", "Verify property", "Apply warnings", "Generate PCC", "Deliver"],
+            outputs: ["PCC/plans issued", "Warnings shown", "Delivery confirmed", "Notification", "Report"],
+            customers: ["Customers", "Lawyers", "Professionals", "Service users"]
+        },
+        {
+            id: 16,
+            name: "Process Trust Amendments",
+            trigger: "Trust amendment notification received (trustee/beneficiary/structure change)",
+            outcome: "Amendment processed, all trust customers recalculated, amended assessments issued",
+            value: "Regulatory compliance, accurate assessment",
+            stakeholders: "Trust Officer, Investigator, Assessment Officer, Manager",
+            suppliers: ["Trustees", "e-Sys", "Investigator", "Document system"],
+            inputs: ["Amendment notice", "Trustee change", "Structure change", "Documentation", "Affected properties"],
+            processes: ["Receive amendment", "Classify trust", "Verify amendment", "Multi-calc impact", "Issue amended assess"],
+            outputs: ["Amendment processed", "Recalculated (all)", "All parties notified", "Penalty (if TND)", "Report"],
+            customers: ["Trustees", "Trust customers", "Assessment", "Compliance"]
+        },
+        {
+            id: 17,
+            name: "Manage Customer Insolvency",
+            trigger: "Customer enters insolvency (administration/liquidation/bankruptcy)",
+            outcome: "Claim filed, administration coordinated, recovery arranged or write-off approved",
+            value: "Revenue protection, legal compliance",
+            stakeholders: "Insolvency Specialist, Legal, Banking, Liquidator",
+            suppliers: ["e-Sys", "Courts", "Liquidator", "Creditors"],
+            inputs: ["Insolvency detected", "Customer status", "Amount owed", "Liquidator info", "Property details"],
+            processes: ["Detect insolvency", "Notify liquidator", "File claim", "Coordinate admin", "Recovery/write-off"],
+            outputs: ["Claim filed", "Recovery/dividend", "Write-off approved", "Coordination complete", "Report"],
+            customers: ["Courts", "Liquidators", "Treasury", "Finance"]
+        },
+        {
+            id: 18,
+            name: "Obtain Technical Tax Rulings",
+            trigger: "Unique or ambiguous tax circumstance requires formal determination",
+            outcome: "TARB determination received, tax treatment clarified, assessment amended if needed",
+            value: "Regulatory compliance, certainty",
+            stakeholders: "Technical Ruling Officer, Assessment Officer, Legal, TARB, Customer",
+            suppliers: ["Customers", "TARB", "e-Sys", "Legal"],
+            inputs: ["Unique circumstance", "Supporting evidence", "Legal analysis", "Assessment basis", "Precedents"],
+            processes: ["Identify need", "Prepare submission", "Submit to TARB", "Monitor TARB", "Implement ruling"],
+            outputs: ["TARB determination", "Tax treatment clarified", "Assessment amended", "Documentation", "Report"],
+            customers: ["Customers", "Legal professionals", "Stakeholders", "Assessment"]
+        }
+    ];
+    
+    let currentProcess = 0;
+    
+    function drillDown(processId) {
+        currentProcess = processId - 1;
+        showIndividualProcess();
+    }
+    
+    function showIndividualProcess() {
+        document.getElementById('masterView').style.display = 'none';
+        document.getElementById('individualView').classList.add('active');
+        
+        const p = processes[currentProcess];
+        
+        document.getElementById('processTitle').textContent = `#${p.id}: ${p.name}`;
+        document.getElementById('processIndicator').textContent = `Process ${p.id} of ${processes.length}`;
+        document.getElementById('trigger').textContent = p.trigger;
+        document.getElementById('outcome').textContent = p.outcome;
+        document.getElementById('value').textContent = p.value;
+        document.getElementById('stakeholders').textContent = p.stakeholders;
+        document.getElementById('individualTitle').textContent = `#${p.id}: ${p.name}`;
+        
+        // Build SIPOC grid
+        const grid = document.getElementById('individualSipocGrid');
+        grid.innerHTML = `
+            <div class="sipoc-cell suppliers">
+                <div class="sipoc-header">🔴 SUPPLIERS</div>
+                <div class="sipoc-content">
+                    ${p.suppliers.map(s => `<div class="sipoc-item">${s}</div>`).join('')}
+                </div>
+            </div>
+            <div class="sipoc-cell inputs">
+                <div class="sipoc-header">🟠 INPUTS</div>
+                <div class="sipoc-content">
+                    ${p.inputs.map(i => `<div class="sipoc-item">${i}</div>`).join('')}
+                </div>
+            </div>
+            <div class="sipoc-cell processes">
+                <div class="sipoc-header">🟢 PROCESSES</div>
+                <div class="sipoc-content">
+                    ${p.processes.map(pr => `<div class="sipoc-item">${pr}</div>`).join('')}
+                </div>
+            </div>
+            <div class="sipoc-cell outputs">
+                <div class="sipoc-header">🔵 OUTPUTS</div>
+                <div class="sipoc-content">
+                    ${p.outputs.map(o => `<div class="sipoc-item">${o}</div>`).join('')}
+                </div>
+            </div>
+            <div class="sipoc-cell customers">
+                <div class="sipoc-header">🟣 CUSTOMERS</div>
+                <div class="sipoc-content">
+                    ${p.customers.map(c => `<div class="sipoc-item">${c}</div>`).join('')}
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('prevBtn').disabled = currentProcess === 0;
+        document.getElementById('nextBtn').disabled = currentProcess === processes.length - 1;
+    }
+    
+    function previousProcess() {
+        if (currentProcess > 0) {
+            currentProcess--;
+            showIndividualProcess();
+        }
+    }
+    
+    function nextProcess() {
+        if (currentProcess < processes.length - 1) {
+            currentProcess++;
+            showIndividualProcess();
+        }
+    }
+    
+    function backToMaster() {
+        document.getElementById('individualView').classList.remove('active');
+        document.getElementById('masterView').style.display = 'block';
+    }
+</script>
+```
+
+</body>
+</html>

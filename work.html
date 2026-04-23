@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>LTX Business Architecture Meta‑Model</title>
+
+<style>
+:root {
+  --navy: #1f2a44;
+  --blue: #4f81bd;
+  --blue-soft: #e6effa;
+  --amber: #f3e6d8;
+  --amber-soft: #fbf4ec;
+  --grey: #6b7280;
+  --bg: #f7f8fb;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  background: var(--bg);
+  padding: 48px 32px;
+  colour: #1a1a1a;
+}
+
+h1 {
+  text-align: centre;
+  font-size: 1.7em;
+  font-weight: 600;
+  margin-bottom: 12px;
+  colour: var(--navy);
+}
+
+.subtitle {
+  text-align: centre;
+  font-size: 0.95em;
+  colour: var(--grey);
+  margin-bottom: 40px;
+}
+
+/* Layout */
+.diagram {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 26px;
+  justify-items: centre;
+}
+
+/* Nodes */
+.node {
+  min-width: 320px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  text-align: centre;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.node-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.node-desc {
+  font-size: 0.85em;
+  line-height: 1.4;
+  colour: #374151;
+}
+
+/* Semantic colouring */
+.value-stream {
+  background: linear-gradient(135deg, #4f81bd, #355f99);
+  colour: white;
+}
+
+.value-stage {
+  background: var(--blue-soft);
+  border-left: 6px solid var(--blue);
+}
+
+.capability {
+  background: #eef6ff;
+  border-left: 6px solid #7aa6d9;
+}
+
+.process-l1 {
+  background: var(--amber);
+  border-left: 6px solid #d6b48a;
+}
+
+.process-l2 {
+  background: var(--amber-soft);
+  border-left: 6px solid #e2caa8;
+}
+
+.process-l3 {
+  background: #ffffff;
+  border: 1px dashed #d1d5db;
+}
+
+/* Horizontal grouping */
+.row {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  justify-content: centre;
+}
+
+/* Connector labels */
+.relation {
+  font-size: 0.8em;
+  colour: var(--grey);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Legend */
+.legend {
+  max-width: 900px;
+  margin: 48px auto 0;
+  display: flex;
+  gap: 24px;
+  justify-content: centre;
+  flex-wrap: wrap;
+  font-size: 0.85em;
+  colour: #374151;
+}
+
+.legend-item {
+  display: flex;
+  align-items: centre;
+  gap: 8px;
+}
+
+.legend-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.swatch-value { background: #4f81bd; }
+.swatch-capability { background: #eef6ff; border: 1px solid #7aa6d9; }
+.swatch-process { background: #f3e6d8; border: 1px solid #d6b48a; }
+</style>
+</head>
+
+<body>
+
+<h1>Land Tax – Business Architecture Meta‑Model</h1>
+<div class="subtitle">
+How value, capability, and process concepts relate in the LTX domain
+</div>
+
+<div class="diagram">
+
+  <!-- Value Stream -->
+  <div class="node value-stream">
+    <div class="node-title">Value Stream</div>
+    <div class="node-desc">
+      End‑to‑end value delivered to customers and the State
+    </div>
+  </div>
+
+  <div class="relation">consists of</div>
+
+  <!-- Value Stage -->
+  <div class="node value-stage">
+    <div class="node-title">Value Stage</div>
+    <div class="node-desc">
+      Outcome‑focused step within a value stream
+    </div>
+  </div>
+
+  <div class="relation">supported by</div>
+
+  <!-- Capability -->
+  <div class="node capability">
+    <div class="node-title">Capability</div>
+    <div class="node-desc">
+      What the business must be able to do to achieve outcomes
+    </div>
+  </div>
+
+  <div class="relation">orchestrated by</div>
+
+  <!-- L1 Process -->
+  <div class="node process-l1">
+    <div class="node-title">Level 1 – Core Process</div>
+    <div class="node-desc">
+      How capabilities are coordinated to realise value
+    </div>
+  </div>
+
+  <div class="relation">decomposed into</div>
+
+  <!-- L2 / L3 -->
+  <div class="row">
+    <div class="node process-l2">
+      <div class="node-title">Level 2 – Sub‑Process</div>
+      <div class="node-desc">
+        Logical decomposition of the core process
+      </div>
+    </div>
+
+    <div class="node process-l3">
+      <div class="node-title">Level 3 – Process Task</div>
+      <div class="node-desc">
+        Atomic operational activity
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-swatch swatch-value"></div>
+    <span>Value / Outcome</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch swatch-capability"></div>
+    <span>Business Capability</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch swatch-process"></div>
+    <span>Process / Orchestration</span>
+  </div>
+</div>
+
+</body>
+</html>
+``

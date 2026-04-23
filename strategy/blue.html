@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Land Tax – Service Blueprint (CSV‑Driven)</title>
+
+<style>
+:root {
+  --bg:#f5f6f8;
+  --surface:#ffffff;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --divider:#cbd5e1;
+
+  --cust:#f97316;
+  --touch:#facc15;
+  --front:#22c55e;
+  --back:#0284c7;
+  --cap:#6366f1;
+  --proc:#db2777;
+  --pain:#dc2626;
+  --opp:#16a34a;
+}
+
+body {
+  margin:0;
+  padding:28px;
+  background:var(--bg);
+  font-family:"Segoe UI",system-ui,Arial,sans-serif;
+  color:var(--text);
+}
+
+.blueprint-grid {
+  max-width:1900px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:14px;
+}
+
+.stage-column {
+  background:var(--surface);
+  border-radius:12px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+.stage-chevron {
+  background:linear-gradient(90deg,#1e40af,#1e3a8a);
+  color:white;
+  height:88px;
+  padding:12px 14px;
+  box-sizing:border-box;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:.85em;
+  font-weight:600;
+  line-height:1.25;
+  clip-path:polygon(0 0,90% 0,100% 50%,90% 100%,0 100%,5% 50%);
+}
+
+.lane {
+  border-top:1px solid var(--divider);
+  padding:8px 10px;
+}
+
+.lane-label {
+  font-size:.6em;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--muted);
+  margin-bottom:4px;
+}
+
+.block {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:#f8fafc;
+  border-radius:6px;
+  padding:6px 8px;
+  font-size:.7em;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.icon { font-size:.9em; }
+
+.cust  { border-left:3px solid var(--cust); }
+.touch { border-left:3px solid var(--touch); }
+.front { border-left:3px solid var(--front); }
+.back  { border-left:3px solid var(--back); }
+.cap   { border-left:3px solid var(--cap); }
+.proc  { border-left:3px solid var(--proc); }
+.pain  { border-left:3px solid var(--pain); }
+.opp   { border-left:3px solid var(--opp); }
+
+.modal {
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+.modal.active { display:flex; }
+
+.modal-content {
+  background:white;
+  padding:28px;
+  border-radius:12px;
+  max-width:520px;
+  width:90%;
+}
+
+.close {
+  position:absolute;
+  top:16px;
+  right:20px;
+  font-size:1.6em;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1 style="text-align:center;margin-bottom:20px;">
+Land Tax – Service Blueprint (CSV‑Driven)
+</h1>
+
+<div class="blueprint-grid" id="grid"></div>
+
+<div class="modal" id="modal" onclick="closeModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="close" onclick="closeModal()">&times;</div>
+    <h2 id="modalTitle"></h2>
+    <p id="modalBody"></p>
+  </div>
+</div>
+
+<script>
+// ---------- FALLBACK CSV (used if fetch fails) ----------
+const FALLBACK_CSV = `
+stage,customer,touch,front,back,capability,process,pain,opportunity
+Accurate Land & Ownership Information Maintained,Customer action,Digital touchpoint,Front stage,Back stage,Capability,Process,Pain point,Opportunity
+Authoritative Land Value Established,Customer action,Digital touchpoint,Front stage,Back stage,Capability,Process,Pain point,Opportunity
+Correct Land Tax Rules Applied,Customer action,Digital touchpoint,Front stage,Back stage,Capability,Process,Pain point,Opportunity
+Land Tax Liability Determined,Customer action,Digital touchpoint,Front stage,Back stage,Capability,Process,Pain point,Opportunity
+Land Tax Obligations Established & Communicated,Customer action,Digital touchpoint,Front stage,Back stage,Capability,Process,Pain point,Opportunity
+Land Tax Obligations Settled & Corrected,Customer action,Digital touchpoint,Front stage,Back stage,Capability,Process,Pain point,Opportunity
+`.trim();
+
+// ---------- LOAD CSV ----------
+fetch('data/value_stages.csv')
+  .then(r => {
+    if (!r.ok) throw new Error('CSV not found');
+    return r.text();
+  })
+  .then(renderCSV)
+  .catch(err => {
+    console.warn('CSV load failed, using fallback:', err.message);
+    renderCSV(FALLBACK_CSV);
+  });
+
+// ---------- RENDER ----------
+function renderCSV(csv) {
+  const rows = csv.split('\n').slice(1);
+  const grid = document.getElementById('grid');
+
+  rows.forEach(row => {
+    const [
+      stage, customer, touch, front, back,
+      capability, process, pain, opportunity
+    ] = row.split(',');
+
+    grid.innerHTML += `
+      <div class="stage-column">
+        <div class="stage-chevron">${stage}</div>
+        ${lane('Customer', customer, 'cust', '👤')}
+        ${lane('Touch', touch, 'touch', '🖥️')}
+        ${lane('Front', front, 'front', '✅')}
+        ${lane('Back', back, 'back', '⚙️')}
+        ${lane('Capability', capability, 'cap', '🧩')}
+        ${lane('Process', process, 'proc', '🔄')}
+        ${lane('Pain', pain, 'pain', '⚠️')}
+        ${lane('Opportunity', opportunity, 'opp', '💡')}
+      </div>
+    `;
+  });
+}
+
+function lane(label, text, cls, icon) {
+  return `
+    <div class="lane">
+      <div class="lane-label">${label}</div>
+      <div class="block ${cls}" onclick="openModal('${label}','${text}')">
+        <span class="icon">${icon}</span> ${text}
+      </div>
+    </div>
+  `;
+}
+
+function openModal(title, body) {
+  document.getElementById("modalTitle").textContent = title;
+  document.getElementById("modalBody").textContent = body;
+  document.getElementById("modal").classList.add("active");
+}
+function closeModal(e) {
+  if (!e || e.target.id === "modal") {
+    document.getElementById("modal").classList.remove("active");
+  }
+}
+</script>
+
+</body>
+</html>
+``

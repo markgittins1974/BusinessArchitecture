@@ -200,13 +200,22 @@ const pill = arr => arr.length ? arr.map(v=>`<span class="pill">${v}</span>`).jo
 
 /* ========= CSV PARSE ========= */
 function parseCSV(text){
-  const lines=text.trim().split(/\r?\n/)
-  const headers=lines[0].split('\t')
-  return lines.slice(1).map(l=>{
-    const o={}
-    l.split('\t').forEach((v,i)=>o[headers[i]]=v.trim())
-    return o
-  })
+  const lines = text.trim().split(/\r?\n/);
+
+  // detect delimiter safely
+  const delimiter =
+    lines[0].includes('\t') && !lines[0].includes(',') ? '\t' : ',';
+
+  const headers = lines[0].split(delimiter).map(h => h.trim());
+
+  return lines.slice(1).map(line => {
+    const values = line.split(delimiter);
+    const obj = {};
+    headers.forEach((h, i) => {
+      obj[h] = (values[i] || '').trim();
+    });
+    return obj;
+  });
 }
 
 /* ========= LOAD ========= */
@@ -216,14 +225,19 @@ fetch('../data.csv')
   const records=parseCSV(text)
 
   /* ---- VALUE STREAMS ---- */
-  const vs=uniq(records.map(r =>
-    r["Value Stream"]
-      .replace(/^Value Stream:\s*/,'')
-      .replace(/\s*\(\d+\)$/,'')
-  ))
+  
+const vs = uniq(
+  records
+    .map(r => r["Value Stream"])
+    .filter(v => v && v.trim() !== "")
+    .map(v =>
+      v
+        .replace(/^Value Stream:\s*/i, '')
+        .replace(/\s*\(\d+\)\s*$/, '')
+        .trim()
+    )
+);
 
-  document.getElementById('valueStreams').innerHTML =
-    vs.map(v=>`<div class="chevron">${v}</div>`).join('')
 
   /* ---- CAPABILITIES ---- */
   const caps={}

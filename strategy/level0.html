@@ -241,6 +241,10 @@ const vs = uniq(
     )
 );
 
+document.getElementById('valueStreams').innerHTML =
+  vs.map(v => `<div class="chevron">${v}</div>`).join('');
+``
+
 
   /* ---- CAPABILITIES ---- */
   const caps={}

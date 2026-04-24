@@ -913,6 +913,24 @@ function App() {
 ReactDOM.createRoot(document.getElementById('app')).render(<App />);
 </script>
 
+<script>
+async function loadCSV() {
+    const response = await fetch('./data.csv');
+    const csv = await response.text();
+    const rows = csv.split('\n').map(line => line.split(','));
+    
+    // Do something with rows
+    console.log(rows);
+}
+
+// Load immediately
+loadCSV();
+
+// Reload every 5 seconds
+setInterval(loadCSV, 5000);
+</script>
+
+  
 <!-- TWEAKS PANEL -->
 <script>
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{

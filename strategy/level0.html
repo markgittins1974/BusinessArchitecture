@@ -202,9 +202,11 @@ const pill = arr => arr.length ? arr.map(v=>`<span class="pill">${v}</span>`).jo
 function parseCSV(text){
   const lines = text.trim().split(/\r?\n/);
 
-  // detect delimiter safely
+  // detect delimiter safely (CSV or TSV)
   const delimiter =
-    lines[0].includes('\t') && !lines[0].includes(',') ? '\t' : ',';
+    lines[0].includes('\t') && !lines[0].includes(',')
+      ? '\t'
+      : ',';
 
   const headers = lines[0].split(delimiter).map(h => h.trim());
 
@@ -217,6 +219,7 @@ function parseCSV(text){
     return obj;
   });
 }
+
 
 /* ========= LOAD ========= */
 fetch('../data.csv')

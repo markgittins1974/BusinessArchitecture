@@ -1,0 +1,53 @@
+﻿"Value Stream","Value Stream ID","Process ID","Core Process (Level 1)","Description (Level 1)","Executing Capabilities (L2 Execution)","Sub-Process ID","Sub-Process (Level 2)","Description (Level 2)","Trigger","Internal Actors","External Actors","Internal Systems","External Systems","Related Procedures"
+"Accurate Land & Ownership Information Maintained","LTX-VS-01","LTX-P-01","Administer Property & Ownership Records","Executes the ongoing capture, maintenance, and correction of property, ownership, and party records to ensure the Land Tax register is accurate, authoritative, and fit for all downstream valuation and taxation activities.","Customer Identity & Relationship Management, 
+Ownership Structure & Trust Management, 
+Property Data Acquisition & Quality
+Property Information Services","LTX-SP-01.01","Capture Land Transfer Details","Initiates changes to property ownership by capturing factual transfer information required to update authoritative ownership records.",,"[""BTO""]",,"[""eSys"",""CM10"",""Email""]",,
+"Accurate Land & Ownership Information Maintained","LTX-VS-01","LTX-VS-01",,,,"LTX-SP-01.02","Establish Parties","Defines the legal persons (individuals, companies, trusts) necessary to create valid ownership and taxation relationships.",,,,,,
+"Accurate Land & Ownership Information Maintained","LTX-VS-01","LTX-VS-01",,,,"LTX-SP-01.03","Establish Properties","Creates and maintains the property entity that underpins valuation, treatment, and assessment activities.",,,,,,
+"Accurate Land & Ownership Information Maintained","LTX-VS-01","LTX-VS-01",,,,"LTX-SP-01.04","Establish Ownership Interests","Defines who owns what interest in a property, which is a prerequisite for valuation and liability determination.",,,,,,
+"Accurate Land & Ownership Information Maintained","LTX-VS-01","LTX-VS-01",,,,"LTX-SP-01.05","Maintain Customer & Property Data Quality","Ensures ongoing accuracy and integrity of core records that support all downstream Land Tax processes.",,,,,,
+"Authoritative Land Value Established","LTX-VS-02",,"Administer Land Valuations","Executes the determination and maintenance of statutory land values, including general, supplementary, and Commissioner’s valuations, ensuring that authoritative land values are established and kept current for Land Tax purposes.","Valuation Data Administration",,"Manage General Valuation","Establishes baseline land values through scheduled valuation cycles that apply broadly across properties.",,,,,,
+"Authoritative Land Value Established","LTX-VS-02",,,,,,"Manage Supplementary Valuation","Applies event-driven valuation updates triggered by changes such as subdivision, consolidation, or corrected data.",,,,,,
+"Authoritative Land Value Established","LTX-VS-02",,,,,,"Manage Occupancy Valuation","Determines valuation components based on land use or occupancy factors where required by legislation.",,,,,,
+"Authoritative Land Value Established","LTX-VS-02",,,,,,"Manage Commissioner’s Valuation","Provides statutory valuations determined directly by the Commissioner where standard valuation pathways are insufficient.",,,,,,
+"Correct Land Tax Rules Applied","LTX-VS-03",,"Administer Land Tax Treatment","Executes the application of Land Tax legislation to determine how land and owners are treated, including exemptions, concessions, groupings, and surcharge eligibility, prior to calculating any financial liability.","Exemption Management
+Land Grouping Administration
+Absentee Owner Tax Treatment
+Build‑to‑Rent Registration",,"Manage Exemptions (PPR, PPL, Other)","Determines whether land is exempt from Land Tax based on legislative eligibility criteria.","If we decide to define level 3  a standradised process description is more approriate than BPM",,,,,
+"Correct Land Tax Rules Applied","LTX-VS-03",,,,,,"Manage Concessions (e.g. Build-to-Rent)","Applies concessional treatment rules that alter how Land Tax legislation applies to eligible land.",,,,,,
+"Correct Land Tax Rules Applied","LTX-VS-03",,,,,,"Manage Land Groupings","Determines whether properties or owners must be treated as a group for Land Tax purposes.",,,,,,
+"Correct Land Tax Rules Applied","LTX-VS-03",,,,,,"Manage Absentee Owner Surcharge Eligibility","Determines whether absentee owner surcharge provisions apply before financial calculation occurs.",,,,,,
+"Disputes, Corrections & Reviews Resolved","LTX-VS-07",,"Administer Objections, Amendments & Disputes","Executes the review and resolution of objections, disputes, and post‑assessment changes, including valuation objections, assessment objections, and amendments, to ensure Land Tax outcomes remain correct and defensible.","Valuation Dispute Resolution
+Adjustment Management
+Exemption Management
+Case Management (Complex / Specialist)",,"Manage Valuation Objections","Handles formal challenges to determined land values without performing valuation itself.",,,,,,
+"Disputes, Corrections & Reviews Resolved","LTX-VS-07",,,,,,"Manage Assessment Objections","Handles objections to issued Land Tax assessments after liability has been formalised.",,,,,,
+"Disputes, Corrections & Reviews Resolved","LTX-VS-07",,,,,,"Review Exemption Decisions","Reviews prior exemption decisions where challenged or reassessed.",,,,,,
+"Disputes, Corrections & Reviews Resolved","LTX-VS-07",,,,,,"Process Land Tax Amendments","Applies approved changes to assessments arising from objections or corrected information.",,,,,,
+"Land Tax Liability Determined","LTX-VS-04",,"Administer Land Tax Liability","Executes the calculation of financial obligations arising from land ownership by applying statutory rates, surcharges, penalties, and interest to land values and treatment outcomes.","Assessment Lifecycle Management
+New Liability Identification
+Absentee Owner Tax Treatment",,"Calculate Primary Land Tax Liability","Calculates the primary Land Tax amount by applying statutory rates and thresholds to land value and treatment outcomes.",,,,,,
+"Land Tax Liability Determined","LTX-VS-04",,,,,,"Apply Absentee Owner Surcharge","Calculates surcharge amounts once absentee owner eligibility has been established.",,,,,,
+"Land Tax Liability Determined","LTX-VS-04",,,,,,"Calculate Penalties","Calculates penalty amounts arising from non-compliance or late actions.",,,,,,
+"Land Tax Liability Determined","LTX-VS-04",,,,,,"Calculate Interest","Calculates statutory interest on overdue Land Tax liabilities.",,,,,,
+"Land Tax Obligations Formally Established & Communicated","LTX-VS-05",,"Administer Land Tax Assessments","Executes the creation, issue, amendment, and cancellation of Land Tax assessments and notices, converting calculated liability into a formally issued and legally enforceable obligation.","Assessment Lifecycle Management
+Demand Generation & Payment Processing
+Adjustment Management
+Special Levy Administration",,"Generate Assessments","Creates the formal Land Tax assessment record that establishes a legally enforceable obligation.",,,,,,
+"Land Tax Obligations Formally Established & Communicated","LTX-VS-05",,,,,,"Issue Assessments & Payment Notices","Issues official notices communicating the assessed Land Tax and payment requirements to taxpayers.",,,,,,
+"Land Tax Obligations Formally Established & Communicated","LTX-VS-05",,,,,,"Withdraw or Cancel Assessments","Formally reverses or nullifies assessments where required under legislation or error correction.",,,,,,
+"Land Tax Obligations Formally Established & Communicated","LTX-VS-05",,,,,,"Manage RTU / Special Assessments","Handles non-standard or specialised assessments that still form part of the assessment lifecycle.",,,,,,
+"Land Tax Obligations Settled & Corrected","LTX-VS-06",,"Administer Payments & Financial Adjustments","Executes the receipt, allocation, reconciliation, and correction of Land Tax payments, including refunds and suspense handling, to accurately settle assessed obligations.","Demand Generation & Payment Processing
+Payment Suspense & Refund Management",,"Receive Payments","Accepts Land Tax payments from taxpayers through approved payment channels.",,,,,,
+"Land Tax Obligations Settled & Corrected","LTX-VS-06",,,,,,"Allocate & Process Payments","Allocates received payments to the correct accounts and liabilities.",,,,,,
+"Land Tax Obligations Settled & Corrected","LTX-VS-06",,,,,,"Manage Refunds","Processes repayment of overpaid or incorrectly applied Land Tax amounts.",,,,,,
+"Land Tax Obligations Settled & Corrected","LTX-VS-06",,,,,,"Manage Payment Suspense","Manages unresolved or unmatched payments pending clarification or correction.",,,,,,
+"Non-Compliance Addressed and Liabilities Recovered","LTX-VS-08",,"Administer Debt Recovery & Enforcement","Executes monitoring and enforcement actions for unpaid Land Tax liabilities, including recovery processes and insolvency management, where voluntary compliance has not occurred.
+","Debt Recovery & Enforcement
+Case Management (Complex / Specialist)",,"Monitor Overdue Debt","Identifies Land Tax liabilities that remain unpaid beyond due dates.",,,,,,
+"Non-Compliance Addressed and Liabilities Recovered","LTX-VS-08",,,,,,"Recover Unpaid Land Tax","Applies statutory recovery actions to collect outstanding Land Tax debts.",,,,,,
+"Non-Compliance Addressed and Liabilities Recovered","LTX-VS-08",,,,,,"Manage Customer Insolvency","Manages Land Tax recovery where taxpayers enter insolvency arrangements.",,,,,,
+"Statutory Land Tax Assurances Provided","LTX-VS-09",,"Administer Certificates & Assurance","Executes the provision of formal Land Tax certifications and assurances, such as Property Clearance Certificates, confirming Land Tax status to customers and third parties.","Property Information Services
+Assessment Quality Assurance",,"Issue Property Clearance Certificates","Provides legally required certification of Land Tax status for property transactions.",,,,,,
+"Statutory Land Tax Assurances Provided","LTX-VS-09",,,,,,"Provide Land Tax Status Assurance","Provides formal confirmation of Land Tax compliance or liability status to customers or third parties.",,,,,,

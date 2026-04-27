@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,9 +10,20 @@
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body, #root { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; }
 
-.app { display: flex; flex-direction: column; height: 100vh; width: 100vw; overflow: hidden; }
+/* ── KEY CHANGE: page now scrolls vertically ─────────────────────────── */
+html, body { width: 100%; height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; }
+#root { width: 100%; }
+
+.app { display: flex; flex-direction: column; width: 100vw; }
+
+/* Blueprint section — fixed viewport height, scrolls internally */
+.blueprint-section {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 
 /* Top bar */
 .topbar {
@@ -147,14 +159,14 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; font-family: 'S
 
 /* Process view link pill */
 .process-link {
-  display: inline-flex; align-items: center; gap: 4px;
+  display: inline-flex; align-items: flex-start; gap: 4px;
   margin-top: 5px;
-  padding: 2px 8px 2px 6px; border-radius: 20px;
+  padding: 2px 8px 2px 6px; border-radius: 8px;
   background: #ede9fe; color: #6d28d9;
   font-size: 8.5px; font-weight: 700; letter-spacing: 0.03em;
   text-decoration: none; border: 1px solid #c4b5fd;
   transition: background 0.15s, color 0.15s;
-  white-space: nowrap; cursor: pointer;
+  white-space: normal; word-break: break-word; cursor: pointer;
   user-select: none;
 }
 .process-link:hover { background: #6d28d9; color: white; border-color: #6d28d9; }
@@ -226,43 +238,98 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; font-family: 'S
 .tweak-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 13px; height: 13px; background: white; border-radius: 50%; transition: transform 0.2s; }
 .tweak-switch.on::after { transform: translateX(13px); }
 
+/* ── BPMN SECTION ─────────────────────────────────────────────────────── */
+.bpmn-section {
+  width: 100%;
+  background: #f0f2f5;
+  margin-top: 32px;
+  border-top: 3px solid #163172;
+}
 
+.bpmn-section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 16px;
+  height: 44px;
+  background: #0f2044;
+}
+
+.bpmn-header-accent {
+  width: 4px;
+  height: 22px;
+  background: #4a7fd4;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.bpmn-header-text { flex: 1; }
+
+.bpmn-header-title {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.bpmn-toggle-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 11px; border-radius: 5px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.1); color: white;
+  font-size: 11px; font-weight: 500;
+  cursor: pointer; transition: background 0.15s;
+  flex-shrink: 0;
+}
+.bpmn-toggle-btn:hover { background: rgba(255,255,255,0.22); }
+
+.bpmn-image-collapsible {
+  overflow: hidden;
+  max-height: 9999px;
+  opacity: 1;
+  transition: max-height 0.35s ease, opacity 0.25s ease;
+}
+.bpmn-image-collapsible.hidden {
+  max-height: 0;
+  opacity: 0;
+}
+
+.bpmn-image-wrapper {
+  width: 100%;
+  padding: 0;
+  background: #ffffff;
+  border-top: 1px solid #e0e4ed;
+}
+
+.bpmn-image-wrapper img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+/* ── PRINT ────────────────────────────────────────────────────────────── */
 @media print {
   .print-only-expanded { display: flex !important; flex-direction: column; gap: 4px; padding: 5px 6px; flex: 1; }
   .cell-collapsed { display: none !important; }
   .cell-expanded.print-show-expanded { display: flex !important; }
-}
-@media print {
   @page { size: A3 landscape; margin: 10mm 8mm; }
-
   html, body, #root { overflow: visible !important; height: auto !important; width: auto !important; background: white !important; }
   .app { height: auto !important; overflow: visible !important; }
-
-  /* Hide UI chrome */
-  .topbar, .filterbar, .tweaks-float, .side-panel, .panel-close { display: none !important; }
-
-  /* Print header */
+  .topbar, .filterbar, .tweaks-float, .side-panel, .panel-close, .bpmn-section { display: none !important; }
   .print-header { display: block !important; }
-
-  /* Blueprint fills page */
   .blueprint { flex: 1; overflow: visible !important; }
   .main { overflow: visible !important; }
   .grid-wrapper { overflow: visible !important; height: auto !important; }
   .grid-body { min-width: unset !important; }
-
-  /* Show all rows expanded */
   .lane-row { min-height: 90px !important; border-bottom: 1px solid #e0e4ed !important; break-inside: avoid; }
   .lane-label-btn { position: static !important; border-right: 1px solid #e0e4ed !important; background: #f8fafc !important; }
-
-  /* Header row sticky → static for print */
   .header-row { position: static !important; border-bottom: 2px solid #0f2044 !important; }
   .grid-corner { position: static !important; }
-
-  /* Force expanded cell content on all rows */
   .cell-collapsed { display: none !important; }
   .cell-expanded-print { display: flex !important; }
-
-  /* Cell sizing for print */
   .cell-wrap { width: auto !important; flex: 1 !important; }
   .cell { border: 1px solid #e0e4ed !important; box-shadow: none !important; transform: none !important; }
   .cell-expanded { display: flex !important; flex: 1 !important; padding: 5px 6px !important; gap: 4px !important; min-height: 80px !important; }
@@ -270,44 +337,155 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; font-family: 'S
   .cell-exp-desc { font-size: 7px !important; }
   .cell-exp-footer { flex-wrap: wrap !important; gap: 2px !important; }
   .cell-status, .cell-tag { font-size: 6.5px !important; padding: 1px 4px !important; }
-
-  /* Column headers */
   .col-header { height: 40px !important; font-size: 7.5px !important; }
   .col-header::after { display: none !important; }
   .col-header-cell { width: auto !important; flex: 1 !important; padding: 3px 3px 3px 0 !important; }
-
-  /* Lane labels */
   .lane-icon svg { width: 12px !important; height: 12px !important; }
   .lane-name { font-size: 7px !important; }
   .lane-expand-indicator { display: none !important; }
   .lane-label-btn { width: 72px !important; padding: 4px 3px !important; }
-
-  /* Process link hidden in print */
   .process-link { display: none !important; }
   .cell-comment-badge { display: none !important; }
 }
 
-/* Print header — hidden on screen */
 .print-header { display: none; padding: 8px 0 6px; border-bottom: 2px solid #0f2044; margin-bottom: 6px; }
 .print-header-title { font-size: 16px; font-weight: 700; color: #0f2044; }
 .print-header-meta { font-size: 10px; color: #6b7280; margin-top: 2px; }
-
 </style>
 </head>
 <body>
 <div id="root"></div>
+
+<!-- ── BPMN section lives outside React — rendered directly in HTML ──── -->
+<section class="bpmn-section" id="bpmn-overview">
+  <div class="bpmn-section-header">
+    <div class="bpmn-header-accent"></div>
+    <div class="bpmn-header-text">
+      <div class="bpmn-header-title">Business Process Model — Administer Land Tax</div>
+    </div>
+    <button class="bpmn-toggle-btn" id="bpmn-toggle-btn" onclick="toggleBpmn()">▶ Show</button>
+  </div>
+  <div class="bpmn-image-collapsible hidden" id="bpmn-collapsible">
+    <div class="bpmn-image-wrapper">
+      <img
+        src="https://markgittins1974.github.io/BusinessArchitecture/process/administer-land-tax.png"
+        alt="Administer Land Tax – Business Process Overview (BPMN 2.0)"
+      />
+    </div>
+  </div>
+</section>
+
+<!-- ── Sub-process section: Administer Property & Ownership Records ──── -->
+<section class="bpmn-section" id="bpmn-property-ownership" style="margin-top: 0; border-top: 1px solid #2a3f6e;">
+  <div class="bpmn-section-header" style="background: #163172;">
+    <div class="bpmn-header-accent"></div>
+    <div class="bpmn-header-text">
+      <div class="bpmn-header-title">Administer Property &amp; Ownership Records</div>
+    </div>
+    <button class="bpmn-toggle-btn" id="bpmn-property-ownership-btn" onclick="toggleBpmn2()">▶ Show</button>
+  </div>
+  <div class="bpmn-image-collapsible hidden" id="bpmn-property-ownership-collapsible">
+    <div class="bpmn-image-wrapper">
+      <img
+        src="https://markgittins1974.github.io/BusinessArchitecture/process/administer-property-ownership.png"
+        alt="Administer Property & Ownership Records – Business Process (BPMN 2.0)"
+      />
+    </div>
+  </div>
+</section>
+
+<script>
+function toggleBanner(collapsibleId, btnId) {
+  var el = document.getElementById(collapsibleId);
+  var btn = document.getElementById(btnId);
+  var hidden = el.classList.toggle('hidden');
+  btn.textContent = hidden ? '▶ Show' : '▼ Hide';
+}
+function toggleBpmn()  { toggleBanner('bpmn-collapsible',   'bpmn-toggle-btn'); }
+function toggleBpmn2() { toggleBanner('bpmn-collapsible-2', 'bpmn-toggle-btn-2'); }
+function openBanner(bannerId) {
+  var el = document.getElementById(bannerId + '-collapsible');
+  var btn = document.getElementById(bannerId + '-btn');
+  if (!el) return;
+  el.classList.remove('hidden');
+  if (btn) btn.textContent = '▼ Hide';
+  var section = document.getElementById(bannerId);
+  if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+
 <script type="text/babel">
 
 const PHASES = [
-  { id: 'p1', label: 'Accurate Land & Ownership Information Maintained', code: 'VS-01' },
-  { id: 'p2', label: 'Authoritative Land Value Established', code: 'VS-02' },
-  { id: 'p3', label: 'Correct Land Tax Rules Applied', code: 'VS-03' },
-  { id: 'p4', label: 'Land Tax Liability Determined', code: 'VS-04' },
-  { id: 'p5', label: 'Land Tax Obligations Formally Established & Communicated', code: 'VS-05' },
-  { id: 'p6', label: 'Land Tax Obligations Settled & Corrected', code: 'VS-06' },
-  { id: 'p7', label: 'Disputes, Corrections & Reviews Resolved', code: 'VS-07' },
-  { id: 'p8', label: 'Non-Compliance Addressed & Liabilities Recovered', code: 'VS-08' },
-  { id: 'p9', label: 'Interest Management & Write-offs Processed', code: 'VS-09' },
+  { id: 'p1', label: 'Accurate Land & Ownership Information Maintained', code: 'VS-01', capabilities: [
+    { name: 'Address Validation Management', type: 'Common' },
+    { name: 'Customer Creation Management', type: 'Common' },
+    { name: 'Customer Digital Onboarding Management', type: 'Common' },
+    { name: 'Customer Identification Management', type: 'Common' },
+    { name: 'Duplicate Customer Management', type: 'Land Tax' },
+    { name: 'Joint Ownership Management', type: 'Land Tax' },
+  ]},
+  { id: 'p2', label: 'Authoritative Land Value Established', code: 'VS-02', capabilities: [
+    { name: 'Valuation Data Acquisition', type: 'Common' },
+    { name: 'Valuation Data Management', type: 'Common' },
+  ]},
+  { id: 'p3', label: 'Correct Land Tax Rules Applied', code: 'VS-03', capabilities: [
+    { name: 'Concession Application', type: 'Common' },
+    { name: 'Determine Land Tax Liability', type: 'Land Tax' },
+    { name: 'Exemption Application Management', type: 'Land Tax' },
+    { name: 'Exemption Creation Management', type: 'Land Tax' },
+    { name: 'Joint Ownership', type: 'Land Tax' },
+    { name: 'Land Hold on Trust', type: 'Land Tax' },
+    { name: 'Land Tax', type: 'Land Tax' },
+    { name: 'Tax/Entitlement Rate Management', type: 'Land Tax' },
+    { name: 'Threshold Management', type: 'Land Tax' },
+  ]},
+  { id: 'p4', label: 'Land Tax Liability Determined', code: 'VS-04', capabilities: [
+    { name: 'Assessment Generation Management', type: 'Common' },
+    { name: 'Automated Communication Management', type: 'Common' },
+    { name: 'General Valuations', type: 'Land Tax' },
+    { name: 'Generate Land Tax Assessments', type: 'Land Tax' },
+    { name: 'Liability/Entitlement Calculation Management', type: 'Land Tax' },
+    { name: 'Reduction Management', type: 'Land Tax' },
+  ]},
+  { id: 'p5', label: 'Land Tax Obligations Formally Established & Communicated', code: 'VS-05', capabilities: [
+    { name: 'Assessment Cancellation Management', type: 'Common' },
+    { name: 'Assessment Communication Management', type: 'Common' },
+    { name: 'Assessment Withdrawal Management', type: 'Common' },
+    { name: 'Communication Preference Management', type: 'Common' },
+    { name: 'Customer Communication Record Management', type: 'Common' },
+    { name: 'Issue Cycle Management', type: 'Land Tax' },
+    { name: 'Issue Land Tax Assessment', type: 'Land Tax' },
+    { name: 'Service of Notice Management', type: 'Land Tax' },
+  ]},
+  { id: 'p6', label: 'Land Tax Obligations Settled & Corrected', code: 'VS-06', capabilities: [
+    { name: 'Adjustment Management', type: 'Land Tax' },
+    { name: 'Instalment Management', type: 'Land Tax' },
+    { name: 'Payment Matchmaking & Allocation Management', type: 'Land Tax' },
+    { name: 'Payment Management', type: 'Land Tax' },
+    { name: 'Penalty Management', type: 'Land Tax' },
+    { name: 'Refund Data Management', type: 'Common' },
+    { name: 'Refund Management', type: 'Land Tax' },
+    { name: 'Suspense Management', type: 'Land Tax' },
+  ]},
+  { id: 'p7', label: 'Disputes, Corrections & Reviews Resolved', code: 'VS-07', capabilities: [
+    { name: 'Assessment Objection Management', type: 'Land Tax' },
+    { name: 'Audit Management', type: 'Land Tax' },
+    { name: 'Case Creation', type: 'Common' },
+    { name: 'Case Management', type: 'Land Tax' },
+    { name: 'Compliance Management', type: 'Common' },
+    { name: 'Dispute Resolution Management', type: 'Land Tax' },
+    { name: 'Quality Assurance Management', type: 'Land Tax' },
+    { name: 'Risk Management', type: 'Land Tax' },
+  ]},
+  { id: 'p8', label: 'Non-Compliance Addressed & Liabilities Recovered', code: 'VS-08', capabilities: [
+    { name: 'Interest Management', type: 'Common' },
+    { name: 'Write Off Management', type: 'Common' },
+  ]},
+  { id: 'p9', label: 'Interest Management & Write-offs Processed', code: 'VS-09', capabilities: [
+    { name: 'Certificate Evidence & Record Management', type: 'Land Tax' },
+    { name: 'Issue Land Tax Certificates', type: 'Land Tax' },
+  ]},
 ];
 
 const LANES = [
@@ -335,7 +513,7 @@ const DATA = {
     front:       { text: 'Ownership change received & validated', detail: 'Front-stage staff review submitted documents for completeness and authenticity.', tags: ['Document Review', 'Validation'], status: 'current', links: ['Case Management System'] },
     back:        { text: 'Title data updated in land register', detail: 'The Titles Office updates the land register with new ownership details, written to the authoritative database and timestamped.', tags: ['Titles Office', 'Data Entry', 'Batch'], status: 'current', links: ['Land Register DB', 'Audit Log'] },
     capability:  { text: 'Land data management', detail: 'Core capability to maintain, update, and govern land parcel and ownership records including data quality controls.', tags: ['Data Governance', 'Master Data'], status: 'current', links: ['Data Quality Framework'] },
-    process:     { text: 'Update land register on ownership transfer', detail: 'Formal process triggered by settlement of property transactions. Includes legal validation, data entry, and notification of downstream systems.', tags: ['SRO Notified', 'Automated'], status: 'future', links: ['Land Transfer Act', 'API Gateway'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs01-land-register-update.html'},
+    process:     { processName: 'Administer Property & Ownership Records', bannerId: 'bpmn-property-ownership', text: 'Update land register on ownership transfer', detail: 'Formal process triggered by settlement of property transactions. Includes legal validation, data entry, and notification of downstream systems.', tags: ['SRO Notified', 'Automated'], status: 'future', links: ['Land Transfer Act', 'API Gateway'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs01-land-register-update.html'},
     pain:        { text: 'Delays in title registration causing liability gaps', detail: 'Manual processing backlogs mean ownership changes are not reflected promptly, creating incorrect liability attribution and taxpayer disputes.', tags: ['High Impact', 'Manual Process'], status: 'risk', links: [] },
     opportunity: { text: 'Real-time data feed from Titles Office', detail: 'Automate the data handoff between Titles Office and Revenue Authority via API, eliminating manual re-entry and reducing lag to under 24 hours.', tags: ['API Integration', 'Quick Win'], status: 'future', links: ['Integration Roadmap'] },
   },
@@ -345,7 +523,7 @@ const DATA = {
     front:       { text: 'Valuation notice issued to landowner', detail: 'The valuations team generates and dispatches notices after the annual mass appraisal cycle.', tags: ['Annual Cycle', 'Mass Appraisal'], status: 'current', links: ['Notice Production System'] },
     back:        { text: 'Mass appraisal model run by Valuer-General', detail: 'Computer-aided mass appraisal (CAMA) system applies statistical models to market data to generate site values for all properties.', tags: ['CAMA', 'Automated', 'Valuer-General'], status: 'current', links: ['CAMA System', 'Market Data Feed'] },
     capability:  { text: 'Property valuation', detail: 'The ability to determine assessed value of land parcels using market evidence, statistical modelling, and expert review.', tags: ['Valuation', 'CAMA', 'Appeals'], status: 'current', links: ['Valuation Act'] },
-    process:     { text: 'Annual valuation cycle & notice distribution', detail: 'Data collection → modelling → QA → Valuer-General sign-off → notice generation → distribution. Must be completed before assessment run.', tags: ['Annual', 'Regulated'], status: 'current', links: ['Valuation Cycle SOP'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs02-valuation-cycle.html'},
+    process:     { processName: 'Administer Land Valuations', bannerId: null, text: 'Annual valuation cycle & notice distribution', detail: 'Data collection → modelling → QA → Valuer-General sign-off → notice generation → distribution. Must be completed before assessment run.', tags: ['Annual', 'Regulated'], status: 'current', links: ['Valuation Cycle SOP'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs02-valuation-cycle.html'},
     pain:        { text: 'High volume of valuation objections at peak', detail: 'Post-notice dispatch causes overwhelm with 30-day resolution SLAs frequently breached during peak season.', tags: ['High Volume', 'SLA Risk'], status: 'risk', links: [] },
     opportunity: { text: 'Self-service objection tracking', detail: 'Allow landowners to track objection status in real-time via portal, reducing inbound call volume by an estimated 40%.', tags: ['Self-Service', 'Cost Reduction'], status: 'future', links: ['Portal Backlog'] },
   },
@@ -355,7 +533,7 @@ const DATA = {
     front:       { text: 'Concession / exemption application assessed', detail: 'Case officers review applications against legislative criteria. Complex cases are escalated to technical specialists.', tags: ['Case Officer', 'Complex', 'Decision'], status: 'current', links: ['Policy Rules Engine'] },
     back:        { text: 'Rules engine applies legislation to land attributes', detail: 'Automated rules engine cross-references land use, ownership type, and usage declarations against the Land Tax Act.', tags: ['Rules Engine', 'Automated', 'Legislation'], status: 'future', links: ['Rules Engine', 'Land Tax Act'] },
     capability:  { text: 'Legislation interpretation & rules management', detail: 'Translate legislative requirements into executable business rules, maintain currency with amendments, and test before deployment.', tags: ['Policy', 'Rules', 'Governance'], status: 'current', links: ['Rules Registry'] },
-    process:     { text: 'Apply exemptions, concessions & trust surcharge', detail: 'Evaluate each land holding against legislative criteria and apply relevant rate adjustments before liability calculation.', tags: ['Legislative', 'Annual'], status: 'current', links: ['Concession SOP'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs03-exemptions-concessions.html'},
+    process:     { processName: 'Administer Land Tax Treatment', bannerId: null, text: 'Apply exemptions, concessions & trust surcharge', detail: 'Evaluate each land holding against legislative criteria and apply relevant rate adjustments before liability calculation.', tags: ['Legislative', 'Annual'], status: 'current', links: ['Concession SOP'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs03-exemptions-concessions.html'},
     pain:        { text: 'Inconsistent concession decisions across case officers', detail: 'Without a centralised rules engine, officers interpret legislation differently, leading to inconsistent decisions and appeals.', tags: ['Inconsistency', 'Appeals Risk'], status: 'risk', links: [] },
     opportunity: { text: 'Automate exemption eligibility determination', detail: 'Deploy a rules engine that auto-determines exemption eligibility based on declared land use and ownership, reducing manual assessment by 70%.', tags: ['Automation', 'High Value'], status: 'future', links: ['Rules Engine Project'] },
   },
@@ -365,7 +543,7 @@ const DATA = {
     front:       { text: 'Assessment issued to landowner', detail: 'The formal land tax assessment is generated and dispatched to the landowner or their nominated agent via preferred channel.', tags: ['Statutory Notice', 'Annual'], status: 'current', links: ['Assessment System', 'Correspondence'] },
     back:        { text: 'Liability calculated across all holdings', detail: 'Assessment engine aggregates all holdings per taxpayer, applies the progressive rate schedule, deducts concessions, adds applicable surcharges.', tags: ['Aggregation', 'Rate Schedule', 'Automated'], status: 'current', links: ['Assessment Engine', 'Rate Tables'] },
     capability:  { text: 'Tax liability calculation', detail: 'Accurately aggregate land holdings by taxpayer, apply complex rate schedules and surcharges, and produce legally defensible assessments at scale.', tags: ['Calculation', 'Accuracy', 'Scale'], status: 'current', links: ['Calculation Methodology'] },
-    process:     { text: 'Annual assessment run & bulk issuance', detail: 'Batch process that aggregates holdings by taxpayer, applies current rates, generates assessment notices, and queues for dispatch.', tags: ['Batch', 'Annual', 'Bulk'], status: 'current', links: ['Assessment Run SOP'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs04-assessment-run.html'},
+    process:     { processName: 'Administer Land Tax Liability', bannerId: null, text: 'Annual assessment run & bulk issuance', detail: 'Batch process that aggregates holdings by taxpayer, applies current rates, generates assessment notices, and queues for dispatch.', tags: ['Batch', 'Annual', 'Bulk'], status: 'current', links: ['Assessment Run SOP'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs04-assessment-run.html'},
     pain:        { text: 'Late lodgement of trust details delays assessment', detail: 'Trusts failing to lodge beneficial ownership details on time delay the assessment cycle, requiring manual intervention.', tags: ['Manual', 'Compliance Risk'], status: 'risk', links: [] },
     opportunity: { text: 'Pre-assessment estimate notification', detail: 'Send a pre-assessment estimate 4 weeks before formal assessment, reducing payment shock and inbound enquiry volume.', tags: ['CX Improvement', 'Proactive'], status: 'future', links: ['Communications Strategy'] },
   },
@@ -375,7 +553,7 @@ const DATA = {
     front:       { text: 'Customer enquiry handling & instalment set-up', detail: 'Contact centre and portal self-service handle post-assessment enquiries. Customers can set up monthly instalments or payment arrangements.', tags: ['Contact Centre', 'Instalment', 'Arrangement'], status: 'current', links: ['CRM', 'Payment Portal'] },
     back:        { text: 'Debt ledger updated, payment schedule created', detail: 'Debt management system records the assessment, creates a payment schedule, and monitors for compliance. Overdue accounts flagged.', tags: ['Debt Management', 'Ledger', 'Automated'], status: 'current', links: ['Debt System', 'Revenue Ledger'] },
     capability:  { text: 'Revenue communication & debt management', detail: 'Communicate tax obligations clearly across multiple channels, manage payment arrangements, and escalate non-compliance proportionately.', tags: ['Communication', 'Debt', 'Compliance'], status: 'current', links: ['Debt Policy'] },
-    process:     { text: 'Issue assessment & manage payment arrangements', detail: 'Formal process from assessment dispatch to payment receipt, including instalment setup, extension requests, and proactive reminders.', tags: ['End-to-end', 'Regulated'], status: 'current', links: ['Payment Arrangement SOP'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs05-issue-assessment.html'},
+    process:     { processName: 'Administer Land Tax Assessments', bannerId: null, text: 'Issue assessment & manage payment arrangements', detail: 'Formal process from assessment dispatch to payment receipt, including instalment setup, extension requests, and proactive reminders.', tags: ['End-to-end', 'Regulated'], status: 'current', links: ['Payment Arrangement SOP'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs05-issue-assessment.html'},
     pain:        { text: 'Customers surprised by high assessments – spike in calls', detail: 'Post-assessment dispatch causes a 3–5× spike in contact centre volume as customers query their liability.', tags: ['Volume Spike', 'CX Risk', 'High Cost'], status: 'risk', links: [] },
     opportunity: { text: 'Proactive digital communication at all lifecycle events', detail: 'Event-driven notifications (assessment issued, payment due, arrangement approved) across SMS and email to reduce reactive contact volume.', tags: ['Digital', 'Event-driven', 'CX'], status: 'future', links: ['CX Program'] },
   },
@@ -385,7 +563,7 @@ const DATA = {
     front:       { text: 'Receipting, objection triage & hardship assessment', detail: 'Payments receipted and matched to debt ledger in real-time. Objections triaged by technical officers. Hardship assessed by specialist team.', tags: ['Real-time', 'Triage', 'Specialist'], status: 'current', links: ['Receipting System', 'CRM'] },
     back:        { text: 'Reconciliation, enforcement & refund processing', detail: 'Daily automated reconciliation of payments against ledger. Overdue accounts progress through enforcement workflow. Overpayments trigger refunds.', tags: ['Reconciliation', 'Enforcement', 'Refunds'], status: 'current', links: ['Debt System', 'Bank Reconciliation'] },
     capability:  { text: 'Revenue collection & enforcement', detail: 'Collect assessed revenue through multiple channels, manage payment arrangements, apply enforcement proportionately, process corrections and refunds.', tags: ['Collection', 'Enforcement', 'Compliance'], status: 'current', links: ['Enforcement Framework'] },
-    process:     { text: 'Collect, reconcile, enforce & correct', detail: 'End-to-end: payment receipting → reconciliation → arrangement monitoring → enforcement escalation → correction → refund. Regulated timeframes.', tags: ['Collection', 'Enforcement', 'Regulated'], status: 'current', links: ['Collection SOP', 'Enforcement Policy'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs06-collect-reconcile.html'},
+    process:     { processName: 'Administer Payments & Financial Adjustments', bannerId: null, text: 'Collect, reconcile, enforce & correct', detail: 'End-to-end: payment receipting → reconciliation → arrangement monitoring → enforcement escalation → correction → refund. Regulated timeframes.', tags: ['Collection', 'Enforcement', 'Regulated'], status: 'current', links: ['Collection SOP', 'Enforcement Policy'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs06-collect-reconcile.html'},
     pain:        { text: 'High cost of enforcement for small debts', detail: 'Manual enforcement workflows cost more to run than the debt value for accounts <$500, resulting in net revenue loss.', tags: ['Cost Efficiency', 'Manual', 'Low ROI'], status: 'risk', links: [] },
     opportunity: { text: 'Smart enforcement tiering with propensity scoring', detail: 'Propensity-to-pay scoring to triage enforcement intensity. Automate low-value recovery via SMS nudges before formal escalation.', tags: ['Analytics', 'Automation', 'High Value'], status: 'future', links: ['Analytics Program'] },
   },
@@ -395,7 +573,7 @@ const DATA = {
     front:       { text: 'Objection assessed & decision communicated', detail: 'Technical officers review objections against legislative grounds. Complex or high-value objections escalated. Written decisions issued within statutory timeframes.', tags: ['Technical Review', 'Decision', 'Statutory SLA'], status: 'current', links: ['Case Management', 'Decision Templates'] },
     back:        { text: 'Assessment amended & ledger corrected', detail: 'Where an objection is upheld, the assessment engine re-runs with corrected inputs. Ledger updated and credit balance triggers refund workflow.', tags: ['Amendment', 'Refund', 'Automated'], status: 'current', links: ['Assessment Engine', 'Debt System'] },
     capability:  { text: 'Dispute resolution & technical review', detail: 'Assess formal objections against legislative grounds, manage VCAT proceedings, and identify systemic issues driving high objection volumes.', tags: ['Dispute', 'Legal', 'VCAT'], status: 'current', links: ['Legal Framework'] },
-    process:     { text: 'Objection, review & VCAT appeal process', detail: 'Objection lodged → acknowledged → assessed → decision issued → amendment (if upheld) → VCAT referral (if not resolved). Regulated throughout.', tags: ['Regulated', 'Statutory', 'Multi-stage'], status: 'current', links: ['Objection SOP', 'VCAT Process'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs07-objection-review.html'},
+    process:     { processName: 'Administer Objections, Amendments & Disputes', bannerId: null, text: 'Objection, review & VCAT appeal process', detail: 'Objection lodged → acknowledged → assessed → decision issued → amendment (if upheld) → VCAT referral (if not resolved). Regulated throughout.', tags: ['Regulated', 'Statutory', 'Multi-stage'], status: 'current', links: ['Objection SOP', 'VCAT Process'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs07-objection-review.html'},
     pain:        { text: 'Objection volume exceeds team capacity at peak', detail: '22% of cases exceed statutory time-to-decision requirements due to post-assessment objection surge overwhelming the team.', tags: ['SLA Breach', 'Capacity', 'Peak Load'], status: 'risk', links: [] },
     opportunity: { text: 'Fast-track pathway for straightforward objections', detail: 'Auto-resolve objections meeting simple criteria (ownership error, data typo) with no officer involvement — resolving 40% in under 48 hours.', tags: ['Automation', 'CX', 'High Impact'], status: 'future', links: ['Digital Uplift', 'Rules Engine'] },
   },
@@ -405,7 +583,7 @@ const DATA = {
     front:       { text: 'Compliance case managed & enforcement actioned', detail: 'Compliance officers manage non-lodgement and non-payment cases with risk-rated prioritisation. Actions include penalties, garnishees, caveats.', tags: ['Case Management', 'Risk-rated', 'Enforcement'], status: 'current', links: ['CRM', 'Enforcement Workflow'] },
     back:        { text: 'Penalty assessment & enforcement automation', detail: 'Automated penalty calculation applied to overdue accounts. Enforcement workflow triggers escalation steps based on debt age, amount, and risk score.', tags: ['Automation', 'Penalty', 'Escalation'], status: 'future', links: ['Enforcement System', 'Risk Scoring'] },
     capability:  { text: 'Compliance management & enforcement', detail: 'Identify non-compliant taxpayers, apply proportionate enforcement, recover outstanding liabilities, and deter future non-compliance.', tags: ['Compliance', 'Deterrence', 'Recovery'], status: 'current', links: ['Compliance Strategy'] },
-    process:     { text: 'Non-compliance detection, penalty & recovery', detail: 'Identify non-lodgement/non-payment → issue notice → apply penalty → negotiate arrangement or escalate enforcement → recover → close case.', tags: ['End-to-end', 'Risk-based', 'Regulated'], status: 'current', links: ['Compliance SOP', 'Enforcement Policy'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs08-noncompliance-detection.html'},
+    process:     { processName: 'Administer Debt Recovery & Enforcement', bannerId: null, text: 'Non-compliance detection, penalty & recovery', detail: 'Identify non-lodgement/non-payment → issue notice → apply penalty → negotiate arrangement or escalate enforcement → recover → close case.', tags: ['End-to-end', 'Risk-based', 'Regulated'], status: 'current', links: ['Compliance SOP', 'Enforcement Policy'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs08-noncompliance-detection.html'},
     pain:        { text: 'Manual identification of non-lodgers is slow & incomplete', detail: 'Non-lodgement detection relies on manual data matching. An estimated 15% of non-lodgers are not identified within the compliance window.', tags: ['Manual', 'Data Gap', 'Revenue Risk'], status: 'risk', links: [] },
     opportunity: { text: 'Automated non-lodgement detection via data matching', detail: 'Auto cross-match the land register against the lodgement database within 5 days of deadline, enabling earlier intervention and higher recovery rates.', tags: ['Data Matching', 'Automation', 'Revenue Protection'], status: 'future', links: ['Analytics Platform'] },
   },
@@ -415,7 +593,7 @@ const DATA = {
     front:       { text: 'Interest remission review & write-off approval', detail: 'Customers can apply for interest remission on grounds of reasonable cause. Write-off recommendations prepared for senior manager approval.', tags: ['Remission', 'Write-off', 'Delegated Authority'], status: 'current', links: ['CRM', 'Finance System'] },
     back:        { text: 'Interest calculated daily & write-off processed in ledger', detail: 'Interest accrues daily at the legislated rate. Write-offs processed in debt ledger and flagged in revenue reporting. Reversals possible if circumstances change.', tags: ['Daily Calculation', 'Ledger', 'Automated'], status: 'current', links: ['Debt System', 'Finance Ledger'] },
     capability:  { text: 'Interest management & debt write-off', detail: 'Accurately calculate and apply interest charges, assess remission applications consistently, and manage write-offs within delegation and policy.', tags: ['Interest', 'Write-off', 'Financial Control'], status: 'current', links: ['Write-off Policy'] },
-    process:     { text: 'Interest accrual, remission & write-off process', detail: 'Daily interest accrual → remission application assessed → write-off recommendation → approval → ledger update → reporting. Annual write-off review required.', tags: ['Daily', 'Annual Review', 'Regulated'], status: 'current', links: ['Interest SOP', 'Write-off Delegation'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs09-interest-writeoff.html'},
+    process:     { processName: 'Administer Certificates & Assurance', bannerId: null, text: 'Interest accrual, remission & write-off process', detail: 'Daily interest accrual → remission application assessed → write-off recommendation → approval → ledger update → reporting. Annual write-off review required.', tags: ['Daily', 'Annual Review', 'Regulated'], status: 'current', links: ['Interest SOP', 'Write-off Delegation'] , processUrl: 'https://markgittins1974.github.io/BusinessArchitecture/strategy/processes/vs09-interest-writeoff.html'},
     pain:        { text: 'Inconsistent interest remission decisions across officers', detail: 'Without clear remission guidelines, officers apply different standards for "reasonable cause", leading to inconsistent outcomes and appeals.', tags: ['Inconsistency', 'Risk', 'Appeals'], status: 'risk', links: [] },
     opportunity: { text: 'Interest remission decision support tool', detail: 'Guided decision tool with pre-approved remission scenarios and auto-approval for low-value clear-cut cases, ensuring consistency and reducing officer decision time by 60%.', tags: ['Decision Support', 'Consistency', 'Automation'], status: 'future', links: ['Rules Engine', 'Digital Uplift'] },
   },
@@ -486,14 +664,12 @@ function App() {
   const [multiExpand, setMultiExpand] = React.useState(false);
   const [expandedLanes, setExpandedLanes] = React.useState(new Set());
 
-  // Comments — persisted to localStorage
   const [comments, setComments] = React.useState(() => {
     try { return JSON.parse(localStorage.getItem('blueprint-comments') || '{}'); }
     catch { return {}; }
   });
   const [savedMsg, setSavedMsg] = React.useState(false);
   const saveTimer = React.useRef(null);
-
   const [filterNotes, setFilterNotes] = React.useState(false);
 
   const commentKey = (phaseId, laneId) => `${phaseId}::${laneId}`;
@@ -505,7 +681,6 @@ function App() {
     else { delete next[key]; }
     setComments(next);
     localStorage.setItem('blueprint-comments', JSON.stringify(next));
-    // Flash saved message
     clearTimeout(saveTimer.current);
     setSavedMsg(true);
     saveTimer.current = setTimeout(() => setSavedMsg(false), 1800);
@@ -527,14 +702,10 @@ function App() {
     a.click();
   };
 
-  const N = PHASES.length;
-  const gridCols = { display: 'grid', gridTemplateColumns: `repeat(${N}, minmax(130px, 1fr))`, gap: '5px' };
-
   const toggleLaneVisible = (laneId) => {
     setVisibleLanes(prev => {
       const next = new Set(prev);
-      if (next.has(laneId)) { next.delete(laneId); }
-      else { next.add(laneId); }
+      if (next.has(laneId)) { next.delete(laneId); } else { next.add(laneId); }
       return next;
     });
   };
@@ -567,256 +738,268 @@ function App() {
   const selectedLane = selected ? LANES.find(l => l.id === selected.laneId) : null;
   const selectedPhase = selected ? PHASES.find(p => p.id === selected.phaseId) : null;
 
-  const visibleCount = visibleLanes.size;
-
   return (
     <div className="app">
-      {/* Top bar */}
-      <div className="topbar">
-        <span className="topbar-title">Land Tax – Service Blueprint</span>
-        <span className="topbar-meta">{N} Value Streams · {LANES.length} Swim Lanes · {Object.keys(comments).length} comment{Object.keys(comments).length !== 1 ? 's' : ''}</span>
-        <div className="topbar-actions">
-          <button className="topbar-btn" onClick={exportComments}>⬇ Export comments</button>
-          <button className="topbar-btn" onClick={() => window.print()}>🖨 Print view</button>
-        </div>
-      </div>
-
-      {/* Filter bar */}
-      <div className="filterbar">
-        <span className="filterbar-label">Lanes</span>
-        {LANES.map(lane => {
-          const active = visibleLanes.has(lane.id);
-          return (
-            <div
-              key={lane.id}
-              className={`filter-chip ${active ? 'active' : ''}`}
-              style={active ? { color: lane.color, borderColor: lane.color, background: lane.bg } : {}}
-              onClick={() => toggleLaneVisible(lane.id)}
-            >
-              <span className="filter-chip-dot" style={{ background: active ? lane.color : '#d1d5db' }}></span>
-              {lane.label}
-            </div>
-          );
-        })}
-        <div className="filter-sep" />
-        <div
-          className={`filter-chip ${filterNotes ? 'active' : ''}`}
-          style={filterNotes ? { color: '#7c3aed', borderColor: '#7c3aed', background: '#faf5ff' } : {}}
-          onClick={() => setFilterNotes(v => !v)}
-          title="Show only cells with notes"
-        >
-          <span className="filter-chip-dot" style={{ background: filterNotes ? '#7c3aed' : '#d1d5db' }}></span>
-          💬 Has notes {filterNotes && Object.keys(comments).length > 0 ? `(${Object.keys(comments).length})` : ''}
-        </div>
-        <div className="filter-sep" />
-        <div className="filter-clear" onClick={() => setVisibleLanes(new Set())}>Hide all</div>
-      </div>
-
-      <div className="main">
-        <div className="blueprint">
-          <div className="print-header">
-            <div className="print-header-title">Land Tax – Service Blueprint</div>
-            <div className="print-header-meta">Printed {new Date().toLocaleDateString('en-AU', {day:'numeric',month:'long',year:'numeric'})} · {N} Value Streams · {LANES.length} Swim Lanes</div>
+      {/* Blueprint section — fixed-height viewport block */}
+      <div className="blueprint-section">
+        {/* Top bar */}
+        <div className="topbar">
+          <span className="topbar-title">Land Tax – Service Blueprint</span>
+          <span className="topbar-meta">{PHASES.length} Value Streams · {LANES.length} Swim Lanes · {Object.keys(comments).length} comment{Object.keys(comments).length !== 1 ? 's' : ''}</span>
+          <div className="topbar-actions">
+            <button className="topbar-btn" onClick={exportComments}>⬇ Export comments</button>
+            <button className="topbar-btn" onClick={() => window.print()}>🖨 Print view</button>
           </div>
-          <div className="grid-wrapper">
-            <div className="grid-body">
-              {/* Sticky header row */}
-              <div className="header-row">
-                <div className="grid-corner" />
-                {PHASES.map(p => (
-                  <div key={p.id} className="col-header-cell">
-                    <div className="col-header">
-                      <span className="col-code">{p.code}</span>
-                      {p.label}
-                    </div>
-                  </div>
-                ))}
+        </div>
+
+        {/* Filter bar */}
+        <div className="filterbar">
+          <span className="filterbar-label">Lanes</span>
+          {LANES.map(lane => {
+            const active = visibleLanes.has(lane.id);
+            return (
+              <div
+                key={lane.id}
+                className={`filter-chip ${active ? 'active' : ''}`}
+                style={active ? { color: lane.color, borderColor: lane.color, background: lane.bg } : {}}
+                onClick={() => toggleLaneVisible(lane.id)}
+              >
+                <span className="filter-chip-dot" style={{ background: active ? lane.color : '#d1d5db' }}></span>
+                {lane.label}
               </div>
+            );
+          })}
+          <div className="filter-sep" />
+          <div
+            className={`filter-chip ${filterNotes ? 'active' : ''}`}
+            style={filterNotes ? { color: '#7c3aed', borderColor: '#7c3aed', background: '#faf5ff' } : {}}
+            onClick={() => setFilterNotes(v => !v)}
+            title="Show only cells with notes"
+          >
+            <span className="filter-chip-dot" style={{ background: filterNotes ? '#7c3aed' : '#d1d5db' }}></span>
+            💬 Has notes {filterNotes && Object.keys(comments).length > 0 ? `(${Object.keys(comments).length})` : ''}
+          </div>
+          <div className="filter-sep" />
+          <div className="filter-clear" onClick={() => setVisibleLanes(new Set())}>Hide all</div>
+        </div>
 
-              {/* Lane rows */}
-              {LANES.map(lane => {
-                if (!visibleLanes.has(lane.id)) return null;
-                const expanded = isExpanded(lane.id);
-                return (
-                  <div
-                    key={lane.id}
-                    className={`lane-row ${expanded ? 'expanded' : ''}`}
-                  >
-                    {/* Sticky lane label */}
-                    <div
-                      role="button"
-                      tabIndex={0}
-                      className={`lane-label-btn ${expanded ? 'expanded' : ''}`}
-                      style={expanded ? { borderLeft: `3px solid ${lane.color}`, background: lane.bg } : {}}
-                      onClick={(e) => { e.stopPropagation(); toggleExpand(lane.id); }}
-                      onKeyDown={(e) => e.key === 'Enter' && toggleExpand(lane.id)}
-                      title={`${expanded ? 'Collapse' : 'Expand'} ${lane.label} row`}
-                    >
-                      <span className="lane-icon"><LaneIcon id={lane.id} size={16}/></span>
-                      <span className="lane-name" style={expanded ? { color: lane.color } : {}}>{lane.label}</span>
-                      <span className="lane-expand-indicator" style={{ fontSize: '8px', color: expanded ? lane.color : '#9ca3af' }}>▼</span>
+        <div className="main">
+          <div className="blueprint">
+            <div className="print-header">
+              <div className="print-header-title">Land Tax – Service Blueprint</div>
+              <div className="print-header-meta">Printed {new Date().toLocaleDateString('en-AU', {day:'numeric',month:'long',year:'numeric'})} · {PHASES.length} Value Streams · {LANES.length} Swim Lanes</div>
+            </div>
+            <div className="grid-wrapper">
+              <div className="grid-body">
+                {/* Sticky header row */}
+                <div className="header-row">
+                  <div className="grid-corner" />
+                  {PHASES.map(p => (
+                    <div key={p.id} className="col-header-cell">
+                      <div className="col-header">
+                        <span className="col-code">{p.code}</span>
+                        {p.label}
+                      </div>
                     </div>
+                  ))}
+                </div>
 
-                    {/* Cells */}
-                    {PHASES.map(phase => {
-                      const cell = DATA[phase.id]?.[lane.id];
-                      const isSel = selected?.phaseId === phase.id && selected?.laneId === lane.id;
-                      const hasNote = !!comments[commentKey(phase.id, lane.id)];
-                      const dimmed = filterNotes && !hasNote;
-                      return (
-                        <div key={phase.id} className="cell-wrap">
-                          <div
-                            className={`cell ${isSel ? 'selected' : ''}`}
-                            style={{ background: colorRows ? lane.bg : 'white', opacity: dimmed ? 0.2 : 1, transition: 'opacity 0.2s', pointerEvents: dimmed ? 'none' : 'auto' }}
-                            onClick={(e) => { e.stopPropagation(); cell && handleCellClick(phase.id, lane.id, e); }}
-                          >
-                            {comments[commentKey(phase.id, lane.id)] && (
-                              <div className="cell-comment-badge" title="Has comment">💬</div>
-                            )}
-                            {cell ? (
-                              expanded ? (
-                                <div className="cell-expanded print-show-expanded">
-                                  <div className="cell-exp-title">{cell.text}</div>
-                                  <div className="cell-exp-desc">{cell.detail}</div>
-                                  <div className="cell-exp-footer">
-                                    <span className={`cell-status ${STATUS_CONFIG[cell.status]?.cls}`}>
-                                      {STATUS_CONFIG[cell.status]?.label}
-                                    </span>
-                                    {cell.tags.slice(0,2).map(t => <span key={t} className="cell-tag">{t}</span>)}
-                                  </div>
-                                  {lane.id === 'process' && cell.processUrl && (
-                                    <a className="process-link" href={cell.processUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}>
-                                      <span className="process-link-icon">⟶</span>View process
-                                    </a>
-                                  )}
-                                </div>
-                              ) : (
-                                <>
-                                  <div className="cell-collapsed">
-                                    <span className="cell-col-icon"><LaneIcon id={lane.id} size={13}/></span>
-                                    <div style={{display:'flex',flexDirection:'column',gap:'3px',flex:1}}>
-                                      <span className="cell-col-text">{cell.text}</span>
-                                      {lane.id === 'process' && cell.processUrl && (
-                                        <a className="process-link" href={cell.processUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}>
-                                          <span className="process-link-icon">⟶</span>View process
-                                        </a>
-                                      )}
-                                    </div>
-                                  </div>
-                                  <div className="cell-expanded print-only-expanded" style={{display:'none'}}>
+                {/* Lane rows */}
+                {LANES.map(lane => {
+                  if (!visibleLanes.has(lane.id)) return null;
+                  const expanded = isExpanded(lane.id);
+                  return (
+                    <div key={lane.id} className={`lane-row ${expanded ? 'expanded' : ''}`}>
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        className={`lane-label-btn ${expanded ? 'expanded' : ''}`}
+                        style={expanded ? { borderLeft: `3px solid ${lane.color}`, background: lane.bg } : {}}
+                        onClick={(e) => { e.stopPropagation(); toggleExpand(lane.id); }}
+                        onKeyDown={(e) => e.key === 'Enter' && toggleExpand(lane.id)}
+                        title={`${expanded ? 'Collapse' : 'Expand'} ${lane.label} row`}
+                      >
+                        <span className="lane-icon"><LaneIcon id={lane.id} size={16}/></span>
+                        <span className="lane-name" style={expanded ? { color: lane.color } : {}}>{lane.label}</span>
+                        <span className="lane-expand-indicator" style={{ fontSize: '8px', color: expanded ? lane.color : '#9ca3af' }}>▼</span>
+                      </div>
+
+                      {PHASES.map(phase => {
+                        const cell = DATA[phase.id]?.[lane.id];
+                        const isSel = selected?.phaseId === phase.id && selected?.laneId === lane.id;
+                        const hasNote = !!comments[commentKey(phase.id, lane.id)];
+                        const dimmed = filterNotes && !hasNote;
+                        return (
+                          <div key={phase.id} className="cell-wrap">
+                            <div
+                              className={`cell ${isSel ? 'selected' : ''}`}
+                              style={{ background: colorRows ? lane.bg : 'white', opacity: dimmed ? 0.2 : 1, transition: 'opacity 0.2s', pointerEvents: dimmed ? 'none' : 'auto' }}
+                              onClick={(e) => { e.stopPropagation(); cell && handleCellClick(phase.id, lane.id, e); }}
+                            >
+                              {comments[commentKey(phase.id, lane.id)] && (
+                                <div className="cell-comment-badge" title="Has comment">💬</div>
+                              )}
+                              {cell ? (
+                                expanded ? (
+                                  <div className="cell-expanded print-show-expanded">
                                     <div className="cell-exp-title">{cell.text}</div>
                                     <div className="cell-exp-desc">{cell.detail}</div>
                                     <div className="cell-exp-footer">
-                                      <span className={`cell-status ${STATUS_CONFIG[cell.status]?.cls}`}>{STATUS_CONFIG[cell.status]?.label}</span>
+                                      <span className={`cell-status ${STATUS_CONFIG[cell.status]?.cls}`}>
+                                        {STATUS_CONFIG[cell.status]?.label}
+                                      </span>
+                                      {cell.tags.slice(0,2).map(t => <span key={t} className="cell-tag">{t}</span>)}
                                     </div>
+                                    {lane.id === 'process' && cell.processUrl && (
+                                      <a className="process-link" href="#" onClick={e => { e.preventDefault(); e.stopPropagation(); cell.bannerId ? window.openBanner(cell.bannerId) : window.open(cell.processUrl, '_blank'); }}>
+                                        <span className="process-link-icon">⟶</span>{cell.processName || 'View process'}
+                                      </a>
+                                    )}
                                   </div>
-                                </>
-                              )
-                            ) : (
-                              <div className="cell-collapsed">
-                                <span style={{ fontSize: '9px', color: '#d1d5db' }}>—</span>
-                              </div>
-                            )}
+                                ) : (
+                                  <>
+                                    <div className="cell-collapsed">
+                                      <span className="cell-col-icon"><LaneIcon id={lane.id} size={13}/></span>
+                                      <div style={{display:'flex',flexDirection:'column',gap:'3px',flex:1}}>
+                                        <span className="cell-col-text">{cell.text}</span>
+                                        {lane.id === 'process' && cell.processUrl && (
+                                          <a className="process-link" href="#" onClick={e => { e.preventDefault(); e.stopPropagation(); cell.bannerId ? window.openBanner(cell.bannerId) : window.open(cell.processUrl, '_blank'); }}>
+                                            <span className="process-link-icon">⟶</span>{cell.processName || 'View process'}
+                                          </a>
+                                        )}
+                                      </div>
+                                    </div>
+                                    <div className="cell-expanded print-only-expanded" style={{display:'none'}}>
+                                      <div className="cell-exp-title">{cell.text}</div>
+                                      <div className="cell-exp-desc">{cell.detail}</div>
+                                      <div className="cell-exp-footer">
+                                        <span className={`cell-status ${STATUS_CONFIG[cell.status]?.cls}`}>{STATUS_CONFIG[cell.status]?.label}</span>
+                                      </div>
+                                    </div>
+                                  </>
+                                )
+                              ) : (
+                                <div className="cell-collapsed">
+                                  <span style={{ fontSize: '9px', color: '#d1d5db' }}>—</span>
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })}
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Side panel */}
-        <div className={`side-panel ${selected ? 'open' : ''}`}>
-          {selected && (
-            <div className="panel-inner">
-              <div className="panel-header">
-                <div className="panel-badge" style={{ background: selectedLane.badge, color: selectedLane.color }}>
-                  <LaneIcon id={selectedLane.id} size={11}/>
-                  <span>{selectedLane.label}</span>
-                </div>
-                <div className="panel-title">{selected.cell.text}</div>
-                <div className="panel-phase">{selectedPhase.label}</div>
-                <button className="panel-close" onClick={() => setSelected(null)}>✕</button>
-              </div>
-              <div className="panel-body">
-                <div>
-                  <div className="panel-section-title">Description</div>
-                  <div className="panel-section-body">{selected.cell.detail}</div>
-                </div>
-                <div className="panel-divider" />
-                <div>
-                  <div className="panel-section-title">💬 Comment</div>
-                  <textarea
-                    className="comment-box"
-                    placeholder="Add a note about this cell…"
-                    value={comments[commentKey(selected.phaseId, selected.laneId)]?.value || ''}
-                    onChange={e => handleCommentChange(selected.phaseId, selected.laneId, e.target.value)}
-                  />
-                  <div className="comment-save-row">
-                    <span className={`comment-saved-msg ${savedMsg ? 'show' : ''}`}>✓ Saved</span>
-                    {comments[commentKey(selected.phaseId, selected.laneId)] && (
-                      <button className="comment-clear" onClick={() => clearComment(selected.phaseId, selected.laneId)}>Clear</button>
-                    )}
+          {/* Side panel */}
+          <div className={`side-panel ${selected ? 'open' : ''}`}>
+            {selected && (
+              <div className="panel-inner">
+                <div className="panel-header">
+                  <div className="panel-badge" style={{ background: selectedLane.badge, color: selectedLane.color }}>
+                    <LaneIcon id={selectedLane.id} size={11}/>
+                    <span>{selectedLane.label}</span>
                   </div>
+                  <div className="panel-title">{selected.cell.text}</div>
+                  <div className="panel-phase">{selectedPhase.label}</div>
+                  <button className="panel-close" onClick={() => setSelected(null)}>✕</button>
                 </div>
-                <div className="panel-divider" />
-                <div>
-                  <div className="panel-section-title">State</div>
-                  <span className={`panel-status-badge ${STATUS_CONFIG[selected.cell.status]?.cls}`}>
-                    {STATUS_CONFIG[selected.cell.status]?.label}
-                  </span>
-                </div>
-                <div className="panel-divider" />
-                <div>
-                  <div className="panel-section-title">Tags</div>
-                  <div className="panel-tags">
-                    {selected.cell.tags.map(t => <span key={t} className="panel-tag">{t}</span>)}
+                <div className="panel-body">
+                  <div>
+                    <div className="panel-section-title">Description</div>
+                    <div className="panel-section-body">{selected.cell.detail}</div>
                   </div>
-                </div>
-                {selected.cell.links?.length > 0 && (
-                  <>
-                    <div className="panel-divider" />
-                    <div>
-                      <div className="panel-section-title">Linked Systems & Assets</div>
-                      <div className="panel-links">
-                        {selected.cell.links.map(l => (
-                          <div key={l} className="panel-link">🔗 {l}</div>
-                        ))}
+                  {selected.laneId === 'process' && selected.cell.processUrl && (
+                    <a
+                      className="process-link"
+                      style={{ fontSize: '11px', padding: '5px 12px', marginTop: '2px', alignSelf: 'flex-start' }}
+                      href="#"
+                      onClick={e => { e.preventDefault(); selected.cell.bannerId ? window.openBanner(selected.cell.bannerId) : window.open(selected.cell.processUrl, '_blank'); }}
+                    >
+                      <span className="process-link-icon">⟶</span>
+                      {selected.cell.processName || 'View process'}
+                    </a>
+                  )}
+                  {selected.laneId === 'capability' && selectedPhase.capabilities?.length > 0 && (
+                    <>
+                      <div className="panel-divider" />
+                      <div>
+                        <div className="panel-section-title">All Capabilities — {selectedPhase.code}</div>
+                        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                          {selectedPhase.capabilities.map(cap => (
+                            <li key={cap.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '5px 8px', background: '#f8fafc', borderRadius: '4px', border: '1px solid #e8eaf0' }}>
+                              <span style={{ fontSize: '11px', color: '#1e293b', fontWeight: 500 }}>• {cap.name}</span>
+                              <span style={{
+                                fontSize: '9px', fontWeight: 700, padding: '1px 7px', borderRadius: '8px', flexShrink: 0, marginLeft: '8px',
+                                background: cap.type === 'Common' ? '#dbeafe' : '#dcfce7',
+                                color: cap.type === 'Common' ? '#1d4ed8' : '#15803d',
+                              }}>{cap.type}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
+                    </>
+                  )}
+                  <div className="panel-divider" />
+                  <div>
+                    <div className="panel-section-title">💬 Comment</div>
+                    <textarea
+                      className="comment-box"
+                      placeholder="Add a note about this cell…"
+                      value={comments[commentKey(selected.phaseId, selected.laneId)]?.value || ''}
+                      onChange={e => handleCommentChange(selected.phaseId, selected.laneId, e.target.value)}
+                    />
+                    <div className="comment-save-row">
+                      <span className={`comment-saved-msg ${savedMsg ? 'show' : ''}`}>✓ Saved</span>
+                      {comments[commentKey(selected.phaseId, selected.laneId)] && (
+                        <button className="comment-clear" onClick={() => clearComment(selected.phaseId, selected.laneId)}>Clear</button>
+                      )}
                     </div>
-                  </>
-                )}
-                <div className="panel-divider" />
-                <div>
-                  <div className="panel-section-title">Value Stream</div>
-                  <div className="panel-section-body" style={{ color: '#1d4ed8', fontWeight: 600, fontSize: '11px' }}>{selectedPhase.code} — {selectedPhase.label}</div>
+                  </div>
+                  <div className="panel-divider" />
+                  <div>
+                    <div className="panel-section-title">State</div>
+                    <span className={`panel-status-badge ${STATUS_CONFIG[selected.cell.status]?.cls}`}>
+                      {STATUS_CONFIG[selected.cell.status]?.label}
+                    </span>
+                  </div>
+                  <div className="panel-divider" />
+                  <div>
+                    <div className="panel-section-title">Tags</div>
+                    <div className="panel-tags">
+                      {selected.cell.tags.map(t => <span key={t} className="panel-tag">{t}</span>)}
+                    </div>
+                  </div>
+                  {selected.cell.links?.length > 0 && (
+                    <>
+                      <div className="panel-divider" />
+                      <div>
+                        <div className="panel-section-title">Linked Systems & Assets</div>
+                        <div className="panel-links">
+                          {selected.cell.links.map(l => (
+                            <div key={l} className="panel-link">🔗 {l}</div>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  <div className="panel-divider" />
+                  <div>
+                    <div className="panel-section-title">Value Stream</div>
+                    <div className="panel-section-body" style={{ color: '#1d4ed8', fontWeight: 600, fontSize: '11px' }}>{selectedPhase.code} — {selectedPhase.label}</div>
+                  </div>
+
+
                 </div>
-                {selected.laneId === 'process' && selected.cell.processUrl && (
-                  <>
-                    <div className="panel-divider" />
-                    <div>
-                      <div className="panel-section-title">Process View</div>
-                      <a
-                        className="process-link"
-                        style={{ fontSize: '11px', padding: '5px 12px' }}
-                        href={selected.cell.processUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <span className="process-link-icon">⟶</span>
-                        Open process view
-                      </a>
-                    </div>
-                  </>
-                )}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
+      {/* END blueprint-section — BPMN section follows in plain HTML above */}
 
       {/* Tweaks */}
       <div className="tweaks-float">

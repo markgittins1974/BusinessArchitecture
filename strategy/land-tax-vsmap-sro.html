@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Land Tax Value Stream Map</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family:'IBM Plex Mono','Courier New',monospace;
+    background:linear-gradient(135deg,#0a0e27 0%,#1a1f3a 100%);
+    color:#e0e0e0;
+    padding:40px 20px;
+    min-height:100vh
+}
+body.fullscreen{padding:0}
+.container{max-width:100%;margin:0 auto}
+body.fullscreen .container{height:100vh;display:flex;flex-direction:column}
+.header{
+    margin-bottom:40px;
+    border-bottom:2px solid #4a90e2;
+    padding-bottom:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center
+}
+body.fullscreen .header{margin-bottom:20px;padding:20px;padding-bottom:15px}
+.header h1{font-size:28px;color:#fff;margin-bottom:8px}
+.header p{
+    font-size:12px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:#a0a0a0
+}
+.fullscreen-btn{
+    padding:8px 16px;
+    background:#4a90e2;
+    color:#fff;
+    border:none;
+    border-radius:3px;
+    cursor:pointer;
+    font-family:inherit;
+    font-size:12px
+}
+.map-wrapper{
+    background:#0f1220;
+    border:1px solid #2a3550;
+    border-radius:4px;
+    padding:20px 16px;
+    overflow-x:auto;
+    min-height:240px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.4)
+}
+body.fullscreen .map-wrapper{flex:1;margin:0 20px;border-radius:0;box-shadow:none}
+.value-stream{display:flex;gap:12px;min-width:min-content}
+.stage{
+    background:linear-gradient(135deg,#1a2340,#0f1628);
+    border:1px solid #3a5a9f;
+    border-radius:4px;
+    padding:8px;
+    min-width:140px;
+    max-width:140px;
+    display:flex;
+    flex-direction:column;
+    cursor:default;
+    transition:all 0.3s ease;
+    font-size:11px
+}
+.stage:hover{
+    background:linear-gradient(135deg,#243050,#1a2333);
+    border-color:#5a8fff;
+    box-shadow:0 0 20px rgba(74,144,226,0.2)
+}
+.stage-id{
+    font-size:8px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    margin-bottom:4px;
+    color:#4a90e2
+}
+.stage-name{font-size:11px;font-weight:600;color:#fff;line-height:1.2;word-break:break-word}
+.capabilities-container{display:flex;flex-direction:column;gap:4px;margin-top:6px;flex:1}
+.capability-card{
+    background:linear-gradient(135deg,#162850,#0d1a30);
+    border:1px solid #2a4570;
+    border-radius:3px;
+    padding:6px;
+    cursor:pointer;
+    font-size:10px;
+    transition:all 0.3s ease;
+    flex-shrink:0
+}
+.capability-card:hover{
+    background:linear-gradient(135deg,#1a3060,#132140);
+    border-color:#4a90e2;
+    box-shadow:0 0 12px rgba(74,144,226,0.2)
+}
+.capability-header{display:flex;justify-content:space-between;gap:4px;align-items:flex-start}
+.capability-name{flex:1;line-height:1.2;word-break:break-word;font-size:9px}
+.capability-toggle{
+    width:14px;height:14px;
+    border:1px solid #4a90e2;
+    color:#4a90e2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:9px;
+    flex-shrink:0
+}
+.detail-panel{
+    position:fixed;right:0;top:0;
+    width:360px;height:100vh;
+    background:linear-gradient(135deg,#1a2340,#0f1628);
+    border-left:2px solid #4a90e2;
+    display:none;
+    flex-direction:column;
+    overflow-y:auto;
+    transform:translateX(100%);
+    transition:transform 0.3s ease;
+    z-index:1000
+}
+.detail-panel.open{display:flex;transform:translateX(0)}
+.panel-header{
+    padding:20px;
+    border-bottom:2px solid #4a90e2;
+    display:flex;
+    justify-content:space-between;
+    flex-shrink:0
+}
+.panel-stage-id{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#4a90e2;margin-bottom:6px}
+.panel-capability-name{font-size:18px;font-weight:600;color:#fff;line-height:1.3}
+.panel-close-btn{cursor:pointer;font-size:20px;color:#4a90e2;width:28px;height:28px;display:flex;align-items:center;justify-content:center}
+.panel-content{padding:20px;overflow-y:auto;flex:1}
+.panel-section{margin-bottom:24px}
+.panel-title{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#4a90e2;margin-bottom:8px;font-weight:600}
+.panel-text{font-size:13px;color:#b0b0b0;line-height:1.6}
+.panel-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.panel-meta-item{background:#0f1628;border:1px solid #2a4570;border-radius:3px;padding:10px}
+.panel-meta-label{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#6a7a9a;margin-bottom:4px}
+.panel-meta-value{color:#e0e0e0;font-weight:500;font-size:12px}
+
+.stage:nth-child(1) .stage-id{color:#e24a4a}
+.stage:nth-child(2) .stage-id{color:#e2a04a}
+.stage:nth-child(3) .stage-id{color:#c4e24a}
+.stage:nth-child(4) .stage-id{color:#4ae290}
+.stage:nth-child(5) .stage-id{color:#4ae2d2}
+.stage:nth-child(6) .stage-id{color:#4a9ae2}
+.stage:nth-child(7) .stage-id{color:#704ae2}
+.stage:nth-child(8) .stage-id{color:#d24ae2}
+.stage:nth-child(9) .stage-id{color:#e24ab6}
+
+@media(max-width:768px){
+    .detail-panel{width:100%}
+    .stage{min-width:160px;padding:16px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div>
+            <h1>LAND TAX VALUE STREAM MAP</h1>
+            <p>SRO Capabilities mapped to 9 value streams</p>
+        </div>
+        <button class="fullscreen-btn" onclick="toggleFullscreen()">Maximize</button>
+    </div>
+    <div class="map-wrapper">
+        <div class="value-stream" id="valueStream"></div>
+    </div>
+</div>
+
+<div class="detail-panel" id="detailPanel">
+    <div class="panel-header">
+        <div>
+            <div class="panel-stage-id" id="panelStageId"></div>
+            <div class="panel-capability-name" id="panelCapabilityName"></div>
+        </div>
+        <div class="panel-close-btn" onclick="closeDetailPanel()">×</div>
+    </div>
+    <div class="panel-content" id="panelContent"></div>
+</div>
+
+<script>
+// Real SRO Land Tax data embedded directly
+const DATA=[
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Address Validation Management","CapabilityID":"COM-07-L2-01","CapabilityDescription":"Validating addresses against authoritative sources such as GNAF to ensure they are accurate and deliverable.","CapabilityMaturityLevel":"High","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Customer Creation Management","CapabilityID":"COM-04-L2-01","CapabilityDescription":"","CapabilityMaturityLevel":"High","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Customer Digital Onboarding Management","CapabilityID":"COM-04-L2-05","CapabilityDescription":"Customer Digital Onboarding Management is the capability to enable a customer to establish a verified, digital relationship with the SRO through self‑service channels. It supports customer‑initiated registration, identity verification, record matching, de","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Customer Digital Onboarding Management","CapabilityID":"COM-04-L2-06","CapabilityDescription":"Customer Digital Onboarding Management is the capability to enable a customer to establish a verified, digital relationship with the SRO through self‑service channels. It supports customer‑initiated registration, identity verification, record matching, de","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Customer Identification Management","CapabilityID":"COM-04-L2-02","CapabilityDescription":"","CapabilityMaturityLevel":"High","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Duplicate Customer Management","CapabilityID":"COM-04-L2-03","CapabilityDescription":"","CapabilityMaturityLevel":"High","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Joint Ownership","CapabilityID":"VS1-L2-05","CapabilityDescription":"Manage land owned by more than one party, including proportional interests and lead-owner assignment.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Land Held on Trust","CapabilityID":"VS1-L2-06","CapabilityDescription":"Manage land ownership where land is held under trust arrangements, capturing trustee and beneficiary relationships.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Ownership Maintenance","CapabilityID":"VS1-L2-04","CapabilityDescription":"Maintain ownership details and ownership changes over time so the correct party is held liable.","CapabilityMaturityLevel":"High","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Ownership Management","CapabilityID":"COM-07-L2-04","CapabilityDescription":"Managing the link between properties and their registered owners within the revenue system.","CapabilityMaturityLevel":"High","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Property Creation","CapabilityID":"COM-07-L2-02","CapabilityDescription":"Creating new property records in the system from data received via third-party feeds or manual staff entry.","CapabilityMaturityLevel":"High","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Property Data Acquisition","CapabilityID":"COM-07-L2-03","CapabilityDescription":"","CapabilityMaturityLevel":"High","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Revenue Line Registration Management","CapabilityID":"COM-08-L2-01","CapabilityDescription":"","CapabilityMaturityLevel":"High","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Subdivision/Consolidation Management","CapabilityID":"COM-07-L2-05","CapabilityDescription":"Managing property record changes arising from subdivision or consolidation events.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Subdivisions & Consolidations","CapabilityID":"VS1-L2-02","CapabilityDescription":"Manage changes to land parcels resulting from subdivision or consolidation, and update taxable land records accordingly.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Taxable Land Maintenance","CapabilityID":"VS1-L2-01","CapabilityDescription":"Maintain records of land that is subject to Land Tax, ensuring only qualifying land is included in assessments.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Title to Property Relationship","CapabilityID":"VS1-L2-03","CapabilityDescription":"Maintain the relationship between legal land titles and property records, ensuring title changes are reflected in the system.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Accurate Land & Ownership Information Maintained","ValueStageID":"LTX-VS-01","CapabilityName":"Unknown Customer","CapabilityID":"VS1-L2-07","CapabilityDescription":"Manage land or ownership records where the liable party is not yet identified, flagging for investigation.","CapabilityMaturityLevel":"High","Priority":""},
+{"ValueStageName":"Authoritative Land Value Established","ValueStageID":"LTX-VS-02","CapabilityName":"Valuation Data Acquisition","CapabilityID":"COM-09-L2-01","CapabilityDescription":"Receiving and ingesting valuation data from the Valuer-General and other authoritative sources.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Authoritative Land Value Established","ValueStageID":"LTX-VS-02","CapabilityName":"Valuation Data Management","CapabilityID":"COM-09-L2-02","CapabilityDescription":"Maintaining the accuracy and completeness of valuation records used in assessment calculations.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Correct Land Tax Rules Applied","ValueStageID":"LTX-VS-03","CapabilityName":"Concession Application","CapabilityID":"VS2-L2-06","CapabilityDescription":"Receiving and processing applications for land tax concessions including eligibility assessment and approval.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Correct Land Tax Rules Applied","ValueStageID":"LTX-VS-03","CapabilityName":"Determine Land Tax Liability","CapabilityID":"VS2-L2-03","CapabilityDescription":"Determine whether Land Tax applies to specific land and how liability is calculated, including thresholds and exemptions.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Correct Land Tax Rules Applied","ValueStageID":"LTX-VS-03","CapabilityName":"Exemption Application Management","CapabilityID":"VS2-L2-05","CapabilityDescription":"","CapabilityMaturityLevel":"High","Priority":""},
+{"ValueStageName":"Correct Land Tax Rules Applied","ValueStageID":"LTX-VS-03","CapabilityName":"Exemption Creation Management","CapabilityID":"VS2-L2-04","CapabilityDescription":"Defining and configuring exemption types available under the Land Tax Act, including eligibility criteria and duration.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Correct Land Tax Rules Applied","ValueStageID":"LTX-VS-03","CapabilityName":"Joint Ownership","CapabilityID":"VS2-L2-01","CapabilityDescription":"Determine tax treatment for land owned jointly, applying the correct grouping and rate rules.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Correct Land Tax Rules Applied","ValueStageID":"LTX-VS-03","CapabilityName":"Land Held on Trust","CapabilityID":"VS2-L2-02","CapabilityDescription":"Determine tax treatment for land held under trust arrangements, applying trust-specific rates and surcharges.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Correct Land Tax Rules Applied","ValueStageID":"LTX-VS-03","CapabilityName":"Land Tax","CapabilityID":"VS2-L2-09","CapabilityDescription":"","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Correct Land Tax Rules Applied","ValueStageID":"LTX-VS-03","CapabilityName":"Tax/Entitlement Rate Management","CapabilityID":"VS2-L2-07","CapabilityDescription":"Managing the land tax rates applicable to different taxpayer types and ownership categories.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Correct Land Tax Rules Applied","ValueStageID":"LTX-VS-03","CapabilityName":"Threshold Management","CapabilityID":"VS2-L2-08","CapabilityDescription":"","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Correct Land Tax Rules Applied","ValueStageID":"LTX-VS-03","CapabilityName":"Usage Management","CapabilityID":"VS2-L2-10","CapabilityDescription":"Managing information about how a property is occupied and used, which affects land tax exemption and concession eligibility.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Land Tax Liability Determined","ValueStageID":"LTX-VS-04","CapabilityName":"Assessment Generation Management","CapabilityID":"COM-01-L2-02","CapabilityDescription":"Managing the process of generating assessment notices from calculated liabilities.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Land Tax Liability Determined","ValueStageID":"LTX-VS-04","CapabilityName":"Automated Communication Management","CapabilityID":"COM-03-L2-01","CapabilityDescription":"Managing system-generated outbound communications triggered by assessment events. Includes rules for which channel is used for which communication type","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Land Tax Liability Determined","ValueStageID":"LTX-VS-04","CapabilityName":"Deduction Management","CapabilityID":"VS3-L2-10","CapabilityDescription":"","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Land Tax Liability Determined","ValueStageID":"LTX-VS-04","CapabilityName":"General Valuations","CapabilityID":"VS3-L2-02","CapabilityDescription":"Apply standard Valuer-General valuation data for the annual Land Tax assessment cycle.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Land Tax Liability Determined","ValueStageID":"LTX-VS-04","CapabilityName":"Generate Land Tax Assessments","CapabilityID":"VS3-L2-06","CapabilityDescription":"Generate Land Tax assessment outcomes using validated liability calculations and valuation data.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Land Tax Liability Determined","ValueStageID":"LTX-VS-04","CapabilityName":"Liability/Entitlement Calculation Management","CapabilityID":"VS3-L2-09","CapabilityDescription":"","CapabilityMaturityLevel":"High","Priority":""},
+{"ValueStageName":"Land Tax Obligations Formally Established & Communicated","ValueStageID":"LTX-VS-05","CapabilityName":"Assessment Cancellation Management","CapabilityID":"COM-01-L2-01","CapabilityDescription":"Managing the cancellation of assessment notices that have been issued in error or superseded.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Land Tax Obligations Formally Established & Communicated","ValueStageID":"LTX-VS-05","CapabilityName":"Assessment Withdrawal Management","CapabilityID":"COM-01-L2-03","CapabilityDescription":"Managing the formal withdrawal of issued assessment notices.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Land Tax Obligations Formally Established & Communicated","ValueStageID":"LTX-VS-05","CapabilityName":"Communication Preference/Consent Management","CapabilityID":"COM-03-L2-02","CapabilityDescription":"Extends beyond just \"electronic consent\" to capture consent per channel (a customer may consent to email but not SMS)","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Land Tax Obligations Formally Established & Communicated","ValueStageID":"LTX-VS-05","CapabilityName":"Customer Communication Record Management","CapabilityID":"COM-03-L2-03","CapabilityDescription":"Recording and maintaining a history of all communications with customers.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Land Tax Obligations Formally Established & Communicated","ValueStageID":"LTX-VS-05","CapabilityName":"Issue Cycle Management","CapabilityID":"VS3-L2-08","CapabilityDescription":"","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Land Tax Obligations Formally Established & Communicated","ValueStageID":"LTX-VS-05","CapabilityName":"Issue Land Tax Assessments","CapabilityID":"VS3-L2-07","CapabilityDescription":"Issue formal Land Tax assessments to customers, giving legal effect to the tax obligation.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Land Tax Obligations Formally Established & Communicated","ValueStageID":"LTX-VS-05","CapabilityName":"Service of Notice Management","CapabilityID":"COM-01-L2-04","CapabilityDescription":"Managing the formal service of assessment notices to customers, including electronic and postal channels.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Land Tax Obligations Settled & Corrected","ValueStageID":"LTX-VS-06","CapabilityName":"Adjustment Management","CapabilityID":"VS4-L2-05","CapabilityDescription":"Apply financial adjustments to Land Tax liabilities following reassessment, amendment, or correction.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Land Tax Obligations Settled & Corrected","ValueStageID":"LTX-VS-06","CapabilityName":"Instalment Management","CapabilityID":"VS4-L2-03","CapabilityDescription":"Manage instalment arrangements for paying Land Tax, including schedule setup and monitoring.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Land Tax Obligations Settled & Corrected","ValueStageID":"LTX-VS-06","CapabilityName":"Payment Allocation Management","CapabilityID":"COM-06-L2-01","CapabilityDescription":"","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Land Tax Obligations Settled & Corrected","ValueStageID":"LTX-VS-06","CapabilityName":"Payment Management","CapabilityID":"VS4-L2-01","CapabilityDescription":"Receive and manage Land Tax payments from customers across all payment channels.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Land Tax Obligations Settled & Corrected","ValueStageID":"LTX-VS-06","CapabilityName":"Penalty Management","CapabilityID":"COM-05-L2-02","CapabilityDescription":"Managing penalties applied for late lodgement or payment of Land Tax.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Land Tax Obligations Settled & Corrected","ValueStageID":"LTX-VS-06","CapabilityName":"Refund Data Management","CapabilityID":"COM-06-L2-03","CapabilityDescription":"Maintaining records of refund transactions and supporting documentation.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Land Tax Obligations Settled & Corrected","ValueStageID":"LTX-VS-06","CapabilityName":"Refund Management","CapabilityID":"VS4-L2-04","CapabilityDescription":"Process refunds arising from overpayment or reassessment of Land Tax.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Land Tax Obligations Settled & Corrected","ValueStageID":"LTX-VS-06","CapabilityName":"Suspense Management","CapabilityID":"COM-06-L2-02","CapabilityDescription":"Managing unallocated or unidentified payments held in suspense pending correct allocation.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Disputes, Corrections & Reviews Resolved","ValueStageID":"LTX-VS-07","CapabilityName":"Assessment Objection Management","CapabilityID":"VS5-L2-01","CapabilityDescription":"Manage formal objections to Land Tax assessment decisions, including receipt, review and determination.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Disputes, Corrections & Reviews Resolved","ValueStageID":"LTX-VS-07","CapabilityName":"Audit Management","CapabilityID":"VS5-L2-06","CapabilityDescription":"Conduct audit activities to validate correctness and compliance with land tax obligations.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Disputes, Corrections & Reviews Resolved","ValueStageID":"LTX-VS-07","CapabilityName":"Case Creation","CapabilityID":"COM-02-L2-02","CapabilityDescription":"Creating new cases to track complex land tax matters, private rulings and referrals.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Disputes, Corrections & Reviews Resolved","ValueStageID":"LTX-VS-07","CapabilityName":"Case Management","CapabilityID":"VS5-L2-04","CapabilityDescription":"Manage Land Tax cases across their full lifecycle including creation, tracking and closure.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Disputes, Corrections & Reviews Resolved","ValueStageID":"LTX-VS-07","CapabilityName":"Compliance Management","CapabilityID":"VS5-L2-05","CapabilityDescription":"Monitor and address non-compliance with Land Tax obligations, including proactive and reactive activities.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Disputes, Corrections & Reviews Resolved","ValueStageID":"LTX-VS-07","CapabilityName":"Dispute Resolution Management","CapabilityID":"VS5-L2-03","CapabilityDescription":"Resolve disputes arising from Land Tax matters, including VCAT referrals and settlements.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Disputes, Corrections & Reviews Resolved","ValueStageID":"LTX-VS-07","CapabilityName":"Quality Assurance Management","CapabilityID":"VS5-L2-08","CapabilityDescription":"Ensure accuracy and consistency of Land Tax decisions through sampling and review activities.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Disputes, Corrections & Reviews Resolved","ValueStageID":"LTX-VS-07","CapabilityName":"Risk Management","CapabilityID":"VS5-L2-07","CapabilityDescription":"Identify and manage risks associated with Land Tax administration.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Disputes, Corrections & Reviews Resolved","ValueStageID":"LTX-VS-07","CapabilityName":"Valuation Objection Management","CapabilityID":"VS5-L2-02","CapabilityDescription":"Manage objections relating specifically to land valuations used in Land Tax assessments.","CapabilityMaturityLevel":"Med","Priority":""},
+{"ValueStageName":"Non-Compliance Addressed and Liabilities Recovered","ValueStageID":"LTX-VS-08","CapabilityName":"Interest Management","CapabilityID":"COM-05-L2-01","CapabilityDescription":"Managing interest charges applied to overdue Land Tax liabilities.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Non-Compliance Addressed and Liabilities Recovered","ValueStageID":"LTX-VS-08","CapabilityName":"Write Off Management","CapabilityID":"COM-05-L2-03","CapabilityDescription":"Managing the write-off of Land Tax debts deemed irrecoverable.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Statutory Land Tax Assurances Provided","ValueStageID":"LTX-VS-09","CapabilityName":"Certificate Evidence & Record Management","CapabilityID":"VS6-L2-02","CapabilityDescription":"Maintain records and evidence supporting issued certificates, including liability outstanding at issue.","CapabilityMaturityLevel":"Low","Priority":""},
+{"ValueStageName":"Statutory Land Tax Assurances Provided","ValueStageID":"LTX-VS-09","CapabilityName":"Issue Land Tax Certificates","CapabilityID":"VS6-L2-01","CapabilityDescription":"Issue certificates confirming Land Tax status for land, used in property settlement and conveyancing.","CapabilityMaturityLevel":"Med","Priority":""}
+];
+
+function toggleFullscreen(){
+    document.body.classList.toggle('fullscreen');
+    document.querySelector('.fullscreen-btn').textContent=document.body.classList.contains('fullscreen')?'Exit':'Maximize';
+}
+
+function getCapabilityType(id){
+    if(id.startsWith('VS'))return 'LTX';
+    if(id.startsWith('COM'))return 'COMMON';
+    return 'SUPPORTING';
+}
+
+function render(){
+    const map={};
+    DATA.forEach(r=>{
+        if(!map[r.ValueStageID]){
+            map[r.ValueStageID]={id:r.ValueStageID,name:r.ValueStageName,caps:[]};
+        }
+        const type=getCapabilityType(r.CapabilityID);
+        map[r.ValueStageID].caps.push({...r,type});
+    });
+    
+    const stages=Object.values(map).sort((a,b)=>a.id.localeCompare(b.id,undefined,{numeric:true}));
+    const el=document.getElementById('valueStream');
+    el.innerHTML='';
+    
+    stages.forEach(s=>{
+        const d=document.createElement('div');
+        d.className='stage';
+        d.innerHTML=`
+            <div class="stage-id">${s.id}</div>
+            <div class="stage-name">${s.name}</div>
+            <div class="capabilities-container"></div>`;
+        
+        const c=d.querySelector('.capabilities-container');
+        s.caps.forEach(cap=>{
+            const cc=document.createElement('div');
+            cc.className='capability-card';
+            const typeBadge=cap.type==='LTX'?'<span style="font-size:9px;color:#4ae290;margin-left:4px">[LTX]</span>':cap.type==='COMMON'?'<span style="font-size:9px;color:#e2a04a;margin-left:4px">[COM]</span>':'';
+            cc.innerHTML=`
+                <div class="capability-header">
+                    <div class="capability-name" style="flex:1">${cap.CapabilityName}${typeBadge}</div>
+                    <div class="capability-toggle">+</div>
+                </div>`;
+            cc.onclick=()=>openDetail(s,cap);
+            c.appendChild(cc);
+        });
+        el.appendChild(d);
+    });
+}
+
+function openDetail(stage,cap){
+    document.getElementById('panelStageId').textContent=stage.id;
+    document.getElementById('panelCapabilityName').textContent=cap.CapabilityName;
+    document.getElementById('panelContent').innerHTML=`
+        <div class="panel-section">
+            <div class="panel-title">Capability ID</div>
+            <div class="panel-text">${cap.CapabilityID}</div>
+        </div>
+        <div class="panel-section">
+            <div class="panel-title">Description</div>
+            <div class="panel-text">${cap.CapabilityDescription||'—'}</div>
+        </div>
+        <div class="panel-section">
+            <div class="panel-title">Details</div>
+            <div class="panel-meta">
+                <div class="panel-meta-item">
+                    <div class="panel-meta-label">Maturity Level</div>
+                    <div class="panel-meta-value">${cap.CapabilityMaturityLevel||'—'}</div>
+                </div>
+                <div class="panel-meta-item">
+                    <div class="panel-meta-label">Value Stream</div>
+                    <div class="panel-meta-value">${stage.id}</div>
+                </div>
+            </div>
+        </div>`;
+    document.getElementById('detailPanel').classList.add('open');
+}
+
+function closeDetailPanel(){
+    document.getElementById('detailPanel').classList.remove('open');
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetailPanel()});
+document.addEventListener('DOMContentLoaded',render);
+</script>
+</body>
+</html>

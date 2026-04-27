@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Land Tax Value Stream Map</title>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'IBM Plex Mono', 'Courier New', monospace;
@@ -19,20 +16,14 @@
             min-height: 100vh;
         }
 
-        body.fullscreen {
-            padding: 0;
-        }
+        body.fullscreen { padding: 0; }
 
-        .container {
-            max-width: 100%;
-            margin: 0 auto;
-        }
+        .container { max-width: 100%; margin: 0 auto; }
 
         body.fullscreen .container {
             height: 100vh;
             display: flex;
             flex-direction: column;
-            margin: 0;
         }
 
         .header {
@@ -44,694 +35,272 @@
             align-items: center;
         }
 
-        body.fullscreen .header {
-            margin-bottom: 20px;
-            padding: 20px;
-            padding-bottom: 15px;
-        }
-
-        .header-content {
-            flex: 1;
-        }
+        body.fullscreen .header { margin-bottom: 20px; padding: 20px; }
 
         .header h1 {
             font-size: 28px;
             font-weight: 600;
-            letter-spacing: 0.05em;
-            margin-bottom: 8px;
-            color: #ffffff;
-        }
-
-        body.fullscreen .header h1 {
-            font-size: 24px;
-            margin-bottom: 4px;
+            color: #fff;
+            margin-bottom: 6px;
         }
 
         .header p {
-            font-size: 13px;
-            color: #a0a0a0;
-            text-transform: uppercase;
+            font-size: 12px;
             letter-spacing: 0.08em;
-        }
-
-        .header-controls {
-            display: flex;
-            gap: 12px;
-            align-items: center;
+            text-transform: uppercase;
+            color: #a0a0a0;
         }
 
         .fullscreen-btn {
             padding: 8px 16px;
             background: #4a90e2;
-            color: #ffffff;
+            color: #fff;
             border: none;
             border-radius: 3px;
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
             cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .fullscreen-btn:hover {
-            background: #5aa0ff;
-            box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+            font-size: 12px;
         }
 
         .map-wrapper {
-            overflow-x: auto;
-            overflow-y: hidden;
             background: #0f1220;
             border: 1px solid #2a3550;
             border-radius: 4px;
             padding: 20px 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            height: auto;
-            min-height: 240px;
-        }
-
-        body.fullscreen .map-wrapper {
-            flex: 1;
-            margin: 0 20px;
-            border-radius: 0;
-            box-shadow: none;
-            padding: 20px 16px;
+            overflow-x: auto;
         }
 
         .value-stream {
             display: flex;
             gap: 12px;
-            min-width: min-content;
-            position: relative;
             align-items: flex-start;
         }
 
         .stage {
-            flex: 1;
-            min-width: 0;
-            background: linear-gradient(135deg, #1a2340 0%, #0f1628 100%);
+            background: linear-gradient(135deg, #1a2340, #0f1628);
             border: 1px solid #3a5a9f;
             border-radius: 4px;
             padding: 12px;
-            position: relative;
-            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
-            cursor: default;
+            min-width: 220px;
         }
 
-        .stage:hover {
-            background: linear-gradient(135deg, #243050 0%, #1a2333 100%);
-            border-color: #5a8fff;
-            box-shadow: 0 0 20px rgba(74, 144, 226, 0.2);
-        }
-
-        .stage-header {
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .stage-header-content {
-            flex: 1;
-        }
+        .stage-header { margin-bottom: 10px; }
 
         .stage-id {
             font-size: 10px;
-            text-transform: uppercase;
             letter-spacing: 0.1em;
-            color: #4a90e2;
-            margin-bottom: 6px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
         }
 
         .stage-name {
             font-size: 14px;
             font-weight: 600;
-            color: #ffffff;
-            word-break: break-word;
-            line-height: 1.3;
+            color: #fff;
         }
 
         .capabilities-container {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            flex: 1;
         }
 
         .capability-card {
-            background: linear-gradient(135deg, #162850 0%, #0d1a30 100%);
+            background: linear-gradient(135deg, #162850, #0d1a30);
             border: 1px solid #2a4570;
             border-radius: 3px;
             padding: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
             font-size: 12px;
-            font-weight: 500;
-            color: #e0e0e0;
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .capability-card:hover {
-            background: linear-gradient(135deg, #1a3060 0%, #132140 100%);
-            border-color: #4a90e2;
-            box-shadow: 0 0 12px rgba(74, 144, 226, 0.2);
         }
 
         .capability-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 6px;
-        }
-
-        .capability-name {
-            flex: 1;
-            word-break: break-word;
-            line-height: 1.3;
         }
 
         .capability-toggle {
-            flex-shrink: 0;
             width: 18px;
             height: 18px;
-            background: #2a4570;
             border: 1px solid #4a90e2;
-            border-radius: 2px;
+            color: #4a90e2;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #4a90e2;
             font-size: 11px;
-            font-weight: bold;
-            transition: all 0.2s ease;
-        }
-
-        .capability-card:hover .capability-toggle {
-            background: #3a5a9f;
-            box-shadow: 0 0 8px rgba(74, 144, 226, 0.3);
+            border-radius: 2px;
         }
 
         .detail-panel {
             position: fixed;
-            right: 0;
-            top: 0;
-            width: 350px;
+            right: 0; top: 0;
+            width: 360px;
             height: 100vh;
-            background: linear-gradient(135deg, #1a2340 0%, #0f1628 100%);
+            background: linear-gradient(135deg, #1a2340, #0f1628);
             border-left: 2px solid #4a90e2;
-            box-shadow: -8px 0 32px rgba(0, 0, 0, 0.5);
-            z-index: 1000;
             display: none;
             flex-direction: column;
-            overflow-y: auto;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
         }
 
-        .detail-panel.open {
-            display: flex;
-            transform: translateX(0);
-        }
+        .detail-panel.open { display: flex; }
 
         .panel-header {
-            padding: 24px 20px;
+            padding: 20px;
             border-bottom: 2px solid #4a90e2;
-            flex-shrink: 0;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .panel-header-content {
-            flex: 1;
-        }
-
-        .panel-stage-id {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #4a90e2;
-            margin-bottom: 6px;
-        }
-
-        .panel-capability-name {
-            font-size: 18px;
-            font-weight: 600;
-            color: #ffffff;
-            word-break: break-word;
-            line-height: 1.3;
         }
 
         .panel-close-btn {
-            flex-shrink: 0;
-            width: 28px;
-            height: 28px;
-            background: #2a3550;
-            border: 1px solid #4a90e2;
-            border-radius: 3px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #4a90e2;
-            font-size: 18px;
             cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .panel-close-btn:hover {
-            background: #3a5a9f;
-            box-shadow: 0 0 10px rgba(74, 144, 226, 0.3);
-        }
-
-        .panel-content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .panel-section {
-            margin-bottom: 24px;
-        }
-
-        .panel-section-title {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+            font-size: 20px;
             color: #4a90e2;
-            margin-bottom: 12px;
-            font-weight: 600;
         }
 
-        .panel-section-content {
-            font-size: 13px;
-            color: #b0b0b0;
-            line-height: 1.6;
-            word-break: break-word;
-        }
+        .panel-content { padding: 20px; overflow-y: auto; }
 
-        .panel-metadata {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            font-size: 12px;
-        }
-
-        .panel-meta-item {
-            background: #0f1628;
-            border: 1px solid #2a4570;
-            border-radius: 3px;
-            padding: 10px;
-        }
-
-        .panel-meta-label {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: #6a7a9a;
-            margin-bottom: 4px;
-        }
-
-        .panel-meta-value {
-            color: #e0e0e0;
-            font-weight: 500;
-        }
-
-        .stage:nth-child(1) .stage-id { color: #e24a4a; }
-        .stage:nth-child(2) .stage-id { color: #e2a04a; }
-        .stage:nth-child(3) .stage-id { color: #c4e24a; }
-        .stage:nth-child(4) .stage-id { color: #4ae290; }
-        .stage:nth-child(5) .stage-id { color: #4ae2d2; }
-        .stage:nth-child(6) .stage-id { color: #4a9ae2; }
-
-        .controls {
-            margin-top: 30px;
-            padding: 20px;
-            background: #0f1220;
-            border: 1px solid #2a3550;
-            border-radius: 4px;
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
-
-        body.fullscreen .controls {
-            margin: 20px 20px 20px 20px;
-            border-radius: 0;
-        }
-
-        .controls span {
-            color: #6a7a9a;
-            font-size: 12px;
-        }
-
-        @media (max-width: 768px) {
-            .stage {
-                flex: 0 0 160px;
-                padding: 16px;
-                min-height: 280px;
-            }
-
-            .stage-name {
-                font-size: 14px;
-            }
-
-            .header h1 {
-                font-size: 22px;
-            }
-        }
+        .stage:nth-child(1) .stage-id { color:#e24a4a; }
+        .stage:nth-child(2) .stage-id { color:#e2a04a; }
+        .stage:nth-child(3) .stage-id { color:#c4e24a; }
+        .stage:nth-child(4) .stage-id { color:#4ae290; }
+        .stage:nth-child(5) .stage-id { color:#4ae2d2; }
+        .stage:nth-child(6) .stage-id { color:#4a9ae2; }
+        .stage:nth-child(7) .stage-id { color:#8a4ae2; }
+        .stage:nth-child(8) .stage-id { color:#e24abf; }
+        .stage:nth-child(9) .stage-id { color:#e26a4a; }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="header-content">
-                <h1>LAND TAX VALUE STREAM MAP</h1>
-                <p>Value Streams Mapped to Capabilities</p>
-            </div>
-            <div class="header-controls">
-                <button class="fullscreen-btn" onclick="toggleFullscreen()">Maximize</button>
-            </div>
-        </div>
+<div class="container">
 
-        <div class="map-wrapper">
-            <div class="value-stream" id="valueStream">
-                <!-- Stages populated by JavaScript -->
-            </div>
-        </div>
-
-        <div class="controls">
-            <span>✓ Data loaded from embedded source</span>
-        </div>
+<div class="header">
+    <div>
+        <h1>LAND TAX VALUE STREAM MAP</h1>
+        <p>Execution Capabilities mapped to 9 Value Stages</p>
     </div>
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">Maximise</button>
+</div>
 
-    <!-- Detail Panel -->
-    <div class="detail-panel" id="detailPanel">
-        <div class="panel-header">
-            <div class="panel-header-content">
-                <div class="panel-stage-id" id="panelStageId"></div>
-                <div class="panel-capability-name" id="panelCapabilityName"></div>
-            </div>
-            <div class="panel-close-btn" onclick="closeDetailPanel()">×</div>
+<div class="map-wrapper">
+    <div class="value-stream" id="valueStream"></div>
+</div>
+
+</div>
+
+<div class="detail-panel" id="detailPanel">
+    <div class="panel-header">
+        <div>
+            <div class="stage-id" id="panelStageId"></div>
+            <div id="panelCapabilityName"></div>
         </div>
-        <div class="panel-content" id="panelContent">
-            <!-- Content populated on click -->
-        </div>
+        <div class="panel-close-btn" onclick="closeDetailPanel()">×</div>
     </div>
+    <div class="panel-content" id="panelContent"></div>
+</div>
 
-    <script>
-        // ============================================================
-        // EMBEDDED DATA - Replace this with your actual Land Tax data
-        // ============================================================
-        const DATA = [
-            {
-                value_stream_id: 'STREAM-01',
-                value_stream_name: 'Maintain Land & Ownership Records',
-                capability_id: 'CAP-1.1',
-                capability_name: 'Property Registration',
-                capability_description: 'Register new properties and update ownership records in the central registry',
-                maturity_level: '3 - Defined',
-                owner: 'Registry Team',
-                priority: 'High'
-            },
-            {
-                value_stream_id: 'STREAM-01',
-                value_stream_name: 'Maintain Land & Ownership Records',
-                capability_id: 'CAP-1.2',
-                capability_name: 'Title Verification',
-                capability_description: 'Verify property titles and ownership claims against historical records',
-                maturity_level: '3 - Defined',
-                owner: 'Title Team',
-                priority: 'High'
-            },
-            {
-                value_stream_id: 'STREAM-01',
-                value_stream_name: 'Maintain Land & Ownership Records',
-                capability_id: 'CAP-1.3',
-                capability_name: 'Change Management',
-                capability_description: 'Process changes to property ownership, boundaries, and land use classifications',
-                maturity_level: '2 - Repeatable',
-                owner: 'Change Team',
-                priority: 'Medium'
-            },
-            {
-                value_stream_id: 'STREAM-02',
-                value_stream_name: 'Determine How Land is Taxed',
-                capability_id: 'CAP-2.1',
-                capability_name: 'Land Valuation',
-                capability_description: 'Assess and determine fair market value of land for tax purposes',
-                maturity_level: '3 - Defined',
-                owner: 'Valuation Team',
-                priority: 'High'
-            },
-            {
-                value_stream_id: 'STREAM-02',
-                value_stream_name: 'Determine How Land is Taxed',
-                capability_id: 'CAP-2.2',
-                capability_name: 'Zone Classification',
-                capability_description: 'Classify land into appropriate tax zones and apply relevant tax rate schedules',
-                maturity_level: '2 - Repeatable',
-                owner: 'Classification Team',
-                priority: 'High'
-            },
-            {
-                value_stream_id: 'STREAM-02',
-                value_stream_name: 'Determine How Land is Taxed',
-                capability_id: 'CAP-2.3',
-                capability_name: 'Exemptions & Reliefs',
-                capability_description: 'Identify and process eligible properties for tax exemptions and relief schemes',
-                maturity_level: '2 - Repeatable',
-                owner: 'Exemptions Team',
-                priority: 'Medium'
-            },
-            {
-                value_stream_id: 'STREAM-03',
-                value_stream_name: 'Assess and Issue Land Tax',
-                capability_id: 'CAP-3.1',
-                capability_name: 'Tax Calculation',
-                capability_description: 'Calculate annual tax liability based on land value, classification, and exemptions',
-                maturity_level: '3 - Defined',
-                owner: 'Tax Calculation Team',
-                priority: 'High'
-            },
-            {
-                value_stream_id: 'STREAM-03',
-                value_stream_name: 'Assess and Issue Land Tax',
-                capability_id: 'CAP-3.2',
-                capability_name: 'Assessment Issuance',
-                capability_description: 'Generate and issue land tax assessment notices to property owners',
-                maturity_level: '3 - Defined',
-                owner: 'Assessment Team',
-                priority: 'High'
-            },
-            {
-                value_stream_id: 'STREAM-03',
-                value_stream_name: 'Assess and Issue Land Tax',
-                capability_id: 'CAP-3.3',
-                capability_name: 'Objections Handling',
-                capability_description: 'Review and process objections and appeals against tax assessments',
-                maturity_level: '2 - Repeatable',
-                owner: 'Appeals Team',
-                priority: 'Medium'
-            },
-            {
-                value_stream_id: 'STREAM-04',
-                value_stream_name: 'Manage Payments & Adjustments',
-                capability_id: 'CAP-4.1',
-                capability_name: 'Payment Processing',
-                capability_description: 'Process and reconcile land tax payments from property owners',
-                maturity_level: '3 - Defined',
-                owner: 'Payment Team',
-                priority: 'High'
-            },
-            {
-                value_stream_id: 'STREAM-04',
-                value_stream_name: 'Manage Payments & Adjustments',
-                capability_id: 'CAP-4.2',
-                capability_name: 'Arrears Management',
-                capability_description: 'Monitor, pursue, and collect overdue tax payments and arrears',
-                maturity_level: '2 - Repeatable',
-                owner: 'Collections Team',
-                priority: 'High'
-            },
-            {
-                value_stream_id: 'STREAM-04',
-                value_stream_name: 'Manage Payments & Adjustments',
-                capability_id: 'CAP-4.3',
-                capability_name: 'Adjustments & Credits',
-                capability_description: 'Process tax adjustments, credits, and refunds for eligible properties',
-                maturity_level: '2 - Repeatable',
-                owner: 'Adjustments Team',
-                priority: 'Medium'
-            },
-            {
-                value_stream_id: 'STREAM-05',
-                value_stream_name: 'Resolve Issues & Enforce Compliance',
-                capability_id: 'CAP-5.1',
-                capability_name: 'Dispute Resolution',
-                capability_description: 'Resolve disputes between taxpayers and revenue authority',
-                maturity_level: '2 - Repeatable',
-                owner: 'Dispute Team',
-                priority: 'Medium'
-            },
-            {
-                value_stream_id: 'STREAM-05',
-                value_stream_name: 'Resolve Issues & Enforce Compliance',
-                capability_id: 'CAP-5.2',
-                capability_name: 'Compliance Monitoring',
-                capability_description: 'Monitor taxpayer compliance and identify non-compliance issues',
-                maturity_level: '2 - Repeatable',
-                owner: 'Compliance Team',
-                priority: 'High'
-            },
-            {
-                value_stream_id: 'STREAM-05',
-                value_stream_name: 'Resolve Issues & Enforce Compliance',
-                capability_id: 'CAP-5.3',
-                capability_name: 'Enforcement Actions',
-                capability_description: 'Execute enforcement actions against non-compliant taxpayers',
-                maturity_level: '1 - Initial',
-                owner: 'Enforcement Team',
-                priority: 'Medium'
-            }
-        ];
+<script>
+/* GOVERNANCE NOTE
+ * This view is structurally immutable.
+ * Data is ingested from a governed CSV (SharePoint list export).
+ */
 
-        function toggleFullscreen() {
-            const body = document.body;
-            const btn = document.querySelector('.fullscreen-btn');
-            body.classList.toggle('fullscreen');
-            btn.textContent = body.classList.contains('fullscreen') ? 'Exit' : 'Maximize';
+async function loadCSV(url) {
+    const res = await fetch(url);
+    const text = await res.text();
+    const [header, ...rows] = text.trim().split('\n');
+    const keys = header.split(',');
+
+    return rows.map(r => {
+        const vals = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+        const o = {};
+        keys.forEach((k,i)=>o[k.trim()] = vals[i]?.replace(/^"|"$/g,'').trim());
+        return o;
+    });
+}
+
+function renderStages(data) {
+    const stages = {};
+
+    data.forEach(r => {
+        if (!stages[r.ValueStageID]) {
+            stages[r.ValueStageID] = {
+                id: r.ValueStageID,
+                name: r.ValueStageName,
+                desc: r.ValueStageDescription,
+                caps: []
+            };
         }
+        stages[r.ValueStageID].caps.push({
+            id: r.CapabilityID,
+            name: r.CapabilityName,
+            desc: r.CapabilityDescription,
+            maturity: r.CapabilityMaturityLevel,
+            priority: r.Priority || '—'
+        });
+    });
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+    const container = document.getElementById('valueStream');
+    container.innerHTML = '';
 
-        function renderStages(data) {
-            const stagesMap = {};
-            
-            data.forEach(rec => {
-                const stageId = rec.value_stream_id;
-                
-                if (!stagesMap[stageId]) {
-                    stagesMap[stageId] = {
-                        id: stageId,
-                        name: rec.value_stream_name,
-                        capabilities: []
-                    };
-                }
-                
-                stagesMap[stageId].capabilities.push({
-                    id: rec.capability_id,
-                    name: rec.capability_name,
-                    description: rec.capability_description,
-                    maturityLevel: rec.maturity_level,
-                    owner: rec.owner,
-                    priority: rec.priority
-                });
-            });
+    Object.values(stages).forEach(stage => {
+        const s = document.createElement('div');
+        s.className = 'stage';
 
-            const stages = Object.values(stagesMap);
-            const container = document.getElementById('valueStream');
-            container.innerHTML = '';
+        s.innerHTML = `
+            <div class="stage-header">
+                <div class="stage-id">${stage.id}</div>
+                <div class="stage-name">${stage.name}</div>
+            </div>
+            <div class="capabilities-container"></div>
+        `;
 
-            stages.forEach((stage, idx) => {
-                const stageDiv = document.createElement('div');
-                stageDiv.className = 'stage';
+        const c = s.querySelector('.capabilities-container');
 
-                const headerDiv = document.createElement('div');
-                headerDiv.className = 'stage-header';
-                headerDiv.innerHTML = `
-                    <div class="stage-header-content">
-                        <div class="stage-id">${escapeHtml(stage.id)}</div>
-                        <div class="stage-name">${escapeHtml(stage.name)}</div>
-                    </div>
-                `;
-                stageDiv.appendChild(headerDiv);
-
-                const capContainer = document.createElement('div');
-                capContainer.className = 'capabilities-container';
-
-                stage.capabilities.forEach(cap => {
-                    const capCard = document.createElement('div');
-                    capCard.className = 'capability-card';
-                    capCard.innerHTML = `
-                        <div class="capability-header">
-                            <div class="capability-name">${escapeHtml(cap.name)}</div>
-                            <div class="capability-toggle">+</div>
-                        </div>
-                    `;
-
-                    capCard.addEventListener('click', () => {
-                        openDetailPanel(stage, cap);
-                    });
-
-                    capContainer.appendChild(capCard);
-                });
-
-                stageDiv.appendChild(capContainer);
-                container.appendChild(stageDiv);
-            });
-        }
-
-        function openDetailPanel(stage, capability) {
-            document.getElementById('panelStageId').textContent = escapeHtml(stage.id);
-            document.getElementById('panelCapabilityName').textContent = escapeHtml(capability.name);
-
-            const panelContent = document.getElementById('panelContent');
-            let html = `
-                <div class="panel-section">
-                    <div class="panel-section-title">Description</div>
-                    <div class="panel-section-content">${escapeHtml(capability.description)}</div>
-                </div>
-                
-                <div class="panel-section">
-                    <div class="panel-section-title">Details</div>
-                    <div class="panel-metadata">
-                        <div class="panel-meta-item">
-                            <div class="panel-meta-label">Maturity Level</div>
-                            <div class="panel-meta-value">${escapeHtml(capability.maturityLevel)}</div>
-                        </div>
-                        <div class="panel-meta-item">
-                            <div class="panel-meta-label">Owner</div>
-                            <div class="panel-meta-value">${escapeHtml(capability.owner)}</div>
-                        </div>
-                        <div class="panel-meta-item">
-                            <div class="panel-meta-label">Priority</div>
-                            <div class="panel-meta-value">${escapeHtml(capability.priority)}</div>
-                        </div>
-                        <div class="panel-meta-item">
-                            <div class="panel-meta-label">Capability ID</div>
-                            <div class="panel-meta-value">${escapeHtml(capability.id)}</div>
-                        </div>
-                    </div>
+        stage.caps.forEach(cap => {
+            const card = document.createElement('div');
+            card.className = 'capability-card';
+            card.innerHTML = `
+                <div class="capability-header">
+                    <div>${cap.name}</div>
+                    <div class="capability-toggle">+</div>
                 </div>
             `;
-
-            panelContent.innerHTML = html;
-            document.getElementById('detailPanel').classList.add('open');
-        }
-
-        function closeDetailPanel() {
-            document.getElementById('detailPanel').classList.remove('open');
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeDetailPanel();
+            card.onclick = () => openDetailPanel(stage, cap);
+            c.appendChild(card);
         });
 
-        // Render on load
-        document.addEventListener('DOMContentLoaded', () => {
-            renderStages(DATA);
-        });
-    </script>
+        container.appendChild(s);
+    });
+}
+
+function openDetailPanel(stage, cap) {
+    document.getElementById('panelStageId').textContent = stage.id;
+    document.getElementById('panelCapabilityName').textContent = cap.name;
+    document.getElementById('panelContent').innerHTML = `
+        <p>${cap.desc}</p><br>
+        <p><strong>Maturity:</strong> ${cap.maturity}</p>
+        <p><strong>Priority:</strong> ${cap.priority}</p>
+        <p><strong>Capability ID:</strong> ${cap.id}</p>
+    `;
+    document.getElementById('detailPanel').classList.add('open');
+}
+
+function closeDetailPanel() {
+    document.getElementById('detailPanel').classList.remove('open');
+}
+
+function toggleFullscreen() {
+    document.body.classList.toggle('fullscreen');
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const data = await loadCSV('./SharePoint_List_ValueStage_Capability_Import.csv');
+    renderStages(data);
+});
+</script>
 </body>
 </html>
+``

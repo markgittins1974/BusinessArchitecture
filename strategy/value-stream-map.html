@@ -1,708 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Land Tax Value Stream Map</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Land Tax Value Stream Map</title>
 
-        body {
-            font-family: 'IBM Plex Mono', 'Courier New', monospace;
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
-            color: #e0e0e0;
-            padding: 40px 20px;
-            min-height: 100vh;
-        }
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family:'IBM Plex Mono','Courier New',monospace;
+    background:linear-gradient(135deg,#0a0e27 0%,#1a1f3a 100%);
+    color:#e0e0e0;
+    padding:40px 20px;
+    min-height:100vh
+}
+body.fullscreen{padding:0}
+.container{max-width:100%;margin:0 auto}
+.header{
+    margin-bottom:40px;
+    border-bottom:2px solid #4a90e2;
+    padding-bottom:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center
+}
+.header h1{font-size:28px;color:#fff}
+.header p{
+    font-size:12px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:#a0a0a0
+}
+.fullscreen-btn{
+    padding:8px 16px;
+    background:#4a90e2;
+    color:#fff;
+    border:none;
+    border-radius:3px;
+    cursor:pointer
+}
+.map-wrapper{
+    background:#0f1220;
+    border:1px solid #2a3550;
+    border-radius:4px;
+    padding:20px 16px;
+    overflow-x:auto
+}
+.value-stream{display:flex;gap:12px}
+.stage{
+    background:linear-gradient(135deg,#1a2340,#0f1628);
+    border:1px solid #3a5a9f;
+    border-radius:4px;
+    padding:12px;
+    min-width:240px;
+    display:flex;
+    flex-direction:column
+}
+.stage-id{
+    font-size:10px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    margin-bottom:6px;
+    color:#4a90e2
+}
+.stage-name{font-size:14px;font-weight:600;color:#fff}
+.capabilities-container{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.capability-card{
+    background:linear-gradient(135deg,#162850,#0d1a30);
+    border:1px solid #2a4570;
+    border-radius:3px;
+    padding:10px;
+    cursor:pointer;
+    font-size:12px
+}
+.capability-header{display:flex;justify-content:space-between}
+.capability-toggle{
+    width:18px;height:18px;
+    border:1px solid #4a90e2;
+    color:#4a90e2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px
+}
+.detail-panel{
+    position:fixed;right:0;top:0;
+    width:360px;height:100vh;
+    background:linear-gradient(135deg,#1a2340,#0f1628);
+    border-left:2px solid #4a90e2;
+    display:none;
+    flex-direction:column
+}
+.detail-panel.open{display:flex}
+.panel-header{
+    padding:20px;
+    border-bottom:2px solid #4a90e2;
+    display:flex;
+    justify-content:space-between
+}
+.panel-close-btn{cursor:pointer;font-size:20px;color:#4a90e2}
+.panel-content{padding:20px;overflow-y:auto}
 
-        body.fullscreen { padding: 0; }
-
-        .container {
-            max-width: 100%;
-            margin: 0 auto;
-        }
-
-        body.fullscreen .container {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            margin: 0;
-        }
-
-        .header {
-            margin-bottom: 40px;
-            border-bottom: 2px solid #4a90e2;
-            padding-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        body.fullscreen .header {
-            margin-bottom: 20px;
-            padding: 20px;
-            padding-bottom: 15px;
-        }
-
-        .header-content { flex: 1; }
-
-        .header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            margin-bottom: 8px;
-            color: #ffffff;
-        }
-
-        body.fullscreen .header h1 {
-            font-size: 24px;
-            margin-bottom: 4px;
-        }
-
-        .header p {
-            font-size: 13px;
-            color: #a0a0a0;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-
-        .header-controls {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .fullscreen-btn {
-            padding: 8px 16px;
-            background: #4a90e2;
-            color: #ffffff;
-            border: none;
-            border-radius: 3px;
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .fullscreen-btn:hover {
-            background: #5aa0ff;
-            box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
-        }
-
-        .map-wrapper {
-            overflow-x: auto;
-            overflow-y: hidden;
-            background: #0f1220;
-            border: 1px solid #2a3550;
-            border-radius: 4px;
-            padding: 20px 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            height: auto;
-            min-height: 240px;
-        }
-
-        body.fullscreen .map-wrapper {
-            flex: 1;
-            margin: 0 20px;
-            border-radius: 0;
-            box-shadow: none;
-            padding: 20px 16px;
-        }
-
-        .value-stream {
-            display: flex;
-            gap: 12px;
-            min-width: min-content;
-            position: relative;
-            align-items: flex-start;
-        }
-
-        .stage {
-            flex: 1;
-            min-width: 0;
-            background: linear-gradient(135deg, #1a2340 0%, #0f1628 100%);
-            border: 1px solid #3a5a9f;
-            border-radius: 4px;
-            padding: 12px;
-            position: relative;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            cursor: default;
-        }
-
-        .stage:hover {
-            background: linear-gradient(135deg, #243050 0%, #1a2333 100%);
-            border-color: #5a8fff;
-            box-shadow: 0 0 20px rgba(74, 144, 226, 0.2);
-        }
-
-        .stage-header {
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .stage-header-content { flex: 1; }
-
-        .stage-id {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #4a90e2;
-            margin-bottom: 6px;
-        }
-
-        .stage-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #ffffff;
-            word-break: break-word;
-            line-height: 1.3;
-        }
-
-        .capabilities-container {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            flex: 1;
-        }
-
-        .capability-card {
-            background: linear-gradient(135deg, #162850 0%, #0d1a30 100%);
-            border: 1px solid #2a4570;
-            border-radius: 3px;
-            padding: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 12px;
-            font-weight: 500;
-            color: #e0e0e0;
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .capability-card:hover {
-            background: linear-gradient(135deg, #1a3060 0%, #132140 100%);
-            border-color: #4a90e2;
-            box-shadow: 0 0 12px rgba(74, 144, 226, 0.2);
-        }
-
-        .capability-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .capability-name {
-            flex: 1;
-            word-break: break-word;
-            line-height: 1.3;
-        }
-
-        .capability-toggle {
-            flex-shrink: 0;
-            width: 18px;
-            height: 18px;
-            background: #2a4570;
-            border: 1px solid #4a90e2;
-            border-radius: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #4a90e2;
-            font-size: 11px;
-            font-weight: bold;
-            transition: all 0.2s ease;
-        }
-
-        .capability-card:hover .capability-toggle {
-            background: #3a5a9f;
-            box-shadow: 0 0 8px rgba(74, 144, 226, 0.3);
-        }
-
-        .detail-panel {
-            position: fixed;
-            right: 0;
-            top: 0;
-            width: 350px;
-            height: 100vh;
-            background: linear-gradient(135deg, #1a2340 0%, #0f1628 100%);
-            border-left: 2px solid #4a90e2;
-            box-shadow: -8px 0 32px rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-            overflow-y: auto;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .detail-panel.open {
-            display: flex;
-            transform: translateX(0);
-        }
-
-        .panel-header {
-            padding: 24px 20px;
-            border-bottom: 2px solid #4a90e2;
-            flex-shrink: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .panel-header-content { flex: 1; }
-
-        .panel-stage-id {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #4a90e2;
-            margin-bottom: 6px;
-        }
-
-        .panel-capability-name {
-            font-size: 18px;
-            font-weight: 600;
-            color: #ffffff;
-            word-break: break-word;
-            line-height: 1.3;
-        }
-
-        .panel-close-btn {
-            flex-shrink: 0;
-            width: 28px;
-            height: 28px;
-            background: #2a3550;
-            border: 1px solid #4a90e2;
-            border-radius: 3px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #4a90e2;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .panel-close-btn:hover {
-            background: #3a5a9f;
-            box-shadow: 0 0 10px rgba(74, 144, 226, 0.3);
-        }
-
-        .panel-content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .panel-section { margin-bottom: 24px; }
-
-        .panel-section-title {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #4a90e2;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-
-        .panel-section-content {
-            font-size: 13px;
-            color: #b0b0b0;
-            line-height: 1.6;
-            word-break: break-word;
-        }
-
-        .panel-metadata {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            font-size: 12px;
-        }
-
-        .panel-meta-item {
-            background: #0f1628;
-            border: 1px solid #2a4570;
-            border-radius: 3px;
-            padding: 10px;
-        }
-
-        .panel-meta-label {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: #6a7a9a;
-            margin-bottom: 4px;
-        }
-
-        .panel-meta-value {
-            color: #e0e0e0;
-            font-weight: 500;
-        }
-
-        .stage:nth-child(1) .stage-id { color: #e24a4a; }
-        .stage:nth-child(2) .stage-id { color: #e2a04a; }
-        .stage:nth-child(3) .stage-id { color: #c4e24a; }
-        .stage:nth-child(4) .stage-id { color: #4ae290; }
-        .stage:nth-child(5) .stage-id { color: #4ae2d2; }
-        .stage:nth-child(6) .stage-id { color: #4a9ae2; }
-        .stage:nth-child(7) .stage-id { color: #8a4ae2; }
-        .stage:nth-child(8) .stage-id { color: #e24abf; }
-        .stage:nth-child(9) .stage-id { color: #e26a4a; }
-
-        .controls {
-            margin-top: 30px;
-            padding: 20px;
-            background: #0f1220;
-            border: 1px solid #2a3550;
-            border-radius: 4px;
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
-
-        body.fullscreen .controls {
-            margin: 20px;
-            border-radius: 0;
-        }
-
-        .controls span {
-            color: #6a7a9a;
-            font-size: 12px;
-        }
-
-        .controls .ok { color: #75ffb0; }
-        .controls .err { color: #ff7a7a; }
-
-        @media (max-width: 768px) {
-            .stage { flex: 0 0 160px; padding: 16px; min-height: 280px; }
-            .stage-name { font-size: 14px; }
-            .header h1 { font-size: 22px; }
-        }
-    </style>
+.stage:nth-child(1) .stage-id{color:#e24a4a}
+.stage:nth-child(2) .stage-id{color:#e2a04a}
+.stage:nth-child(3) .stage-id{color:#c4e24a}
+.stage:nth-child(4) .stage-id{color:#4ae290}
+.stage:nth-child(5) .stage-id{color:#4ae2d2}
+.stage:nth-child(6) .stage-id{color:#4a9ae2}
+.stage:nth-child(7) .stage-id{color:#8a4ae2}
+.stage:nth-child(8) .stage-id{color:#e24abf}
+.stage:nth-child(9) .stage-id{color:#e26a4a}
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="header-content">
-                <h1>LAND TAX VALUE STREAM MAP</h1>
-                <p>Value Streams Mapped to Capabilities</p>
-            </div>
-            <div class="header-controls">
-                <button class="fullscreen-btn" onclick="toggleFullscreen()">Maximize</button>
-            </div>
-        </div>
+<div class="container">
 
-        <div class="map-wrapper">
-            <div class="value-stream" id="valueStream">
-                <!-- Stages populated by JavaScript -->
-            </div>
-        </div>
-
-        <div class="controls">
-            <span id="statusLine">⏳ Loading CSV…</span>
-        </div>
+<div class="header">
+    <div>
+        <h1>LAND TAX VALUE STREAM MAP</h1>
+        <p>Execution capabilities mapped to 9 value stages</p>
     </div>
+    <button class="fullscreen-btn" onclick="document.body.classList.toggle('fullscreen')">Maximise</button>
+</div>
 
-    <!-- Detail Panel -->
-    <div class="detail-panel" id="detailPanel">
-        <div class="panel-header">
-            <div class="panel-header-content">
-                <div class="panel-stage-id" id="panelStageId"></div>
-                <div class="panel-capability-name" id="panelCapabilityName"></div>
-            </div>
-            <div class="panel-close-btn" onclick="closeDetailPanel()">×</div>
+<div class="map-wrapper">
+    <div class="value-stream" id="valueStream"></div>
+</div>
+
+</div>
+
+<div class="detail-panel" id="detailPanel">
+    <div class="panel-header">
+        <div>
+            <div class="stage-id" id="panelStageId"></div>
+            <div id="panelCapabilityName"></div>
         </div>
-        <div class="panel-content" id="panelContent">
-            <!-- Content populated on click -->
-        </div>
+        <div class="panel-close-btn" onclick="closeDetailPanel()">×</div>
     </div>
+    <div class="panel-content" id="panelContent"></div>
+</div>
 
-    <script>
-        // ============================================================
-        // GOVERNANCE NOTE:
-        // This view is structurally immutable.
-        // Data is ingested from a governed CSV export (SharePoint-ready mapping).
-        // Do NOT hard-code capability mappings in this file.
-        // ============================================================
+<script>
+const CSV_URL = './SharePoint_List_ValueStage_Capability_Import.csv';
 
-        // Put the CSV in the same folder as this HTML (or change path here)
-        const CSV_URL = './SharePoint_List_ValueStage_Capability_Import.csv';
+/* ---------- Robust CSV parser ---------- */
+function parseCSV(text){
+    if(text.charCodeAt(0)===0xFEFF)text=text.slice(1);
+    const rows=[],row=[];let cell='',q=false;
+    for(let i=0;i<text.length;i++){
+        const c=text[i],n=text[i+1];
+        if(c==='"'){
+            if(q && n==='"'){cell+='"';i++} else q=!q;
+        }else if(c===','&&!q){row.push(cell);cell=''}
+        else if((c==='\n'||c==='\r')&&!q){
+            if(c==='\r'&&n==='\n')i++;
+            row.push(cell);cell='';
+            if(row.some(v=>v.trim()))rows.push(row.slice());
+            row.length=0;
+        }else cell+=c;
+    }
+    if(cell||row.length){row.push(cell);if(row.some(v=>v.trim()))rows.push(row)}
+    return rows;
+}
 
-        function toggleFullscreen() {
-            const body = document.body;
-            const btn = document.querySelector('.fullscreen-btn');
-            body.classList.toggle('fullscreen');
-            btn.textContent = body.classList.contains('fullscreen') ? 'Exit' : 'Maximize';
+function val(rec,...keys){
+    for(const k of keys){if(rec[k]&&rec[k].trim())return rec[k].trim()}
+    return '';
+}
+
+async function loadData(){
+    const res=await fetch(CSV_URL,{cache:'no-store'});
+    const text=await res.text();
+    const m=parseCSV(text);
+    const headers=m[0];
+    return m.slice(1).map(r=>{
+        const o={};headers.forEach((h,i)=>o[h]=r[i]||'');
+        return {
+            stageId:val(o,'ValueStageID','Value Stage ID'),
+            stageName:val(o,'ValueStageName','Value Stage Name'),
+            stageDesc:val(o,'ValueStageDescription'),
+            capId:val(o,'CapabilityID','L2CapabilityID'),
+            capName:val(o,'CapabilityName','L2CapabilityName','Title'),
+            capDesc:val(o,'CapabilityDescription'),
+            maturity:val(o,'CapabilityMaturityLevel','Maturity Level'),
+            priority:val(o,'Priority')||'—'
+        };
+    });
+}
+
+function render(data){
+    const map={};
+    data.forEach(r=>{
+        if(!map[r.stageId]){
+            map[r.stageId]={id:r.stageId,name:r.stageName,desc:r.stageDesc,caps:[]};
         }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text ?? '';
-            return div.innerHTML;
-        }
-
-        // Robust CSV parser (handles commas/newlines inside quoted fields)
-        function parseCSV(text) {
-            if (!text) return [];
-
-            // Remove BOM if present
-            if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
-
-            const rows = [];
-            let row = [];
-            let cell = '';
-            let inQuotes = false;
-
-            for (let i = 0; i < text.length; i++) {
-                const c = text[i];
-                const next = text[i + 1];
-
-                if (c === '"') {
-                    if (inQuotes && next === '"') { // escaped quote
-                        cell += '"';
-                        i++;
-                    } else {
-                        inQuotes = !inQuotes;
-                    }
-                } else if (c === ',' && !inQuotes) {
-                    row.push(cell);
-                    cell = '';
-                } else if ((c === '\n' || c === '\r') && !inQuotes) {
-                    // handle CRLF
-                    if (c === '\r' && next === '\n') i++;
-                    row.push(cell);
-                    cell = '';
-                    // ignore trailing blank last row
-                    if (row.some(v => v.trim() !== '')) rows.push(row);
-                    row = [];
-                } else {
-                    cell += c;
-                }
-            }
-            // last cell
-            if (cell.length || row.length) {
-                row.push(cell);
-                if (row.some(v => v.trim() !== '')) rows.push(row);
-            }
-            return rows;
-        }
-
-        function normaliseHeader(h) {
-            return (h ?? '')
-                .replace(/\uFEFF/g, '')
-                .trim();
-        }
-
-        function getField(rec, candidates) {
-            for (const k of candidates) {
-                if (rec[k] !== undefined && rec[k] !== null && String(rec[k]).trim() !== '') {
-                    return String(rec[k]).trim();
-                }
-            }
-            return '';
-        }
-
-        function toInternalRecord(rec) {
-            // Support multiple schemas (SharePoint-ready + legacy embedded)
-            const value_stream_id = getField(rec, ['ValueStageID', 'ValueStageID_B', 'value_stream_id', 'Value Stream ID', 'Value Stream ID ']);
-            const value_stream_name = getField(rec, ['ValueStageName', 'ValueStageName_B', 'value_stream_name', 'Value Stream']);
-            const value_stream_description = getField(rec, ['ValueStageDescription', 'value_stage_description', 'ValueStageDescriotion', 'Description (Level 1)']);
-
-            const capability_id = getField(rec, ['CapabilityID', 'L2CapabilityID', 'capability_id']);
-            const capability_name = getField(rec, ['CapabilityName', 'L2CapabilityName', 'capability_name', 'Title']);
-            const capability_description = getField(rec, ['CapabilityDescription', 'L2CapabilityDescription', 'capability_description']);
-            const maturity_level = getField(rec, ['CapabilityMaturityLevel', 'Maturity Level', 'maturity_level']);
-            const priority = getField(rec, ['Priority', 'priority']);
-
-            return {
-                value_stream_id: value_stream_id || 'UNKNOWN-STAGE',
-                value_stream_name: value_stream_name || 'Unnamed Value Stage',
-                value_stream_description: value_stream_description || '',
-                capability_id: capability_id || 'UNKNOWN-CAP',
-                capability_name: capability_name || 'Unnamed Capability',
-                capability_description: capability_description || '',
-                maturity_level: maturity_level || '—',
-                priority: priority || '—'
-            };
-        }
-
-        async function loadMappingCSV(url) {
-            const res = await fetch(url, { cache: 'no-store' });
-            if (!res.ok) throw new Error(`Could not load CSV (${res.status} ${res.statusText}). Check file path and hosting permissions.`);
-
-            const text = await res.text();
-            const matrix = parseCSV(text);
-            if (matrix.length < 2) throw new Error('CSV loaded but has no data rows.');
-
-            const headers = matrix[0].map(normaliseHeader);
-            const dataRows = matrix.slice(1);
-
-            const records = dataRows.map(r => {
-                const obj = {};
-                headers.forEach((h, i) => obj[h] = (r[i] ?? '').trim());
-                return obj;
-            });
-
-            return records.map(toInternalRecord);
-        }
-
-        function renderStages(data) {
-            const stagesMap = {};
-
-            data.forEach(rec => {
-                const stageId = rec.value_stream_id;
-
-                if (!stagesMap[stageId]) {
-                    stagesMap[stageId] = {
-                        id: stageId,
-                        name: rec.value_stream_name,
-                        description: rec.value_stream_description,
-                        capabilities: []
-                    };
-                }
-
-                stagesMap[stageId].capabilities.push({
-                    id: rec.capability_id,
-                    name: rec.capability_name,
-                    description: rec.capability_description,
-                    maturityLevel: rec.maturity_level,
-                    priority: rec.priority
-                });
-            });
-
-            // Keep stage order stable by sorting by ID where possible (LTX-VS-01..09)
-            const stages = Object.values(stagesMap).sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
-
-            const container = document.getElementById('valueStream');
-            container.innerHTML = '';
-
-            stages.forEach(stage => {
-                const stageDiv = document.createElement('div');
-                stageDiv.className = 'stage';
-
-                const headerDiv = document.createElement('div');
-                headerDiv.className = 'stage-header';
-                headerDiv.innerHTML = `
-                    <div class="stage-header-content">
-                        <div class="stage-id">${escapeHtml(stage.id)}</div>
-                        <div class="stage-name">${escapeHtml(stage.name)}</div>
-                    </div>
-                `;
-                stageDiv.appendChild(headerDiv);
-
-                const capContainer = document.createElement('div');
-                capContainer.className = 'capabilities-container';
-
-                stage.capabilities.forEach(cap => {
-                    const capCard = document.createElement('div');
-                    capCard.className = 'capability-card';
-                    capCard.innerHTML = `
-                        <div class="capability-header">
-                            <div class="capability-name">${escapeHtml(cap.name)}</div>
-                            <div class="capability-toggle">+</div>
-                        </div>
-                    `;
-
-                    capCard.addEventListener('click', () => {
-                        openDetailPanel(stage, cap);
-                    });
-
-                    capContainer.appendChild(capCard);
-                });
-
-                stageDiv.appendChild(capContainer);
-                container.appendChild(stageDiv);
-            });
-        }
-
-        function openDetailPanel(stage, capability) {
-            document.getElementById('panelStageId').textContent = escapeHtml(stage.id);
-            document.getElementById('panelCapabilityName').textContent = escapeHtml(capability.name);
-
-            const panelContent = document.getElementById('panelContent');
-            const html = `
-                <div class="panel-section">
-                    <div class="panel-section-title">Value Stage</div>
-                    <div class="panel-section-content">${escapeHtml(stage.name)}</div>
-                </div>
-
-                ${stage.description ? `
-                <div class="panel-section">
-                    <div class="panel-section-title">Value Stage Description</div>
-                    <div class="panel-section-content">${escapeHtml(stage.description)}</div>
-                </div>` : ''}
-
-                <div class="panel-section">
-                    <div class="panel-section-title">Capability Description</div>
-                    <div class="panel-section-content">${escapeHtml(capability.description)}</div>
-                </div>
-
-                <div class="panel-section">
-                    <div class="panel-section-title">Details</div>
-                    <div class="panel-metadata">
-                        <div class="panel-meta-item">
-                            <div class="panel-meta-label">Maturity Level</div>
-                            <div class="panel-meta-value">${escapeHtml(capability.maturityLevel)}</div>
-                        </div>
-                        <div class="panel-meta-item">
-                            <div class="panel-meta-label">Priority</div>
-                            <div class="panel-meta-value">${escapeHtml(capability.priority)}</div>
-                        </div>
-                        <div class="panel-meta-item">
-                            <div class="panel-meta-label">Capability ID</div>
-                            <div class="panel-meta-value">${escapeHtml(capability.id)}</div>
-                        </div>
-                        <div class="panel-meta-item">
-                            <div class="panel-meta-label">Value Stage ID</div>
-                            <div class="panel-meta-value">${escapeHtml(stage.id)}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            panelContent.innerHTML = html;
-            document.getElementById('detailPanel').classList.add('open');
-        }
-
-        function closeDetailPanel() {
-            document.getElementById('detailPanel').classList.remove('open');
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeDetailPanel();
+        map[r.stageId].caps.push(r);
+    });
+    const stages=Object.values(map).sort((a,b)=>a.id.localeCompare(b.id,undefined,{numeric:true}));
+    const el=document.getElementById('valueStream');
+    el.innerHTML='';
+    stages.forEach(s=>{
+        const d=document.createElement('div');
+        d.className='stage';
+        d.innerHTML=`
+            <div class="stage-id">${s.id}</div>
+            <div class="stage-name">${s.name}</div>
+            <div class="capabilities-container"></div>`;
+        const c=d.querySelector('.capabilities-container');
+        s.caps.forEach(cap=>{
+            const cc=document.createElement('div');
+            cc.className='capability-card';
+            cc.innerHTML=`
+                <div class="capability-header">
+                    <div>${cap.capName}</div>
+                    <div class="capability-toggle">+</div>
+                </div>`;
+            cc.onclick=()=>openDetail(s,cap);
+            c.appendChild(cc);
         });
+        el.appendChild(d);
+    });
+}
 
-        // Render on load
-        document.addEventListener('DOMContentLoaded', async () => {
-            const status = document.getElementById('statusLine');
+function openDetail(stage,cap){
+    document.getElementById('panelStageId').textContent=stage.id;
+    document.getElementById('panelCapabilityName').textContent=cap.capName;
+    document.getElementById('panelContent').innerHTML=`
+        <p>${stage.stageDesc||''}</p><br>
+        <p>${cap.capDesc}</p><br>
+        <p><strong>Maturity:</strong> ${cap.maturity}</p>
+        <p><strong>Priority:</strong> ${cap.priority}</p>
+        <p><strong>Capability ID:</strong> ${cap.capId}</p>`;
+    document.getElementById('detailPanel').classList.add('open');
+}
+function closeDetailPanel(){document.getElementById('detailPanel').classList.remove('open')}
 
-            try {
-                status.innerHTML = `⏳ Loading CSV: <strong>${escapeHtml(CSV_URL)}</strong>`;
-                const records = await loadMappingCSV(CSV_URL);
-
-                renderStages(records);
-
-                status.innerHTML = `<span class="ok">✓ Loaded ${records.length} rows from CSV</span> — <span>${escapeHtml(CSV_URL)}</span>`;
-            } catch (err) {
-                console.error(err);
-                status.innerHTML = `<span class="err">✗ CSV load failed:</span> ${escapeHtml(err.message)}<br><span>Tip: ensure the CSV is in the same folder as this HTML and the first row contains headers.</span>`;
-            }
-        });
-    </script>
+document.addEventListener('DOMContentLoaded',async()=>{
+    const data=await loadData();
+    render(data);
+});
+</script>
 </body>
 </html>
 ``

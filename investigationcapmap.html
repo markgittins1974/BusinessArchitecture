@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRO Investigations Capability Matrix — Complete Current State</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 20px; color: #333; }
+        .container { max-width: 1900px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h1 { color: #1a1a1a; margin-bottom: 8px; font-size: 26px; }
+        .subtitle { color: #666; margin-bottom: 20px; font-size: 12px; }
+        .state-banner { background: #fff8e1; border: 2px solid #f9a825; border-radius: 4px; padding: 12px 15px; margin-bottom: 25px; font-size: 11px; color: #5f3b00; }
+        h2 { color: #2c3e50; margin-top: 30px; margin-bottom: 12px; font-size: 14px; border-bottom: 2px solid #1a5490; padding-bottom: 8px; }
+        .stage-header { background: #2c3e50; color: white; padding: 8px 12px; margin-bottom: 10px; border-radius: 3px; font-weight: 700; font-size: 11px; text-transform: uppercase; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 9px; }
+        thead { background: #f5f5f5; }
+        th { padding: 7px; text-align: left; font-weight: 600; border-bottom: 2px solid #ddd; }
+        td { padding: 7px; border-bottom: 1px solid #eee; line-height: 1.3; }
+        tbody tr:hover { background: #f9f9f9; }
+        .cap-name { font-weight: 600; color: #2c3e50; }
+        .badge { display: inline-block; padding: 2px 5px; border-radius: 2px; font-size: 7px; font-weight: 700; text-transform: uppercase; white-space: nowrap; color: white; margin-right: 2px; }
+        .native { background: #2e7d32; }
+        .config { background: #1a5490; }
+        .custom { background: #ff6f00; }
+        .gap { background: #d32f2f; }
+        .wa { background: #f9a825; }
+        .source { background: #e3f2fd; color: #1a5490; padding: 1px 4px; border-radius: 2px; font-size: 7px; font-weight: 600; display: inline-block; margin-right: 2px; margin-top: 2px; }
+        .note { font-size: 8px; margin-top: 3px; line-height: 1.2; color: #555; }
+        .note-crit { background: #fef5f5; border-left: 2px solid #d32f2f; padding: 3px; color: #5a1a1a; font-weight: 600; }
+        .note-wa { background: #fff8e1; border-left: 2px solid #f9a825; padding: 3px; color: #5f3b00; }
+        .note-lpr { background: #f0f7ff; border-left: 2px solid #1a5490; padding: 3px; color: #0d3a7a; }
+        .summary { background: #e8f5e9; border: 2px solid #2e7d32; border-radius: 4px; padding: 18px; margin-top: 30px; font-size: 11px; line-height: 1.5; }
+        .summary h3 { color: #2e7d32; margin-top: 0; margin-bottom: 10px; font-size: 12px; }
+        .summary ul { margin-left: 20px; }
+        .summary li { margin: 4px 0; }
+        .stat-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin: 18px 0; }
+        .stat-box { border: 1px solid #ddd; border-radius: 3px; padding: 10px; text-align: center; background: #fafafa; }
+        .stat-num { font-size: 16px; font-weight: 700; color: #2c3e50; }
+        .stat-label { font-size: 8px; color: #666; text-transform: uppercase; font-weight: 600; margin-top: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SRO Investigations Capability Matrix</h1>
+        <div class="subtitle">Complete Current-State Model with LPR Framework Integration & Blueprint Findings</div>
+
+```
+    <div class="state-banner">
+        ⚠️ CURRENT STATE (April 2025): Documents SRO investigations as-is. Missing capabilities (GAPS, WORKAROUNDS) identified via LPR framework. These are required for Salesforce automation target (70-80%).
+    </div>
+    
+    <div class="stat-row">
+        <div class="stat-box"><div class="stat-num">23</div><div class="stat-label">Core Capabilities</div></div>
+        <div class="stat-box"><div class="stat-num">8</div><div class="stat-label">SFDC Native</div></div>
+        <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">Config</div></div>
+        <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">Custom Dev</div></div>
+        <div class="stat-box"><div class="stat-num">7</div><div class="stat-label">Gaps/Missing</div></div>
+        <div class="stat-box"><div class="stat-num">11</div><div class="stat-label">LPR Gaps</div></div>
+    </div>
+    
+    <h2>STAGE 1: TRIAGE & VALIDATE (Activities 1-4)</h2>
+    <div class="stage-header">C1-C4: Receive Case, Review PIC, Eligibility, Gate Decision</div>
+    <table>
+        <thead><tr><th style="width:18%">Capability</th><th style="width:9%">SFDC</th><th style="width:10%">Status</th><th style="width:32%">Current State</th><th style="width:31%">Gaps & Findings</th></tr></thead>
+        <tbody>
+            <tr><td class="cap-name">Case Allocation & Intake</td><td><span class="badge native">N</span></td><td>✓ Exists</td><td>Ad-hoc allocation from COI/IR. Manual email tracking. Omni-Channel will formalize.</td><td>LPR C1 equivalent. ✓ Phone + letter exist. <strong>Need:</strong> Portal UI, conditional field logic, client-side validation.<span class="source">WS,P10,P16</span></td></tr>
+            <tr><td class="cap-name">PIC Eligibility Assessment</td><td><span class="badge config">C</span></td><td>⚠ Manual</td><td>Manual checks: recent audit date (CM9/ESys), materiality threshold, time bar. No BRMS. Investigator judgment-based.</td><td>LPR C2 (Validation & Gating). Gap: No BRMS for auto-reject/resubmit flow. <strong>Need:</strong> Rules engine + automated validation gate.<span class="source">WS,P14,P16</span></td></tr>
+            <tr><td class="cap-name">Entity Identity & Relationship Validation</td><td><span class="badge custom">D</span></td><td>⚠ WORKAROUND</td><td>Manual ASIC/ABN/CM9 lookups. No MDM. Deduplication rules missing. Entity matching errors documented (P4, P8: "admin mistakes").</td><td><span class="note-crit">CRITICAL LPR C8 Gap:</span> No Address Matching Engine. Manual entity matching → customer rework burden (P4, P8). MDM MISSING. <strong>Blocker for accuracy.</strong><span class="source">WS,P3,P9,P15,Blueprint:P4,P8</span></td></tr>
+            <tr><td class="cap-name">Prioritisation & Decisioning</td><td><span class="badge native">N</span></td><td>✓ Manual</td><td>Manual prioritization by materiality, recent audit, time bar. No escalation rules. Ad-hoc decisions. Time bar tracking unclear.</td><td>SRO-specific. Not LPR-equivalent. Manual OK. No gap.<span class="source">WS,P16</span></td></tr>
+        </tbody>
+    </table>
+    
+    <h2>STAGE 2: UNDERSTAND (Activities 5-7)</h2>
+    <div class="stage-header">C5-C8: Background Searches, Investigation Plan, Case Setup</div>
+    <table>
+        <thead><tr><th style="width:18%">Capability</th><th style="width:9%">SFDC</th><th style="width:10%">Status</th><th style="width:32%">Current State</th><th style="width:31%">Gaps & Findings</th></tr></thead>
+        <tbody>
+            <tr><td class="cap-name">Customer/Entity Profiling & Background Research</td><td><span class="badge gap">G</span></td><td>❌ MISSING</td><td>Manual investigator searches: COI, ATO, ASIC, Council, utilities, Nearmap (revenue-specific). Separate logins. No integrated view. Data fragmented. ASIC not live in e-Sys (P14). COI hard to read (P5).</td><td><span class="note-crit">CRITICAL LPR C3-C7 Gaps (5 Missing Integrations):</span> RTBA API (C3), ATO batch (C4), Land Titles (C5), DLS (C6), Council (C7). SRO: Manual today. BLOCKER for automation. Blueprint P5, P14 flag data freshness as pain. <strong>Requirement:</strong> Design APIs/batch feeds, data lag documentation, reconciliation jobs.<span class="source">WS,P2,P3,P9,P14,P15,P16,Blueprint:P5,P14</span></td></tr>
+            <tr><td class="cap-name">Cross-Revenue Line Scoping</td><td><span class="badge config">C</span></td><td>⚠ WORKAROUND</td><td>"Duties in e-Sys doesn't communicate with LTX side" (P10, Blueprint). Manual cross-revenue search. No linked-case view. Investigator manually checks both sections.</td><td>SRO-specific complexity. Not LPR-equivalent. Multi-revenue nature. No gap.<span class="source">WS,P3,P15,Blueprint:P10</span></td></tr>
+            <tr><td class="cap-name">Issue & Hypothesis Definition</td><td><span class="badge config">C</span></td><td>✓ Manual</td><td>Unstructured case notes (e-Sys, Lotus Notes). Revenue-line analysis rules not codified. Investigator judgment-driven. Pro-formas used inconsistently.</td><td>LPR C10-13: Tolerance ratings + usage classification require rules engine. SRO: Manual analysis correct (complex judgments). No gap for core logic. <strong>Gap:</strong> Sub-rules (eligibility, gating) could be automated via BRMS.<span class="source">WS,P2,P3,P8</span></td></tr>
+            <tr><td class="cap-name">Investigation Scoping & Planning</td><td><span class="badge config">C</span></td><td>✓ Manual</td><td>Scope defined in Word + e-Sys + CM10. Target period set. Evidence strategy informal. No single source of truth. Duplication across systems.</td><td>LPR C9 (Calendar Year Logic): Basic. SRO date arithmetic minimal. No intensive CY calculations like LPR. No gap.<span class="source">WS,P2,P9,P14,P16</span></td></tr>
+            <tr><td class="cap-name">Case Establishment in ESys/KOI</td><td><span class="badge custom">D</span></td><td>⚠ WORKAROUND</td><td>Manual data entry: COI → e-Sys IC → CM10 case. No API integration. Data re-entry risk. Multiple system entry points.</td><td>LPR C18 (Database Update): Automated via BRMS → API. SRO: Manual today. <strong>Need:</strong> eSys/KOI API integration for IC creation + assessment writes.<span class="source">WS,P9,P14</span></td></tr>
+            <tr><td class="cap-name">Governance & Decision Documentation</td><td><span class="badge native">N</span></td><td>✓ Native</td><td>Decisions logged in Action Notes (e-Sys) + email. No formal approval workflow. Team discussion ad-hoc (email/Teams). Documentation unstructured.</td><td>LPR C14: Manual referral engine (BRMS + BPM). SRO: Manual. <strong>Need:</strong> Salesforce Approval Process + BPM integration (Camunda/Airflow).<span class="source">WS,P2,P8,P11</span></td></tr>
+        </tbody>
+    </table>
+    
+    <h2>STAGE 3: ENGAGE CUSTOMER (Activities 8-10)</h2>
+    <div class="stage-header">C9-C10: Phone Contact, Entry Letter, Wait for Response</div>
+    <table>
+        <thead><tr><th style="width:18%">Capability</th><th style="width:9%">SFDC</th><th style="width:10%">Status</th><th style="width:32%">Current State</th><th style="width:31%">Gaps & Findings</th></tr></thead>
+        <tbody>
+            <tr><td class="cap-name">Customer Contact & Correspondence Management</td><td><span class="badge native">N</span></td><td>⚠ FRAGMENTED</td><td>Phone call (Activity 8) + entry letter via LetterPro (Activity 9, inconsistent template use). Responses: email, post, Dropbox (P5: "customers send via Dropbox" → IT access required). No unified inbox. Manual consolidation to case file.</td><td>Blueprint P5 explicitly flags Dropbox fragmentation. Evidence scattered (email, post, Dropbox, CM9). <strong>Need:</strong> Email-to-Case + centralized document management (Salesforce Files). Unified correspondence view.<span class="source">WS,P2,P3,P8,P9,P15,P16,Blueprint:P5</span></td></tr>
+            <tr><td class="cap-name">Information Request Management & Field Coordination</td><td><span class="badge config">C</span></td><td>⚠ WORKAROUND</td><td>Request tracking: spreadsheets, Action Sheet (P7: "like insurance"), personal lists (P11: "[We need] system with notes on documents requested"). Response deadline set. No auto-escalation if overdue. Manual follow-up. Escalation manual.</td><td>LPR C2/C14: Automated gating + manual referral triggers. SRO: Manual. <strong>Need:</strong> Task automation (Salesforce Task), escalation rules, deadline enforcement, reminder logic.<span class="source">WS,P2,P9,P15,Blueprint:P7,P11</span></td></tr>
+        </tbody>
+    </table>
+    
+    <h2>STAGE 4: GATHER & CLARIFY EVIDENCE (Activities 11-15)</h2>
+    <div class="stage-header">C11-C13: Receive Response, Validate, Gate, Clarification Loop, Save</div>
+    <table>
+        <thead><tr><th style="width:18%">Capability</th><th style="width:9%">SFDC</th><th style="width:10%">Status</th><th style="width:32%">Current State</th><th style="width:31%">Gaps & Findings</th></tr></thead>
+        <tbody>
+            <tr><td class="cap-name">Information Intake & Registration</td><td><span class="badge native">N</span></td><td>⚠ MANUAL</td><td>Evidence received: email, post, Dropbox. Manual filing to CM9. No version control. Chain of custody manual. Blueprint: P5 "Dropbox" evidence means IT access grant, manual download, local filing. Fragmentation risk.</td><td><span class="note-wa">Blueprint explicitly identifies evidence fragmentation as PAIN POINT:</span> 5 locations (email, post, Dropbox, CM9, Salesforce Files). <strong>Need:</strong> Salesforce Files integration + automated consolidation + chain of custody tracking (hash/version).<span class="source">WS,P2,P3,P9,Blueprint:P5</span></td></tr>
+            <tr><td class="cap-name">Evidence Quality & Completeness Assessment</td><td><span class="badge config">C</span></td><td>⚠ WORKAROUND</td><td>Manual investigator checklist: documents requested vs received. No validation gate. Spreadsheet-based (P2, P15). Risk of gaps missed. QA review may flag later. Completeness confirmation ad-hoc.</td><td>LPR C2/C8: Automated validation rules + gating. SRO: Manual. <strong>Need:</strong> Validation checklist as custom fields (Evidence__c), gate before Phase 5, reject + resubmit flow if incomplete.<span class="source">WS,P2,P15,Blueprint:P2,P15</span></td></tr>
+            <tr><td class="cap-name">Clarification & Follow-up Management</td><td><span class="badge custom">D</span></td><td>⚠ LOOP MANUAL</td><td>Clarification letter issued (Activity 14). New deadline set. Loop back to Activity 11 if incomplete. No formal loop tracking. Manual count. Risk: loops spiral without escalation. Multiple clarifications → customer frustration.</td><td>LPR C14: Manual referral engine detects loop triggers. SRO: Manual. <strong>Need:</strong> Loop counter field (Salesforce), alert if >2 clarifications (customer fatigue), escalation to Team Lead.<span class="source">WS,P2,P3,P9,P15</span></td></tr>
+        </tbody>
+    </table>
+    
+    <h2>STAGE 5: ANALYSE & DETERMINE OUTCOME (Activities 16-18)</h2>
+    <div class="stage-header">C14-C17: Analysis, Apply Legislation, Report Production</div>
+    <table>
+        <thead><tr><th style="width:18%">Capability</th><th style="width:9%">SFDC</th><th style="width:10%">Status</th><th style="width:32%">Current State</th><th style="width:31%">Gaps & Findings</th></tr></thead>
+        <tbody>
+            <tr><td class="cap-name">Evidence Analysis & Assessment</td><td><span class="badge gap">G</span></td><td>❌ MISSING RULES</td><td>Manual investigator analysis using spreadsheets. Revenue-line-specific rules (wage variance, grouping, contractor, residency) embedded in knowledge or pro-formas. No rules engine. Risk of inconsistency.</td><td><span class="note-crit">LPR C10-13 Gap (No BRMS):</span> Tolerance ratings + usage classification require rules engine. SRO: Manual analysis correct (complex judgments). <strong>No gap for core logic.</strong> Gap: Sub-rules (eligibility, gating) should be BRMS-automated.<span class="source">WS,P2,P3,P8,P9,P11,P14</span></td></tr>
+            <tr><td class="cap-name">Outcome Determination & Quantification</td><td><span class="badge config">C</span></td><td>⚠ MANUAL CALC</td><td>Liability calculated: spreadsheet + ESys. Results copied to report. Cut-and-paste errors risk (P7: "cut and paste" concern, P10: "how might we automate transfer...reduce cut and paste"). Manual reconciliation.</td><td>LPR C13/C16: BRMS → auto-calculation + doc generation. SRO: Manual. <strong>Need:</strong> Salesforce formula fields to auto-calculate liability from Analysis record (underpayment + interest + penalty).<span class="source">WS,P9,P11,P14,Blueprint:P7,P10</span></td></tr>
+            <tr><td class="cap-name">Quality Assurance & Technical Review</td><td><span class="badge native">N</span></td><td>✓ Manual QA</td><td>Team Lead peer review: email + shared spreadsheet (ad-hoc). No formal checklist. Approval workflow manual. Feedback via email. No documented criteria.</td><td>LPR C15/C19: Investigator portal + approval process. SRO: Manual. <strong>Need:</strong> Salesforce Approval Process to formalize QA routing + SLA tracking.<span class="source">WS,P2,P3,P8,P11</span></td></tr>
+            <tr><td class="cap-name">Investigation Report Production</td><td><span class="badge config">C</span></td><td>⚠ MANUAL</td><td>Manual report writing in Word. LetterPro template used (inconsistently). Data cut-and-pasted from analysis. No auto-population. Template versioning manual. Pro-formas scattered.</td><td><span class="note-wa">Blueprint P10 PAIN POINT:</span> "How might we automate transfer of relevant data into reports...reduce need to cut and paste?" LPR C16: Doc generation (BRMS → Conga/Bibblio). SRO: Manual today. <strong>Need:</strong> Salesforce + doc generation tool (Conga/Bibblio) integration. Template library in Salesforce. Auto-populate from Case/Analysis records.<span class="source">WS,P2,P3,P8,Blueprint:P10</span></td></tr>
+        </tbody>
+    </table>
+    
+    <h2>STAGE 6: APPROVAL (Activities 19-22)</h2>
+    <div class="stage-header">C18-C21: QA Submission, Peer Review, Gate, Rework</div>
+    <table>
+        <thead><tr><th style="width:18%">Capability</th><th style="width:9%">SFDC</th><th style="width:10%">Status</th><th style="width:32%">Current State</th><th style="width:31%">Gaps & Findings</th></tr></thead>
+        <tbody>
+            <tr><td class="cap-name">QA Routing & Submission</td><td><span class="badge native">N</span></td><td>✓ Manual</td><td>Manual email to Team Lead. Ad-hoc routing. No formal workflow engine. Submission timing unclear. Escalation manual.</td><td>LPR C14/C19: Manual referral engine (BRMS + BPM) + approval process. SRO: Manual. <strong>Need:</strong> Salesforce Approval Process + Camunda/Airflow integration for formal routing.<span class="source">WS,P2,P8</span></td></tr>
+            <tr><td class="cap-name">QA Review Checklist & Tracking</td><td><span class="badge config">C</span></td><td>⚠ WORKAROUND</td><td>Team Lead manual review: evidence supports findings? methodology sound? consistency check? Checklist ad-hoc or mental. Tracked in shared spreadsheet (if tracked at all). No standardization.</td><td><span class="note-lpr">LPR C15 (Investigator Portal):</span> Case context pane + conflict guidance + decision form. SRO: Zero portal. Blueprint: manual email-based QA. <strong>Need:</strong> Portal UI with QA checklist + case context + guided workflow + mobile-responsive.<span class="source">WS,P2,P3,P8,P11</span></td></tr>
+            <tr><td class="cap-name">Approval Gate & Decision Routing</td><td><span class="badge native">N</span></td><td>✓ Manual</td><td>Team Lead approval decision: email response. Approve or request rework. Manual decision capture. No audit trail. Routing ad-hoc.</td><td>LPR C14: Manual referral engine detects gates. SRO: Manual. <strong>Need:</strong> Salesforce Approval Process to automate gate routing + audit trail.</td></tr>
+            <tr><td class="cap-name">Rework Tracking & Loop Management</td><td><span class="badge config">C</span></td><td>⚠ WORKAROUND</td><td>Investigator revises report (Activity 22 loop). Resubmits to QA. No loop count. Manual tracking. Risk: loops spiral. No escalation threshold.</td><td>LPR C14: Alert if manual SLA breached (5d). SRO: No SLA tracking. <strong>Need:</strong> Loop counter field, escalation alert if >2 reworks, Team Lead escalation.</td></tr>
+        </tbody>
+    </table>
+    
+    <h2>STAGE 7: OUTCOME & CLOSURE (Activities 23-30)</h2>
+    <div class="stage-header">C22-C24: Gate (NFA or Assessment), Issue Letter, Close</div>
+    <table>
+        <thead><tr><th style="width:18%">Capability</th><th style="width:9%">SFDC</th><th style="width:10%">Status</th><th style="width:32%">Current State</th><th style="width:31%">Gaps & Findings</th></tr></thead>
+        <tbody>
+            <tr><td class="cap-name">Outcome Documentation & Communication</td><td><span class="badge config">C</span></td><td>✓ Manual</td><td>NFA or assessment letter via LetterPro. Manual mail merge. Response tracking manual. Issued via post or email. Template inconsistently applied.</td><td>LPR C16/C18: Auto-generation + database update. SRO: Manual. <strong>Need:</strong> BRMS → LetterPro/Conga auto-population. Outcome routing logic (NFA vs Assessment).<span class="source">WS,P2,P3,P8,P9</span></td></tr>
+            <tr><td class="cap-name">Assessment Issuance & Closure</td><td><span class="badge config">C</span></td><td>⚠ MANUAL ENTRY</td><td>Manual assessment creation in ESys. Case marked closed (Activities 25, 29). No API integration. Downstream teams notified via email. Cease date calculated manual.</td><td>LPR C18: BRMS → eSys API write. SRO: Manual. <strong>Need:</strong> Salesforce → eSys API integration. Automated assessment record creation. Downstream notification (Chatter, email).<span class="source">WS,P9,P14</span></td></tr>
+            <tr><td class="cap-name">Knowledge Capture & Continuous Improvement</td><td><span class="badge config">C</span></td><td>⚠ AD-HOC</td><td>Case comments document lessons (Salesforce Chatter if used). No formal feedback loop. Team retrospectives ad-hoc. No pattern analysis. Lessons not codified.</td><td>LPR C19: Performance monitoring (automation %, latency, accuracy). SRO: Zero. <strong>Need:</strong> Prometheus/Grafana dashboard. Track: automation rate, manual SLA (5d), QA rework %, evidence completeness %, accuracy rate (sample audit).<span class="source">WS,P2,P3,P8</span></td></tr>
+        </tbody>
+    </table>
+    
+    <h2>MISSING LAYERS (LPR Framework Gaps — Required for Automation)</h2>
+    <div class="stage-header">Data Integration, Decision Engine, Portal, Monitoring — Current State: ❌ NOT IMPLEMENTED</div>
+    <table>
+        <thead><tr><th style="width:22%">LPR Capability</th><th style="width:10%">Status</th><th style="width:35%">Purpose</th><th style="width:33%">Implementation Requirement</th></tr></thead>
+        <tbody>
+            <tr><td class="cap-name" style="color: #d32f2f;"><strong>C3: RTBA Bond Data Integration</strong></td><td><span class="badge gap">MISSING</span></td><td>Fetch RTBA bond lodge date, status, amount (real-time or daily batch). Current: Manual Activity 5 search.</td><td><strong>CRITICAL BLOCKER.</strong> Design: RTBA API contract or daily SFTP. Caching job. Reconciliation. Target lag <2 days. Fallback: previous day cached data if API fails.<span class="source">LPR C3</span></td></tr>
+            <tr><td class="cap-name" style="color: #d32f2f;"><strong>C4: ATO Rental Data Integration</strong></td><td><span class="badge gap">MISSING</span></td><td>Fetch ATO rental income reporting (rental start date, address). Weekly batch. Current: Manual Activity 5 search.</td><td><strong>CRITICAL BLOCKER.</strong> Design: ATO SFTP contract. Weekly load. Document data lag (3-6 months typical). Null handling: fallback to customer date.<span class="source">LPR C4</span></td></tr>
+            <tr><td class="cap-name" style="color: #d32f2f;"><strong>C5: Land Titles Ownership Integration</strong></td><td><span class="badge gap">MISSING</span></td><td>Fetch property registration (ownership chain, registration date, ownership %). Weekly batch. Current: Manual Activity 5 search.</td><td><strong>CRITICAL BLOCKER.</strong> Design: Land Titles API/batch. Extract ownership % for JO properties. Registration date → possession date fallback. Weekly load, ~1-2 week lag expected.<span class="source">LPR C5</span></td></tr>
+            <tr><td class="cap-name" style="color: #d32f2f;"><strong>C6: DLS Residential Address Integration</strong></td><td><span class="badge gap">MISSING</span></td><td>Fetch owner residential address at time of sale (DLS data). Monthly batch. Most reliable address source. Current: Manual Activity 5 search.</td><td><strong>CRITICAL BLOCKER.</strong> Design: DLS API/batch. Address standardization (USPS/AusPost library). Monthly load. Fallback for Council data if DLS null. Critical for address matching accuracy.<span class="source">LPR C6</span></td></tr>
+            <tr><td class="cap-name" style="color: #d32f2f;"><strong>C7: Council Residential Address Integration</strong></td><td><span class="badge gap">MISSING</span></td><td>Fetch Council tax/rates residential address (fallback). Quarterly batch. Current: Manual Activity 5 search.</td><td><strong>HIGH PRIORITY.</strong> Design: Council API/batch. Fallback if DLS null. Data quality variable by council. Quarterly load. 3-6 month freshness expected.<span class="source">LPR C7</span></td></tr>
+            <tr><td class="cap-name" style="color: #d32f2f;"><strong>C8: Address Matching Engine</strong></td><td><span class="badge gap">MISSING</span></td><td>Fuzzy address matching (exact/partial/no match). Standardize addresses (abbreviations, unit numbers). Current: Manual investigator comparison (Activity 3-5).</td><td><strong>CRITICAL for accuracy.</strong> Implement: USPS/AusPost library + fuzzy matching. Handle abbreviations (St→Street), unit numbers. Investigator override capability. Critical blocker identified by Blueprint (P4, P8 entity errors).<span class="source">LPR C8</span></td></tr>
+            <tr><td class="cap-name" style="color: #d32f2f;"><strong>BRMS Rule Engine</strong></td><td><span class="badge gap">MISSING</span></td><td>Execute: validation gating (C2), manual referral triggers (C14), decision logic, doc generation parameters. Current: Manual or ad-hoc.</td><td><strong>FOUNDATIONAL BLOCKER.</strong> Evaluate: Drools (open-source), Corticon, AWS Decision Automation. Prototype week 2. Rule modules: validation, referral triggers, case routing, doc parameters. Version control + deployment pipeline.<span class="source">LPR C4.1</span></td></tr>
+            <tr><td class="cap-name" style="color: #d32f2f;"><strong>Investigator Portal / Manual Case Workbench</strong></td><td><span class="badge gap">MISSING</span></td><td>UI for manual cases: case summary, BI data pane, conflict guidance, decision form, approval. Current: Email + spreadsheet (Blueprint: P7, P11). Zero today.</td><td><strong>HIGH IMPACT on manual SLA (5d).</strong> Build: React/Vue frontend, Node.js/Python backend. Panes: (a) Case summary (customer, property, claim), (b) BI data (RTBA, ATO, Land Titles, DLS, Council), (c) Conflict guidance (tolerance ratings, suggested action), (d) Decision form (Accept/Override/Request More Info), (e) Approval workflow. Mobile-responsive. User research with 2-3 investigators. Accessibility (WCAG 2.1 AA).<span class="source">LPR C15</span></td></tr>
+            <tr><td class="cap-name" style="color: #d32f2f;"><strong>Automated Document Generation</strong></td><td><span class="badge gap">MISSING</span></td><td>BRMS → LetterPro/Conga auto-populate investigation reports + outcome letters. Current: Manual copy-paste from spreadsheet (Activity 18, Blueprint P10 pain point).</td><td><strong>Blueprint explicitly flagged (P10): "automate transfer...reduce cut and paste".</strong> Design: BRMS → Conga/Bibblio integration. Template versioning in Salesforce. Auto-populate: case details, analysis results, liability amounts. Audit trail. Manual cases: investigator completes before approval.<span class="source">LPR C16</span></td></tr>
+            <tr><td class="cap-name" style="color: #d32f2f;"><strong>Data Quality Monitoring</strong></td><td><span class="badge gap">MISSING</span></td><td>Monitor RTBA/ATO/Land Titles/DLS/Council data freshness (lag days), null rates, schema drift. Auto-alerting. Current: None. Blueprint flagged ASIC not live, COI hard to read.</td><td><strong>PREVENTS SILENT FAILURES.</strong> Implement: Great Expectations/Soda. Checks: (a) Freshness: RTBA <2d, ATO <7d, alert if >lag. (b) Null rates: alert >5%. (c) Schema drift: new/missing/renamed fields. (d) Reconciliation: records fetched vs expected count. Daily run (overnight). Alert: email + dashboard. Remediation: pause automation for affected cases, route to manual.<span class="source">LPR C20</span></td></tr>
+            <tr><td class="cap-name" style="color: #d32f2f;"><strong>Performance Monitoring & SLA Dashboard</strong></td><td><span class="badge gap">MISSING</span></td><td>Real-time metrics: automation %, decision latency p95, SLA compliance, accuracy rate. Current: No monitoring infrastructure.</td><td><strong>OPERATIONAL VISIBILITY for continuous improvement.</strong> Implement: Prometheus/Grafana or Splunk. Metrics: (a) Automation rate (% auto-approved), target 70-80%. (b) Manual resolution time (SLA 5d), track p95. (c) QA rework rate (% cases reworked >1x). (d) Evidence completeness (% cases gate pass first time). (e) Accuracy rate (sample audit: 50 auto-approved cases/month, verify correct decision). (f) Error rates by decision type. Dashboard refresh: hourly (real-time), daily (SLA report). Alerts: if automation <60% or SLA breached, escalate ops team.<span class="source">LPR C19</span></td></tr>
+        </tbody>
+    </table>
+    
+    <div class="summary">
+        <h3>✓ Current-State Assessment & Salesforce Readiness</h3>
+        <ul>
+            <li><strong>23 Core Capabilities Documented (7 Stages):</strong> Triage → Understand → Engage → Gather → Analyse → Approval → Closure. Process flow is sound. Execution is investigator-driven, manual, with documented workarounds.</li>
+            <li><strong>8 SFDC Native + 4 Config + 4 Custom:</strong> 16 capabilities can be implemented in Salesforce. Covers case management, approval workflows, document storage, task automation, communications.</li>
+            <li><strong>11 LPR Framework Gaps (Data Integration, BRMS, Portal, Monitoring):</strong> CRITICAL for automation target. These are NOT SRO failures; they are SCOPE gaps identified via LPR framework comparison. Required investments for 70-80% automation.</li>
+            <li><strong>Blueprint Findings Integrated:</strong> 11 workarounds documented (Action Sheet, spreadsheets, manual searches). Data quality issues (ASIC not live, COI hard to read). Evidence fragmentation (email, post, Dropbox). Automation pain points (cut-and-paste, manual clarifications, email-based QA).</li>
+            <li><strong>Criticality Assessment:</strong> 6 capabilities are BLOCKERS (entity deduplication, data integrations C3-C7, BRMS, address matching, investigator portal). Must be solved before Salesforce go-live.</li>
+        </ul>
+    </div>
+    
+</div>
+```
+
+</body>
+</html>

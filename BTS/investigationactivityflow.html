@@ -1,0 +1,770 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investigation Case Process - Diagram & Details</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: #1e3a8a;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 40px;
+            font-size: 15px;
+        }
+
+        /* DIAGRAM SECTION */
+        .diagram-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .diagram-title {
+            color: #1e3a8a;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            background: #fafbfc;
+            padding: 30px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        /* SEARCH SECTION */
+        .search-section {
+            margin-bottom: 40px;
+        }
+
+        .search-box {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #1e3a8a;
+            background: #f0f4ff;
+        }
+
+        .search-label {
+            font-size: 12px;
+            color: #64748b;
+            align-self: center;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        /* TABLE SECTION */
+        .table-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        .table-title {
+            color: #1e3a8a;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: #f9fafb;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        th {
+            padding: 14px;
+            text-align: left;
+            font-weight: 700;
+            color: #1e3a8a;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        tr.hidden {
+            display: none;
+        }
+
+        .activity-code {
+            font-weight: 700;
+            color: #1e3a8a;
+            white-space: nowrap;
+        }
+
+        .activity-name {
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+
+        .activity-description {
+            color: #64748b;
+            line-height: 1.5;
+            font-size: 12px;
+        }
+
+        .inputs, .outputs, .decision {
+            color: #475569;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .source {
+            color: #94a3b8;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge.gate {
+            background: #fef08a;
+            color: #b45309;
+            border: 1px solid #ca8a04;
+        }
+
+        .badge.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #dc2626;
+        }
+
+        .badge.service {
+            background: #dbeafe;
+            color: #0c4a6e;
+            border: 1px solid #0284c7;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .search-info {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 10px;
+            padding: 0 20px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 30px;
+            padding: 20px 0;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .legend-box.gate {
+            background: #fef08a;
+            border: 1px solid #ca8a04;
+        }
+
+        .legend-box.error {
+            background: #fee2e2;
+            border: 1px solid #dc2626;
+        }
+
+        .legend-box.service {
+            background: #dbeafe;
+            border: 1px solid #0284c7;
+        }
+
+        .legend-box.end {
+            background: #dcfce7;
+            border: 1px solid #16a34a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Investigation Case Process</h1>
+        <p class="subtitle">Complete process flow from PIC receipt (ACT01) through case closure (ACT29/ACT31)</p>
+
+        <!-- DIAGRAM -->
+        <div class="diagram-section">
+            <div class="diagram-title">Process Flow Diagram</div>
+            <div class="mermaid">
+graph TD
+    START["🔵 PIC Received"]
+    ACT01["ACT01: Receive<br/>Case Allocation"]
+    ACT02["ACT02: Review PIC<br/>Details & Scope"]
+    ACT03["ACT03: Conduct<br/>Eligibility Checks"]
+    ACT04{"🔶 ACT04:<br/>Case Valid?"}
+    ACT05["ACT05: Conduct<br/>Background Searches"]
+    ACT06["ACT06: Plan<br/>Investigation"]
+    ACT07["ACT07: Create<br/>Investigation Case"]
+    ACT08["ACT08: Contact<br/>Customer by Phone"]
+    ACT09["ACT09: Draft & Issue<br/>Entry Letter"]
+    ACT10["ACT10: Wait for<br/>Response"]
+    ACT11["ACT11: Receive<br/>Customer Response"]
+    ACT12["ACT12: Validate<br/>Completeness & Quality"]
+    ACT13{"🔶 ACT13:<br/>Info Complete?"}
+    ACT14["ACT14: Request<br/>Clarification"]
+    ACT15["ACT15: Save Evidence<br/>to System"]
+    ACT16["ACT16: Conduct<br/>Analysis"]
+    ACT17["ACT17: Apply Legislation<br/>& Determine Findings"]
+    ACT18["ACT18: Produce<br/>Investigation Report"]
+    ACT19["ACT19: Submit Report<br/>for QA"]
+    ACT20["ACT20: Peer Review<br/>QA Checklist"]
+    ACT21{"🔶 ACT21:<br/>Approved?"}
+    ACT22["ACT22: QA Rework<br/>& Resubmit"]
+    ACT23{"🔶 ACT23:<br/>NFA or Assessment?"}
+    ACT24["ACT24: Issue NFA<br/>Exit Letter"]
+    ACT25A["ACT25: Close IC<br/>NFA Pathway"]
+    ACT27["ACT27: Calculate<br/>& Generate Assessment"]
+    ACT28["ACT28: Issue Assessment<br/>Notice & Exit Letter"]
+    ACT29["ACT29: Close IC<br/>Assessment Pathway"]
+    ACT31["ACT31: Kill PIC<br/>Ineligible"]
+    END1["⛔ PIC Terminated"]
+    END2["✅ NFA Closed"]
+    END3["✅ Assessment Closed"]
+
+    START --> ACT01
+    ACT01 --> ACT02
+    ACT02 --> ACT03
+    ACT03 --> ACT04
+    ACT04 -->|No| ACT31
+    ACT31 --> END1
+    ACT04 -->|Yes| ACT05
+    ACT05 --> ACT06
+    ACT06 --> ACT07
+    ACT07 --> ACT08
+    ACT08 --> ACT09
+    ACT09 --> ACT10
+    ACT10 --> ACT11
+    ACT11 --> ACT12
+    ACT12 --> ACT13
+    ACT13 -->|No| ACT14
+    ACT14 --> ACT11
+    ACT13 -->|Yes| ACT15
+    ACT15 --> ACT16
+    ACT16 --> ACT17
+    ACT17 --> ACT18
+    ACT18 --> ACT19
+    ACT19 --> ACT20
+    ACT20 --> ACT21
+    ACT21 -->|No| ACT22
+    ACT22 --> ACT19
+    ACT21 -->|Yes| ACT23
+    ACT23 -->|NFA| ACT24
+    ACT24 --> ACT25A
+    ACT25A --> END2
+    ACT23 -->|Assessment| ACT27
+    ACT27 --> ACT28
+    ACT28 --> ACT29
+    ACT29 --> END3
+
+    style ACT04 fill:#fef08a,stroke:#ca8a04,stroke-width:2px
+    style ACT13 fill:#fef08a,stroke:#ca8a04,stroke-width:2px
+    style ACT21 fill:#fef08a,stroke:#ca8a04,stroke-width:2px
+    style ACT23 fill:#fef08a,stroke:#ca8a04,stroke-width:2px
+    style ACT31 fill:#fee2e2,stroke:#dc2626,stroke-width:2px
+    style END1 fill:#fee2e2,stroke:#dc2626,stroke-width:2px
+    style END2 fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+    style END3 fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-box gate">🔶</div>
+                    <span>Decision Gate</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box service">⬜</div>
+                    <span>Service Task</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box error">❌</div>
+                    <span>Termination</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box end">✅</div>
+                    <span>End State</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="search-section">
+            <div class="search-box">
+                <label class="search-label">🔍 Search:</label>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search by activity code, name, inputs, outputs, or decision...">
+            </div>
+            <div class="search-info">
+                Search results: <strong id="resultCount">30</strong> activities | Type to filter
+            </div>
+        </div>
+
+        <!-- DETAILS TABLE -->
+        <div class="table-section">
+            <div class="table-title">Activity Details</div>
+            <table id="detailsTable">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Activity Name</th>
+                        <th>Description</th>
+                        <th>Inputs</th>
+                        <th>Outputs</th>
+                        <th>Decision / Rule</th>
+                        <th>Source</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+            <div class="no-results" id="noResults" style="display: none;">
+                No activities match your search. Try different keywords.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        mermaid.contentLoaded();
+
+        const activities = [
+            {
+                code: 'ACT01',
+                name: 'Receive Case Allocation',
+                type: 'service',
+                description: 'Receipt of a Preliminary Investigation Case (PIC) and allocation to an investigator for triage and assessment.',
+                inputs: 'PRELIMINARY INVESTIGATION CASE (PIC)',
+                outputs: 'Assigned Investigator',
+                decision: 'Not explicitly specified',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT02',
+                name: 'Review PIC Details & Scope',
+                type: 'service',
+                description: 'Review PIC trigger, revenue line, entity details, period, and risk indicators to frame scope.',
+                inputs: 'PRELIMINARY INVESTIGATION CASE (PIC)',
+                outputs: 'Scope Confirmed',
+                decision: 'Not explicitly specified',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT03',
+                name: 'Conduct Eligibility Checks',
+                type: 'service',
+                description: 'Assess whether PIC meets legislative, policy, and operational criteria (jurisdiction, timeliness, materiality, authority).',
+                inputs: 'PRELIMINARY INVESTIGATION CASE (PIC)',
+                outputs: 'Eligibility Determined',
+                decision: 'Determine eligibility (criteria not detailed in sources)',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT04',
+                name: 'Case Valid? (GATE)',
+                type: 'gate',
+                description: 'Decision point determining whether PIC proceeds or is terminated.',
+                inputs: 'PRELIMINARY INVESTIGATION CASE (PIC)',
+                outputs: 'Proceed; PIC Terminated',
+                decision: 'Proceed vs terminate the PIC',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT05',
+                name: 'Conduct Background Searches',
+                type: 'service',
+                description: 'Execute internal/external background searches for context about customer, related entities, ownership, holdings, compliance history.',
+                inputs: 'CUSTOMER; PRELIMINARY INVESTIGATION CASE (PIC)',
+                outputs: 'BACKGROUND_SEARCH',
+                decision: 'Not explicitly specified',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT06',
+                name: 'Plan Investigation',
+                type: 'service',
+                description: 'Define investigation approach, scope, period, required information, sequencing, and complexity.',
+                inputs: 'CUSTOMER; PIC; BACKGROUND_SEARCH',
+                outputs: 'Investigation Plan',
+                decision: 'Planning choices (scope/sequence) not specified as formal rules',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT07',
+                name: 'Create Investigation Case',
+                type: 'service',
+                description: 'Create the Investigation Case as the authoritative record consolidating activity, artefacts, correspondence, evidence, and outcomes.',
+                inputs: 'CUSTOMER; PIC; RELATED_ENTITY; BACKGROUND_SEARCH',
+                outputs: 'INVESTIGATION_CASE (IC)',
+                decision: 'Mandatory fields: Revenue Line, Liability Period, Investigation Project, Team, Investigator, Industry Code',
+                source: 'investigations1 | HTML'
+            },
+            {
+                code: 'ACT08',
+                name: 'Contact Customer by Phone',
+                type: 'service',
+                description: 'Initial verbal contact to notify customer and set expectations before written correspondence.',
+                inputs: 'CUSTOMER; INVESTIGATION_CASE (IC)',
+                outputs: 'Customer Contacted',
+                decision: 'Not explicitly specified',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT09',
+                name: 'Draft & Issue Entry Letter',
+                type: 'service',
+                description: 'Prepare and issue entry letter outlining scope, documents required, deadlines, rights and obligations.',
+                inputs: 'CUSTOMER; INVESTIGATION_CASE (IC)',
+                outputs: 'CORRESPONDENCE (Entry Letter)',
+                decision: 'Not explicitly specified',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT10',
+                name: 'Wait for Response',
+                type: 'service',
+                description: 'Pause while customer gathers and submits requested information within deadline.',
+                inputs: 'CORRESPONDENCE; INVESTIGATION_CASE (IC)',
+                outputs: 'Response Awaited',
+                decision: 'Not explicitly specified',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT11',
+                name: 'Receive Customer Response',
+                type: 'service',
+                description: 'Receipt of documents, data, and explanations from customer via multiple channels.',
+                inputs: 'CORRESPONDENCE; INVESTIGATION_CASE (IC)',
+                outputs: 'EVIDENCE',
+                decision: 'Not explicitly specified',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT12',
+                name: 'Validate Completeness & Quality',
+                type: 'service',
+                description: 'Assess evidence completeness/readability/relevance/sufficiency; identify gaps.',
+                inputs: 'EVIDENCE; INVESTIGATION_CASE (IC)',
+                outputs: 'Validation_Status',
+                decision: 'Determine evidence quality/completeness (criteria not specified)',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT13',
+                name: 'Info Complete? (GATE)',
+                type: 'gate',
+                description: 'Decision point whether evidence is sufficient to proceed to analysis or needs clarification.',
+                inputs: 'EVIDENCE; INVESTIGATION_CASE (IC)',
+                outputs: 'Proceed; Clarification Required',
+                decision: 'Proceed vs request clarification',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT14',
+                name: 'Request Clarification',
+                type: 'service',
+                description: 'Request additional information/clarification/correction where evidence is incomplete or inconsistent.',
+                inputs: 'EVIDENCE; INVESTIGATION_CASE (IC)',
+                outputs: 'Clarification Requested',
+                decision: 'Not explicitly specified',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT15',
+                name: 'Save Evidence to System',
+                type: 'service',
+                description: 'Store validated evidence in official repository to ensure traceability and auditability.',
+                inputs: 'EVIDENCE; INVESTIGATION_CASE (IC)',
+                outputs: 'Evidence Stored',
+                decision: 'TRIM folder structure created including IC folder for correspondence storage',
+                source: 'investigations1 | HTML'
+            },
+            {
+                code: 'ACT16',
+                name: 'Conduct Analysis',
+                type: 'service',
+                description: 'Analyse evidence and background info to identify discrepancies, assess compliance, quantify liabilities, and form preliminary conclusions.',
+                inputs: 'EVIDENCE; BACKGROUND_SEARCH; INVESTIGATION_CASE (IC)',
+                outputs: 'Analysis Completed',
+                decision: 'CS210 automatically splits liability periods; detection reasons must sum to 100%',
+                source: 'investigations1 | HTML'
+            },
+            {
+                code: 'ACT17',
+                name: 'Apply Legislation & Determine Findings',
+                type: 'service',
+                description: 'Apply legislation/rulings/policy to analysis to determine non-compliance and breach type.',
+                inputs: 'ANALYSIS_COMPLETED; INVESTIGATION_CASE (IC)',
+                outputs: 'Findings Determined',
+                decision: 'Determine whether non-compliance occurred (specific legal tests not provided)',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT18',
+                name: 'Produce Investigation Report',
+                type: 'service',
+                description: 'Produce report documenting methodology, evidence, analysis, findings, recommended outcomes.',
+                inputs: 'FINDINGS; INVESTIGATION_CASE (IC)',
+                outputs: 'Investigation Report',
+                decision: 'Not explicitly specified',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT19',
+                name: 'Submit Report for QA',
+                type: 'service',
+                description: 'Submit report for QA review.',
+                inputs: 'Investigation Report',
+                outputs: 'Submitted for QA',
+                decision: 'Not explicitly specified',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT20',
+                name: 'Peer Review (QA Checklist)',
+                type: 'service',
+                description: 'Peer review against QA checklist.',
+                inputs: 'Investigation Report',
+                outputs: 'QA Feedback',
+                decision: 'Not explicitly specified (checklist criteria not provided)',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT21',
+                name: 'Approved? (GATE)',
+                type: 'gate',
+                description: 'Decision point whether findings are approved or require rework before outcome issuance.',
+                inputs: 'QA Feedback',
+                outputs: 'Approved; Rework Required',
+                decision: 'Approve vs rework',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT22',
+                name: 'QA Rework & Resubmit',
+                type: 'service',
+                description: 'Rework report to address QA feedback and resubmit.',
+                inputs: 'QA Feedback',
+                outputs: 'Reworked Report',
+                decision: 'Not explicitly specified',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT23',
+                name: 'NFA or Assessment? (GATE)',
+                type: 'gate',
+                description: 'Decision point whether outcome is No Further Action (NFA) or proceeds to assessment.',
+                inputs: 'Approved Findings',
+                outputs: 'NFA Path; Assessment Path',
+                decision: 'NFA vs assessment',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT24',
+                name: 'Issue NFA Exit Letter',
+                type: 'service',
+                description: 'Issue correspondence advising customer no further action will be taken.',
+                inputs: 'Approved Findings',
+                outputs: 'NFA Issued',
+                decision: 'Not explicitly specified',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT25A',
+                name: 'Close IC (NFA Pathway)',
+                type: 'service',
+                description: 'Administrative closure of the Investigation Case following an NFA decision.',
+                inputs: 'INVESTIGATION_CASE (IC)',
+                outputs: 'IC Closed',
+                decision: 'Non-compliance reasons mandatory when closing; closure ceases active "Under Investigation" non-issues',
+                source: 'investigations1 | HTML'
+            },
+            {
+                code: 'ACT27',
+                name: 'Calculate & Generate Assessment',
+                type: 'service',
+                description: 'Calculate liability/interest/penalties and generate assessment based on findings.',
+                inputs: 'Approved Findings',
+                outputs: 'ASSESSMENT',
+                decision: 'Assessments linked to IC; only within liability period; revenue-line-specific rules apply',
+                source: 'investigations1 | HTML'
+            },
+            {
+                code: 'ACT28',
+                name: 'Issue Assessment Notice & Exit Letter',
+                type: 'service',
+                description: 'Issue assessment notice and exit correspondence communicating the outcome.',
+                inputs: 'ASSESSMENT; CUSTOMER',
+                outputs: 'Assessment Issued',
+                decision: 'Not explicitly specified',
+                source: 'SCP scope | Meeting'
+            },
+            {
+                code: 'ACT29',
+                name: 'Close IC (Assessment Pathway)',
+                type: 'service',
+                description: 'Administrative closure of the Investigation Case following assessment issuance.',
+                inputs: 'INVESTIGATION_CASE (IC)',
+                outputs: 'IC Closed',
+                decision: 'Non-compliance reasons mandatory; reopening restricted to INV_ADMIN group users',
+                source: 'investigations1 | HTML'
+            },
+            {
+                code: 'ACT31',
+                name: 'Kill PIC (Ineligible)',
+                type: 'error',
+                description: 'Terminate a PIC determined to be ineligible before an IC is created.',
+                inputs: 'PRELIMINARY INVESTIGATION CASE (PIC)',
+                outputs: 'PIC Terminated',
+                decision: 'PIC is ineligible → terminate (criteria not detailed in sources)',
+                source: 'SCP scope | Meeting'
+            }
+        ];
+
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                document.getElementById('noResults').style.display = 'block';
+                document.getElementById('resultCount').textContent = '0';
+                return;
+            }
+
+            document.getElementById('noResults').style.display = 'none';
+            document.getElementById('resultCount').textContent = data.length;
+
+            data.forEach(activity => {
+                const row = document.createElement('tr');
+                const badgeClass = `badge ${activity.type}`;
+                
+                row.innerHTML = `
+                    <td><span class="activity-code">${activity.code}</span></td>
+                    <td><span class="activity-name">${activity.name}</span></td>
+                    <td><span class="activity-description">${activity.description}</span></td>
+                    <td><span class="inputs">${activity.inputs}</span></td>
+                    <td><span class="outputs">${activity.outputs}</span></td>
+                    <td><span class="decision">${activity.decision}</span></td>
+                    <td><span class="source">${activity.source}</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function filterActivities() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (!searchTerm) {
+                renderTable(activities);
+                return;
+            }
+
+            const filtered = activities.filter(activity =>
+                activity.code.toLowerCase().includes(searchTerm) ||
+                activity.name.toLowerCase().includes(searchTerm) ||
+                activity.description.toLowerCase().includes(searchTerm) ||
+                activity.inputs.toLowerCase().includes(searchTerm) ||
+                activity.outputs.toLowerCase().includes(searchTerm) ||
+                activity.decision.toLowerCase().includes(searchTerm)
+            );
+
+            renderTable(filtered);
+        }
+
+        document.getElementById('searchInput').addEventListener('input', filterActivities);
+        
+        // Initial render
+        renderTable(activities);
+    </script>
+</body>
+</html>

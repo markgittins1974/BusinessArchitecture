@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SRO Investigations Capability Map</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding: 40px 20px;
+      overflow-x: auto;
+    }
+
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .header {
+      margin-bottom: 40px;
+      text-align: left;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #0f2847;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #555;
+      font-weight: 400;
+    }
+
+    /* Main horizontal swimlane container */
+    .swimlane-container {
+      display: flex;
+      gap: 32px;
+      min-height: 600px;
+      padding-bottom: 40px;
+      position: relative;
+    }
+
+    .stage-swimlane {
+      flex: 1;
+      min-width: 280px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .stage-header {
+      background: linear-gradient(135deg, #1f3a5a 0%, #2d5080 100%);
+      color: #fff;
+      padding: 20px 16px;
+      border-radius: 8px 8px 0 0;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(31, 58, 90, 0.15);
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Arc connector from stage header to capabilities */
+    .stage-header::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 20px;
+      background: linear-gradient(180deg, rgba(79, 129, 189, 0.6) 0%, transparent 100%);
+    }
+
+    .capabilities-column {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 40px;
+    }
+
+    .capability-card {
+      background: #fff;
+      border: 2px solid #d0d4da;
+      border-left: 5px solid #4f81bd;
+      padding: 14px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.3;
+      color: #222;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .capability-card:hover {
+      background: #f8f9fa;
+      border-color: #4f81bd;
+      border-left: 5px solid #2d5080;
+      box-shadow: 0 4px 12px rgba(79, 129, 189, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .capability-card:active {
+      transform: translateY(0);
+    }
+
+    /* Side Panel */
+    .panel {
+      position: fixed;
+      top: 0;
+      right: -500px;
+      width: 500px;
+      height: 100%;
+      background: #fff;
+      box-shadow: -4px 0 16px rgba(0, 0, 0, 0.2);
+      overflow-y: auto;
+      padding: 32px;
+      transition: right 0.3s ease;
+      z-index: 1000;
+    }
+
+    .panel.open {
+      right: 0;
+    }
+
+    .panel-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .panel-overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .panel-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #888;
+      border: none;
+      background: none;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .panel-close:hover {
+      color: #222;
+      background: #f0f0f0;
+    }
+
+    .panel-header {
+      margin-bottom: 24px;
+      padding-top: 8px;
+    }
+
+    .panel-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0f2847;
+      margin-bottom: 8px;
+    }
+
+    .panel-stage {
+      font-size: 12px;
+      color: #888;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .panel-section {
+      margin-bottom: 24px;
+    }
+
+    .panel-section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1f3a5a;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e8ecf1;
+    }
+
+    .panel-section p {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .panel-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .panel-section li {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #555;
+      margin-bottom: 6px;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .panel-section li:before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: #4f81bd;
+      font-weight: bold;
+    }
+
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: #eef3f8;
+      color: #1f3a5a;
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+      .capability-card {
+        font-size: 11px;
+        padding: 12px 10px;
+        min-height: 55px;
+      }
+
+      .stage-header {
+        font-size: 12px;
+        padding: 16px 12px;
+      }
+
+      .swimlane-container {
+        gap: 24px;
+      }
+    }
+
+    @media (max-width: 1000px) {
+      body {
+        padding: 20px 12px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .stage-swimlane {
+        min-width: 240px;
+      }
+
+      .swimlane-container {
+        gap: 16px;
+      }
+
+      .panel {
+        width: 450px;
+        right: -450px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px;
+      }
+
+      .header {
+        margin-bottom: 24px;
+      }
+
+      h1 {
+        font-size: 18px;
+      }
+
+      .subtitle {
+        font-size: 12px;
+      }
+
+      .swimlane-container {
+        flex-direction: column;
+        gap: 24px;
+        min-height: auto;
+      }
+
+      .stage-swimlane {
+        min-width: 100%;
+      }
+
+      .stage-header {
+        border-radius: 8px;
+        min-height: auto;
+      }
+
+      .stage-header::after {
+        display: none;
+      }
+
+      .capabilities-column {
+        padding-top: 12px;
+      }
+
+      .capability-card {
+        font-size: 12px;
+        min-height: auto;
+        padding: 12px;
+      }
+
+      .panel {
+        width: 100%;
+        right: -100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>SRO Investigations Capability Map</h1>
+      <p class="subtitle">Current-state capabilities aligned to investigation value stages</p>
+    </div>
+
+    <div class="swimlane-container">
+      <!-- STAGE 1: Identify Issues & Triggers -->
+      <div class="stage-swimlane">
+        <div class="stage-header">Identify Issues &amp; Triggers</div>
+        <div class="capabilities-column">
+          <div class="capability-card" onclick="openPanel('intelligence', 'Intelligence &amp; Referral Management', 'Identify Issues &amp; Triggers')">
+            Intelligence &amp; Referral Management
+          </div>
+          <div class="capability-card" onclick="openPanel('risk', 'Risk Indicators &amp; Analytics', 'Identify Issues &amp; Triggers')">
+            Risk Indicators &amp; Analytics
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 2: Triage & Initiate Case -->
+      <div class="stage-swimlane">
+        <div class="stage-header">Triage &amp; Initiate Case</div>
+        <div class="capabilities-column">
+          <div class="capability-card" onclick="openPanel('intake', 'Investigation Intake &amp; Triage', 'Triage &amp; Initiate Case')">
+            Investigation Intake &amp; Triage
+          </div>
+          <div class="capability-card" onclick="openPanel('jurisdiction', 'Jurisdiction &amp; Authority Validation', 'Triage &amp; Initiate Case')">
+            Jurisdiction &amp; Authority Validation
+          </div>
+          <div class="capability-card" onclick="openPanel('caseMgmt', 'Investigation Case Management', 'Triage &amp; Initiate Case')">
+            Investigation Case Management
+          </div>
+
+          <!-- ADDED CAPABILITIES -->
+          <div class="capability-card" onclick="openPanel('bulkInitiation', 'Automated &amp; Bulk Investigation Initiation', 'Triage &amp; Initiate Case')">
+            Automated &amp; Bulk Investigation Initiation
+          </div>
+          <div class="capability-card" onclick="openPanel('activityEffort', 'Investigation Activity &amp; Effort Tracking', 'Triage &amp; Initiate Case')">
+            Investigation Activity &amp; Effort Tracking
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 3: Plan & Gather Evidence -->
+      <div class="stage-swimlane">
+        <div class="stage-header">Plan &amp; Gather Evidence</div>
+        <div class="capabilities-column">
+          <div class="capability-card" onclick="openPanel('planning', 'Investigation Planning', 'Plan &amp; Gather Evidence')">
+            Investigation Planning
+          </div>
+          <div class="capability-card" onclick="openPanel('requests', 'Information Requests', 'Plan &amp; Gather Evidence')">
+            Information Requests
+          </div>
+          <div class="capability-card" onclick="openPanel('evidence', 'Evidence &amp; Information Capture', 'Plan &amp; Gather Evidence')">
+            Evidence &amp; Information Capture
+          </div>
+          <div class="capability-card" onclick="openPanel('search', 'External &amp; Internal Search Management', 'Plan &amp; Gather Evidence')">
+            External &amp; Internal Search Management
+          </div>
+
+          <!-- ADDED CAPABILITIES -->
+          <div class="capability-card" onclick="openPanel('flagsNonIssue', 'Investigation Flags &amp; Non-Issue Controls', 'Plan &amp; Gather Evidence')">
+            Investigation Flags &amp; Non-Issue Controls
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 4: Assess & Decide -->
+      <div class="stage-swimlane">
+        <div class="stage-header">Assess &amp; Decide</div>
+        <div class="capabilities-column">
+          <div class="capability-card" onclick="openPanel('infoMgmt', 'Investigation Information Management', 'Assess &amp; Decide')">
+            Investigation Information Management
+          </div>
+          <div class="capability-card" onclick="openPanel('analysis', 'Evidence Analysis &amp; Decision Support', 'Assess &amp; Decide')">
+            Evidence Analysis &amp; Decision Support
+          </div>
+          <div class="capability-card" onclick="openPanel('legal', 'Legal &amp; Policy Review', 'Assess &amp; Decide')">
+            Legal &amp; Policy Review
+          </div>
+
+          <!-- ADDED CAPABILITIES -->
+          <div class="capability-card" onclick="openPanel('periodRevenue', 'Investigation Period &amp; Revenue Line Management', 'Assess &amp; Decide')">
+            Investigation Period &amp; Revenue Line Management
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 5: Enforce & Govern Outcomes -->
+      <div class="stage-swimlane">
+        <div class="stage-header">Enforce &amp; Govern Outcomes</div>
+        <div class="capabilities-column">
+          <div class="capability-card" onclick="openPanel('sanctions', 'Sanctions &amp; Remedies Management', 'Enforce &amp; Govern Outcomes')">
+            Sanctions &amp; Remedies Management
+          </div>
+          <div class="capability-card" onclick="openPanel('approvals', 'Internal Approvals', 'Enforce &amp; Govern Outcomes')">
+            Internal Approvals
+          </div>
+          <div class="capability-card" onclick="openPanel('governance', 'Governed Exception &amp; Override Management', 'Enforce &amp; Govern Outcomes')">
+            Governed Exception &amp; Override Management
+          </div>
+
+          <!-- ADDED CAPABILITIES -->
+          <div class="capability-card" onclick="openPanel('reportingInsights', 'Investigation Reporting &amp; Performance Insights', 'Enforce &amp; Govern Outcomes')">
+            Investigation Reporting &amp; Performance Insights
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Side Panel -->
+  <div class="panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
+  <div class="panel" id="panel">
+    <button class="panel-close" onclick="closePanel()">×</button>
+    <div class="panel-header">
+      <div class="panel-stage" id="panelStage"></div>
+      <h2 class="panel-title" id="panelTitle"></h2>
+    </div>
+    <div id="panelContent"></div>
+  </div>
+
+  <script>
+    const CAPABILITY_CONTENT = {
+      // --- existing capabilities are expected to be here (unchanged) ---
+
+      // ========== ADDED CAPABILITIES (only these are new) ==========
+      bulkInitiation: {
+        description: 'Enables investigation cases to be initiated through automated or bulk mechanisms while maintaining validation and governance controls. Supports high-volume or system-driven investigation initiation so cases created at scale follow the same rules and lifecycle as manually initiated investigations.',
+        keywords: ['Bulk', 'Automate', 'Validate', 'Initiate'],
+        inputs: [
+          'Bulk case creation datasets (e.g., program lists, uplift cohorts)',
+          'External system referrals and feeds',
+          'Case initiation parameters and validation rules'
+        ],
+        outputs: [
+          'Created investigation cases with provenance',
+          'Validation outcomes (accepted/rejected records)',
+          'Initiation logs for audit and reporting'
+        ],
+        painPoints: [
+          'Manual case creation is time-consuming and does not scale for high-volume programs',
+          'Data quality varies across sources, increasing rework and triage effort',
+          'Limited visibility into why a bulk-created case was initiated and what inputs were used'
+        ],
+        opportunities: [
+          'Consistent validation and rule enforcement across all initiation channels',
+          'Clear provenance fields capturing source system, batch, and rationale',
+          'Scalable initiation enabling analytics-led or campaign-style compliance programs'
+        ]
+      },
+
+      activityEffort: {
+        description: 'Records and tracks investigation actions and the effort associated with them to provide transparency over work performed during an investigation. Captures what activities were undertaken, by whom, when they occurred, and the effort expended, supporting operational oversight and performance reporting.',
+        keywords: ['Action Log', 'Effort', 'Time', 'Visibility'],
+        inputs: [
+          'Investigation cases and case lifecycle events',
+          'Investigator activities and recorded actions',
+          'Time/effort captured by investigators'
+        ],
+        outputs: [
+          'Logged investigation actions with timestamps',
+          'Recorded effort per action and per case',
+          'Aggregated activity and effort data for reporting'
+        ],
+        painPoints: [
+          'Action and effort capture is manual and inconsistent across teams',
+          'Limited visibility of workload and progress without relying on spreadsheets or informal updates',
+          'Rework is required to reconcile effort data for operational reporting'
+        ],
+        opportunities: [
+          'Standardised action logging with consistent categories and mandatory effort capture',
+          'Real-time visibility of workload and case progress for team leads',
+          'More reliable performance reporting and planning insights'
+        ]
+      },
+
+      flagsNonIssue: {
+        description: 'Applies operational flags and non-issue indicators to control downstream system behaviour while an investigation is underway. Ensures relevant processes are aware a matter is under investigation, helping prevent premature actions and protecting investigation integrity until outcomes are finalised.',
+        keywords: ['Flag', 'Hold', 'Control', 'Protect'],
+        inputs: [
+          'Investigation status and lifecycle events',
+          'Customer, account, or liability references',
+          'Eligibility rules for applying investigation controls'
+        ],
+        outputs: [
+          'Active investigation flags or non-issue indicators',
+          'Controlled downstream processing behaviour during investigation',
+          'Automatic cessation/removal of controls on closure'
+        ],
+        painPoints: [
+          'Downstream processes can act without awareness of active investigations',
+          'Manual application and removal of holds is error-prone',
+          'Risk of conflicting or premature actions while evidence is still being gathered'
+        ],
+        opportunities: [
+          'Automated signalling of investigation status across affected processes',
+          'Consistent application/removal rules tied to case status changes',
+          'Reduced operational risk and improved investigation integrity'
+        ]
+      },
+
+      periodRevenue: {
+        description: 'Manages the structure of investigations across defined liability periods and revenue lines to support accurate analysis and decision-making. Enables investigations to span multiple time periods and revenue obligations, applying appropriate rules for periodisation, aggregation, and calculation of outcomes.',
+        keywords: ['Periodise', 'Revenue Line', 'Aggregate', 'Calculate'],
+        inputs: [
+          'Investigation liability periods',
+          'Revenue line classifications and rules',
+          'Detected/assessed/refund/pre-payment and related investigation data'
+        ],
+        outputs: [
+          'Structured investigation periods and sub-periods',
+          'Revenue line period records with period-based outcomes',
+          'Aggregated views across periods to support decisions'
+        ],
+        painPoints: [
+          'Complexity managing investigations spanning multiple years or reporting cycles',
+          'Risk of inconsistent treatment across revenue lines and period types',
+          'Manual reconciliation of period-based outcomes increases error risk'
+        ],
+        opportunities: [
+          'Automated period splitting and aggregation rules',
+          'Consistent revenue-specific handling and calculation controls',
+          'Improved traceability of outcomes across time and revenue contexts'
+        ]
+      },
+
+      reportingInsights: {
+        description: 'Provides aggregated reporting and insight into investigation activity, performance, and outcomes to support governance and strategic oversight. Enables leadership to track case volumes, effort, and financial outcomes to understand effectiveness and impact across the investigation function.',
+        keywords: ['Report', 'Insights', 'Governance', 'Performance'],
+        inputs: [
+          'Investigation case and status data',
+          'Recorded activities and effort information',
+          'Financial outcomes (detected, assessed, refunded, forgone)'
+        ],
+        outputs: [
+          'Investigation volume and status insights',
+          'Performance and productivity measures',
+          'Aggregated financial outcome reporting'
+        ],
+        painPoints: [
+          'Reporting often relies on manual extraction and reconciliation',
+          'Limited real-time visibility of investigation performance',
+          'Inconsistent metrics and definitions across teams'
+        ],
+        opportunities: [
+          'Standardised reporting views and consistent definitions',
+          'Improved management visibility for assurance and resourcing decisions',
+          'Data-driven insights to refine investigation prioritisation and operating model'
+        ]
+      }
+    };
+
+    function openPanel(key, title, stage) {
+      const content = CAPABILITY_CONTENT[key];
+      if (!content) return;
+
+      let html = '';
+
+      // Description
+      if (content.description) {
+        html += `
+          <div class="panel-section">
+            <div class="panel-section-title">Description</div>
+            <p>${content.description}</p>
+            ${content.keywords && content.keywords.length ? `<div class="pill-group">${content.keywords.map(k => `<span class="pill">${k}</span>`).join('')}</div>` : ''}
+          </div>
+        `;
+      }
+
+      // Inputs
+      if (content.inputs && content.inputs.length) {
+        html += `
+          <div class="panel-section">
+            <div class="panel-section-title">Inputs</div>
+            <ul>${content.inputs.map(i => `<li>${i}</li>`).join('')}</ul>
+          </div>
+        `;
+      }
+
+      // Outputs
+      if (content.outputs && content.outputs.length) {
+        html += `
+          <div class="panel-section">
+            <div class="panel-section-title">Outputs</div>
+            <ul>${content.outputs.map(o => `<li>${o}</li>`).join('')}</ul>
+          </div>
+        `;
+      }
+
+      // Pain Points
+      if (content.painPoints && content.painPoints.length) {
+        html += `
+          <div class="panel-section">
+            <div class="panel-section-title">Pain Points</div>
+            <ul>${content.painPoints.map(p => `<li>${p}</li>`).join('')}</ul>
+          </div>
+        `;
+      }
+
+      // Opportunities
+      if (content.opportunities && content.opportunities.length) {
+        html += `
+          <div class="panel-section">
+            <div class="panel-section-title">Opportunities</div>
+            <ul>${content.opportunities.map(o => `<li>${o}</li>`).join('')}</ul>
+          </div>
+        `;
+      }
+
+      document.getElementById('panelTitle').textContent = title;
+      document.getElementById('panelStage').textContent = stage;
+      document.getElementById('panelContent').innerHTML = html;
+      document.getElementById('panel').classList.add('open');
+      document.getElementById('panelOverlay').classList.add('visible');
+    }
+
+    function closePanel() {
+      document.getElementById('panel').classList.remove('open');
+      document.getElementById('panelOverlay').classList.remove('visible');
+    }
+
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closePanel();
+    });
+  </script>
+
+  <script>
+    // --- IMPORTANT ---
+    // Your original HTML defines CAPABILITY_CONTENT for existing capabilities.
+    // To keep your file structure unchanged, merge the existing object with the added entries above.
+    // If you paste this whole file, ensure you remove the old CAPABILITY_CONTENT declaration to avoid duplicate const errors.
+  </script>
+</body>
+</html>

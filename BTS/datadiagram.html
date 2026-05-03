@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SRO Investigation Domain – Entity Model</title>
+
+  <!-- Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: "default" });
+  </script>
+
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: #f8f9fb;
+      color: #2b2b2b;
+    }
+
+    h1 {
+      background: #003a8f;
+      color: white;
+      padding: 16px 24px;
+      margin: -24px -24px 24px -24px;
+    }
+
+    h2 {
+      margin-top: 40px;
+      border-bottom: 2px solid #003a8f;
+      padding-bottom: 6px;
+    }
+
+    .diagram-container {
+      background: white;
+      padding: 16px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      background: white;
+    }
+
+    th, td {
+      border: 1px solid #d0d7de;
+      padding: 10px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: #e8f0fe;
+      font-weight: 600;
+    }
+
+    .entity {
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .note {
+      color: #555;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>SRO Investigations – Entity Relationship Model (Logical)</h1>
+
+<h2>Entity Relationship Diagram</h2>
+
+<div class="diagram-container">
+<pre class="mermaid">
+erDiagram
+
+    INVESTIGATION_CASE ||--o{ INVESTIGATION_ACTION : has
+    INVESTIGATION_CASE ||--o{ INVESTIGATION_REVENUE_LINE_PERIOD : covers
+    INVESTIGATION_CASE ||--o{ ASSESSMENT : produces
+    INVESTIGATION_CASE ||--o{ REFUND : may_trigger
+    INVESTIGATION_CASE ||--o{ MAILING_PROTOCOL : uses
+    INVESTIGATION_CASE ||--o{ EVIDENCE_CONTAINER : stores
+    CUSTOMER ||--o{ INVESTIGATION_CASE : subject_of
+    USER ||--o{ INVESTIGATION_ACTION : performs
+
+    INVESTIGATION_REVENUE_LINE_PERIOD ||--o{ DISCREPANCY : reveals
+    INVESTIGATION_REVENUE_LINE_PERIOD ||--o{ DETECTION_REASON : explained_by
+    INVESTIGATION_REVENUE_LINE_PERIOD ||--o{ PRE_PAYMENT : offset_by
+    INVESTIGATION_REVENUE_LINE_PERIOD ||--o{ REVENUE_FORGONE : results_in
+
+    REVENUE_LINE ||--o{ INVESTIGATION_REVENUE_LINE_PERIOD : classifies
+
+    INVESTIGATION_CASE ||..o{ REGULATORY_ASSESSMENT : informs
+</pre>
+</div>
+
+<h2>Canonical Entity Attribute Catalogue</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Entity</th>
+      <th>Description</th>
+      <th>Key Attributes</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <td class="entity">Investigation Case</td>
+      <td>Formal investigation record representing compliance activity.</td>
+      <td>
+        Investigation Case ID<br>
+        Case Status<br>
+        Priority<br>
+        Case Begin Date<br>
+        Expected End Date<br>
+        Case Close Reason<br>
+        Audit Indicator<br>
+        Revenue Line<br>
+        Liability Period (Start / End)<br>
+        Investigation Team<br>
+        Investigator(s)<br>
+        Non‑Compliance Reasons<br>
+        Source System
+      </td>
+      <td class="note">“Investigation” and “Case” are the same construct in current state.</td>
+    </tr>
+
+    <tr>
+      <td class="entity">Investigation Action</td>
+      <td>Discrete action performed during an investigation.</td>
+      <td>
+        Action ID<br>
+        Action Type<br>
+        Action Date<br>
+        Investigator<br>
+        Hours Taken<br>
+        Notes<br>
+        Deleted Indicator
+      </td>
+      <td class="note">Operational audit trail; no financial meaning.</td>
+    </tr>
+
+    <tr>
+      <td class="entity">Investigation Revenue Line Period</td>
+      <td>Periodised investigation view for a specific revenue line.</td>
+      <td>
+        Revenue Line Period ID<br>
+        Revenue Line<br>
+        Period Start Date<br>
+        Period End Date<br>
+        Detected Amount<br>
+        Assessed Amount<br>
+        Pre‑Payment Amount<br>
+        Revenue Forgone Amount<br>
+        JobKeeper Indicator<br>
+        Regional Employer Indicator
+      </td>
+      <td class="note">Primary financial aggregation boundary.</td>
+    </tr>
+
+    <tr>
+      <td class="entity">Discrepancy</td>
+      <td>Variance between declared and detected amounts.</td>
+      <td>
+        Discrepancy Type<br>
+        Declared Amount<br>
+        Detected Amount<br>
+        Discrepancy Amount<br>
+        Comments
+      </td>
+      <td class="note">Revenue‑line variants exist but collapse conceptually.</td>
+    </tr>
+
+    <tr>
+      <td class="entity">Detection Reason</td>
+      <td>Explanation for detected amounts.</td>
+      <td>
+        Detection Reason Code<br>
+        Description<br>
+        Percentage Allocation<br>
+        Detected Amount
+      </td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td class="entity">Assessment</td>
+      <td>Formal assessment issued as investigation outcome.</td>
+      <td>
+        Assessment ID<br>
+        Assessment Type (Primary / Penalty / Interest)<br>
+        Assessed Amount<br>
+        Liability Items<br>
+        Assessment Date
+      </td>
+      <td class="note">Authoritative financial artefact.</td>
+    </tr>
+
+    <tr>
+      <td class="entity">Refund</td>
+      <td>Refund linked to an investigation case.</td>
+      <td>
+        Refund ID<br>
+        Refund Amount<br>
+        Refund Status<br>
+        Payment Reference<br>
+        Refund Claim ID
+      </td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td class="entity">Pre‑Payment</td>
+      <td>Payments made in advance against liabilities.</td>
+      <td>
+        Payment ID<br>
+        Amount<br>
+        Allocation Date<br>
+        Suspense Indicator
+      </td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td class="entity">Revenue Forgone</td>
+      <td>Revenue not pursued as investigation outcome.</td>
+      <td>
+        Primary Amount<br>
+        Penalty Amount<br>
+        Market Interest<br>
+        Premium Interest<br>
+        Total Forgone Amount
+      </td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td class="entity">Customer / Subject Party</td>
+      <td>Customer under investigation.</td>
+      <td>
+        Customer ID<br>
+        Customer Type<br>
+        Name(s)<br>
+        ABN / ACN<br>
+        ANZSIC Code<br>
+        Addresses<br>
+        Contacts
+      </td>
+      <td class="note">Financial Institution is a classification, not an entity.</td>
+    </tr>
+
+    <tr>
+      <td class="entity">User (Investigator)</td>
+      <td>System user performing investigation work.</td>
+      <td>
+        User ID<br>
+        Name<br>
+        Role<br>
+        Work Group<br>
+        Assigned Cases
+      </td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td class="entity">Mailing Protocol</td>
+      <td>Defines how correspondence is delivered.</td>
+      <td>
+        Mailing Protocol ID<br>
+        Addressee<br>
+        Channel<br>
+        Address<br>
+        Effective Dates
+      </td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td class="entity">Evidence / Artefact Container</td>
+      <td>TRIM folder holding investigation evidence.</td>
+      <td>
+        Folder Type<br>
+        Folder Path<br>
+        Linked Case
+      </td>
+      <td class="note">Evidence items not individually modelled.</td>
+    </tr>
+
+    <tr>
+      <td class="entity">Regulatory Assessment </td>
+      <td>Outcome‑based regulatory judgement (target‑state).</td>
+      <td>
+        Assessment Outcome<br>
+        Risk Rating<br>
+        Linked Investigation<br>
+        Linked Revenue Line
+      </td>
+      <td class="note">Analytical, not transactional.</td>
+    </tr>
+
+  </tbody>
+</table>
+
+</body>
+</html>

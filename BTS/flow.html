@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investigation Case Process – Diagram & Details</title>
+
+  <!-- ✅ Correct Mermaid load -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f5f7fa;
+      color: #334155;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    /* Top nav */
+    .top-nav { margin-bottom: 20px; }
+
+    .nav-button {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      background: white;
+      color: #1e3a8a;
+      font-weight: 600;
+      font-size: 13px;
+      text-decoration: none;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .nav-button:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    h1 { color: #1e3a8a; margin-bottom: 8px; }
+    .subtitle { color: #64748b; margin-bottom: 32px; }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .mermaid {
+      background: #fafbfc;
+      padding: 24px;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 2px solid #e2e8f0;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead { background: #f9fafb; }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+
+    th {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #1e3a8a;
+    }
+
+    .activity-code { font-weight: 700; color: #1e3a8a; }
+    .activity-name { font-weight: 600; }
+    .muted { color: #64748b; font-size: 12px; }
+
+    .no-results {
+      text-align: center;
+      padding: 30px;
+      color: #94a3b8;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- ✅ View Data Diagram button -->
+  <div class="top-nav">
+    <a href="datadiagram.html" class="nav-button">📊 View Data Diagram</a>
+  </div>
+
+  <h1>Investigation Case Process</h1>
+  <p class="subtitle">End‑to‑end flow from PIC receipt to case closure</p>
+
+  <!-- ✅ VERTICAL MERMAID DIAGRAM -->
+  <div class="card">
+    <h2>Process Flow Diagram</h2>
+
+    <div class="mermaid">
+flowchart TB
+
+subgraph S1["Identify Issues & Triggers"]
+  ACT01["1. Receive Case Allocation"]
+  ACT02["2. Review PIC Details & Scope"]
+  ACT03["3. Conduct Eligibility Checks"]
+  ACT04{"4. Gate: Case Valid?"}
+  ACT01 --> ACT02 --> ACT03 --> ACT04
+end
+
+subgraph S2["Triage & Initiate Case"]
+  ACT05["5. Conduct Background Searches"]
+  ACT06["6. Plan Investigation"]
+  ACT07["7. Create Investigation Case (IC)"]
+  ACT05 --> ACT06 --> ACT07
+end
+
+subgraph S3["Customer Engagement"]
+  ACT08["8. Contact Customer by Phone"]
+  ACT09["9. Draft & Issue Entry Letter"]
+  ACT10["10. Wait for Response"]
+  ACT08 --> ACT09 --> ACT10
+end
+
+subgraph S4["Evidence Gathering"]
+  ACT11["11. Receive Customer Response"]
+  ACT12["12. Validate Completeness & Quality"]
+  ACT13{"13. Gate: Info Complete?"}
+  ACT14["14. Request Clarification"]
+  ACT15["15. Save Evidence to System"]
+  ACT11 --> ACT12 --> ACT13
+  ACT13 -->|Complete| ACT15
+  ACT13 -->|Not Complete| ACT14 --> ACT15
+end
+
+subgraph S5["Assess & Decide"]
+  ACT16["16. Conduct Analysis"]
+  ACT17["17. Apply Legislation & Determine Findings"]
+  ACT18["18. Produce Investigation Report"]
+  ACT16 --> ACT17 --> ACT18
+end
+
+subgraph S6["Approval"]
+  ACT19["19. Submit Report for QA"]
+  ACT20["20. Peer Review (QA Checklist)"]
+  ACT21{"21. Gate: Approved?"}
+  ACT22["22. QA Rework & Resubmit"]
+  ACT19 --> ACT20 --> ACT21
+  ACT21 -->|Rework| ACT22 --> ACT21
+end
+
+subgraph S7["Enforce & Govern Outcomes"]
+  ACT23{"23. Gate: NFA or Assessment?"}
+  ACT24["24. Issue NFA Exit Letter"]
+  ACT25["25. Close IC (NFA Pathway)"]
+  ACT26["26. END (NFA)"]
+  ACT27["27. Calculate & Generate Assessment"]
+  ACT28["28. Issue Assessment Notice & Exit Letter"]
+  ACT29["29. Close IC (Assessment Pathway)"]
+  ACT30["30. END (Assessment)"]
+end
+
+ACT04 -->|Valid| ACT05
+ACT04 -->|Not Valid| ACT31["31. Kill PIC (Ineligible)"]
+
+ACT07 --> ACT08
+ACT10 --> ACT11
+ACT15 --> ACT16
+ACT18 --> ACT19
+ACT21 -->|Approved| ACT23
+
+ACT23 -->|NFA| ACT24 --> ACT25 --> ACT26
+ACT23 -->|Assessment| ACT27 --> ACT28 --> ACT29 --> ACT30
+    </div>
+  </div>
+
+  <!-- ✅ FULL ACTIVITY TABLE -->
+  <div class="card">
+    <h2>Activity Details</h2>
+
+    <div class="search-box">
+      <input id="searchInput" class="search-input"
+             placeholder="Search by activity code or name">
+    </div>
+    <div class="muted">Results: <strong id="resultCount">31</strong></div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Activity Name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+
+    <div id="noResults" class="no-results">No matching activities.</div>
+  </div>
+</div>
+
+<script>
+  mermaid.initialize({ startOnLoad: true });
+
+  const activities = [
+    "ACT01 Receive Case Allocation",
+    "ACT02 Review PIC Details & Scope",
+    "ACT03 Conduct Eligibility Checks",
+    "ACT04 Gate: Case Valid?",
+    "ACT05 Conduct Background Searches",
+    "ACT06 Plan Investigation",
+    "ACT07 Create Investigation Case (IC)",
+    "ACT08 Contact Customer by Phone",
+    "ACT09 Draft & Issue Entry Letter",
+    "ACT10 Wait for Response",
+    "ACT11 Receive Customer Response",
+    "ACT12 Validate Completeness & Quality",
+    "ACT13 Gate: Info Complete?",
+    "ACT14 Request Clarification",
+    "ACT15 Save Evidence to System",
+    "ACT16 Conduct Analysis",
+    "ACT17 Apply Legislation & Determine Findings",
+    "ACT18 Produce Investigation Report",
+    "ACT19 Submit Report for QA",
+    "ACT20 Peer Review (QA Checklist)",
+    "ACT21 Gate: Approved?",
+    "ACT22 QA Rework & Resubmit",
+    "ACT23 Gate: NFA or Assessment?",
+    "ACT24 Issue NFA Exit Letter",
+    "ACT25 Close IC (NFA Pathway)",
+    "ACT26 END (NFA)",
+    "ACT27 Calculate & Generate Assessment",
+    "ACT28 Issue Assessment Notice & Exit Letter",
+    "ACT29 Close IC (Assessment Pathway)",
+    "ACT30 END (Assessment)",
+    "ACT31 Kill PIC (Ineligible)"
+  ].map(a => {
+    const [code, ...name] = a.split(" ");
+    return { code, name: name.join(" "), desc: "See process flow and stage context above." };
+  });
+
+  const body = document.getElementById("tableBody");
+  const count = document.getElementById("resultCount");
+  const noRes = document.getElementById("noResults");
+
+  function render(rows) {
+    body.innerHTML = "";
+    rows.forEach(a => {
+      body.insertAdjacentHTML("beforeend", `
+        <tr>
+          <td class="activity-code">${a.code}</td>
+          <td class="activity-name">${a.name}</td>
+          <td class="muted">${a.desc}</td>
+        </tr>
+      `);
+    });
+    count.textContent = rows.length;
+    noRes.style.display = rows.length ? "none" : "block";
+  }
+
+  document.getElementById("searchInput").addEventListener("input", e => {
+    const q = e.target.value.toLowerCase();
+    render(activities.filter(a =>
+      a.code.toLowerCase().includes(q) ||
+      a.name.toLowerCase().includes(q)
+    ));
+  });
+
+  render(activities);
+</script>
+
+</body>
+</html>

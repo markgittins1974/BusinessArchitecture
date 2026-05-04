@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Systems mapped to Investigation Lifecycle – Current State</title>
+
+  <style>
+    /* ================================
+       Investigation System Mapping
+       ================================ */
+
+    body {
+      background: #ffffff;
+      margin: 24px;
+    }
+
+    .investigation-system-mapping {
+      --primary: #003a8f;
+      --secondary: #e6f0ff;
+      --border: #d9d9d9;
+      --text: #1f1f1f;
+      --muted: #6b7280;
+
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      line-height: 1.5;
+      max-width: 1100px;
+    }
+
+    /* Headings */
+    .investigation-system-mapping h2 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 0.5rem;
+    }
+
+    .investigation-system-mapping h3 {
+      font-size: 1.2rem;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--secondary);
+      border-left: 5px solid var(--primary);
+    }
+
+    /* Lists */
+    .investigation-system-mapping ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0 0 1rem 0;
+    }
+
+    .investigation-system-mapping li {
+      margin-bottom: 0.75rem;
+    }
+
+    .investigation-system-mapping li > strong {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    /* Nested system lists */
+    .investigation-system-mapping li ul {
+      margin-left: 1.25rem;
+      padding-left: 0.75rem;
+      border-left: 2px solid var(--border);
+    }
+
+    .investigation-system-mapping li ul li {
+      margin-bottom: 0.3rem;
+      font-size: 0.95rem;
+    }
+
+    .investigation-system-mapping li ul li::before {
+      content: "•";
+      color: var(--primary);
+      font-weight: bold;
+      display: inline-block;
+      width: 1em;
+      margin-left: -1em;
+    }
+
+    em {
+      color: var(--muted);
+      font-style: italic;
+    }
+  </style>
+</head>
+
+<body>
+
+<section class="investigation-system-mapping">
+
+  <h2>Systems mapped to Investigation Lifecycle (Current State)</h2>
+
+  <h3>1. Identify Issues &amp; Triggers</h3>
+  <ul>
+    <li><strong>Intelligence &amp; Referral Management</strong>
+      <ul>
+        <li>COI – intelligence, referrals, trigger lists</li>
+        <li>Microsoft Outlook – referral and coordination emails</li>
+      </ul>
+    </li>
+    <li><strong>Risk Indicators &amp; Analytics</strong>
+      <ul>
+        <li>COI – risk indicators and analytics</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>2. Triage &amp; Initiate Case</h3>
+  <ul>
+    <li><strong>Investigation Intake &amp; Triage</strong>
+      <ul>
+        <li>COI – review trigger and intelligence context</li>
+        <li>e‑Sys – create investigation case (often post‑triage)</li>
+        <li>Microsoft Excel – prioritisation and working notes</li>
+        <li>Microsoft Outlook – internal discussion</li>
+      </ul>
+    </li>
+    <li><strong>Jurisdiction &amp; Authority Validation</strong>
+      <ul>
+        <li>ASIC – company and director checks</li>
+        <li>ABN Lookup / ABR – entity validation</li>
+        <li>VEDA / Equifax – identity and insolvency checks</li>
+        <li>e‑Sys – confirm entity and case linkage</li>
+      </ul>
+    </li>
+    <li><strong>Investigation Case Management</strong>
+      <ul>
+        <li>e‑Sys – primary system of record</li>
+        <li>Microsoft Excel – shadow workload and stage tracking</li>
+      </ul>
+    </li>
+    <li><strong>Automated &amp; Bulk Investigation Initiation</strong>
+      <ul>
+        <li><em>Not supported – manual case creation in e‑Sys</em></li>
+      </ul>
+    </li>
+    <li><strong>Investigation Activity &amp; Effort Tracking</strong>
+      <ul>
+        <li>Microsoft Excel – primary activity tracking</li>
+        <li>e‑Sys – status updates (often lagging)</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>3. Plan &amp; Gather Evidence</h3>
+  <ul>
+    <li><strong>Investigation Planning</strong>
+      <ul>
+        <li>Microsoft Excel – plans, sequencing, timelines</li>
+        <li>Microsoft Word – planning notes</li>
+        <li>e‑Sys – high‑level case context</li>
+      </ul>
+    </li>
+    <li><strong>Information Requests</strong>
+      <ul>
+        <li>Microsoft Outlook – issue and manage requests</li>
+        <li>Microsoft Word – letters and notices</li>
+        <li>Phone – clarifications and follow‑ups</li>
+      </ul>
+    </li>
+    <li><strong>Evidence &amp; Information Capture</strong>
+      <ul>
+        <li>CM10 – store evidence and correspondence</li>
+        <li>Microsoft Outlook – source of inbound evidence</li>
+        <li>e‑Sys – references to evidence</li>
+      </ul>
+    </li>
+    <li><strong>External &amp; Internal Search Management</strong>
+      <ul>
+        <li>ASIC</li>
+        <li>ABN Lookup / ABR</li>
+        <li>VEDA / Equifax</li>
+        <li>COI – supplementary intelligence</li>
+      </ul>
+    </li>
+    <li><strong>Investigation Flags &amp; Non‑Issue Controls</strong>
+      <ul>
+        <li>e‑Sys – closure and non‑progression recorded</li>
+        <li>Microsoft Excel / Outlook – informal rationale capture</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>4. Assess &amp; Decide</h3>
+  <ul>
+    <li><strong>Investigation Information Management</strong>
+      <ul>
+        <li>CM10 – authoritative evidence store</li>
+        <li>e‑Sys – case summaries and outcomes</li>
+      </ul>
+    </li>
+    <li><strong>Evidence Analysis &amp; Decision Support</strong>
+      <ul>
+        <li>Microsoft Excel – calculations and comparisons</li>
+        <li>Microsoft Word – analysis and draft decisions</li>
+        <li>e‑Sys – final decision recording</li>
+      </ul>
+    </li>
+    <li><strong>Legal &amp; Policy Review</strong>
+      <ul>
+        <li>Microsoft Word – policy interpretation</li>
+        <li>Microsoft Outlook – peer and manager consultation</li>
+      </ul>
+    </li>
+    <li><strong>Investigation Period &amp; Revenue Line Management</strong>
+      <ul>
+        <li>e‑Sys – revenue line and period fields</li>
+        <li>Microsoft Excel – working views and checks</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>5. Enforce &amp; Govern Outcomes</h3>
+  <ul>
+    <li><strong>Sanctions &amp; Remedies Management</strong>
+      <ul>
+        <li>Microsoft Word – outcome documentation</li>
+        <li>e‑Sys – sanctions recorded</li>
+        <li>Microsoft Outlook – outcome communication</li>
+      </ul>
+    </li>
+    <li><strong>Internal Approvals</strong>
+      <ul>
+        <li>Microsoft Outlook – approval via email</li>
+      </ul>
+    </li>
+    <li><strong>Governed Exception &amp; Override Management</strong>
+      <ul>
+        <li>Microsoft Outlook – exception discussion</li>
+        <li>e‑Sys – retrospective recording</li>
+      </ul>
+    </li>
+    <li><strong>Investigation Reporting &amp; Performance Insights</strong>
+      <ul>
+        <li>Microsoft Word – investigation reports</li>
+        <li>Microsoft Excel – performance tracking</li>
+        <li>e‑Sys – limited reporting</li>
+        <li>COI – aggregate intelligence reporting</li>
+      </ul>
+    </li>
+  </ul>
+
+</section>
+
+</body>
+</html>

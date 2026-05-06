@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LXT Capability Architecture Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --navy:      oklch(0.18 0.045 255);
+    --navy-mid:  oklch(0.22 0.04  255);
+    --blue:      oklch(0.58 0.20  250);
+    --blue-lt:   oklch(0.72 0.16  250);
+    --amber:     oklch(0.72 0.16   70);
+    --amber-dk:  oklch(0.58 0.18   65);
+    --bg:        oklch(0.97 0.006 255);
+    --fg:        oklch(0.18 0.02  255);
+    --fg-mid:    oklch(0.38 0.02  255);
+    --fg-light:  oklch(0.58 0.015 255);
+    --card-border: oklch(0.88 0.01 255);
+    --radius: 14px;
+    --radius-sm: 8px;
+    --tw-shadow: 0 4px 24px oklch(0.18 0.045 255 / 0.08);
+    --tw-shadow-lg: 0 12px 48px oklch(0.18 0.045 255 / 0.14);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--navy);
+    border-bottom: 1px solid oklch(1 0 0 / 0.06);
+  }
+  .nav-inner {
+    max-width: 1240px; margin: 0 auto;
+    padding: 0 40px;
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .nav-logo {
+    width: 36px; height: 36px;
+    background: var(--blue);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .nav-logo-inner {
+    width: 18px; height: 18px;
+    border: 2.5px solid white;
+    border-radius: 3px;
+    position: relative;
+  }
+  .nav-logo-inner::after {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 8px; height: 8px;
+    background: white;
+    border-radius: 2px;
+    opacity: 0.6;
+  }
+  .nav-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: white;
+    line-height: 1.2;
+  }
+  .nav-subtitle {
+    font-size: 0.72rem;
+    color: oklch(1 0 0 / 0.45);
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+  .nav-links {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .nav-link {
+    font-size: 0.82rem;
+    color: oklch(1 0 0 / 0.55);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+  }
+  .nav-link:hover { color: white; background: oklch(1 0 0 / 0.07); }
+  .nav-badge {
+    font-size: 0.7rem;
+    background: var(--amber);
+    color: var(--navy);
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+    padding: 80px 40px 90px;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, oklch(1 0 0 / 0.08) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -100px; right: -60px;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--blue) 0%, transparent 70%);
+    opacity: 0.12;
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 1240px; margin: 0 auto;
+    position: relative; z-index: 2;
+  }
+  .hero-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px; height: 2px;
+    background: var(--amber);
+  }
+  .hero-heading {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    font-weight: 700;
+    color: white;
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+  .hero-heading .accent { color: var(--blue-lt); }
+  .hero-desc {
+    font-size: 1.05rem;
+    color: oklch(1 0 0 / 0.55);
+    line-height: 1.65;
+    max-width: 560px;
+    font-weight: 300;
+  }
+
+  /* VALUE STREAMS */
+  .value-streams {
+    background: var(--navy-mid);
+    border-top: 1px solid oklch(1 0 0 / 0.06);
+    border-bottom: 1px solid oklch(1 0 0 / 0.06);
+  }
+  .vs-inner {
+    max-width: 1240px; margin: 0 auto;
+    padding: 0 40px;
+    display: flex; align-items: stretch;
+    overflow-x: auto;
+  }
+  .vs-item {
+    padding: 14px 20px;
+    font-size: 0.75rem;
+    color: oklch(1 0 0 / 0.4);
+    white-space: nowrap;
+    border-right: 1px solid oklch(1 0 0 / 0.06);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .vs-item:first-child { border-left: 1px solid oklch(1 0 0 / 0.06); }
+  .vs-dot {
+    width: 6px; height: 6px;
+    background: var(--blue);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .vs-label {
+    font-size: 0.65rem;
+    color: oklch(1 0 0 / 0.25);
+    text-transform: uppercase;
+    padding: 14px 20px;
+    white-space: nowrap;
+    font-weight: 500;
+    display: flex; align-items: center;
+  }
+
+  /* MAIN */
+  .main {
+    max-width: 1240px; margin: 0 auto;
+    padding: 56px 40px 80px;
+  }
+  .section-header {
+    display: flex; align-items: baseline; gap: 12px;
+    margin-bottom: 28px;
+  }
+  .section-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--fg-light);
+    padding: 4px 10px;
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+  }
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--fg);
+  }
+  .section-title .accent { color: var(--blue); }
+
+  /* GRIDS */
+  .views-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .views-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  /* CARD */
+  .view-group {
+    background: white;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--tw-shadow);
+    transition: box-shadow 0.25s, transform 0.25s;
+  }
+  .view-group:hover {
+    box-shadow: var(--tw-shadow-lg);
+    transform: translateY(-2px);
+  }
+  .vg-header {
+    padding: 22px 24px 18px;
+    border-bottom: 1px solid var(--card-border);
+    position: relative;
+  }
+  .vg-stripe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+  }
+  .vg-header-tag {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .vg-header-tag-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .vg-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--fg);
+  }
+  .vg-desc {
+    font-size: 0.8rem;
+    color: var(--fg-light);
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+
+  .vg-link {
+    display: flex; align-items: center;
+    padding: 14px 24px;
+    text-decoration: none;
+    border-bottom: 1px solid var(--card-border);
+    gap: 14px;
+    transition: background 0.18s;
+    color: inherit;
+  }
+  .vg-link:last-child { border-bottom: none; }
+  .vg-link:hover { background: var(--bg); }
+  .vg-link-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .vg-link-text { flex: 1; }
+  .vg-link-name {
+    font-size: 0.87rem;
+    font-weight: 500;
+    color: var(--fg);
+    margin-bottom: 2px;
+  }
+  .vg-link-sub {
+    font-size: 0.73rem;
+    color: var(--fg-light);
+    line-height: 1.4;
+  }
+  .chip {
+    display: inline-flex; align-items: center;
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-top: 4px;
+  }
+  .chip-blue { background: oklch(0.58 0.20 250 / 0.1); color: var(--blue); }
+  .chip-amber { background: oklch(0.72 0.16 70 / 0.12); color: var(--amber-dk); }
+  .chip-green { background: oklch(0.65 0.15 145 / 0.1); color: oklch(0.45 0.15 145); }
+  .chip-purple { background: oklch(0.55 0.18 300 / 0.1); color: oklch(0.45 0.18 300); }
+
+  /* FILTER */
+  .quick-search {
+    margin-bottom: 48px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .qs-chips {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .qs-chip {
+    font-size: 0.75rem;
+    padding: 6px 14px;
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    background: white;
+    color: var(--fg-mid);
+    cursor: pointer;
+    transition: all 0.18s;
+    font-weight: 400;
+    font-family: inherit;
+  }
+  .qs-chip:hover, .qs-chip.active {
+    border-color: var(--blue);
+    color: var(--blue);
+    background: oklch(0.58 0.20 250 / 0.06);
+  }
+
+  /* FOOTER */
+  .footer {
+    border-top: 1px solid var(--card-border);
+    padding: 32px 40px;
+    max-width: 1240px; margin: 0 auto;
+  }
+  .footer-inner {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-left, .footer-right {
+    font-size: 0.78rem;
+    color: var(--fg-light);
+  }
+  .footer-right {
+    display: flex; align-items: center; gap: 24px;
+  }
+  .footer-right a { color: var(--fg-light); text-decoration: none; }
+  .footer-right a:hover { color: var(--fg); }
+
+  @media (max-width: 960px) {
+    .views-grid { grid-template-columns: 1fr; }
+    .views-grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+
+</head>
+<body>
+
+<!-- NAV -->
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <div class="nav-logo">
+        <div class="nav-logo-inner"></div>
+      </div>
+      <div>
+        <div class="nav-title">LXT Capability Architecture</div>
+        <div class="nav-subtitle">Land Tax Transformation Program</div>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a class="nav-link" href="#">Strategic</a>
+      <a class="nav-link" href="#">Management</a>
+      <a class="nav-link" href="#">Operational</a>
+      <a class="nav-link" href="#">BTS</a>
+      <span class="nav-badge">Live</span>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Business Capability Architecture</div>
+    <h1 class="hero-heading">Explore LXT<br><span class="accent">Capability</span> Portal</h1>
+    <p class="hero-desc">Role‑based entry points into the Land Tax capability architecture — from strategic streams to operational procedures and system mappings.</p>
+  </div>
+</section>
+
+<!-- STREAMS -->
+
+<div class="value-streams">
+  <div class="vs-inner">
+    <div class="vs-label">Value Streams</div>
+    <div class="vs-item"><div class="vs-dot"></div>Maintain Land &amp; Ownership Records</div>
+    <div class="vs-item"><div class="vs-dot"></div>Determine How Land Is Taxed</div>
+    <div class="vs-item"><div class="vs-dot"></div>Assess &amp; Issue Land Tax</div>
+    <div class="vs-item"><div class="vs-dot"></div>Manage Payments &amp; Adjustments</div>
+    <div class="vs-item"><div class="vs-dot"></div>Resolve Issues &amp; Enforce Compliance</div>
+    <div class="vs-item"><div class="vs-dot"></div>Provide Certificates &amp; Assurance</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+
+<main class="main">
+  <!-- FILTER -->
+  <div class="quick-search">
+    <div class="qs-chips" id="filters"></div>
+  </div>
+
+  <!-- SECTION 1 -->
+
+  <div class="section-header">
+    <span class="section-label">Role-based Entry Points</span>
+    <span class="section-title">Architecture <span class="accent">Views</span></span>
+  </div>
+  <div class="views-grid" id="views1"></div>
+
+  <!-- SECTION 2 -->
+
+  <div class="views-grid-2" id="views2" style="margin-top: 24px;"></div>
+</main>
+
+<!-- FOOTER -->
+
+<footer>
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-left">
+        LXT Capability Architecture Portal &nbsp;·&nbsp; Land Tax Transformation Program &nbsp;·&nbsp; Last updated May 2026
+      </div>
+      <div class="footer-right">
+        <a href="#">Help</a>
+        <a href="#">Glossary</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const BASE = 'https://markgittins1974.github.io/BusinessArchitecture';
+
+// ============================================================
+// DATA SECTION (MUTABLE)
+// ============================================================
+
+const VIEWS = [
+  {
+    id: 'strategic',
+    label: 'Strategic View',
+    dot: '#3b82f6',
+    accent: 'var(--blue)',
+    chipClass: 'chip-blue',
+    chipText: 'Executive',
+    desc: 'High-level capability maps and maturity assessments for strategic investment decisions.',
+    links: [
+      { icon: '◈', iconBg: 'oklch(0.58 0.20 250 / 0.1)', iconColor: 'var(--blue)', name: 'LTX Value Stream', sub: 'End‑to‑end view of Land Tax outcomes across the full lifecycle.', href: `${BASE}/strategy/value-stream-map.html`, chip: null },
+      { icon: '◈', iconBg: 'oklch(0.58 0.20 250 / 0.1)', iconColor: 'var(--blue)', name: 'LTX Service Blueprint', sub: 'Visual map that shows how a service works end‑to‑end.', href: `${BASE}/strategy/blueprint.html`, chip: null },
+      { icon: '▦', iconBg: 'oklch(0.58 0.20 250 / 0.1)', iconColor: 'var(--blue)', name: 'Capability Heat Map', sub: 'Maturity and gaps across capabilities to support investment and prioritisation.', href: `${BASE}/strategy/heat2.html`, chip: { text: '31 Capabilities', cls: 'chip-blue' } },
+      { icon: '▦', iconBg: 'oklch(0.58 0.20 250 / 0.1)', iconColor: 'var(--blue)', name: 'Meta Model', sub: 'Defines what kinds of things exist in your architecture and how they relate.', href: `${BASE}/strategy/metamodel.html`, chip: null },
+    ]
+  },
+  {
+    id: 'management',
+    label: 'Management View',
+    dot: 'oklch(0.72 0.16 70)',
+    accent: 'var(--amber)',
+    chipClass: 'chip-amber',
+    chipText: 'Manager',
+    desc: 'Operational insights, pain points, and delivery tracking for management oversight.',
+    links: [
+      { icon: '⚑', iconBg: 'oklch(0.72 0.16 70 / 0.1)', iconColor: 'var(--amber-dk)', name: 'Capability Pain Points', sub: 'Operational issues mapped directly to impacted capabilities.', href: `${BASE}/management/pain.html`, chip: null },
+      { icon: '◉', iconBg: 'oklch(0.72 0.16 70 / 0.1)', iconColor: 'var(--amber-dk)', name: 'Dashboard', sub: 'Track delivery progress and improvement over time.', href: `${BASE}/management/dashboard.html`, chip: null },
+    ]
+  },
+  {
+    id: 'operational',
+    label: 'Operational View',
+    dot: 'oklch(0.55 0.15 145)',
+    accent: 'oklch(0.55 0.15 145)',
+    chipClass: 'chip-green',
+    chipText: 'Operations',
+    desc: 'Detailed processes, procedures, SIPOC and work item catalogue for day-to-day operations.',
+    links: [
+      { icon: '⊞', iconBg: 'oklch(0.55 0.15 145 / 0.1)', iconColor: 'oklch(0.45 0.15 145)', name: 'LTX SIPOC', sub: 'Suppliers, inputs, processes, outputs and customers summary.', href: `${BASE}/operations/sipoc.html`, chip: null },
+      { icon: '≡', iconBg: 'oklch(0.55 0.15 145 / 0.1)', iconColor: 'oklch(0.45 0.15 145)', name: 'Process Catalogue', sub: 'Detailed process descriptions that explain how work is executed end to end.', href: `${BASE}/operations/processcatalogue.html`, chip: null },
+      { icon: '§', iconBg: 'oklch(0.55 0.15 145 / 0.1)', iconColor: 'oklch(0.45 0.15 145)', name: 'Procedures', sub: 'Detailed procedures for tasks executed in accordance with policy.', href: `${BASE}/procedure/procedurelist.html`, chip: null },
+      { icon: '⋮⋮', iconBg: 'oklch(0.55 0.15 145 / 0.1)', iconColor: 'oklch(0.45 0.15 145)', name: 'Work Item Catalogue', sub: 'Catalogue of work items on hand and KPI tracking.', href: `${BASE}/operations/activities.html`, chip: null },
+    ]
+  },
+];
+
+const VIEWS2 = [
+  {
+    id: 'bts',
+    label: 'Business & Technology Systems',
+    dot: 'oklch(0.55 0.18 300)',
+    accent: 'oklch(0.55 0.18 300)',
+    chipClass: 'chip-purple',
+    chipText: 'BTS',
+    desc: 'Systems landscape mapped to capabilities and organisational glossary.',
+    links: [
+      { icon: '⬡', iconBg: 'oklch(0.55 0.18 300 / 0.1)', iconColor: 'oklch(0.45 0.18 300)', name: 'Systems Mapped to Capabilities', sub: 'LTX systems mapped to business capabilities across the architecture.', href: `${BASE}/BTS/systemmatrix.html`, chip: { text: '19 Systems', cls: 'chip-purple' } },
+      { icon: 'Aa', iconBg: 'oklch(0.55 0.18 300 / 0.1)', iconColor: 'oklch(0.45 0.18 300)', name: 'LTX Glossary', sub: 'Detailed Land Tax glossary of terms, definitions and abbreviations.', href: `${BASE}/BTS/glossary.html`, chip: null },
+      { icon: 'Aa', iconBg: 'oklch(0.55 0.18 300 / 0.1)', iconColor: 'oklch(0.45 0.18 300)', name: 'Investigations Value Stream', sub: 'Investigations Value Stage mapped to Capabilities', href: `${BASE}/BTS/investigationcapmap.html`, chip: null },
+      { icon: 'Aa', iconBg: 'oklch(0.55 0.18 300 / 0.1)', iconColor: 'oklch(0.45 0.18 300)', name: 'Investigations Process', sub: 'Investigations activity flow', href: `${BASE}/BTS/investigationactivityflow.html`, chip: null },
+      { icon: 'Aa', iconBg: 'oklch(0.55 0.18 300 / 0.1)', iconColor: 'oklch(0.45 0.18 300)', name: 'Investigations Data Entity Diagram', sub: 'Investigations data entities', href: `${BASE}/BTS/datadiagram.html`, chip: null },
+      { icon: 'Aa', iconBg: 'oklch(0.55 0.18 300 / 0.1)', iconColor: 'oklch(0.45 0.18 300)', name: 'Investigations System Diagram', sub: 'Investigations systems', href: `${BASE}/BTS/investigationsystems.html`, chip: null },
+      { icon: 'Aa', iconBg: 'oklch(0.55 0.18 300 / 0.1)', iconColor: 'oklch(0.45 0.18 300)', name: 'Investigations Target State Blueprint', sub: 'Investigations target state blueprint', href: `${BASE}/BTS/investigationtargetstate.html`, chip: null },
+      { icon: 'Aa', iconBg: 'oklch(0.55 0.18 300 / 0.1)', iconColor: 'oklch(0.45 0.18 300)', name: 'Investigations Target State Hypotheses', sub: 'Investigations target state hypotheses', href: `${BASE}/BTS/hypotheses.html`, chip: null },
+    ]
+  },
+  {
+    id: 'prototypes',
+    label: 'Prototypes',
+    dot: 'oklch(0.6 0.15 180)',
+    accent: 'oklch(0.6 0.15 180)',
+    chipClass: 'chip-green',
+    chipText: 'UX',
+    desc: 'Interactive prototypes demonstrating proposed workflows and user experiences.',
+    links: [
+      { icon: '⟳', iconBg: 'oklch(0.6 0.15 180 / 0.1)', iconColor: 'oklch(0.42 0.15 180)', name: 'Insolvency Wizard', sub: 'Wizard-style guided flow for insolvency case handling.', href: `${BASE}/insolvencywizard4.html`, chip: { text: 'Prototype', cls: 'chip-green' } }
+    ]
+  }
+];
+
+// ============================================================
+// RENDERING LOGIC
+// ============================================================
+
+let currentFilter = 'All';
+
+function renderCard(view) {
+  const html = `
+    <div class="view-group">
+      <div class="vg-header">
+        <div class="vg-stripe" style="background: ${view.accent}"></div>
+        <div class="vg-header-tag" style="color: ${view.accent}">
+          <div class="vg-header-tag-dot" style="background: ${view.dot}"></div>
+          ${view.label}
+          <span class="chip ${view.chipClass}">${view.chipText}</span>
+        </div>
+        <div class="vg-title">${view.label}</div>
+        <div class="vg-desc">${view.desc}</div>
+      </div>
+      <div>
+        ${view.links.map(link => `
+          <a class="vg-link" href="${link.href}" target="_blank" rel="noopener noreferrer">
+            <div class="vg-link-icon" style="background: ${link.iconBg}; color: ${link.iconColor}">
+              ${link.icon}
+            </div>
+            <div class="vg-link-text">
+              <div class="vg-link-name">${link.name}</div>
+              <div class="vg-link-sub">${link.sub}</div>
+              ${link.chip ? `<span class="chip ${link.chip.cls}">${link.chip.text}</span>` : ''}
+            </div>
+          </a>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  return html;
+}
+
+function render() {
+  // Filter views
+  const filtered1 = currentFilter === 'All' ? VIEWS : VIEWS.filter(v => v.chipText === currentFilter);
+  const filtered2 = currentFilter === 'All' ? VIEWS2 : VIEWS2.filter(v => v.chipText === currentFilter);
+
+  // Render grids
+  document.getElementById('views1').innerHTML = filtered1.map(renderCard).join('');
+  document.getElementById('views2').innerHTML = filtered2.map(renderCard).join('');
+}
+
+function renderFilters() {
+  const filters = ['All', 'Executive', 'Manager', 'Operations', 'BTS', 'UX'];
+  const html = filters.map(f => `
+    <button class="qs-chip ${f === 'All' ? 'active' : ''}" onclick="setFilter('${f}')">
+      ${f}
+    </button>
+  `).join('');
+  document.getElementById('filters').innerHTML = html;
+}
+
+function setFilter(filter) {
+  currentFilter = filter;
+  document.querySelectorAll('.qs-chip').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.trim() === filter);
+  });
+  render();
+}
+
+// INIT
+renderFilters();
+render();
+</script>
+
+</body>
+</html>

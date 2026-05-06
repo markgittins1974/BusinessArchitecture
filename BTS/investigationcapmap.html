@@ -362,7 +362,7 @@ h1 {
 }
 
 
-.scope-badge.partial {
+.scope-badge.partial { display: none; /* Hidden - moved to out-of-scope */
   background: #dbeafe;
   color: #1e40af;
   border: 1px solid #93c5fd;
@@ -552,29 +552,93 @@ h1 {
   </a>
 </div>
 
+<!-- POC SCOPE STATEMENT - COLLAPSIBLE -->
+
+<div style="background: #dcfce7; border: 2px solid #059669; border-radius: 8px; margin-bottom: 32px; overflow: hidden;">
+  <button onclick="togglePOCScope()" style="width: 100%; padding: 16px 20px; background: #059669; color: white; border: none; font-family: 'Inter Tight', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+    <span>3-Month POC Scope & Viability Gates</span>
+    <span id="pocToggleIcon" style="font-size: 16px; transition: transform 0.3s;">▼</span>
+  </button>
+
+  <div id="pocScopeContent" style="padding: 20px; display: none;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 16px;">
+      <div>
+        <h3 style="font-size: 12px; font-weight: 700; color: #059669; margin-bottom: 8px;">✓ What POC Delivers (7 Capabilities)</h3>
+        <ul style="font-size: 12px; color: #4b5563; margin: 0; padding-left: 18px; line-height: 1.6;">
+          <li>Single system of record (replace ESYS/CM9/email)</li>
+          <li>Mandatory TL/Legal approval workflow</li>
+          <li>Complete audit trail of all decisions</li>
+          <li>Real-time case visibility to executives</li>
+          <li>Expected 15-25% cycle time improvement</li>
+          <li>Investigators document full case lifecycle</li>
+          <li>Unified case history & findings</li>
+        </ul>
+      </div>
+
+```
+  <div>
+    <h3 style="font-size: 12px; font-weight: 700; color: #b45309; margin-bottom: 8px;">✗ What POC Does NOT Do (Phase 2+)</h3>
+    <ul style="font-size: 12px; color: #4b5563; margin: 0; padding-left: 18px; line-height: 1.6;">
+      <li>Auto-create cases from PICs (manual intake)</li>
+      <li>Fetch evidence from external systems (manual upload)</li>
+      <li>Generate notices (investigators draft in Word)</li>
+      <li>Issue assessments (Operations does in ESYS)</li>
+      <li>Route approvals via automation (manual record)</li>
+      <li>Integrate with ESYS, CM9, ATO, council systems</li>
+      <li>Auto-calculate liabilities (Excel-based)</li>
+    </ul>
+  </div>
+</div>
+
+<div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 6px; padding: 12px; margin-top: 16px;">
+  <p style="font-size: 12px; color: #166534; margin: 0;"><strong>Viability Success Criteria:</strong> Investigators adopt Salesforce over ESYS/CM9 for case documentation. Approval cycle time drops from 5 days to 2 days. Executives get real-time visibility of cases in flight. Cycle time improves 15%+. If all met → Green-light Phase 2 automation.</p>
+</div>
+
+<div style="background: #fffbf0; border: 1px solid #fcd34d; border-radius: 6px; padding: 12px; margin-top: 12px;">
+  <p style="font-size: 11px; color: #92400e; margin: 0;"><strong>Key Assumption:</strong> POC proves Salesforce can be the <em>single source of truth</em> for investigation data. Automation (Phase 2+) comes after we validate the case model works and investigators prefer it to current systems.</p>
+</div>
+```
+
+  </div>
+</div>
+
+<script>
+function togglePOCScope() {
+  var content = document.getElementById('pocScopeContent');
+  var icon = document.getElementById('pocToggleIcon');
+  
+  if (content.style.display === 'none') {
+    content.style.display = 'block';
+    icon.style.transform = 'rotate(180deg)';
+  } else {
+    content.style.display = 'none';
+    icon.style.transform = 'rotate(0deg)';
+  }
+}
+
+// Start collapsed
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('pocScopeContent').style.display = 'none';
+  document.getElementById('pocToggleIcon').style.transform = 'rotate(0deg)';
+});
+</script>
+
 <div class="filter-group" style="margin-bottom: 24px;">
   <span class="filter-label">Filter by scope:</span>
   <button class="filter-button active in-scope" onclick="toggleFilter('in-scope', this)">In Scope for POC</button>
-  <button class="filter-button active partial" onclick="toggleFilter('partial', this)">Partial for POC</button>
-  <button class="filter-button active out-of-scope" onclick="toggleFilter('out-of-scope', this)">Out of Scope for POC</button>
-  <button class="filter-button" onclick="resetFilters()" style="margin-left: auto;">Reset</button>
+
+<button class="filter-button active out-of-scope" onclick="toggleFilter('out-of-scope', this)">Out of Scope for POC</button>
+<button class="filter-button" onclick="resetFilters()" style="margin-left: auto;">Reset</button>
+
 </div>
 
-<div class="filter-group" style="margin-bottom: 32px;">
-  <span class="filter-label">Filter by roadmap step:</span>
-  <button class="filter-button active step-1" onclick="toggleStepFilter('step-1', this)">Step 1: Foundation</button>
-  <button class="filter-button active step-2" onclick="toggleStepFilter('step-2', this)">Step 2: Workflow</button>
-  <button class="filter-button active step-3" onclick="toggleStepFilter('step-3', this)">Step 3: Data Sync</button>
-  <button class="filter-button active step-4" onclick="toggleStepFilter('step-4', this)">Step 4: AI/Integration</button>
-  <button class="filter-button active step-5" onclick="toggleStepFilter('step-5', this)">Step 5: Reporting</button>
-  <button class="filter-button" onclick="resetStepFilters()" style="margin-left: auto;">Reset Steps</button>
-</div>
+<!-- Step filters removed for 3-month POC focus -->
 
 <div class="swimlane-wrapper">
 <div class="swimlane-container">
 
   <div class="stage-swimlane">
-    <div class="stage-header">Identify Issues &amp; Triggers</div>
+    <div class="stage-header">Stage 1: Intake</div>
     <div class="stage-track">
       <div class="capability-card" onclick="openPanel('intelligence','Intelligence &amp; Referral Management','Identify Issues &amp; Triggers',1)" data-scope="out-of-scope" data-step="step-out">Intelligence &amp; Referral Management<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge external-system">→ External System</span></div>
       <div class="capability-card" onclick="openPanel('risk','Risk Indicators &amp; Analytics','Identify Issues &amp; Triggers',1)" data-scope="out-of-scope" data-step="step-out">Risk Indicators &amp; Analytics<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge external-system">→ External System</span></div>
@@ -583,42 +647,42 @@ h1 {
   </div>
 
   <div class="stage-swimlane">
-    <div class="stage-header">Triage &amp; Initiate Case</div>
+    <div class="stage-header">Stage 2: Triage</div>
     <div class="stage-track">
       <div class="capability-card" onclick="openPanel('intake','Investigation Intake &amp; Triage','Triage &amp; Initiate Case',2)" data-scope="in-scope" data-step="step-1">Investigation Intake &amp; Triage<span class="scope-badge in-scope">In Scope</span></div>
       <div class="capability-card" onclick="openPanel('jurisdiction','Jurisdiction &amp; Authority Validation','Triage &amp; Initiate Case',2)" data-scope="in-scope" data-step="step-1">Jurisdiction &amp; Authority Validation<span class="scope-badge in-scope">In Scope</span></div>
       <div class="capability-card" onclick="openPanel('caseMgmt','Investigation Case Management','Triage &amp; Initiate Case',2)" data-scope="in-scope" data-step="step-1">Investigation Case Management<span class="scope-badge in-scope">In Scope</span></div>
       <div class="capability-card" onclick="openPanel('bulkInitiation','Automated &amp; Bulk Investigation Initiation','Triage &amp; Initiate Case',2)" data-scope="out-of-scope" data-step="step-out">Automated &amp; Bulk Investigation Initiation<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge external-system">→ External System</span></div>
-      <div class="capability-card" onclick="openPanel('activityEffort','Investigation Activity &amp; Effort Tracking','Triage &amp; Initiate Case',2)" data-scope="partial" data-step="step-2">Investigation Activity &amp; Effort Tracking<span class="scope-badge partial">Partial for POC</span><span class="scope-badge future-scope">→ Future Scope</span></div>
-      <div class="capability-card" onclick="openPanel('prioritisation','Case Prioritisation &amp; Workload Balancing','Triage &amp; Initiate Case',2)" data-scope="partial" data-step="step-2">Case Prioritisation &amp; Workload Balancing<span class="scope-badge partial">Partial for POC</span><span class="scope-badge future-scope">→ Future Scope</span></div>
+      <div class="capability-card" onclick="openPanel('activityEffort','Investigation Activity &amp; Effort Tracking','Triage &amp; Initiate Case',2)" data-scope="out-of-scope" data-step="step-2">Investigation Activity &amp; Effort Tracking<span class="scope-badge out-of-scope">Out of Scope for POC</span><span class="scope-badge future-scope">→ Future Scope</span></div>
+      <div class="capability-card" onclick="openPanel('prioritisation','Case Prioritisation &amp; Workload Balancing','Triage &amp; Initiate Case',2)" data-scope="out-of-scope" data-step="step-2">Case Prioritisation &amp; Workload Balancing<span class="scope-badge out-of-scope">Out of Scope for POC</span><span class="scope-badge future-scope">→ Future Scope</span></div>
     </div>
   </div>
 
   <div class="stage-swimlane">
-    <div class="stage-header">Plan &amp; Gather Evidence</div>
+    <div class="stage-header">Stage 3: Planning &amp; Evidence</div>
     <div class="stage-track">
       <div class="capability-card" onclick="openPanel('planning','Investigation Planning','Plan &amp; Gather Evidence',3)" data-scope="in-scope" data-step="step-1">Investigation Planning<span class="scope-badge in-scope">In Scope</span></div>
-      <div class="capability-card" onclick="openPanel('requests','Information Requests','Plan &amp; Gather Evidence',3)" data-scope="partial" data-step="step-2">Information Requests<span class="scope-badge partial">Partial for POC</span><span class="scope-badge future-scope">→ Future Scope</span></div>
+      <div class="capability-card" onclick="openPanel('requests','Information Requests','Plan &amp; Gather Evidence',3)" data-scope="out-of-scope" data-step="step-2">Information Requests<span class="scope-badge out-of-scope">Out of Scope for POC</span><span class="scope-badge future-scope">→ Future Scope</span></div>
       <div class="capability-card" onclick="openPanel('evidence','Evidence &amp; Information Capture','Plan &amp; Gather Evidence',3)" data-scope="in-scope" data-step="step-1">Evidence &amp; Information Capture<span class="scope-badge in-scope">In Scope</span></div>
       <div class="capability-card" onclick="openPanel('search','External &amp; Internal Search Management','Plan &amp; Gather Evidence',3)" data-scope="out-of-scope" data-step="step-4">External &amp; Internal Search Management<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge future-scope">→ Future Scope</span></div>
-      <div class="capability-card" onclick="openPanel('flags','Investigation Flags &amp; Non-Issue Controls','Plan &amp; Gather Evidence',3)" data-scope="partial" data-step="step-3">Investigation Flags &amp; Non-Issue Controls<span class="scope-badge partial">Partial for POC</span><span class="scope-badge future-scope">→ Future Scope</span></div>
+      <div class="capability-card" onclick="openPanel('flags','Investigation Flags &amp; Non-Issue Controls','Plan &amp; Gather Evidence',3)" data-scope="out-of-scope" data-step="step-3">Investigation Flags &amp; Non-Issue Controls<span class="scope-badge out-of-scope">Out of Scope for POC</span><span class="scope-badge future-scope">→ Future Scope</span></div>
       <div class="capability-card" onclick="openPanel('crossRevenue','Cross-Revenue Investigation Coordination','Plan &amp; Gather Evidence',3)" data-scope="out-of-scope" data-step="step-4">Cross-Revenue Investigation Coordination<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge future-scope">→ Future Scope</span></div>
     </div>
   </div>
 
   <div class="stage-swimlane">
-    <div class="stage-header">Assess &amp; Decide</div>
+    <div class="stage-header">Stage 4: Analysis &amp; Decision</div>
     <div class="stage-track">
       <div class="capability-card" onclick="openPanel('infoMgmt','Investigation Information Management','Assess &amp; Decide',4)" data-scope="in-scope" data-step="step-1">Investigation Information Management<span class="scope-badge in-scope">In Scope</span></div>
       <div class="capability-card" onclick="openPanel('analysis','Evidence Analysis &amp; Decision Support','Assess &amp; Decide',4)" data-scope="in-scope" data-step="step-1">Evidence Analysis &amp; Decision Support<span class="scope-badge in-scope">In Scope</span></div>
       <div class="capability-card" onclick="openPanel('legal','Legal &amp; Policy Review','Assess &amp; Decide',4)" data-scope="in-scope" data-step="step-1">Legal &amp; Policy Review<span class="scope-badge in-scope">In Scope</span></div>
       <div class="capability-card" onclick="openPanel('periodRevenue','Investigation Period &amp; Revenue Line Management','Assess &amp; Decide',4)" data-scope="in-scope" data-step="step-1">Investigation Period &amp; Revenue Line Management<span class="scope-badge in-scope">In Scope</span></div>
-      <div class="capability-card" onclick="openPanel('calculation','Calculation &amp; Scenario Modelling','Assess &amp; Decide',4)" data-scope="partial" data-step="step-3">Calculation &amp; Scenario Modelling<span class="scope-badge partial">Partial for POC</span><span class="scope-badge future-scope">→ Future Scope</span></div>
+      <div class="capability-card" onclick="openPanel('calculation','Calculation &amp; Scenario Modelling','Assess &amp; Decide',4)" data-scope="out-of-scope" data-step="step-3">Calculation &amp; Scenario Modelling<span class="scope-badge out-of-scope">Out of Scope for POC</span><span class="scope-badge future-scope">→ Future Scope</span></div>
     </div>
   </div>
 
   <div class="stage-swimlane">
-    <div class="stage-header">Enforce &amp; Govern Outcomes</div>
+    <div class="stage-header">Stage 5: Approval &amp; Closure</div>
     <div class="stage-track">
       <div class="capability-card" onclick="openPanel('sanctions','Sanctions &amp; Remedies Management','Enforce &amp; Govern Outcomes',5)" data-scope="out-of-scope" data-step="step-out">Sanctions &amp; Remedies Management<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge future-scope">→ Future Scope</span></div>
       <div class="capability-card" onclick="openPanel('approvals','Internal Approvals','Enforce &amp; Govern Outcomes',5)" data-scope="in-scope" data-step="step-1">Internal Approvals<span class="scope-badge in-scope">In Scope</span></div>
@@ -629,51 +693,6 @@ h1 {
   </div>
 
 </div>
-
-<!-- ENABLING SECTION -->
-
-<div style="margin-top: 48px; padding-top: 32px; border-top: 3px solid #e5e7eb;">
-  <div style="text-align: center; margin-bottom: 32px;">
-    <h2 style="font-family: 'Inter Tight', sans-serif; font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Enabling Capabilities</h2>
-    <p style="font-size: 13px; color: #6b7280; margin: 0 auto; max-width: 600px;">These capabilities support the investigation lifecycle but operate outside the core case management process.</p>
-  </div>
-
-  <div style="display: flex; gap: 24px; width: 100%;">
-    <!-- Learn & Improve Swimlane -->
-    <div style="flex: 1; min-width: 0;">
-      <div class="swimlane-wrapper">
-        <div class="swimlane-container">
-          <div class="stage-swimlane">
-            <div class="stage-header">Learn &amp; Improve</div>
-            <div class="stage-track">
-              <div class="capability-card" onclick="openPanel('knowledge','Investigation Knowledge Management','Learn &amp; Improve',6)" data-scope="out-of-scope" data-step="step-out">Investigation Knowledge Management<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge external-system">→ External System</span></div>
-              <div class="capability-card" onclick="openPanel('improvement','Continuous Improvement &amp; Design','Learn &amp; Improve',6)" data-scope="out-of-scope" data-step="step-out">Continuous Improvement &amp; Design<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge external-system">→ External System</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-```
-<!-- Enable & Support Swimlane -->
-<div style="flex: 1; min-width: 0;">
-  <div class="swimlane-wrapper">
-    <div class="swimlane-container">
-      <div class="stage-swimlane">
-        <div class="stage-header">Enable &amp; Support</div>
-        <div class="stage-track">
-          <div class="capability-card" onclick="openPanel('workforce','Investigation Workforce Management','Enable &amp; Support',7)" data-scope="out-of-scope" data-step="step-out">Investigation Workforce Management<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge external-system">→ External System</span></div>
-          <div class="capability-card" onclick="openPanel('technology','Investigation Technology &amp; Tools','Enable &amp; Support',7)" data-scope="out-of-scope" data-step="step-out">Investigation Technology &amp; Tools<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge external-system">→ External System</span></div>
-          <div class="capability-card" onclick="openPanel('analytics','Data &amp; Analytics Platform','Enable &amp; Support',7)" data-scope="out-of-scope" data-step="step-out">Data &amp; Analytics Platform<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge external-system">→ External System</span></div>
-          <div class="capability-card" onclick="openPanel('policy','Policy &amp; Procedure Governance','Enable &amp; Support',7)" data-scope="out-of-scope" data-step="step-out">Policy &amp; Procedure Governance<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge external-system">→ External System</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-```
-
-  </div>
 
 <div class="panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
 <div class="panel" id="panel">
@@ -686,38 +705,22 @@ h1 {
 <!-- ROADMAP LEGEND -->
 
 <div style="margin-top: 60px; padding-top: 40px; padding-bottom: 40px; border-top: 2px solid #e5e7eb;">
-  <h2 style="font-family: 'Inter Tight', sans-serif; font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 0.5px;">5-Step Implementation Roadmap</h2>
+  <h2 style="font-family: 'Inter Tight', sans-serif; font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 0.5px;">3-Month POC vs Future Phases</h2>
 
   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 100%;">
-    <!-- Step 1 -->
-    <div style="padding: 20px; background: var(--s1-bg); border-left: 4px solid var(--s1); border-radius: 6px;">
-      <h3 style="font-family: 'Inter Tight', sans-serif; font-size: 13px; font-weight: 700; color: var(--s1); margin-bottom: 8px;">Step 1: Foundation & Data Model</h3>
-      <p style="font-size: 12px; color: #4b5563; line-height: 1.5; margin: 0;">PIC/IC record types, case lifecycle fields, entity relationships, and core case structure. 10 capabilities: intake, triage, case management, planning, evidence, information management, analysis, legal review, period/revenue management, approvals.</p>
+    <!-- POC -->
+    <div style="padding: 20px; background: #dcfce7; border-left: 4px solid #059669; border-radius: 6px;">
+      <h3 style="font-family: 'Inter Tight', sans-serif; font-size: 13px; font-weight: 700; color: #059669; margin-bottom: 8px;">Phase 1: POC (3 Months)</h3>
+      <p style="font-size: 12px; color: #4b5563; line-height: 1.5; margin: 0;"><strong>7 Core Capabilities:</strong> Case management, intake & triage, planning, evidence capture, analysis & decision support, internal approvals, reporting & insights.</p>
+      <p style="font-size: 12px; color: #4b5563; line-height: 1.5; margin: 8px 0 0 0;"><strong>Scope:</strong> Single system of record. Manual intake, evidence, approvals. Investigators document full case in Salesforce. TLs approve with audit trail. Execs see real-time visibility.</p>
     </div>
 
 ```
-<!-- Step 2 -->
-<div style="padding: 20px; background: var(--s2-bg); border-left: 4px solid var(--s2); border-radius: 6px;">
-  <h3 style="font-family: 'Inter Tight', sans-serif; font-size: 13px; font-weight: 700; color: var(--s2); margin-bottom: 8px;">Step 2: Workflow & Assignment Rules</h3>
-  <p style="font-size: 12px; color: #4b5563; line-height: 1.5; margin: 0;">Case routing, TL assignment, activity logging, workload dashboards, and basic letter templating. 3 capabilities: activity/effort tracking, prioritisation & workload balancing, information requests (basic letters).</p>
-</div>
-
-<!-- Step 3 -->
-<div style="padding: 20px; background: var(--s3-bg); border-left: 4px solid var(--s3); border-radius: 6px;">
-  <h3 style="font-family: 'Inter Tight', sans-serif; font-size: 13px; font-weight: 700; color: var(--s3); margin-bottom: 8px;">Step 3: Data Seeding & Synchronisation</h3>
-  <p style="font-size: 12px; color: #4b5563; line-height: 1.5; margin: 0;">Load historical case data, real-time sync with ESYS/CM9, flag synchronisation, and calculation storage. 2 capabilities: investigation flags & non-issue controls, calculation & scenario modelling (partial).</p>
-</div>
-
-<!-- Step 4 -->
-<div style="padding: 20px; background: var(--s4-bg); border-left: 4px solid var(--s4); border-radius: 6px;">
-  <h3 style="font-family: 'Inter Tight', sans-serif; font-size: 13px; font-weight: 700; color: var(--s4); margin-bottom: 8px;">Step 4: Agentic AI & Integration</h3>
-  <p style="font-size: 12px; color: #4b5563; line-height: 1.5; margin: 0;">API integrations, AI-driven case linking, federated search, and intelligent automation. 2 capabilities: cross-revenue case coordination, external & internal search management.</p>
-</div>
-
-<!-- Step 5 -->
-<div style="padding: 20px; background: var(--s5-bg); border-left: 4px solid var(--s5); border-radius: 6px;">
-  <h3 style="font-family: 'Inter Tight', sans-serif; font-size: 13px; font-weight: 700; color: var(--s5); margin-bottom: 8px;">Step 5: Reporting, Dashboards & Analytics</h3>
-  <p style="font-size: 12px; color: #4b5563; line-height: 1.5; margin: 0;">Unified case analytics, performance dashboards, SLA tracking, and post-closure insights. 2 capabilities: investigation reporting & performance insights, objections & dispute management.</p>
+<!-- Phase 2 -->
+<div style="padding: 20px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 6px;">
+  <h3 style="font-family: 'Inter Tight', sans-serif; font-size: 13px; font-weight: 700; color: #b45309; margin-bottom: 8px;">Phase 2+ (6-12 Months)</h3>
+  <p style="font-size: 12px; color: #4b5563; line-height: 1.5; margin: 0;"><strong>Add:</strong> Auto-case creation from PICs, integrated evidence fetching, advanced workflows, notice generation templates, flag synchronisation with ESYS, analytics & learning capture.</p>
+  <p style="font-size: 12px; color: #4b5563; line-height: 1.5; margin: 8px 0 0 0;"><strong>Outcome:</strong> End-to-end case automation. Investigators focus on analysis; Salesforce handles intake, routing, documentation, notifications.</p>
 </div>
 ```
 
@@ -816,7 +819,7 @@ function openPanel(capId, title, stage, stageNum) {
   }
   
   if (content.scopePartial) {
-    html += '<div class="panel-section" style="background:#dbeafe;border:1px solid #93c5fd;border-radius:5px;padding:12px;margin-bottom:16px;"><div class="panel-section-title" style="border:none;color:#1e40af;margin-bottom:6px;">Partial for POC - Salesforce MVP</div><p style="color:#1e40af;margin:0;">' + content.scopePartial + '</p></div>';
+    html += '<div class="panel-section" style="background:#dbeafe;border:1px solid #93c5fd;border-radius:5px;padding:12px;margin-bottom:16px;"><div class="panel-section-title" style="border:none;color:#1e40af;margin-bottom:6px;">Deferred to Phase 2+</div><p style="color:#1e40af;margin:0;">' + content.scopePartial + '</p></div>';
   }
   
   if (content.description) {
@@ -899,6 +902,7 @@ var activeStepFilters = {
   'step-5': true,
   'step-out': true
 };
+// Step filters disabled for 3-month POC - all steps visible
 
 function toggleFilter(scope, button) {
   activeFilters[scope] = !activeFilters[scope];
@@ -975,6 +979,178 @@ function applyFilters() {
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closePanel();
 });
+</script>
+
+<!-- FEEDBACK & COMMENTS SECTION -->
+
+<div style="margin-top: 80px; padding-top: 60px; border-top: 3px solid #e5e7eb; margin-bottom: 40px;">
+  <h2 style="font-family: 'Inter Tight', sans-serif; font-size: 16px; font-weight: 700; color: #374151; margin-bottom: 12px;">Feedback & Comments</h2>
+  <p style="font-size: 13px; color: #6b7280; margin-bottom: 20px;">Use this section to capture feedback, questions, or concerns about the 3-month POC scope. All comments are saved locally in your browser.</p>
+
+  <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px;">
+    <div style="margin-bottom: 16px;">
+      <label style="font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 6px;">Your Name / Role</label>
+      <input type="text" id="commentAuthor" placeholder="e.g., Mark - Business Architect" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 12px; box-sizing: border-box;">
+    </div>
+
+```
+<div style="margin-bottom: 16px;">
+  <label style="font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 6px;">Comment / Feedback</label>
+  <textarea id="commentText" placeholder="e.g., Concern about manual evidence upload, question about LetterPro integration timeline, suggestion for Phase 2..." style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 12px; box-sizing: border-box; font-family: Arial, sans-serif; min-height: 80px; resize: vertical;"></textarea>
+</div>
+
+<div style="display: flex; gap: 8px; margin-bottom: 20px;">
+  <button onclick="addComment()" style="padding: 8px 16px; background: #059669; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Save Comment</button>
+  <button onclick="clearCommentForm()" style="padding: 8px 16px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Clear</button>
+  <button onclick="exportComments()" style="padding: 8px 16px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto;">Export as Text</button>
+  <button onclick="clearAllComments()" style="padding: 8px 16px; background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Clear All</button>
+</div>
+
+<div id="commentsList" style="max-height: 400px; overflow-y: auto;">
+  <!-- Comments will appear here -->
+</div>
+```
+
+  </div>
+</div>
+
+<script>
+// Comments Storage
+const COMMENTS_KEY = 'sro_poc_comments';
+
+// Initialize comments on page load
+function initializeComments() {
+  loadAndDisplayComments();
+}
+
+// Add a new comment
+function addComment() {
+  var author = document.getElementById('commentAuthor').value.trim();
+  var text = document.getElementById('commentText').value.trim();
+  
+  if (!author || !text) {
+    alert('Please fill in both name and comment');
+    return;
+  }
+  
+  // Create comment object
+  var comment = {
+    id: Date.now(),
+    author: author,
+    text: text,
+    timestamp: new Date().toLocaleString('en-AU', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric', 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    })
+  };
+  
+  // Get existing comments
+  var comments = JSON.parse(localStorage.getItem(COMMENTS_KEY) || '[]');
+  comments.unshift(comment); // Add to top
+  
+  // Save to localStorage
+  localStorage.setItem(COMMENTS_KEY, JSON.stringify(comments));
+  
+  // Clear form
+  clearCommentForm();
+  
+  // Reload display
+  loadAndDisplayComments();
+}
+
+// Load and display comments
+function loadAndDisplayComments() {
+  var comments = JSON.parse(localStorage.getItem(COMMENTS_KEY) || '[]');
+  var listDiv = document.getElementById('commentsList');
+  
+  if (comments.length === 0) {
+    listDiv.innerHTML = '<p style="font-size: 12px; color: #9ca3af; text-align: center; padding: 20px;">No comments yet. Be the first to provide feedback.</p>';
+    return;
+  }
+  
+  var html = '<div style="border-top: 1px solid #e5e7eb; padding-top: 12px;">';
+  
+  for (var i = 0; i < comments.length; i++) {
+    var comment = comments[i];
+    html += '<div style="background: white; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; margin-bottom: 12px;">';
+    html += '<div style="display: flex; justify-content: space-between; align-items: flex-start;">';
+    html += '<div>';
+    html += '<p style="font-size: 12px; font-weight: 600; color: #374151; margin: 0 0 4px 0;">' + comment.author + '</p>';
+    html += '<p style="font-size: 11px; color: #9ca3af; margin: 0 0 8px 0;">' + comment.timestamp + '</p>';
+    html += '</div>';
+    html += '<button onclick="deleteComment(' + comment.id + ')" style="background: #fee2e2; color: #991b1b; border: none; border-radius: 4px; padding: 4px 8px; font-size: 11px; cursor: pointer;">Delete</button>';
+    html += '</div>';
+    html += '<p style="font-size: 12px; color: #4b5563; margin: 0; line-height: 1.5; white-space: pre-wrap;">' + comment.text + '</p>';
+    html += '</div>';
+  }
+  
+  html += '</div>';
+  listDiv.innerHTML = html;
+}
+
+// Delete a comment
+function deleteComment(id) {
+  if (!confirm('Delete this comment?')) return;
+  
+  var comments = JSON.parse(localStorage.getItem(COMMENTS_KEY) || '[]');
+  comments = comments.filter(function(c) { return c.id !== id; });
+  localStorage.setItem(COMMENTS_KEY, JSON.stringify(comments));
+  loadAndDisplayComments();
+}
+
+// Clear comment form
+function clearCommentForm() {
+  document.getElementById('commentAuthor').value = '';
+  document.getElementById('commentText').value = '';
+  document.getElementById('commentAuthor').focus();
+}
+
+// Export comments as text
+function exportComments() {
+  var comments = JSON.parse(localStorage.getItem(COMMENTS_KEY) || '[]');
+  
+  if (comments.length === 0) {
+    alert('No comments to export');
+    return;
+  }
+  
+  var text = 'SRO Investigations Capability Map - Feedback Export\n';
+  text += 'Generated: ' + new Date().toLocaleString('en-AU') + '\n';
+  text += '=' + Array(70).join('=') + '\n\n';
+  
+  for (var i = 0; i < comments.length; i++) {
+    var comment = comments[i];
+    text += 'COMMENT ' + (i + 1) + '\n';
+    text += 'Author: ' + comment.author + '\n';
+    text += 'Date: ' + comment.timestamp + '\n';
+    text += 'Text:\n' + comment.text + '\n';
+    text += '\n' + Array(70).join('-') + '\n\n';
+  }
+  
+  // Create blob and download
+  var blob = new Blob([text], { type: 'text/plain' });
+  var url = window.URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'sro_capability_map_feedback_' + new Date().toISOString().slice(0,10) + '.txt';
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+}
+
+// Clear all comments
+function clearAllComments() {
+  if (!confirm('Delete ALL comments? This cannot be undone.')) return;
+  localStorage.removeItem(COMMENTS_KEY);
+  loadAndDisplayComments();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', initializeComments);
 </script>
 
 </body>

@@ -1,0 +1,700 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRO Investigation Flow – Value Stages</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+        }
+
+```
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+        margin-top: 0;
+        font-size: 28px;
+        color: #222;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 15px;
+    }
+    
+    h2 {
+        font-size: 16px;
+        color: #333;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        border-left: 4px solid #2c7be5;
+        padding-left: 12px;
+    }
+    
+    .mermaid-container {
+        overflow-x: auto;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 20px;
+        background: #f9f9f9;
+        margin-bottom: 30px;
+    }
+    
+    .mermaid {
+        display: flex;
+        justify-content: center;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-top: 20px;
+    }
+    
+    th {
+        background: #2c7be5;
+        color: white;
+        padding: 12px;
+        text-align: left;
+        font-weight: bold;
+        border: 1px solid #ddd;
+    }
+    
+    td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        vertical-align: top;
+    }
+    
+    tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+    
+    tr:hover {
+        background: #f0f0f0;
+    }
+    
+    .activity-num {
+        font-weight: bold;
+        color: #2c7be5;
+        min-width: 60px;
+    }
+    
+    .stage-header {
+        background: #e8f4f8;
+        font-weight: bold;
+        color: #2c7be5;
+    }
+    
+    .pain-point {
+        color: #d32f2f;
+        font-style: italic;
+    }
+</style>
+```
+
+</head>
+<body>
+
+<div class="container">
+    <h1>SRO Investigation Flow – Value Stages</h1>
+
+```
+<div class="mermaid-container">
+    <div class="mermaid">
+```
+
+graph TD
+Start([Investigation Triggered])
+
+```
+subgraph VS1["VALUE STAGE 1: INTAKE & VALIDATION"]
+    1.1["1.1 Receive PIC / Trigger"]
+    1.1LT["🔸 LT: Council triggers, valuation, trust"]
+    1.1PTX["◆ PTX: STP, VWA, grouping"]
+    1.1FHOG["★ FHOG: Fraud, IDV, occupancy"]
+    1.1Duties["◇ Duties: Conveyancer, undervaluation"]
+    1.2["1.2 Validate Trigger"]
+    1.3["1.3 Create Case Record"]
+end
+
+subgraph VS2["VALUE STAGE 2: TRIAGE & PRIORITISATION"]
+    2.1["2.1 Initial Checks & Searches"]
+    2.1LT["🔸 LT: Valuation conflicts"]
+    2.1PTX["◆ PTX: STP/VWA gaps"]
+    2.1FHOG["★ FHOG: Utilities delays"]
+    2.1Duties["◇ Duties: Upload inconsistency"]
+    2.2["2.2 Assess Risk & Priority"]
+    2.3{"2.3 GATE: Proceed/<br/>Redirect/Close"}
+end
+
+subgraph VS3["VALUE STAGE 3: INVESTIGATION PLANNING"]
+    3.1["3.1 Define Scope"]
+    3.1LT["🔸 LT: Exemptions, trusts"]
+    3.1PTX["◆ PTX: Contractor class"]
+    3.1FHOG["★ FHOG: Occupancy proof"]
+    3.1Duties["◇ Duties: Dutiable value"]
+    3.2["3.2 Develop Plan"]
+    3.3["3.3 Obtain Approvals"]
+end
+
+subgraph VS4["VALUE STAGE 4: EVIDENCE & ANALYSIS"]
+    4.1["4.1 Gather Evidence"]
+    4.1LT["🔸 LT: Council rates, deeds"]
+    4.1PTX["◆ PTX: 20+ payroll formats"]
+    4.1FHOG["★ FHOG: Utilities, documents"]
+    4.1Duties["◇ Duties: 200-page contracts"]
+    4.2["4.2 Analyse Evidence & Gaps"]
+    4.3["4.3 Request Information"]
+    4.4["4.4 Conduct Interviews"]
+    4.5["4.5 Form Preliminary View"]
+end
+
+subgraph VS5["VALUE STAGE 5: ENFORCEMENT & RESOLUTION"]
+    5.1["5.1 Draft Findings"]
+    5.1LT["🔸 LT: Notice variants, surcharge"]
+    5.1PTX["◆ PTX: Grouping notices"]
+    5.1FHOG["★ FHOG: Reversal notices"]
+    5.1Duties["◇ Duties: Foreign surcharge"]
+    5.2["5.2 Review & Approve"]
+    5.3["5.3 Issue Notices"]
+    5.4{"5.4 GATE:<br/>Objections?"}
+    5.4LT["🔸 LT: Valuation delays"]
+    5.4PTX["◆ PTX: Full re-analysis"]
+    5.4FHOG["★ FHOG: Emotional appeals"]
+    5.4Duties["◇ Duties: Tech complexity"]
+    5.5["5.5 Finalise & Close"]
+end
+
+subgraph VS6["VALUE STAGE 6: LEARNING & IMPROVEMENT"]
+    6.1["6.1 Capture Learnings"]
+    6.2["6.2 Share Insights"]
+end
+
+Start --> 1.1
+1.1 --> 1.1LT
+1.1 --> 1.1PTX
+1.1 --> 1.1FHOG
+1.1 --> 1.1Duties
+1.1LT --> 1.2
+1.1PTX --> 1.2
+1.1FHOG --> 1.2
+1.1Duties --> 1.2
+1.2 --> 1.3
+
+1.3 --> 2.1
+2.1 --> 2.1LT
+2.1 --> 2.1PTX
+2.1 --> 2.1FHOG
+2.1 --> 2.1Duties
+2.1LT --> 2.2
+2.1PTX --> 2.2
+2.1FHOG --> 2.2
+2.1Duties --> 2.2
+2.2 --> 2.3
+
+2.3 -->|Proceed| 3.1
+2.3 -->|Close/Redirect| End1([Case Closed])
+
+3.1 --> 3.1LT
+3.1 --> 3.1PTX
+3.1 --> 3.1FHOG
+3.1 --> 3.1Duties
+3.1LT --> 3.2
+3.1PTX --> 3.2
+3.1FHOG --> 3.2
+3.1Duties --> 3.2
+3.2 --> 3.3
+
+3.3 --> 4.1
+4.1 --> 4.1LT
+4.1 --> 4.1PTX
+4.1 --> 4.1FHOG
+4.1 --> 4.1Duties
+4.1LT --> 4.2
+4.1PTX --> 4.2
+4.1FHOG --> 4.2
+4.1Duties --> 4.2
+4.2 --> 4.3 --> 4.4 --> 4.5
+
+4.5 --> 5.1
+5.1 --> 5.1LT
+5.1 --> 5.1PTX
+5.1 --> 5.1FHOG
+5.1 --> 5.1Duties
+5.1LT --> 5.2
+5.1PTX --> 5.2
+5.1FHOG --> 5.2
+5.1Duties --> 5.2
+5.2 --> 5.3 --> 5.4
+
+5.4 -->|No| 5.5
+5.4 -->|Yes| 5.4LT
+5.4 -->|Yes| 5.4PTX
+5.4 -->|Yes| 5.4FHOG
+5.4 -->|Yes| 5.4Duties
+5.4LT --> Handle["Handle Objections"]
+5.4PTX --> Handle
+5.4FHOG --> Handle
+5.4Duties --> Handle
+Handle --> 5.5
+
+5.5 --> 6.1 --> 6.2 --> End2([Case Closed])
+
+style Start fill:#e8f4f8,stroke:#333,stroke-width:2px
+style End1 fill:#f0f0f0,stroke:#666
+style End2 fill:#e8f4f8,stroke:#333,stroke-width:2px
+style Handle fill:#fff,stroke:#333
+
+style VS1 fill:#f0f8ff,stroke:#2c7be5,stroke-width:2px
+style VS2 fill:#f0f8ff,stroke:#2c7be5,stroke-width:2px
+style VS3 fill:#f0f8ff,stroke:#2c7be5,stroke-width:2px
+style VS4 fill:#f0f8ff,stroke:#2c7be5,stroke-width:2px
+style VS5 fill:#f0f8ff,stroke:#2c7be5,stroke-width:2px
+style VS6 fill:#f0f8ff,stroke:#2c7be5,stroke-width:2px
+
+style 1.1 fill:#fff,stroke:#333
+style 1.2 fill:#fff,stroke:#333
+style 1.3 fill:#fff,stroke:#333
+style 2.1 fill:#fff,stroke:#333
+style 2.2 fill:#fff,stroke:#333
+style 2.3 fill:#fffacd,stroke:#ff9800,stroke-width:2px
+style 3.1 fill:#fff,stroke:#333
+style 3.2 fill:#fff,stroke:#333
+style 3.3 fill:#fff,stroke:#333
+style 4.1 fill:#fff,stroke:#333
+style 4.2 fill:#fff,stroke:#333
+style 4.3 fill:#fff,stroke:#333
+style 4.4 fill:#fff,stroke:#333
+style 4.5 fill:#fff,stroke:#333
+style 5.1 fill:#fff,stroke:#333
+style 5.2 fill:#fff,stroke:#333
+style 5.3 fill:#fff,stroke:#333
+style 5.4 fill:#fffacd,stroke:#ff9800,stroke-width:2px
+style 5.5 fill:#fff,stroke:#333
+style 6.1 fill:#fff,stroke:#333
+style 6.2 fill:#fff,stroke:#333
+
+style 1.1LT fill:#faf8f3,stroke:#d4a574,stroke-width:2px
+style 2.1LT fill:#faf8f3,stroke:#d4a574,stroke-width:2px
+style 3.1LT fill:#faf8f3,stroke:#d4a574,stroke-width:2px
+style 4.1LT fill:#faf8f3,stroke:#d4a574,stroke-width:2px
+style 5.1LT fill:#faf8f3,stroke:#d4a574,stroke-width:2px
+style 5.4LT fill:#faf8f3,stroke:#d4a574,stroke-width:2px
+
+style 1.1PTX fill:#f3f7fa,stroke:#5b92c9,stroke-width:2px
+style 2.1PTX fill:#f3f7fa,stroke:#5b92c9,stroke-width:2px
+style 3.1PTX fill:#f3f7fa,stroke:#5b92c9,stroke-width:2px
+style 4.1PTX fill:#f3f7fa,stroke:#5b92c9,stroke-width:2px
+style 5.1PTX fill:#f3f7fa,stroke:#5b92c9,stroke-width:2px
+style 5.4PTX fill:#f3f7fa,stroke:#5b92c9,stroke-width:2px
+
+style 1.1FHOG fill:#faf5f3,stroke:#c97b5c,stroke-width:2px
+style 2.1FHOG fill:#faf5f3,stroke:#c97b5c,stroke-width:2px
+style 3.1FHOG fill:#faf5f3,stroke:#c97b5c,stroke-width:2px
+style 4.1FHOG fill:#faf5f3,stroke:#c97b5c,stroke-width:2px
+style 5.1FHOG fill:#faf5f3,stroke:#c97b5c,stroke-width:2px
+style 5.4FHOG fill:#faf5f3,stroke:#c97b5c,stroke-width:2px
+
+style 1.1Duties fill:#f5f9f3,stroke:#7ba84f,stroke-width:2px
+style 2.1Duties fill:#f5f9f3,stroke:#7ba84f,stroke-width:2px
+style 3.1Duties fill:#f5f9f3,stroke:#7ba84f,stroke-width:2px
+style 4.1Duties fill:#f5f9f3,stroke:#7ba84f,stroke-width:2px
+style 5.1Duties fill:#f5f9f3,stroke:#7ba84f,stroke-width:2px
+style 5.4Duties fill:#f5f9f3,stroke:#7ba84f,stroke-width:2px
+    </div>
+</div>
+
+<h2>Activity Reference</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Activity #</th>
+            <th>Activity Name</th>
+            <th>Description</th>
+            <th>Pain Point</th>
+            <th>User Role</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="stage-header">
+            <td colspan="5">VALUE STAGE 1: INTAKE & VALIDATION</td>
+        </tr>
+        <tr>
+            <td class="activity-num">1.1</td>
+            <td>Receive PIC / Trigger</td>
+            <td>Receive a PIC, referral, anomaly, or system-generated trigger from internal or external sources</td>
+            <td class="pain-point">PICs come from everywhere — no consistency. Multiple intake channels create inconsistent PIC quality.</td>
+            <td>Investigator, Team Leader, Third-Party Data Provider</td>
+        </tr>
+        <tr style="background: #faf8f3;">
+            <td class="activity-num">1.1-LT</td>
+            <td>🔸 Land Tax Exception</td>
+            <td>Council valuation anomalies, land use mismatches, vacant residential land indicators, trust ownership irregularities</td>
+            <td class="pain-point">Council data is always late or inconsistent.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #f3f7fa;">
+            <td class="activity-num">1.1-PTX</td>
+            <td>◆ Payroll Tax Exception</td>
+            <td>ATO STP discrepancies, VWA wage declaration mismatch, grouping anomalies, large payroll growth, contractor flags</td>
+            <td class="pain-point">STP data is messy — it never lines up with what employers report.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #faf5f3;">
+            <td class="activity-num">1.1-FHOG</td>
+            <td>★ FHOG Exception</td>
+            <td>Suspicious grant applications, builder anomalies, high-risk postcodes, identity mismatch alerts, occupancy anomalies</td>
+            <td class="pain-point">FHOG fraud is creative — people try everything.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #f5f9f3;">
+            <td class="activity-num">1.1-Duties</td>
+            <td>◇ Duties Exception</td>
+            <td>Conveyancer referral anomalies, property undervaluation, foreign purchaser flags, related-party transfers, trust structures</td>
+            <td class="pain-point">Conveyancers don't always give us the full story.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr class="stage-header">
+            <td colspan="5"></td>
+        </tr>
+        <tr>
+            <td class="activity-num">1.2</td>
+            <td>Validate Trigger</td>
+            <td>Determine whether the trigger meets the threshold for an investigation or should be redirected</td>
+            <td class="pain-point">Half the PICs shouldn't even be investigations. Lack of clear intake criteria leads to misrouted work.</td>
+            <td>Investigator, Team Leader, Legal / Policy Advisor</td>
+        </tr>
+        <tr>
+            <td class="activity-num">1.3</td>
+            <td>Create/Update Case Record</td>
+            <td>Open or update the case record, attach documents, and ensure metadata is correct</td>
+            <td class="pain-point">We enter the same info in three places. Duplicate data entry across ESYS, CM9, and email increases administrative load.</td>
+            <td>Investigator, Team Leader, Processor</td>
+        </tr>
+        
+        <tr class="stage-header">
+            <td colspan="5">VALUE STAGE 2: TRIAGE & PRIORITISATION</td>
+        </tr>
+        <tr>
+            <td class="activity-num">2.1</td>
+            <td>Initial Checks & Background Searches</td>
+            <td>Perform quick checks to understand the customer, entity structure, history, and potential risk indicators</td>
+            <td class="pain-point">We spend half our time Googling. Lack of integrated data sources forces manual searching across multiple systems.</td>
+            <td>Investigator, Team Leader, Peer Reviewer</td>
+        </tr>
+        <tr style="background: #faf8f3;">
+            <td class="activity-num">2.1-LT</td>
+            <td>🔸 Land Tax Exception</td>
+            <td>Verify land use classification, check valuation history, confirm ownership structure, cross-check with Duties/Titles data</td>
+            <td class="pain-point">Valuation Services data doesn't match council data.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #f3f7fa;">
+            <td class="activity-num">2.1-PTX</td>
+            <td>◆ Payroll Tax Exception</td>
+            <td>Cross-check VWA vs PTX wages, analyse STP payroll totals, identify grouping relationships, review contractor reclassification risk</td>
+            <td class="pain-point">Grouping is a nightmare — there's no single source of truth.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #faf5f3;">
+            <td class="activity-num">2.1-FHOG</td>
+            <td>★ FHOG Exception</td>
+            <td>Verify occupancy using utilities data, cross-check identity documents, validate builder registration, check for multiple grants</td>
+            <td class="pain-point">We rely on utilities data but it's slow and inconsistent.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #f5f9f3;">
+            <td class="activity-num">2.1-Duties</td>
+            <td>◇ Duties Exception</td>
+            <td>Verify property transfer against Titles Office, check valuation for undervaluation, identify foreign purchaser surcharge, review related-party docs</td>
+            <td class="pain-point">Duties Online data is good, but conveyancer uploads are inconsistent.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr class="stage-header">
+            <td colspan="5"></td>
+        </tr>
+        <tr>
+            <td class="activity-num">2.2</td>
+            <td>Assess Risk & Determine Priority</td>
+            <td>Determine the level of risk, complexity, and urgency to decide whether the case should proceed, be paused, or be redirected</td>
+            <td class="pain-point">Risk is subjective — everyone does it differently. No consistent risk framework leads to inconsistent prioritisation.</td>
+            <td>Investigator, Team Leader, Executive Reviewer</td>
+        </tr>
+        <tr>
+            <td class="activity-num">2.3</td>
+            <td>Proceed / Redirect / Close (DECISION GATE)</td>
+            <td>Based on risk and available information, decide whether the case should proceed to planning, be redirected, or be closed</td>
+            <td class="pain-point">We don't close things early enough — they drag on. Lack of early decision criteria leads to unnecessary progression of low-value cases.</td>
+            <td>Investigator, Team Leader, Executive Reviewer</td>
+        </tr>
+        
+        <tr class="stage-header">
+            <td colspan="5">VALUE STAGE 3: INVESTIGATION PLANNING</td>
+        </tr>
+        <tr>
+            <td class="activity-num">3.1</td>
+            <td>Define Scope & Objectives</td>
+            <td>Define what the investigation will examine, what evidence is required, and what outcomes are possible</td>
+            <td class="pain-point">We jump straight into work without a plan. Lack of structured planning leads to inefficient evidence gathering and scope creep.</td>
+            <td>Investigator, Team Leader, Legal / Policy Advisor</td>
+        </tr>
+        <tr style="background: #faf8f3;">
+            <td class="activity-num">3.1-LT</td>
+            <td>🔸 Land Tax Exception</td>
+            <td>Determine land use classification, assess exemption eligibility, identify trust structures/beneficiaries, determine entity grouping</td>
+            <td class="pain-point">Trusts make everything harder.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #f3f7fa;">
+            <td class="activity-num">3.1-PTX</td>
+            <td>◆ Payroll Tax Exception</td>
+            <td>Determine grouping across entities, assess contractor vs employee classification, verify interstate allocation, identify exempt wages</td>
+            <td class="pain-point">Contractor rules are interpreted differently by everyone.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #faf5f3;">
+            <td class="activity-num">3.1-FHOG</td>
+            <td>★ FHOG Exception</td>
+            <td>Confirm genuine occupancy timeframe, validate first-home buyer eligibility, assess builder legitimacy, identify straw-buyer arrangements</td>
+            <td class="pain-point">Occupancy is the hardest thing to prove.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #f5f9f3;">
+            <td class="activity-num">3.1-Duties</td>
+            <td>◇ Duties Exception</td>
+            <td>Determine correct dutiable value, assess related-party transfer legitimacy, determine foreign surcharge applicability, assess landholder duty</td>
+            <td class="pain-point">Related-party transfers are always messy.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr class="stage-header">
+            <td colspan="5"></td>
+        </tr>
+        <tr>
+            <td class="activity-num">3.2</td>
+            <td>Develop Investigation Plan</td>
+            <td>Create a structured plan outlining tasks, evidence sources, timelines, and dependencies</td>
+            <td class="pain-point">Plans live in our heads — nothing is written down. Lack of documented plans reduces transparency and makes handovers difficult.</td>
+            <td>Investigator, Team Leader, Legal / Policy Advisor</td>
+        </tr>
+        <tr>
+            <td class="activity-num">3.3</td>
+            <td>Obtain Approvals</td>
+            <td>Seek approval for investigation scope, planned actions, or use of specific powers</td>
+            <td class="pain-point">Approvals take forever — everything is via email. Manual approval processes create delays and lack auditability.</td>
+            <td>Team Leader, Executive Reviewer, Legal / Policy Advisor</td>
+        </tr>
+        
+        <tr class="stage-header">
+            <td colspan="5">VALUE STAGE 4: EVIDENCE & ANALYSIS</td>
+        </tr>
+        <tr>
+            <td class="activity-num">4.1</td>
+            <td>Gather Evidence</td>
+            <td>Collect evidence from internal systems, external agencies, customers, and third parties</td>
+            <td class="pain-point">We chase the same documents multiple times. Lack of centralised evidence tracking leads to duplication and delays.</td>
+            <td>Investigator, Team Leader, Third-Party Data Provider</td>
+        </tr>
+        <tr style="background: #faf8f3;">
+            <td class="activity-num">4.1-LT</td>
+            <td>🔸 Land Tax Exception</td>
+            <td>Collect council rates notices, valuation reports, land use declarations, site photos, trust deeds, Titles Office extracts</td>
+            <td class="pain-point">We have to ask the customer for documents council already has.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #f3f7fa;">
+            <td class="activity-num">4.1-PTX</td>
+            <td>◆ Payroll Tax Exception</td>
+            <td>Collect payroll reports (weekly/fortnightly/monthly), STP submissions, VWA declarations, contractor agreements, timesheets, interstate breakdowns</td>
+            <td class="pain-point">Employers give us payroll data in 20 different formats.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #faf5f3;">
+            <td class="activity-num">4.1-FHOG</td>
+            <td>★ FHOG Exception</td>
+            <td>Collect utilities data, lease agreements, bank statements, builder contracts, occupancy declarations, driver licence history, council records</td>
+            <td class="pain-point">Applicants give us doctored documents — we have to verify everything.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #f5f9f3;">
+            <td class="activity-num">4.1-Duties</td>
+            <td>◇ Duties Exception</td>
+            <td>Collect contract of sale, statement of adjustments, valuation reports, Titles extracts, trust/corporate docs, foreign declarations, bank statements</td>
+            <td class="pain-point">We get 200-page contracts with no index — impossible to find anything.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr class="stage-header">
+            <td colspan="5"></td>
+        </tr>
+        <tr>
+            <td class="activity-num">4.2</td>
+            <td>Analyse Evidence & Identify Gaps</td>
+            <td>Review collected evidence, identify inconsistencies, and determine what additional information is required</td>
+            <td class="pain-point">We don't know what we already have — everything is buried in CM9. Poor document organisation makes evidence hard to locate.</td>
+            <td>Investigator, Team Leader, Peer Reviewer</td>
+        </tr>
+        <tr>
+            <td class="activity-num">4.3</td>
+            <td>Request Additional Information</td>
+            <td>Send formal or informal requests for additional information to customers or external agencies</td>
+            <td class="pain-point">We send letters manually — no templates, no automation. Manual correspondence processes increase cycle time and introduce inconsistency.</td>
+            <td>Investigator, Team Leader, Third-Party Data Provider</td>
+        </tr>
+        <tr>
+            <td class="activity-num">4.4</td>
+            <td>Conduct Interviews or Site Visits</td>
+            <td>Conduct interviews, site visits, or inspections to gather further evidence or validate claims</td>
+            <td class="pain-point">We don't have a standard way to record interviews. Lack of structured templates leads to inconsistent evidence capture.</td>
+            <td>Investigator, Team Leader, Legal / Policy Advisor</td>
+        </tr>
+        <tr>
+            <td class="activity-num">4.5</td>
+            <td>Form Preliminary View</td>
+            <td>Based on evidence gathered, form a preliminary view of liability, compliance, or risk</td>
+            <td class="pain-point">Everyone interprets evidence differently. Lack of standardised assessment criteria leads to inconsistent outcomes.</td>
+            <td>Investigator, Team Leader, Peer Reviewer</td>
+        </tr>
+        
+        <tr class="stage-header">
+            <td colspan="5">VALUE STAGE 5: ENFORCEMENT & RESOLUTION</td>
+        </tr>
+        <tr>
+            <td class="activity-num">5.1</td>
+            <td>Draft Findings & Notices</td>
+            <td>Prepare draft findings, notices, or assessments based on the preliminary view</td>
+            <td class="pain-point">Templates are inconsistent — everyone writes them differently. Lack of standardised templates leads to inconsistent communication and legal risk.</td>
+            <td>Investigator, Team Leader, Processor, Legal / Policy Advisor</td>
+        </tr>
+        <tr style="background: #faf8f3;">
+            <td class="activity-num">5.1-LT</td>
+            <td>🔸 Land Tax Exception</td>
+            <td>Land Tax Assessment Notice, Vacant Residential Land Tax Notice, Land Use Adjustment Notice, Trust Surcharge Assessment</td>
+            <td class="pain-point">LT notices are the most complex — too many variations.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #f3f7fa;">
+            <td class="activity-num">5.1-PTX</td>
+            <td>◆ Payroll Tax Exception</td>
+            <td>Payroll Tax Assessment, Grouping Determination Notice, Contractor Reclassification Notice, Interstate Payroll Adjustment Notice</td>
+            <td class="pain-point">Grouping notices are the most contested — employers always push back.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #faf5f3;">
+            <td class="activity-num">5.1-FHOG</td>
+            <td>★ FHOG Exception</td>
+            <td>FHOG Reversal Notice, FHOG Recovery Notice, FHOG Eligibility Determination, Occupancy Breach Notice</td>
+            <td class="pain-point">FHOG reversals get messy — people get emotional.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #f5f9f3;">
+            <td class="activity-num">5.1-Duties</td>
+            <td>◇ Duties Exception</td>
+            <td>Duties Assessment Notice, Foreign Purchaser Surcharge Assessment, Landholder Duty Assessment, Off-the-Plan Concession Adjustment Notice</td>
+            <td class="pain-point">Foreign purchaser surcharge is the most contested part.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr class="stage-header">
+            <td colspan="5"></td>
+        </tr>
+        <tr>
+            <td class="activity-num">5.2</td>
+            <td>Review & Approve Findings</td>
+            <td>Review draft findings and notices for accuracy, consistency, and legal compliance</td>
+            <td class="pain-point">Reviews take too long — everything is manual. Manual review processes create bottlenecks and inconsistent quality assurance.</td>
+            <td>Team Leader, Executive Reviewer, Legal / Policy Advisor</td>
+        </tr>
+        <tr>
+            <td class="activity-num">5.3</td>
+            <td>Issue Notices / Assessments</td>
+            <td>Send formal notices or assessments to the customer and record them in the case file</td>
+            <td class="pain-point">We manually upload everything — nothing is automated. Manual issuance and filing processes increase administrative burden and risk of error.</td>
+            <td>Investigator, Team Leader, Processor</td>
+        </tr>
+        <tr>
+            <td class="activity-num">5.4</td>
+            <td>Objections Received? (DECISION GATE)</td>
+            <td>Review customer objections or responses and determine whether findings need to be updated or case should close</td>
+            <td class="pain-point">Objections go back and forth forever. No structured objection-handling workflow leads to delays and inconsistent outcomes.</td>
+            <td>Investigator, Team Leader, Legal / Policy Advisor</td>
+        </tr>
+        <tr style="background: #faf8f3;">
+            <td class="activity-num">5.4-LT</td>
+            <td>🔸 Land Tax Exception</td>
+            <td>Disputes: incorrect land use, incorrect valuation, incorrect trust surcharge, incorrect exemption removal</td>
+            <td class="pain-point">Valuation objections take forever — we depend on another team.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #f3f7fa;">
+            <td class="activity-num">5.4-PTX</td>
+            <td>◆ Payroll Tax Exception</td>
+            <td>Disputes: grouping determination, contractor classification, wage totals (STP vs employer), interstate allocation, exempt wages</td>
+            <td class="pain-point">Objections turn into mini-audits — we basically redo the whole case.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #faf5f3;">
+            <td class="activity-num">5.4-FHOG</td>
+            <td>★ FHOG Exception</td>
+            <td>Disputes: occupancy evidence, claims of temporary absence, builder contract validity, identity verification, administrative error claims</td>
+            <td class="pain-point">Objections often turn into emotional appeals rather than factual disputes.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr style="background: #f5f9f3;">
+            <td class="activity-num">5.4-Duties</td>
+            <td>◇ Duties Exception</td>
+            <td>Disputes: dutiable value, foreign purchaser surcharge, related-party valuation, landholder thresholds, off-the-plan concession eligibility</td>
+            <td class="pain-point">Duties objections are technical — they take ages to resolve.</td>
+            <td>Investigator, Team Leader</td>
+        </tr>
+        <tr class="stage-header">
+            <td colspan="5"></td>
+        </tr>
+        <tr>
+            <td class="activity-num">5.5</td>
+            <td>Finalise Case & Close</td>
+            <td>Complete final documentation, update systems, and formally close the case</td>
+            <td class="pain-point">Closing a case takes longer than the investigation. Excessive administrative steps and duplicate filing slow down case closure.</td>
+            <td>Investigator, Team Leader, Processor</td>
+        </tr>
+        
+        <tr class="stage-header">
+            <td colspan="5">VALUE STAGE 6: LEARNING & IMPROVEMENT</td>
+        </tr>
+        <tr>
+            <td class="activity-num">6.1</td>
+            <td>Capture Learnings & Insights</td>
+            <td>Document key learnings, systemic issues, and opportunities for improvement</td>
+            <td class="pain-point">We never capture learnings — everything is in people's heads. Lack of structured learning capture prevents continuous improvement.</td>
+            <td>Investigator, Team Leader, Executive Reviewer</td>
+        </tr>
+        <tr>
+            <td class="activity-num">6.2</td>
+            <td>Share Insights with Other Teams</td>
+            <td>Share insights with other teams to improve processes, risk models, and compliance strategies</td>
+            <td class="pain-point">Insights never go anywhere — no one sees them. No structured mechanism for sharing insights limits organisational learning.</td>
+            <td>Investigator, Team Leader, Executive Reviewer, Legal / Policy Advisor</td>
+        </tr>
+    </tbody>
+</table>
+```
+
+</div>
+
+<script>
+    mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Management Solution – How Might We Hypotheses</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+        }
+
+```
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+        margin-top: 0;
+        font-size: 28px;
+        color: #222;
+        border-bottom: 3px solid #2c7be5;
+        padding-bottom: 15px;
+        margin-bottom: 30px;
+    }
+    
+    h2 {
+        font-size: 18px;
+        color: #fff;
+        background: #2c7be5;
+        padding: 12px 16px;
+        margin: 30px 0 15px 0;
+        border-radius: 6px;
+        margin-top: 40px;
+    }
+    
+    .value-stage {
+        background: #f9f9f9;
+        border-left: 4px solid #2c7be5;
+        padding: 20px;
+        margin-bottom: 25px;
+        border-radius: 4px;
+    }
+    
+    .vs-title {
+        font-weight: bold;
+        color: #2c7be5;
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+    
+    .pain-point-group {
+        margin-bottom: 18px;
+    }
+    
+    .pain-title {
+        font-weight: bold;
+        color: #333;
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+    
+    .pain-description {
+        color: #666;
+        font-size: 13px;
+        margin: 4px 0;
+        line-height: 1.5;
+    }
+    
+    .raw-pain {
+        color: #d32f2f;
+        font-style: italic;
+        font-size: 12px;
+        margin-bottom: 4px;
+        padding-left: 12px;
+        border-left: 2px solid #d32f2f;
+    }
+    
+    .hmw-statements {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #ddd;
+    }
+    
+    .hmw-header {
+        font-weight: bold;
+        color: #1e5ba8;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+    }
+    
+    .hmw-list {
+        margin: 0;
+        padding-left: 18px;
+        list-style: none;
+    }
+    
+    .hmw-item {
+        color: #555;
+        font-size: 13px;
+        margin-bottom: 6px;
+        line-height: 1.5;
+    }
+    
+    .hmw-item:before {
+        content: "→ ";
+        color: #2c7be5;
+        font-weight: bold;
+        margin-right: 6px;
+    }
+    
+    .measurable {
+        background: #fffacd;
+        border-left: 3px solid #ff9800;
+        padding-left: 6px;
+    }
+    
+    .measurable:before {
+        content: "📊 ";
+        margin-right: 3px;
+    }
+    
+    .revenue-tags {
+        display: inline-flex;
+        gap: 6px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+    }
+    
+    .revenue-tag {
+        font-size: 11px;
+        font-weight: bold;
+        padding: 3px 8px;
+        border-radius: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+    
+    .tag-lt {
+        background: #faf8f3;
+        color: #8b6f47;
+        border: 1px solid #d4a574;
+    }
+    
+    .tag-ptx {
+        background: #f3f7fa;
+        color: #3d5a8a;
+        border: 1px solid #5b92c9;
+    }
+    
+    .tag-fhog {
+        background: #faf5f3;
+        color: #8b5a3c;
+        border: 1px solid #c97b5c;
+    }
+    
+    .tag-duties {
+        background: #f5f9f3;
+        color: #5a7a35;
+        border: 1px solid #7ba84f;
+    }
+    
+    .tag-all {
+        background: #e8f4f8;
+        color: #2c7be5;
+        border: 1px solid #2c7be5;
+    }
+    
+    .intro {
+        background: #f0f8ff;
+        border-left: 4px solid #2c7be5;
+        padding: 15px;
+        margin-bottom: 30px;
+        border-radius: 4px;
+    }
+    
+    .intro p {
+        margin: 0;
+        color: #555;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    
+    .summary {
+        background: #f5f5f5;
+        border-left: 4px solid #666;
+        padding: 15px;
+        margin-top: 30px;
+        border-radius: 4px;
+    }
+    
+    .summary h3 {
+        margin-top: 0;
+        color: #333;
+        font-size: 14px;
+    }
+    
+    .summary ul {
+        margin: 8px 0;
+        padding-left: 20px;
+    }
+    
+    .summary li {
+        font-size: 13px;
+        color: #555;
+        margin-bottom: 4px;
+    }
+</style>
+```
+
+</head>
+<body>
+
+<div class="container">
+    <h1>Case Management Solution – How Might We Hypotheses</h1>
+
+```
+<div class="intro">
+    <p><strong>Objective:</strong> Translate operational pain points from the SRO investigations workflow into testable "How Might We" statements that a case management system could address. Each HMW focuses on friction points that recur across revenue lines or are revenue-line-specific bottlenecks.</p>
+</div>
+
+<div style="background: #f0f8ff; border-left: 4px solid #ff9800; padding: 15px; margin-bottom: 30px; border-radius: 4px;">
+    <p style="margin: 0; color: #333; font-size: 13px;"><strong>📊 Measurable Indicators:</strong> HMW statements marked with 📊 have clear, quantifiable success metrics. Unmarked statements are qualitative or harder to measure but still important.</p>
+</div>
+
+<h2>VALUE STAGE 1: INTAKE & VALIDATION</h2>
+
+<div class="value-stage">
+    <div class="vs-title">Pain: Inconsistent PIC Quality & Multiple Intake Channels</div>
+    <div class="pain-point-group">
+        <div class="pain-title">Root Cause</div>
+        <div class="pain-description">PICs come from multiple sources (email, systems, third parties, referrals) with no standardisation. Data entry happens 3+ times across ESYS, CM9, email.</div>
+        <div class="raw-pain">"PICs come from everywhere — no consistency." / "We enter the same info in three places."</div>
+    </div>
+    
+    <div class="hmw-statements">
+        <div class="hmw-header">How Might We Statements</div>
+        <ul class="hmw-list">
+            <li class="hmw-item measurable">How might we create a single, standardised intake form that captures all required data once and syncs to all backend systems (ESYS, CM9, COI)? <strong>[Metric: % of cases with duplicate data entry reduced to 0; data sync latency <5min]</strong></li>
+            <li class="hmw-item">How might we implement intake rules that route different PIC types (email, referral, system alert, third-party) to standardised workflows automatically?</li>
+            <li class="hmw-item measurable">How might we validate PIC completeness at intake, flagging missing information and prompting investigators to fill gaps before case creation? <strong>[Metric: % of case records flagged for incomplete data at intake; % rework due to incomplete PIC data]</strong></li>
+            <li class="hmw-item">How might we create a PIC template library (by revenue line) that auto-populates common fields based on trigger type?</li>
+        </ul>
+        <div class="revenue-tags">
+            <span class="revenue-tag tag-all">All Revenue Lines</span>
+        </div>
+    </div>
+</div>
+
+<h2>VALUE STAGE 2: TRIAGE & PRIORITISATION</h2>
+
+<div class="value-stage">
+    <div class="vs-title">Pain: Data Integration Fragmentation & Manual Reconciliation</div>
+    <div class="pain-point-group">
+        <div class="pain-title">Root Cause – All Revenue Lines</div>
+        <div class="pain-description">LT: Valuation Services data conflicts with council data. PTX: STP/VWA reconciliation gaps. FHOG: Utilities data delays. Duties: Conveyancer uploads inconsistent.</div>
+        <div class="raw-pain">"We spend half our time Googling." / "Grouping is a nightmare — there's no single source of truth."</div>
+    </div>
+    
+    <div class="hmw-statements">
+        <div class="hmw-header">How Might We Statements</div>
+        <ul class="hmw-list">
+            <li class="hmw-item measurable">How might we integrate council, Valuation Services, STP, VWA, and utilities data sources into a single case dashboard that automatically reconciles conflicts and flags discrepancies? <strong>[Metric: % of data integration enabled by value stage 2; time saved on manual reconciliation; % of discrepancies flagged vs missed]</strong></li>
+            <li class="hmw-item">How might we create a data quality dashboard showing coverage, staleness, and completeness of each external data source for a given case?</li>
+            <li class="hmw-item measurable">How might we implement an automated reconciliation workflow that identifies and resolves VWA/STP wage discrepancies without manual intervention? <strong>[Metric: % of wage discrepancies auto-resolved; time saved per PTX case during triage]</strong></li>
+            <li class="hmw-item measurable">How might we create a council data sync that automatically updates case records when new council rates, valuation, or occupancy data becomes available? <strong>[Metric: latency of council data updates <24hrs; % of LT cases with auto-updated council data]</strong></li>
+        </ul>
+        <div class="revenue-tags">
+            <span class="revenue-tag tag-lt">LT</span>
+            <span class="revenue-tag tag-ptx">PTX</span>
+            <span class="revenue-tag tag-fhog">FHOG</span>
+            <span class="revenue-tag tag-duties">Duties</span>
+        </div>
+    </div>
+</div>
+
+<div class="value-stage">
+    <div class="vs-title">Pain: No Consistent Risk Framework & Decision Criteria</div>
+    <div class="pain-point-group">
+        <div class="pain-title">Root Cause</div>
+        <div class="pain-description">Risk assessment is subjective. No standardised risk framework. Early closure criteria missing. Cases progress unnecessarily.</div>
+        <div class="raw-pain">"Risk is subjective — everyone does it differently." / "We don't close things early enough — they drag on."</div>
+    </div>
+    
+    <div class="hmw-statements">
+        <div class="hmw-header">How Might We Statements</div>
+        <ul class="hmw-list">
+            <li class="hmw-item measurable">How might we embed a configurable risk scoring model (by revenue line) that automatically calculates case risk and priority based on trigger type, entity characteristics, and historical patterns? <strong>[Metric: % of cases risk-scored automatically; consistency of risk scores across investigators; time saved on manual risk assessment]</strong></li>
+            <li class="hmw-item measurable">How might we create a set of early-closure decision rules that flag low-value cases for immediate redirect/close without full investigation? <strong>[Metric: % of cases closed early; avg cycle time reduction; cost savings per case avoided]</strong></li>
+            <li class="hmw-item">How might we surface risk factors and decision rationale transparently so investigators understand why cases are scored/prioritised as they are?</li>
+            <li class="hmw-item measurable">How might we track risk framework consistency and alert managers when risk assessment outliers appear (e.g., an investigator scores 80% of cases as high-risk)? <strong>[Metric: % of investigators with risk score variance >2σ; number of consistency alerts triggered]</strong></li>
+        </ul>
+        <div class="revenue-tags">
+            <span class="revenue-tag tag-all">All Revenue Lines</span>
+        </div>
+    </div>
+</div>
+
+<h2>VALUE STAGE 3: INVESTIGATION PLANNING</h2>
+
+<div class="value-stage">
+    <div class="vs-title">Pain: No Structured Planning & Manual Approvals</div>
+    <div class="pain-point-group">
+        <div class="pain-title">Root Cause</div>
+        <div class="pain-description">Plans live in heads, not documented. Approvals entirely email-based. No auditability. No handover capability. Revenue lines have different scope considerations.</div>
+        <div class="raw-pain">"Plans live in our heads — nothing is written down." / "Approvals take forever — everything is via email."</div>
+    </div>
+    
+    <div class="hmw-statements">
+        <div class="hmw-header">How Might We Statements</div>
+        <ul class="hmw-list">
+            <li class="hmw-item">How might we create investigation plan templates (by revenue line) that guide investigators through scope definition, evidence identification, and task breakdown?</li>
+            <li class="hmw-item measurable">How might we implement a workflow approval system that routes plans to the right approver (Team Leader, Legal, Executive) based on case complexity and power usage? <strong>[Metric: % of plans approved via system; avg approval time; bottlenecks identified]</strong></li>
+            <li class="hmw-item measurable">How might we track plan versions, approvals, and changes so that any modifications create an audit trail? <strong>[Metric: % of plans with audit trail; number of plan changes tracked; time to retrieve approval history]</strong></li>
+            <li class="hmw-item measurable">How might we auto-generate task lists from investigation plans and assign them with SLAs to prevent scope creep and ensure progress visibility? <strong>[Metric: % of scope creep incidents; task SLA compliance; avg cycle time deviation from plan]</strong></li>
+        </ul>
+        <div class="revenue-tags">
+            <span class="revenue-tag tag-all">All Revenue Lines</span>
+        </div>
+    </div>
+</div>
+
+<h2>VALUE STAGE 4: EVIDENCE & ANALYSIS</h2>
+
+<div class="value-stage">
+    <div class="vs-title">Pain: Fragmented Evidence Tracking & Document Chaos</div>
+    <div class="pain-point-group">
+        <div class="pain-title">Root Cause – Revenue Line Specific</div>
+        <div class="pain-description">LT: Duplicate evidence requests (council data not integrated). PTX: 20+ payroll formats, manual standardization. FHOG: Document fraud risk, extensive verification. Duties: 200-page contracts with no indexing.</div>
+        <div class="raw-pain">"We chase the same documents multiple times." / "Employers give us payroll data in 20 different formats." / "We get 200-page contracts with no index."</div>
+    </div>
+    
+    <div class="hmw-statements">
+        <div class="hmw-header">How Might We Statements</div>
+        <ul class="hmw-list">
+            <li class="hmw-item measurable">How might we create a centralised evidence registry that tracks what evidence has been collected, when, from which source, and whether it's been verified/analysed? <strong>[Metric: % of evidence tracked in registry; duplicate evidence requests eliminated; time to locate evidence]</strong></li>
+            <li class="hmw-item measurable">How might we implement evidence requirement checklists (by revenue line) that auto-populate based on investigation plan and flag when evidence is still outstanding? <strong>[Metric: % of evidence gaps identified; avg time to identify missing evidence; cases with 100% evidence completeness]</strong></li>
+            <li class="hmw-item measurable">How might we auto-normalise payroll data formats so that employers can upload in any format and the system converts to a standard schema? <strong>[Metric: % of payroll data auto-normalised; time saved on PTX manual standardization; format variance reduced]</strong></li>
+            <li class="hmw-item measurable">How might we implement intelligent document parsing for large contracts (Duties) that auto-indexes sections and extracts key clauses (consideration, surcharge applicability, etc.)? <strong>[Metric: % of key clauses auto-extracted; time saved on Duties contract review; accuracy of extraction]</strong></li>
+            <li class="hmw-item measurable">How might we create a document verification workflow (for FHOG) that flags suspicious documents and surfaces anomalies (e.g., utilities data showing zero usage)? <strong>[Metric: % of document fraud detected; false positive rate; time saved on verification]</strong></li>
+        </ul>
+        <div class="revenue-tags">
+            <span class="revenue-tag tag-lt">LT</span>
+            <span class="revenue-tag tag-ptx">PTX</span>
+            <span class="revenue-tag tag-fhog">FHOG</span>
+            <span class="revenue-tag tag-duties">Duties</span>
+        </div>
+    </div>
+</div>
+
+<div class="value-stage">
+    <div class="vs-title">Pain: Inconsistent Evidence Analysis & No Standardised Criteria</div>
+    <div class="pain-point-group">
+        <div class="pain-title">Root Cause</div>
+        <div class="pain-description">Everyone interprets evidence differently. No standardised assessment criteria. Manual interviews, no structured templates. Inconsistent outcomes.</div>
+        <div class="raw-pain">"Everyone interprets evidence differently." / "We don't have a standard way to record interviews."</div>
+    </div>
+    
+    <div class="hmw-statements">
+        <div class="hmw-header">How Might We Statements</div>
+        <ul class="hmw-list">
+            <li class="hmw-item measurable">How might we create decision trees / assessment frameworks (by revenue line) that guide investigators through evidence evaluation and help them reach consistent conclusions? <strong>[Metric: % of cases using assessment framework; consistency of preliminary view across multiple investigators; objection override rate]</strong></li>
+            <li class="hmw-item measurable">How might we implement interview templates (with guided questions, decision logic) that ensure interviews are recorded consistently and all material facts are captured? <strong>[Metric: % of interviews using template; completeness of interview records; time saved on interview documentation]</strong></li>
+            <li class="hmw-item measurable">How might we track preliminary views and their supporting evidence so that multiple investigators assessing the same facts reach similar conclusions? <strong>[Metric: consistency score for preliminary views; % agreement between investigators on similar cases; variance analysis]</strong></li>
+            <li class="hmw-item measurable">How might we flag inconsistencies when evidence contradicts preliminary view assumptions, prompting re-analysis before findings are drafted? <strong>[Metric: % of inconsistencies flagged; re-analysis triggered; findings accuracy improved]</strong></li>
+        </ul>
+        <div class="revenue-tags">
+            <span class="revenue-tag tag-all">All Revenue Lines</span>
+        </div>
+    </div>
+</div>
+
+<h2>VALUE STAGE 5: ENFORCEMENT & RESOLUTION</h2>
+
+<div class="value-stage">
+    <div class="vs-title">Pain: Inconsistent Notice Templates & High Variation</div>
+    <div class="pain-point-group">
+        <div class="pain-title">Root Cause – Revenue Line Specific</div>
+        <div class="pain-description">LT: 4+ notice variants (Assessment, VRLT, Land Use, Trust Surcharge). PTX: Grouping notices high dispute. FHOG: Reversal notices emotionally sensitive. Duties: Foreign surcharge contested.</div>
+        <div class="raw-pain">"Templates are inconsistent — everyone writes them differently." / "LT notices are the most complex — too many variations."</div>
+    </div>
+    
+    <div class="hmw-statements">
+        <div class="hmw-header">How Might We Statements</div>
+        <ul class="hmw-list">
+            <li class="hmw-item measurable">How might we create smart notice templates (by revenue line and notice type) that auto-populate key findings and calculations from the case record? <strong>[Metric: % of notices auto-generated; time saved drafting notices; consistency of notice content]</strong></li>
+            <li class="hmw-item">How might we implement dynamic notices that adjust language based on case facts (e.g., FHOG reversals include hardship language, foreign surcharge notices include exemption summary)?</li>
+            <li class="hmw-item measurable">How might we build a legal review workflow that validates notices for completeness, consistency, and legal compliance before issuance? <strong>[Metric: % of notices legally reviewed; % of legal errors caught pre-issuance; review time]</strong></li>
+            <li class="hmw-item">How might we create a precedent library of historical notices (by revenue line) that investigators can use as reference when drafting new notices?</li>
+        </ul>
+        <div class="revenue-tags">
+            <span class="revenue-tag tag-lt">LT</span>
+            <span class="revenue-tag tag-ptx">PTX</span>
+            <span class="revenue-tag tag-fhog">FHOG</span>
+            <span class="revenue-tag tag-duties">Duties</span>
+        </div>
+    </div>
+</div>
+
+<div class="value-stage">
+    <div class="vs-title">Pain: No Structured Objection Handling & Resolution Delays</div>
+    <div class="pain-point-group">
+        <div class="pain-title">Root Cause – Revenue Line Specific</div>
+        <div class="pain-description">LT: Valuation Service dependency creates delays. PTX: Objections trigger full re-analysis. FHOG: Emotional appeals require careful handling. Duties: Technical complexity slows resolution.</div>
+        <div class="raw-pain">"Objections go back and forth forever." / "Objections turn into mini-audits — we basically redo the whole case."</div>
+    </div>
+    
+    <div class="hmw-statements">
+        <div class="hmw-header">How Might We Statements</div>
+        <ul class="hmw-list">
+            <li class="hmw-item measurable">How might we implement a structured objection workflow that categorises objections (e.g., factual dispute, legal dispute, new evidence) and routes them to the right handler with SLA? <strong>[Metric: % of objections categorised; routing accuracy; SLA compliance; avg objection resolution time]</strong></li>
+            <li class="hmw-item measurable">How might we create templates for common objections (by revenue line) so that investigators can respond consistently and quickly? <strong>[Metric: % of objections responded via template; time saved per objection response; consistency of responses]</strong></li>
+            <li class="hmw-item measurable">How might we track objection dependencies (e.g., Valuation Service involvement) and monitor external delays so they don't fall through the cracks? <strong>[Metric: % of dependency-blocked objections tracked; number of items falling through; time to resolution increase]</strong></li>
+            <li class="hmw-item measurable">How might we surface objection re-analysis requirements early so PTX cases aren't re-audited from scratch, but only affected sections are re-analysed? <strong>[Metric: % of objections requiring full re-analysis vs partial; time saved on PTX re-analysis; rework cost reduction]</strong></li>
+            <li class="hmw-item">How might we implement escalation rules for high-emotion cases (FHOG) that route to senior investigators or add communication support?</li>
+        </ul>
+        <div class="revenue-tags">
+            <span class="revenue-tag tag-lt">LT</span>
+            <span class="revenue-tag tag-ptx">PTX</span>
+            <span class="revenue-tag tag-fhog">FHOG</span>
+            <span class="revenue-tag tag-duties">Duties</span>
+        </div>
+    </div>
+</div>
+
+<div class="value-stage">
+    <div class="vs-title">Pain: Manual Case Closure & Excessive Administrative Steps</div>
+    <div class="pain-point-group">
+        <div class="pain-title">Root Cause</div>
+        <div class="pain-description">Closing a case takes longer than the investigation. Duplicate filing. Excessive documentation steps. Manual archive process.</div>
+        <div class="raw-pain">"Closing a case takes longer than the investigation." / "We manually upload everything — nothing is automated."</div>
+    </div>
+    
+    <div class="hmw-statements">
+        <div class="hmw-header">How Might We Statements</div>
+        <ul class="hmw-list">
+            <li class="hmw-item measurable">How might we automate case closure by creating a checklist of closure steps that auto-complete when conditions are met (final decision made, no open objections, documents archived)? <strong>[Metric: % of cases auto-closed; time to closure; administrative burden reduction; closure error rate]</strong></li>
+            <li class="hmw-item measurable">How might we implement automatic integration with downstream systems (debt recovery, compliance tracking) so that case closure triggers required follow-up actions? <strong>[Metric: % of downstream actions triggered automatically; integration accuracy; process bottleneck elimination]</strong></li>
+            <li class="hmw-item measurable">How might we create closure templates (by case outcome type) that auto-populate standard documentation and reduce manual filing? <strong>[Metric: % of closures using template; documentation completeness; time saved on closure documentation]</strong></li>
+        </ul>
+        <div class="revenue-tags">
+            <span class="revenue-tag tag-all">All Revenue Lines</span>
+        </div>
+    </div>
+</div>
+
+<h2>VALUE STAGE 6: LEARNING & IMPROVEMENT</h2>
+
+<div class="value-stage">
+    <div class="vs-title">Pain: Tacit Knowledge & No Learning Capture</div>
+    <div class="pain-point-group">
+        <div class="pain-title">Root Cause</div>
+        <div class="pain-description">Learnings captured ad-hoc, not systematically. Fraud patterns not aggregated. Valuation methodology not shared. Contractor rules interpreted differently.</div>
+        <div class="raw-pain">"We never capture learnings — everything is in people's heads." / "Insights never go anywhere — no one sees them."</div>
+    </div>
+    
+    <div class="hmw-statements">
+        <div class="hmw-header">How Might We Statements</div>
+        <ul class="hmw-list">
+            <li class="hmw-item measurable">How might we create a structured learning capture form (at case closure) that guides investigators to document key findings, systemic issues, and improvement opportunities? <strong>[Metric: % of cases with learnings captured; completeness of learning records; time to capture]</strong></li>
+            <li class="hmw-item measurable">How might we implement a shared insights dashboard that aggregates fraud patterns, valuation anomalies, and objection themes across cases and revenue lines? <strong>[Metric: # of insights surfaced; cross-revenue-line pattern detection; usage of insights by investigators]</strong></li>
+            <li class="hmw-item measurable">How might we tag and search insights by revenue line, actor, issue type so that new investigators can learn from past cases? <strong>[Metric: # of insight searches; insights applied to new cases; time to relevant past case discovery]</strong></li>
+            <li class="hmw-item measurable">How might we create feedback loops where insights inform risk models, templates, and decision rules so that learnings improve future cases? <strong>[Metric: # of model updates triggered by insights; improvement in case consistency/cycle time over time]</strong></li>
+        </ul>
+        <div class="revenue-tags">
+            <span class="revenue-tag tag-all">All Revenue Lines</span>
+        </div>
+    </div>
+</div>
+
+<div class="summary">
+    <h3>Summary: Case Management Solution Hypothesis Map</h3>
+    <p><strong>Core Hypothesis:</strong> A centralized case management system that integrates data from fragmented sources, enforces standardised workflows, and embeds domain logic (risk models, assessment frameworks, decision rules) will reduce investigation cycle time by 30-40% and improve consistency across revenue lines.</p>
+    
+    <p><strong>Critical Success Factors:</strong></p>
+    <ul>
+        <li><strong>Data Integration:</strong> Single source of truth for all case data (PIC, council, Valuation Services, STP, VWA, utilities, contracts). Reconciliation and conflict detection built in.</li>
+        <li><strong>Workflow Standardisation:</strong> Enforced intake, triage, planning, evidence, findings, objection handling. Revenue-line-specific templates and rules.</li>
+        <li><strong>Decision Support:</strong> Risk models, assessment frameworks, objection decision trees embedded in workflows. Transparent, consistent, auditable.</li>
+        <li><strong>Evidence Management:</strong> Centralised registry, auto-normalisation, intelligent parsing, fraud detection. Prevents duplicate requests and rework.</li>
+        <li><strong>Learning Loop:</strong> Structured capture, aggregation, and sharing of insights. Feedback to improve risk models, templates, and rules.</li>
+    </ul>
+    
+    <p><strong>Revenue Line Specific Opportunities:</strong></p>
+    <ul>
+        <li><strong>Land Tax:</strong> Council data integration, valuation conflict resolution, trust structure analysis automation, exemption eligibility rules.</li>
+        <li><strong>Payroll Tax:</strong> STP/VWA reconciliation, payroll format normalisation, grouping relationship mapping, contractor classification decision tree.</li>
+        <li><strong>FHOG:</strong> Utilities data integration, occupancy verification workflow, document fraud detection, sensitive communication escalation.</li>
+        <li><strong>Duties:</strong> Valuation services integration, foreign surcharge logic, landholder threshold automation, large contract parsing.</li>
+    </ul>
+</div>
+```
+
+</div>
+
+</body>
+</html>

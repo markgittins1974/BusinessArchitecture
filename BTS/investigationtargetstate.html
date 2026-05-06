@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRO Investigations – Target State Service Blueprint</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; }
+body { overflow: hidden; }
+
+.app { display: flex; flex-direction: column; width: 100vw; height: 100vh; }
+
+.topbar {
+display: flex; align-items: center; justify-content: space-between;
+padding: 0 16px; height: 64px;
+background: linear-gradient(90deg, #15803d 0%, #059669 100%); color: white; flex-shrink: 0;
+}
+.topbar-title { font-size: 16px; font-weight: 700; }
+.topbar-meta { font-size: 11px; color: rgba(255,255,255,0.8); line-height: 1.3; }
+
+.legend {
+display: flex; align-items: center; gap: 16px; padding: 10px 16px;
+background: white; border-bottom: 1px solid #e0e4ed; flex-shrink: 0;
+font-size: 9px; font-weight: 600; overflow-x: auto;
+}
+.legend-item { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+.legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+.main-content { display: flex; flex: 1; overflow: hidden; }
+.grid-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.grid-wrapper { flex: 1; overflow: auto; }
+
+.grid {
+display: grid;
+grid-template-columns: 100px repeat(6, 160px);
+gap: 0;
+width: max-content;
+min-width: 100%;
+}
+
+.header-cell {
+position: sticky; top: 0; z-index: 20;
+padding: 0;
+background: #f8fafc; border-bottom: 2px solid #059669;
+display: flex; align-items: stretch;
+min-height: 85px;
+}
+
+.header-corner { width: 100px; border-right: 1px solid #e0e4ed; }
+
+.header-stage {
+width: 160px; padding: 6px 4px;
+display: flex; align-items: center; justify-content: center;
+text-align: center; flex-direction: column; gap: 2px;
+background: #059669; color: white; border-right: 1px solid #047857;
+font-size: 8px; font-weight: 700; line-height: 1.15;
+cursor: pointer; transition: background 0.15s;
+}
+.header-stage:hover { background: #047857; }
+.header-stage.selected { background: #0d6b47; }
+
+.stage-code { font-size: 9px; font-weight: 700; }
+.stage-gate { font-size: 7px; opacity: 0.75; margin-top: 2px; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 2px; }
+
+.lane-header {
+position: sticky; left: 0; z-index: 10;
+width: 100px; padding: 8px 4px;
+background: #f8fafc; border-bottom: 1px solid #edf0f5; border-right: 1px solid #e0e4ed;
+display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+cursor: pointer; transition: background 0.15s;
+user-select: none; font-size: 8px; font-weight: 700; text-transform: uppercase; text-align: center;
+line-height: 1;
+}
+.lane-header:hover { background: #f1f5f9; }
+.lane-icon { font-size: 13px; }
+
+.cell {
+padding: 6px; border-bottom: 1px solid #edf0f5; border-right: 1px solid #e0e4ed;
+min-height: 85px; display: flex; flex-direction: column; gap: 3px;
+cursor: pointer; transition: background 0.15s, border-color 0.15s;
+font-size: 8px; line-height: 1.3; color: #1a1a2e; word-wrap: break-word;
+}
+.cell:hover { border-color: #059669; box-shadow: inset 0 0 8px rgba(5,150,105,0.1); }
+.cell.selected { border: 2px solid #059669; background: #f0fdf4; }
+
+.cell-main { flex: 1; font-weight: 600; color: #0f172a; }
+
+.badge {
+display: inline-flex; align-items: center; gap: 2px;
+padding: 1px 4px; border-radius: 2px; font-size: 7px; font-weight: 600;
+width: fit-content;
+}
+.badge.gate { background: #fee2e2; color: #991b1b; }
+.badge.sla { background: #fef3c7; color: #92400e; }
+.badge.sync { background: #dbeafe; color: #0c4a6e; }
+
+.badges { display: flex; flex-wrap: wrap; gap: 2px; margin-top: 2px; }
+
+.side-panel {
+width: 0; overflow: hidden; transition: width 0.25s ease;
+background: white; border-left: 1px solid #e0e4ed; flex-shrink: 0;
+display: flex; flex-direction: column;
+}
+.side-panel.open { width: 420px; }
+
+.panel-header {
+padding: 14px 16px 12px; border-bottom: 1px solid #e8eaf0; flex-shrink: 0;
+position: relative;
+}
+.panel-badge {
+display: inline-flex; align-items: center; gap: 4px;
+font-size: 8px; font-weight: 700; text-transform: uppercase;
+padding: 2px 6px; border-radius: 2px; margin-bottom: 6px;
+}
+.panel-title { font-size: 14px; font-weight: 700; color: #059669; margin-bottom: 3px; }
+.panel-stage { font-size: 10px; color: #6b7280; }
+.panel-close {
+position: absolute; top: 12px; right: 12px;
+background: none; border: none; cursor: pointer; font-size: 18px;
+color: #9ca3af; transition: color 0.15s;
+}
+.panel-close:hover { color: #374151; }
+
+.panel-body {
+flex: 1; overflow-y: auto; padding: 14px 16px;
+display: flex; flex-direction: column; gap: 12px;
+}
+
+.section-title { font-size: 9px; font-weight: 700; text-transform: uppercase; color: #059669; margin-bottom: 4px; }
+.section-body { font-size: 10px; color: #374151; line-height: 1.5; }
+
+.bullet-list { font-size: 9px; color: #374151; line-height: 1.6; white-space: pre-wrap; font-family: Segoe UI, sans-serif; }
+
+.detail-box {
+background: #f1f5f9; border-left: 2px solid #059669; padding: 8px;
+border-radius: 2px; font-size: 9px; line-height: 1.4;
+}
+
+.divider { height: 1px; background: #f1f5f9; }
+
+.tag { display: inline-block; padding: 2px 6px; background: #dcfce7; color: #166534; border-radius: 2px; font-size: 8px; font-weight: 500; margin-right: 3px; margin-bottom: 2px; }
+</style>
+
+</head>
+<body>
+
+<div class="app">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">🎯 SRO Investigations – Target State Service Blueprint</div>
+      <div class="topbar-meta">6 Stages × 6 Lanes | Click stage headers for PURPOSE | Click cells for DETAIL</div>
+    </div>
+    <button onclick="exportToCSV()" style="padding: 8px 16px; background: white; color: #059669; border: 2px solid #059669; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; transition: all 0.15s;">📥 Export to CSV</button>
+  </div>
+
+  <div class="legend">
+    <span style="font-weight: 700; margin-right: 8px;">Legend:</span>
+    <div class="legend-item"><div class="legend-dot" style="background: #fee2e2;"></div><span>Gate</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background: #fef3c7;"></div><span>SLA</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background: #dbeafe;"></div><span>eSys Sync</span></div>
+  </div>
+
+  <div class="main-content">
+    <div class="grid-area">
+      <div class="grid-wrapper">
+        <div class="grid" id="grid"></div>
+      </div>
+    </div>
+
+```
+<div class="side-panel" id="side-panel">
+  <div id="panel-content"></div>
+</div>
+```
+
+  </div>
+</div>
+
+<script>
+const STAGES = [
+  { id: 's1', code: 'S1', name: 'Intake & Assignment', gate: 'Case created, TL approved' },
+  { id: 's2', code: 'S2', name: 'Scope Definition', gate: 'Revenue_Line locked, plan approved' },
+  { id: 's3', code: 'S3', name: 'Evidence Engagement', gate: 'Evidence deadline passed' },
+  { id: 's4', code: 'S4', name: 'Analysis & QA', gate: 'QA approved, risk assessed' },
+  { id: 's5', code: 'S5', name: 'Assessment & Approval', gate: 'Assessment issued / Closure' },
+  { id: 's6', code: 'S6', name: 'Post-Closure & Disputes', gate: 'Case archived' },
+];
+
+const LANES = [
+  { id: 'subject', label: 'Subject/Taxpayer', icon: '👤', color: '#059669', bg: '#f0fdf4' },
+  { id: 'investigator', label: 'Investigator', icon: '🔍', color: '#059669', bg: '#f0fdf4' },
+  { id: 'teamlead', label: 'Team Lead', icon: '✅', color: '#059669', bg: '#f0fdf4' },
+  { id: 'salesforce', label: 'Salesforce', icon: '☁️', color: '#0891b2', bg: '#ecfdf5' },
+  { id: 'esys', label: 'eSys', icon: '🖥', color: '#6366f1', bg: '#eef2ff' },
+  { id: 'process', label: 'Process Gate', icon: '⚙️', color: '#dc2626', bg: '#fee2e2' },
+];
+
+const DATA = {
+  s1: {
+    subject: { text: 'No action', purpose: 'Internal stage. No taxpayer notification.', detail: ['Taxpayer NOT notified at S1', 'Internal to SRO only', 'Entry letter at S2'], gates: [], sla: '-', sync: '-', tags: ['Internal'] },
+    investigator: { text: 'Complete intake form', purpose: 'Validate jurisdiction, priority, revenue line scope.', detail: ['Log into auto-created Salesforce Case', 'Review pre-populated data: taxpayer, revenue line, valuation', 'Complete Intake Checklist: Jurisdiction, Priority (High/Medium/Low), Revenue lines in scope', 'Submit for TL approval'], gates: ['Intake complete'], sla: '24h', sync: 'eSys→SF', tags: ['Form'] },
+    teamlead: { text: 'Approve assignment', purpose: 'Validate case assigned to right investigator with capacity.', detail: ['Review system assignment suggestion (workload, expertise, history)', 'Accept assignment or override', 'Review intake form completeness', 'Approve (Approval Process, digital signature)'], gates: ['TL approval'], sla: '4h', sync: '-', tags: ['Approval'] },
+    salesforce: { text: 'Case auto-creation', purpose: 'Create case from eSys PIC event. Pre-populate. Enforce gate.', detail: ['eSys webhook POST creates Case', 'Auto-populate: Account, Investigation_Revenue_Line__c, Case.ESys_IC_ID__c', 'Intake form fields: Jurisdiction_Validated__c, Priority__c, Revenue_Lines_in_Scope__c', 'Gate: Intake 100% complete AND TL approved'], gates: ['Case created', 'Intake complete', 'TL approved'], sla: '24h gate', sync: 'eSys webhook', tags: ['Gate'] },
+    esys: { text: 'PIC event webhook', purpose: 'Send PIC event to Salesforce. Trigger case creation.', detail: ['eSys PIC created (new or priority change)', 'Webhook POST to Salesforce /investigations/case endpoint', 'Payload: taxpayer, ABN, revenue line, PIC amount, prior cases', 'Salesforce creates Case async (202 Accepted)'], gates: ['IC created', 'Case linked'], sla: '<5min', sync: 'Event API', tags: ['Event'] },
+    process: { text: 'S1 Gate', purpose: 'Block S2 until intake complete and TL approved. 24h hard stop.', detail: ['GATE: Cannot proceed to S2 until:', '• Intake form 100% complete', '• TL validated assignment', '• Case.Status = Intake Complete', 'Auto-check after TL approval (1h)', 'If not met after 24h: escalate to TL'], gates: ['Intake → Scope'], sla: '24h', sync: '-', tags: ['Hard gate'] }
+  },
+  s2: {
+    subject: { text: 'FIRST NOTIFICATION: Entry letter', purpose: 'Formal notification. Scope, evidence requirements, deadline (T+10).', detail: ['Entry letter is FIRST communication', 'Auto-generated via Mailing_Protocol__c (email/post/courier)', 'Contents: scope, revenue lines, evidence required, T+10 deadline', 'SMS reminders at T+5, T+9 days'], gates: ['Notice delivered'], sla: '2 days', sync: '-', tags: ['First notice'] },
+    investigator: { text: 'Define scope, issue letter', purpose: 'Lock scope (revenue lines + period). Generate entry letter. Immutable.', detail: ['Complete Scope form: Revenue_Lines_in_Scope, Period dates, Evidence_Strategy', 'Investigation_Revenue_Line__c auto-created (one per line)', 'Select Mailing_Protocol__c delivery method', 'Issue entry letter (auto-logged, date stamped)', 'Submit for TL approval'], gates: ['Scope locked', 'Letter sent'], sla: '3d+2d approval', sync: 'Investigation_Revenue_Line→eSys', tags: ['Scope lock'] },
+    teamlead: { text: 'Approve scope plan', purpose: 'Validate scope appropriate + defensible. Immutable once approved.', detail: ['Review Investigation Plan: scope, period, Evidence_Strategy, letter', 'Approve via Approval Process (2-day SLA, digital signature)', 'If rejected: return to Investigator with revision reason', 'On approval: Investigation_Revenue_Line__c set read-only'], gates: ['TL approval'], sla: '2-day SLA', sync: '-', tags: ['Approval'] },
+    salesforce: { text: 'Scope form, letter generation', purpose: 'Capture scope decisions. Auto-generate letter. Lock records. Gate.', detail: ['Scope form: Revenue_Lines_in_Scope, Period dates, Evidence_Strategy', 'On save: auto-creates Investigation_Revenue_Line__c child records', 'Letter template: merge fields populate, generates PDF', 'On send: Investigation_Action (Type: Entry Letter Sent) created', 'On TL approval: Case.Status = Scope Locked (read-only)'], gates: ['Revenue_Line locked', 'TL approved'], sla: '3+2 days', sync: 'Investigation_Revenue_Line batch', tags: ['Gate'] },
+    esys: { text: 'Revenue Line sync', purpose: 'Sync scope to eSys. Cache valuation (read-only in SF).', detail: ['Investigation_Revenue_Line__c synced to eSys (batch daily 1am OR real-time)', 'POST to eSys /revenue_line_period endpoint', 'eSys responds: Revenue_Line_Period ID, Valuation Amount', 'Salesforce caches: Investigation_Revenue_Line__c.Detected_Amount__c (read-only)', 'Scope locks period in eSys (prevents manual editing)'], gates: ['Synced'], sla: '<1h', sync: 'Batch API', tags: ['Sync'] },
+    process: { text: 'S2 Gate', purpose: 'Block S3 until scope locked + TL approved + letter sent + eSys sync.', detail: ['GATE: Cannot proceed to S3 until:', '• Revenue_Line__c records created & locked', '• TL approved plan', '• Entry letter issued & date-stamped', '• eSys sync confirmed', 'Auto-check after TL approval (1h)', 'CONDITIONAL: If No Findings at S2 → skip S3/S4/S5 → go to S6'], gates: ['Scope locked', 'Plan approved'], sla: '3+2 days', sync: '-', tags: ['Hard gate'] }
+  },
+  s3: {
+    subject: { text: 'Upload evidence', purpose: 'Respond to entry letter. Upload evidence or mail by T+10.', detail: ['Upload to portal: docs, bank statements, third-party records', 'OR submit by mail/email', 'Portal shows deadline countdown', 'SMS reminders at T+5, T+9 days from letter date'], gates: ['Evidence received'], sla: 'T+10', sync: '-', tags: ['Portal'] },
+    investigator: { text: 'Track receipt, validate quality', purpose: 'Monitor evidence deadline. Validate completeness. Escalate delays.', detail: ['Track evidence receipts in Salesforce Files + TRIM', 'Send clarification requests (auto-logged)', 'Monitor deadline → escalate if overdue', 'Validate quality: readability, on-topic, completeness', 'Add Investigation_Action (Type: Evidence Validated, Hours: 2)'], gates: ['Letter sent', 'Evidence received', 'Quality validated'], sla: 'T+10', sync: 'TRIM', tags: ['Quality check'] },
+    teamlead: { text: 'Monitor deadline, escalate', purpose: 'Monitor T+10 deadline. Approve extensions if justified.', detail: ['TL dashboard shows case status & evidence receipt progress', 'System creates Task at T+7 (reminder) + T+10 (escalation)', 'Review escalation', 'Approve extension (if justified) OR force analysis with available evidence', 'Log Investigation_Action (Type: Deadline Managed)'], gates: ['Monitored'], sla: '1d review', sync: '-', tags: ['Escalation'] },
+    salesforce: { text: 'Evidence repository, SLA enforcement', purpose: 'Store evidence. Track receipt. Auto-escalate at T+7/T+10. Enforce gate.', detail: ['Salesforce Files (native) + TRIM folder (TRIM_Folder_Path__c)', 'Investigation_Action logs receipt', 'Clarification tracking: Case Comments + auto-created Tasks', 'SLA batch job runs daily (1am, 9am, 5pm)', 'At T+7: create Task (deadline in 3 days)', 'At T+10: create Task (deadline EXPIRED) + escalation to TL'], gates: ['Deadline passed', 'Quality OK'], sla: 'T+10 gate', sync: 'TRIM trigger', tags: ['Gate'] },
+    esys: { text: 'Read-only context', purpose: 'Provide valuation + prior case history. No sync.', detail: ['eSys read-only: valuation data + prior case history', 'Displayed in Salesforce for investigator context', 'No evidence synced to eSys (TRIM is authority)'], gates: ['-'], sla: '-', sync: 'Read-only', tags: ['Read-only'] },
+    process: { text: 'S3 Gate', purpose: 'Block S4 until deadline passed + quality validated. T+10 hard stop.', detail: ['GATE: Cannot proceed to S4 until:', '• Entry letter confirmed sent', '• Evidence deadline passed', '• Evidence receipt completed', '• Quality validated', 'Auto-check daily at 6am', 'If deadline exceeded: escalate to TL', 'TL decision: Grant extension / Approve analysis / Refer to Legal'], gates: ['Deadline passed', 'Quality OK'], sla: 'T+10', sync: '-', tags: ['Hard gate'] }
+  },
+  s4: {
+    subject: { text: 'Passive (no action)', purpose: 'Investigation proceeds internally. No communication unless clarification needed.', detail: ['Investigation proceeds internally with evidence analysis', 'Portal shows status: In Analysis', 'Subject may be contacted if clarification needed (rare)'], gates: ['-'], sla: '-', sync: '-', tags: ['Passive'] },
+    investigator: { text: 'Analyze, document findings', purpose: 'Compare Declared vs Detected. Create Discrepancy records. Prepare recommendation.', detail: ['Compare Declared vs Detected amounts', 'Create Investigation_Discrepancy__c records (one per variance)', 'Assign Investigation_Detection_Reason__c codes (DR001–DR099)', 'Calculate Discrepancy_Amount (formula: Detected - Declared)', 'Query eSys prior cases: review precedent', 'Document findings in Case.Findings_Summary__c', 'Prepare recommendation: Uphold / Adjust / No Finding', 'Flag high-risk if Discrepancy > $5k (auto-escalate to QA)'], gates: ['Discrepancies locked', 'QA triggered'], sla: '7 days', sync: 'Prior lookup', tags: ['Analysis'] },
+    teamlead: { text: 'QA review, approve', purpose: 'Validate findings, calculations, recommendation. Approve or revise.', detail: ['Receive notification: Case ready for QA review', 'Review: Discrepancies, Detection reasons, Findings, Recommendation', 'System highlights: risk flags (>$5k), conflicting precedents', 'Assess: Legal correctness, Proportionality, Consistency', 'If satisfied: Approve via Approval Process (3-day SLA, digital signature)', 'If revision needed: Reject with reason (Task to Investigator)', 'If high-risk (>$100k): auto-escalate to Compliance Officer'], gates: ['QA approved'], sla: '3-day SLA', sync: '-', tags: ['QA'] },
+    salesforce: { text: 'Discrepancy records, formula validation', purpose: 'Create immutable Discrepancy records. Formula-validate (zero errors). Gate.', detail: ['Investigation_Discrepancy__c: auto-creates child records per variance', 'Formula field: Discrepancy_Amount = Detected - Declared (error-free)', 'Investigation_Detection_Reason__c: % allocation (sum = 100%)', 'Risk flagging: if > $5k → Investigation_Risk_Flag__c', 'TL dashboard shows flagged cases (priority)', 'Approval Process: Case.Status = Pending QA (3-day SLA)', 'On TL approval: Case.Status = QA Approved (lock Discrepancies)'], gates: ['Discrepancies locked', 'QA approved'], sla: '7+3 days', sync: 'None', tags: ['Gate'] },
+    esys: { text: 'Prior case history', purpose: 'Provide precedent for consistency check. Pre-fill assessment draft.', detail: ['Query eSys Revenue_Line_Period history (ABN + revenue line)', 'Display: prior case IDs, Detected/Assessed amounts, Assessment Type, dates', 'Pre-fill Investigation_Assessment__c draft with Discrepancy data'], gates: ['Precedent reviewed'], sla: '<1min', sync: 'Read-only', tags: ['Precedent'] },
+    process: { text: 'S4 Gate', purpose: 'Block S5 until QA approved (3-day SLA). Escalate high-risk cases.', detail: ['GATE: Cannot proceed to S5 until:', '• All discrepancies documented & locked', '• QA approved (Approval Process, 3-day SLA)', '• Risk assessment recorded', 'If QA not approved by day 3: escalate to TL Manager', 'If high-risk pending Compliance: allow S5 only if Compliance completes', 'CONDITIONAL: If No Findings → skip assessment → go to closure'], gates: ['QA passed', 'Risk assessed'], sla: '7+3 days', sync: '-', tags: ['Hard gate'] }
+  },
+  s5: {
+    subject: { text: 'SECOND NOTIFICATION: Notice', purpose: 'Assessment Notice (if findings) OR Closure Letter (if no findings). 60-day objection window.', detail: ['SECOND communication to subject', 'Assessment Notice (if findings) OR Closure Letter (if no findings)', 'Includes: SRO decision, appeal rights, payment instructions', '60-day objection window starts (if assessment issued)', 'Portal updated with case status'], gates: ['Notice delivered'], sla: '2 days', sync: '-', tags: ['Second notice'] },
+    investigator: { text: 'Completeness check, submit', purpose: 'Final validation. Prepare case for TL approval. Lock documentation.', detail: ['Completeness check: evidence, findings, QA, recommendation, discrepancies', 'Set Case.Status = Ready for Approval', 'Investigation_Assessment__c draft created (if Findings)', 'OR mark case for closure (if No Findings)', 'Submit for TL approval', 'Add Investigation_Action (Type: Case Submitted, Hours: 0.5)'], gates: ['Complete', 'Submitted'], sla: '1 day', sync: '-', tags: ['Submit'] },
+    teamlead: { text: 'Final approval, digital sig', purpose: 'Final review. Approve assessment with digital signature. No edits after.', detail: ['Access Investigation_Assessment__c draft OR Closure record', 'Review: findings, discrepancies, amounts, liability breakdown', 'Approve OR request revision (creates Task)', 'Digital signature captured (Approver_Signature__c)', 'Approval immutable', 'Approval via Approval Process (2-day SLA)'], gates: ['TL approved', 'Signature captured'], sla: '2-day SLA', sync: '-', tags: ['Signature'] },
+    salesforce: { text: 'Assessment creation, approval', purpose: 'Create Assessment. TL approval gate (2-day SLA). Auto-generate notice. Trigger eSys.', detail: ['Investigation_Assessment__c draft auto-created (if Findings)', 'Fields: Assessment_Status__c, Assessment_Type__c, Assessed_Amount__c', 'Approval Process: TL approval (2-day SLA)', 'On TL approval: webhook fires to eSys', 'Auto-generate Assessment Notice OR Closure Letter', 'Select Mailing_Protocol__c, issue notice', 'Investigation_Action (Type: Notice Issued, date, method)'], gates: ['Approved', 'Notice sent'], sla: '1+2 days', sync: 'Assessment→eSys', tags: ['Gate'] },
+    esys: { text: 'Assessment creation, payment workflow', purpose: 'Create immutable Assessment. Generate ID. Initiate payment processing.', detail: ['On TL approval webhook: POST /assessments endpoint', 'Payload: Revenue_Line_ID, Period, Assessed_Amount, Liability breakdown', 'eSys creates Assessment (immutable)', 'Assessment ID generated (unique identifier)', 'eSys responds: ID + timestamp', 'Salesforce caches: Investigation_Assessment__c.ESys_Assessment_ID__c', 'Assessment enters eSys payment workflow', 'If refund due: eSys creates refund, SF creates Investigation_Refund__c'], gates: ['Created', 'ID synced'], sla: '<5min', sync: 'Webhook', tags: ['Sync'] },
+    process: { text: 'S5 Gate', purpose: 'Block S6 until TL approved + eSys created + notice issued. Dual pathway.', detail: ['GATE: Cannot proceed to S6 until:', '• TL approved', '• Assessment issued in eSys OR closure decided', '• Statutory notice generated & issued', '• Notice delivery confirmed', 'CONDITIONAL PATHWAYS:', '• Findings → Assessment issued, 60-day objection window → S6', '• No Findings → Closure letter issued, no objection → S6 archive'], gates: ['Approved', 'Notice sent'], sla: '1+2 days', sync: 'eSys sync', tags: ['Final gate'] }
+  },
+  s6: {
+    subject: { text: 'Manage objection window', purpose: 'If Assessment: 60-day objection window. Can lodge objection. If No Findings: closed.', detail: ['If Assessment Notice: 60-day objection window from notice date', 'Can lodge objection via portal, email, or mail', 'Portal shows objection deadline countdown', 'If No Findings letter: case closed, no objection window', 'If accepting assessment: payment made per instructions'], gates: ['Objection window tracked'], sla: '60 days', sync: '-', tags: ['Statutory right'] },
+    investigator: { text: 'Close case, document lessons', purpose: 'Mark closed. Auto-generate Closure Report. Capture lessons. Archive.', detail: ['Mark Case.Status = Closed', 'System auto-generates Closure Report: cycle time, outcome %, cost', 'Fill Lessons_Learned__c: what went well, improvements, patterns, bottlenecks', 'Case archived (read-only, >7 years retention)', 'Add Investigation_Action (Type: Case Closed, Hours: 1)'], gates: ['Archived'], sla: '1 day', sync: 'Status→eSys', tags: ['Archive'] },
+    teamlead: { text: 'Approve closure, manage objections', purpose: 'Approve closure. Monitor objection window. Assess objection merit if received.', detail: ['Approve case closure', 'Review Closure Report: cycle time, outcome, key facts, lessons', 'Monitor objection window (60 days from notice if Assessment issued)', 'If objection received: Investigation_Regulatory_Assessment__c created', 'Assess merit: Withdraw (refund) / Uphold / Escalate to Legal', 'Create Investigation_Regulatory_Assessment (Outcome recorded)', 'Real-time dashboard: view metrics'], gates: ['Approved', 'Objections triaged'], sla: '1 day', sync: '-', tags: ['Objection'] },
+    salesforce: { text: 'Closure, metrics, archival', purpose: 'Auto-generate Closure Report. Update dashboards (hourly). Archive case (immutable).', detail: ['Case.Status = Closed (validation: all required fields)', 'Closure Report auto-generated: cycle time, outcome, cost', 'Investigation_Action audit trail complete (31+ activities)', 'Real-time dashboards updated (hourly):', '• Cycle time (avg, by TL/investigator)', '• Outcome % (Uphold/Adjust/No Finding)', '• Investigator hours (aggregated)', '• TL performance (cases closed, SLA %)', 'If objection received: Investigation_Regulatory_Assessment__c created', 'Case archived: Status = Archived (read-only, >7 years)'], gates: ['Archived', 'Metrics recorded'], sla: '1+1 days', sync: 'Status→eSys', tags: ['Archive'] },
+    esys: { text: 'Assessment finalized, closure', purpose: 'Update IC status. Finalize Assessment. Process refunds. Sync closure.', detail: ['When Case.Status = Closed: eSys IC status updated (webhook)', 'Investigation_Assessment__c linked to eSys Assessment ID (immutable)', 'If Assessment issued: eSys Assessment finalized (read-only in eSys)', 'If Objection withdrawn: eSys Refund created, payment processing initiated', 'Closure confirmation sent back to Salesforce', 'Both systems synchronized: SF Case archived + eSys IC closed', 'Investigation record archived (>7 years compliance)'], gates: ['Finalized', 'Archived'], sla: '<1h', sync: 'Webhook', tags: ['Finalize'] },
+    process: { text: 'S6 Complete', purpose: 'Archive gate: all prerequisites complete. Workflow finished. Case immutable.', detail: ['GATE: Investigation workflow complete when:', '• Case archived (read-only status)', '• Closure Report generated & stored', '• Objection window tracked (if applicable, 60d from notice)', '• All Investigation_Action logged (31+ activities)', '• eSys sync confirmed (Assessment finalized / IC closed)', 'Compliance file ready for audit', 'Retention: Case archived >7 years (per SRO compliance)'], gates: ['All gates passed'], sla: 'Continuous', sync: 'eSys sync', tags: ['Complete'] }
+  }
+};
+
+let selected = null;
+let selectedStage = null;
+
+function render() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  
+  const headerCorner = document.createElement('div');
+  headerCorner.className = 'header-cell header-corner';
+  grid.appendChild(headerCorner);
+  
+  STAGES.forEach(stage => {
+    const headerCell = document.createElement('div');
+    headerCell.className = 'header-cell header-stage';
+    if (selectedStage === stage.id) headerCell.classList.add('selected');
+    headerCell.innerHTML = `<div class="stage-code">${stage.code}</div><div>${stage.name}</div><div class="stage-gate">${stage.gate}</div>`;
+    headerCell.onclick = () => {
+      selectedStage = selectedStage === stage.id ? null : stage.id;
+      selected = null;
+      render();
+      renderPanel();
+    };
+    grid.appendChild(headerCell);
+  });
+
+  LANES.forEach(lane => {
+    const laneHeader = document.createElement('div');
+    laneHeader.className = 'lane-header';
+    laneHeader.innerHTML = `<span class="lane-icon">${lane.icon}</span><span>${lane.label}</span>`;
+    grid.appendChild(laneHeader);
+
+    STAGES.forEach(stage => {
+      const cell = document.createElement('div');
+      const data = DATA[stage.id]?.[lane.id];
+      
+      cell.className = 'cell';
+      cell.style.background = lane.bg;
+      
+      if (data) {
+        const activity = document.createElement('div');
+        activity.className = 'cell-main';
+        activity.textContent = data.text;
+        cell.appendChild(activity);
+
+        const badges = document.createElement('div');
+        badges.className = 'badges';
+        if (data.gates && data.gates.length > 0 && data.gates[0] !== '-') {
+          const gateBadge = document.createElement('div');
+          gateBadge.className = 'badge gate';
+          gateBadge.textContent = '⚠ GATE';
+          badges.appendChild(gateBadge);
+        }
+        if (data.sla !== '-') {
+          const slaBadge = document.createElement('div');
+          slaBadge.className = 'badge sla';
+          slaBadge.textContent = '⏳ ' + data.sla;
+          badges.appendChild(slaBadge);
+        }
+        if (data.sync !== '-') {
+          const syncBadge = document.createElement('div');
+          syncBadge.className = 'badge sync';
+          syncBadge.textContent = '🔄 Sync';
+          badges.appendChild(syncBadge);
+        }
+        cell.appendChild(badges);
+        
+        cell.onclick = () => {
+          selected = { stage: stage.id, lane: lane.id, data, stageName: stage.name, laneName: lane.label };
+          selectedStage = null;
+          render();
+          renderPanel();
+        };
+        cell.style.cursor = 'pointer';
+      }
+      
+      if (selected?.stage === stage.id && selected?.lane === lane.id) {
+        cell.classList.add('selected');
+      }
+      
+      grid.appendChild(cell);
+    });
+  });
+}
+
+function renderPanel() {
+  const panelDiv = document.getElementById('side-panel');
+  const content = document.getElementById('panel-content');
+  
+  if (!selectedStage && !selected) {
+    panelDiv.classList.remove('open');
+    return;
+  }
+
+  if (selectedStage) {
+    const stage = STAGES.find(s => s.id === selectedStage);
+    const purposes = {
+      s1: { purpose: 'Translate eSys PIC event into Salesforce case. Assign to investigator. 24h gate.', why: 'eSys detects compliance risk. Case must be created and assigned within 24 hours to prevent delays.', success: 'Case created in Salesforce within 4h of PIC. TL confirmed assignment. Investigator ready for S2.', gate: '24h hard stop. Intake form 100% complete AND TL approved assignment.' },
+      s2: { purpose: 'Define investigation scope (revenue lines, period). Lock scope. Issue entry letter to taxpayer.', why: 'Scope is the boundary. Once locked, cannot be expanded (prevents scope creep). Entry letter is first taxpayer notification. Critical for audit defensibility.', success: 'Revenue_Line__c records created and locked. Entry letter issued. TL approved. First notification sent.', gate: '5+2 days. Scope locked + TL approved + letter sent + eSys sync confirmed.' },
+      s3: { purpose: 'Collect evidence from taxpayer within T+10 deadline. Manage clarifications. Validate quality.', why: 'Evidence is foundation of investigation. Hard deadline prevents indefinite stalling. Quality validation ensures analysis is sound.', success: 'All critical evidence uploaded to TRIM + Salesforce by T+10 (or approved extension). Quality validated. Ready for analysis.', gate: 'T+10 hard stop. Evidence deadline passed + receipt confirmed + quality validated.' },
+      s4: { purpose: 'Analyze evidence. Document findings (variances). Prepare recommendation. TL performs QA.', why: 'Analysis is the core. Findings must be documented in structured format (not free-text). QA by TL ensures correctness and defensibility. All calculations formula-driven (zero errors).', success: 'All discrepancies documented in Investigation_Discrepancy__c (locked). QA approved by TL (digital signature). High-risk cases escalated.', gate: '7+3 days. All discrepancies locked + QA approved (3-day SLA) + risk assessed.' },
+      s5: { purpose: 'Finalize assessment (or closure). TL digital signature. Issue statutory notice. Sync to eSys.', why: 'Point of no return. Once TL approves, assessment is immutable and syncs to eSys. Requires legal sign-off. Statutory notice is second (final) taxpayer communication. Triggers payment processing.', success: 'Assessment approved by TL (or closure decided if No Finding). Statutory notice issued. eSys assessment created + synced. 60-day objection window (if applicable).', gate: '1+2 days. TL approved + eSys assessment created + notice issued.' },
+      s6: { purpose: 'Close case. Generate metrics. Manage objection window. Archive.', why: 'Closure not instant. 60-day objection window is statutory right (if assessment issued). Captures lessons learned and metrics for continuous improvement. Case must be archived for compliance (>7 years).', success: 'Case marked Closed. Closure Report auto-generated. Lessons documented. Objection window tracked (if applicable). Case archived (read-only, >7y retention). Metrics updated on real-time dashboards.', gate: 'Continuous. Case archived + audit trail logged (31+ actions) + objection window managed.' }
+    };
+    const p = purposes[selectedStage];
+    content.innerHTML = `
+      <div class="panel-header">
+        <button class="panel-close" onclick="selectedStage=null; render(); renderPanel();">✕</button>
+        <div class="panel-badge" style="background: #f0fdf4; color: #059669;">${stage.code}</div>
+        <div class="panel-title">${stage.name}</div>
+        <div class="panel-stage">Stage Purpose Statement</div>
+      </div>
+      <div class="panel-body">
+        <div><div class="section-title">🎯 Purpose</div><div class="detail-box" style="background: #f0fdf4; border-left-color: #059669;">${p.purpose}</div></div>
+        <div class="divider"></div>
+        <div><div class="section-title">❓ Why This Stage?</div><div class="section-body">${p.why}</div></div>
+        <div class="divider"></div>
+        <div><div class="section-title">✅ Success Criteria</div><div class="detail-box" style="background: #ecfdf5; border-left-color: #10b981;">${p.success}</div></div>
+        <div class="divider"></div>
+        <div><div class="section-title">🚫 Gate</div><div class="detail-box" style="background: #fee2e2; border-left-color: #dc2626; color: #991b1b;">${p.gate}</div></div>
+      </div>
+    `;
+  } else if (selected) {
+    const data = selected.data;
+    const lane = LANES.find(l => l.id === selected.lane);
+    
+    content.innerHTML = `
+      <div class="panel-header">
+        <button class="panel-close" onclick="selected=null; render(); renderPanel();">✕</button>
+        <div class="panel-badge" style="background: ${lane.bg}; color: ${lane.color};">${lane.icon} ${selected.laneName}</div>
+        <div class="panel-title">${data.text}</div>
+        <div class="panel-stage">${selected.stageName}</div>
+      </div>
+      <div class="panel-body">
+        <div><div class="section-title">Purpose</div><div class="detail-box">${data.purpose}</div></div>
+        <div class="divider"></div>
+        <div><div class="section-title">Details</div><div class="bullet-list">${Array.isArray(data.detail) ? data.detail.map(d => '• ' + d).join('\n') : data.detail}</div></div>
+        ${data.gates && data.gates.length > 0 && data.gates[0] !== '-' ? `<div class="divider"></div><div><div class="section-title">Gates</div><div class="detail-box">${data.gates.join(', ')}</div></div>` : ''}
+        <div class="divider"></div>
+        <div><div class="section-title">SLA</div><div class="detail-box">${data.sla}</div></div>
+        ${data.sync && data.sync !== '-' ? `<div class="divider"></div><div><div class="section-title">eSys Sync</div><div class="detail-box">${data.sync}</div></div>` : ''}
+        ${data.tags && data.tags.length > 0 ? `<div class="divider"></div><div><div class="section-title">Tags</div>${data.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
+      </div>
+    `;
+  }
+  
+  panelDiv.classList.add('open');
+}
+
+function exportToCSV() {
+  const headers = ['Stage', 'Code', 'Lane', 'Role', 'Action', 'Purpose', 'Details', 'Gates', 'SLA', 'eSys Sync', 'Tags'];
+  const rows = [];
+  
+  Object.keys(DATA).forEach(stageId => {
+    const stage = STAGES.find(s => s.id === stageId);
+    const stageData = DATA[stageId];
+    
+    LANES.forEach(lane => {
+      const cellData = stageData[lane.id];
+      if (cellData) {
+        const detailsStr = Array.isArray(cellData.detail) 
+          ? cellData.detail.join('; ')
+          : cellData.detail;
+        
+        const gatesStr = cellData.gates && cellData.gates.length > 0 && cellData.gates[0] !== '-'
+          ? cellData.gates.join('; ')
+          : '';
+        
+        const tagsStr = cellData.tags && cellData.tags.length > 0
+          ? cellData.tags.join('; ')
+          : '';
+        
+        rows.push([
+          stage.code,
+          stage.code,
+          lane.label,
+          cellData.text,
+          cellData.purpose,
+          detailsStr,
+          gatesStr,
+          cellData.sla,
+          cellData.sync,
+          tagsStr
+        ]);
+      }
+    });
+  });
+  
+  function escapeCSV(val) {
+    if (val === null || val === undefined) return '';
+    const str = String(val);
+    if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+      return '"' + str.replace(/"/g, '""') + '"';
+    }
+    return str;
+  }
+  
+  let csv = headers.map(escapeCSV).join(',') + '\n';
+  rows.forEach(row => {
+    csv += row.map(escapeCSV).join(',') + '\n';
+  });
+  
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'sro_investigations_blueprint_' + new Date().toISOString().slice(0,10) + '.csv');
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+render();
+</script>
+
+</body>
+</html>

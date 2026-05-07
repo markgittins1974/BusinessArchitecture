@@ -1,0 +1,970 @@
+
+# SRO Investigation Lifecycle Architecture
+
+## System Integration Epics & User Stories
+
+**Document Version:** 1.0  
+**Status:** Target State Design Phase  
+**Scope:** ESYS ↔ Salesforce ↔ Portal ↔ Comms System ↔ TRIM integrations
+
+-----
+
+## Epic: ESYS ↔ Salesforce PIC/IC Lifecycle Integration
+
+### E-INT-1: PIC Creation API (ESYS → Salesforce)
+
+**Business Objective:** Notify Salesforce when revenue staff create a Preliminary Investigation Case (PIC) in ESYS, so IC (Investigation Case) can be auto-provisioned and investigation tracking begins.
+
+#### US_INT-1.1-1: Design PIC → IC API Payload
+
+**Acceptance Criteria:**
+
+1. API payload defined with all required fields (PIC reference number, taxpayer ID, revenue line, initial compliance flag, PIC creation date, ESYS user)
+1. Payload includes optional fields (case description, priority classification, related PICs)
+1. Optional fields documented with defaults (if not supplied)
+1. Payload validated against ESYS export schema
+1. Error response codes documented (400: invalid payload, 409: duplicate PIC reference, 500: system error)
+
+**Story Points:** 3
+
+-----
+
+#### US_INT-1.1-2: Implement PIC → IC API Trigger (Real-Time)
+
+**Acceptance Criteria:**
+
+1. ESYS fires API call to Salesforce when PIC status = “CREATED” (real-time, not batch)
+1. API authentication: API key stored in Salesforce connected app; ESYS includes key in Authorization header
+1. SF receives POST to `/services/apexrest/pic-intake` endpoint
+1. Apex REST handler parses payload, validates, creates IC record
+1. IC record created with:
+- Case_Record_Type__c = “Investigation_Case”
+- PIC_Reference__c = ESYS PIC ID (external ID for reconciliation)
+- Taxpayer_Account__c = linked via taxpayer ID
+- Revenue_Line__c = from payload
+- Investigation_Status__c = “INTAKE_PENDING”
+- Intake_Gate_Due_Date__c = TODAY + 5 days (PW-001 SLA)
+1. Investigation_Action_c event logged: type=PIC_RECEIVED, timestamp=NOW
+1. Return HTTP 201 (Created) with IC record ID to ESYS (for audit trail)
+
+**Story Points:** 5
+
+-----
+
+#### US_INT-1.1-3: Implement PIC → IC API Error Handling & Retry
+
+**Acceptance Criteria:**
+
+1. If API call fails (network timeout, 500 error):
+- ESYS logs error and queues for retry
+- Automatic retry: 3 attempts, 5-minute intervals (15 mins total)
+- After 3 failures: alert ESYS system admin + log to integration error queue
+1. If Salesforce returns 400 (invalid payload):
+- ESYS receives error details and logs to ESYS integration error log
+- No automatic retry (payload fix required)
+1. If Salesforce returns 409 (duplicate PIC reference):
+- ESYS logs warning (PIC already exists in SF, investigate manually)
+- No retry
+1. If IC creation fails in SF (validation error, missing taxpayer account):
+- SF returns 400 with error message
+- ESYS retries with corrected payload or escalates to admin
+1. Reconciliation report: weekly report of failed PIC → IC API calls + resolution status
+
+**Story Points:** 5
+
+-----
+
+#### US_INT-1.1-4: Implement API Monitoring & Alerting
+
+**Acceptance Criteria:**
+
+1. SF tracks PIC → IC API call statistics:
+- Calls per hour, success/failure rate
+- Average response time (<2 seconds SLA)
+1. Alert thresholds configured:
+- 10% failure rate → alert SF admin
+- Response time >5 seconds → alert SF admin
+- 0 calls in 1 hour (expected daily calls ~50) → alert SF admin
+1. Integration_API_Log__c custom object stores all API calls:
+- timestamp, direction (ESYS→SF), endpoint, payload hash, response code, response time, success flag
+1. C8 dashboard includes API health status
+1. Monthly integration SLA report: 99%+ success rate target
+
+**Story Points:** 3
+
+-----
+
+### E-INT-2: IC Close API (Salesforce → ESYS)
+
+**Business Objective:** When 60-day objection window expires (or objection resolved), close the IC in Salesforce and notify ESYS to close the corresponding PIC, so revenue staff see case is complete.
+
+#### US_INT-1.2-1: Design IC Close API Payload
+
+**Acceptance Criteria:**
+
+1. API payload defined:
+- IC record ID (Salesforce ID)
+- PIC reference (external ID matching US_INT-1.1-1)
+- IC close date (TODAY)
+- Close reason (enum: “OBJECTION_WINDOW_EXPIRED”, “OBJECTION_UPHELD”, “OBJECTION_OVERTURNED”)
+- Final assessment liability (if assessment conducted)
+- Investigation Program Lead approval user (for audit)
+1. Payload documented with examples for each close reason
+1. Error response codes: same as PIC → IC (400, 500)
+1. ESYS schema updated to accept IC close payload
+
+**Story Points:** 3
+
+-----
+
+#### US_INT-1.2-2: Implement IC Close Trigger (Auto-Fire on CLOSED State)
+
+**Acceptance Criteria:**
+
+1. When IC reaches CLOSED state (no pending objections after 60 days):
+- SF scheduled job runs (daily at 00:01 UTC)
+- Query: IC records where IC.Status__c = “CLOSED” AND pik_close_api_sent__c = FALSE AND days_since_closed < 1
+- For each IC: fire API call to ESYS
+1. API call: POST to ESYS endpoint `/api/pic/close`
+1. Payload includes all fields from US_INT-1.2-1
+1. SF includes authentication header (API key)
+1. ESYS receives POST, validates PIC exists, updates PIC status = “CLOSED” in ESYS
+1. ESYS returns HTTP 200 (OK) with confirmation
+1. SF receives confirmation, sets pik_close_api_sent__c = TRUE, pik_close_api_sent_date__c = NOW
+1. Investigation_Action_c event logged: type=PIC_CLOSE_API_SENT
+
+**Story Points:** 5
+
+-----
+
+#### US_INT-1.2-3: Implement IC Close API Error Handling & Retry
+
+**Acceptance Criteria:**
+
+1. If API call fails:
+- SF logs error, queues for retry (same logic as US_INT-1.1-3)
+- Alert: if IC close API fails after 3 retries, notify Investigation Program Lead
+- Manual override: allow admin to mark PIC as closed in SF if ESYS unreachable >24h
+1. Reconciliation: weekly report of IC close API failures
+1. If ESYS returns 404 (PIC not found):
+- SF logs warning (PIC may have been manually deleted in ESYS)
+- No further action (IC is closed in SF)
+
+**Story Points:** 3
+
+-----
+
+-----
+
+## Epic: Assessment Memo Email & Auto-Linking Integration
+
+### E-INT-3: Assessment Memo Email Dispatch
+
+**Business Objective:** When IC reaches ANALYSIS stage and assessment is required, investigator triggers email to revenue specialist with memo instructions. Revenue specialist completes assessment, replies to email, and reply auto-links back to IC.
+
+#### US_INT-2.1-1: Design Assessment Memo Email Template & Send Logic
+
+**Acceptance Criteria:**
+
+1. Email template defined:
+- Subject: “[IC-{IC_ID}] Assessment Memo Required – {Taxpayer_Name}”
+- Body includes:
+  - IC reference number (for reply detection)
+  - Investigation summary (from IC.Investigation_Summary__c)
+  - Memo instructions (link to assessment SOP)
+  - Deadline: T+5 days (Assessment_Memo_Due_Date__c = sent_date + 5d)
+  - Reply-to: investigations-assessments@[domain].gov.au
+- Footer: “Do not modify the subject line; reply to this email with assessment attachment”
+1. Send trigger: Investigator clicks “Send Assessment Memo” button on IC (or auto-triggered when IC.Assessment_Required__c = TRUE)
+1. Recipient email address pulled from custom setting: Assessment_Specialist_Email__c (configurable)
+1. Email sent via SF native email (not third-party service)
+1. Investigation_Action_c event logged: type=MEMO_SENT, timestamp=NOW, recipient=email address
+
+**Story Points:** 3
+
+-----
+
+#### US_INT-2.1-2: Configure Email-to-Case Mailbox & Auto-Linking
+
+**Acceptance Criteria:**
+
+1. Salesforce Email-to-Case mailbox configured:
+- Mailbox address: investigations-assessments@[domain].gov.au
+- Support email address configured in SF
+1. Email routing rules configured:
+- Emails with subject containing “[IC-” are captured
+- IC reference extracted from subject (regex: [IC-(\d+)])
+- Auto-linked to IC record using IC ID
+1. Assessment email replies auto-create EmailMessage records linked to IC
+1. Email attachment (assessment PDF, Excel) stored as Case File attachment (Salesforce Files)
+1. Testing: send test assessment memo, verify reply auto-links to IC
+
+**Story Points:** 5
+
+-----
+
+#### US_INT-2.1-3: Implement Assessment Memo Non-Response Escalation (5-Day SLA)
+
+**Acceptance Criteria:**
+
+1. Custom fields on IC:
+- assessment_memo_sent_date__c (set when memo sent)
+- assessment_memo_due_date__c (calculated = sent_date + 5 days, configurable via custom setting Assessment_Memo_SLA_Days__c)
+- assessment_memo_response_received__c (checkbox, set TRUE when email reply detected)
+- assessment_memo_status__c (picklist: Pending, Received, Overdue, Escalated)
+1. Scheduled Apex job: “Assessment Memo SLA Monitor” runs daily at 00:15 UTC
+- Query: IC records where assessment_memo_due_date__c < TODAY AND assessment_memo_response_received__c = FALSE AND assessment_memo_status__c != ‘Received’
+- For each overdue memo:
+  a. Set assessment_memo_status__c = ‘Overdue’
+  b. Create Task:
+  - Title: “Assessment Memo Non-Response – IC-{IC_ID}”
+  - Assigned to: IC.OwnerId (Investigator)
+  - Due Date: TODAY + 1 day (Escalation_Response_SLA_Days__c configurable)
+  - Priority: HIGH
+  - Description: “Revenue specialist did not respond to assessment memo sent on {sent_date}. Follow up immediately. Contact {revenue_specialist_email} or escalate to supervisor.”
+    c. Log Investigation_Action_c event: type=MEMO_NO_RESPONSE, timestamp=NOW, days_overdue=TODAY-due_date
+    d. Flag case in C8 dashboard: “Blocked on Assessment”
+1. Optional: If Task not closed by {due_date + 3 days}, auto-escalate to Program Lead (Investigation_Program_Lead_Escalation_Days__c configurable)
+1. Configuration stored in Assessment_Memo_SLA__c custom setting:
+- Assessment_Memo_SLA_Days__c (default: 5)
+- Escalation_Response_SLA_Days__c (default: 1)
+- Enable_Auto_Escalation_to_PL__c (default: TRUE)
+- Program_Lead_Escalation_Days__c (default: 3)
+
+**Story Points:** 8
+
+-----
+
+#### US_INT-2.1-4: Implement Assessment Response Population (Assessment Liability)
+
+**Acceptance Criteria:**
+
+1. When email reply is auto-linked to IC:
+- Email attachment (assessment PDF or Excel with calculated liability) is stored as Case File
+- Revenue specialist provides assessment in email body or attachment (assessment_liability_c value)
+1. Process: Investigator or system extracts liability value from email/attachment:
+- Manual: Investigator enters Assessment_Liability__c on IC (case-sensitive, required for exit letter generation)
+- Auto (if possible): Parse email attachment for liability amount (may require OCR or fixed format)
+1. Once Assessment_Liability__c populated:
+- assessment_memo_response_received__c = TRUE
+- assessment_memo_status__c = ‘Received’
+- assessment_memo_response_date__c = email received date
+- Investigation_Action_c event logged: type=ASSESSMENT_COMPLETED
+1. Trigger IC state transition: INVESTIGATING → ASSESSMENT_RECEIVED (if assessment was required)
+1. Next step: case proceeds to FINALIZING_EXIT state (merge assessment into exit letter)
+
+**Story Points:** 5
+
+-----
+
+-----
+
+## Epic: Portal Integration (Evidence Upload & Customer Submissions)
+
+### E-INT-4: Portal Evidence Upload API
+
+**Business Objective:** Customer uploads evidence via portal (entry letter response, additional documents). System auto-detects file type, captures metadata, links to IC, and creates receipt log.
+
+#### US_INT-3.1-1: Design Portal Evidence Upload API Payload
+
+**Acceptance Criteria:**
+
+1. Portal → SF API endpoint defined: POST `/services/apexrest/evidence-upload`
+1. Payload structure:
+- ic_id (Salesforce IC record ID, required)
+- file_name (string, required)
+- file_content_base64 (base64-encoded file bytes, required)
+- file_size_bytes (integer, required)
+- file_type (enum: PDF, DOCX, XLSX, JPEG, PNG, required)
+- upload_date (ISO 8601 datetime, required)
+- submitter (enum: CUSTOMER, INVESTIGATOR, ESYS, required)
+- submission_context (enum: ENTRY_LETTER_RESPONSE, ADDITIONAL_EVIDENCE, OBJECTION, required)
+- metadata (optional): scan date, source system, original filename
+1. Validation rules:
+- Max file size: 20MB
+- Allowed types: PDF, DOCX, XLSX, JPEG, PNG
+- IC must exist and be in valid state (e.g., AWAITING_CUSTOMER_RESPONSE)
+1. Error response codes: 400 (bad payload), 413 (file too large), 415 (unsupported file type), 404 (IC not found), 409 (IC in wrong state)
+
+**Story Points:** 3
+
+-----
+
+#### US_INT-3.1-2: Implement Portal Evidence Upload & Auto-Linking
+
+**Acceptance Criteria:**
+
+1. SF Apex REST handler receives evidence upload:
+- Validate payload (file size, type, IC exists)
+- Decode base64 file content
+- Create Salesforce Files record:
+  - Title: “{submission_context}_{file_name}”
+  - Description: “Evidence uploaded via portal on {upload_date}”
+  - Owner: System user (or IC owner)
+- Link Files record to IC via ContentDocumentLink
+1. Auto-create receipt log:
+- Create EmailMessage record (or custom Receipt__c record) linked to IC:
+  - Subject: “Evidence Received: {file_name}”
+  - Body: “File type: {file_type}, Size: {file_size_bytes} bytes, Submitted on: {upload_date}, Type: {submission_context}”
+  - Date: upload_date
+1. Investigation_Action_c event logged:
+- type=EVIDENCE_UPLOADED
+- file_name, file_size_bytes, submission_context
+- timestamp=upload_date
+1. Return HTTP 201 with File ID + receipt confirmation to portal
+1. Portal displays receipt to customer: “Thank you, your submission has been received and linked to your case”
+
+**Story Points:** 5
+
+-----
+
+#### US_INT-3.1-3: Implement File Type Validation & Rejection Handling
+
+**Acceptance Criteria:**
+
+1. File type validation:
+- Check file extension matches declared file_type in payload
+- Optionally: scan file MIME type (magic bytes) to confirm
+- If mismatch: reject with HTTP 400 + error message to portal
+1. Rejected file handling:
+- Portal receives rejection, displays error to customer: “File type not supported. Please upload PDF, Word, Excel, or image file.”
+- Allow customer to re-upload
+- Log rejected uploads in Integration_API_Log__c for audit
+1. Virus scanning (if available):
+- Before storing in Salesforce, optionally send file to antivirus API
+- If virus detected: reject + alert SF admin + log incident
+1. File size enforcement:
+- If >20MB: reject with HTTP 413
+- Portal should warn customer before upload: “Max file size is 20MB”
+
+**Story Points:** 5
+
+-----
+
+#### US_INT-3.1-4: Implement Evidence Completeness Check Integration
+
+**Acceptance Criteria:**
+
+1. When evidence is uploaded, check if IC.Evidence_Complete_c should auto-update:
+- Define “completeness” logic:
+  a. Option A: ≥1 file uploaded = complete
+  b. Option B: Specific files required (e.g., entry letter response + supporting docs) = complete
+- Store completeness rule in custom setting: Evidence_Completeness_Rule__c
+1. If rule is met:
+- Set Evidence_Complete__c = TRUE
+- Log Investigation_Action_c event: type=EVIDENCE_COMPLETE_AUTO
+1. If T+10 hard stop is active and evidence now complete:
+- Allow IC to progress past T+10 gate (clear block)
+- Log: type=T10_GATE_CLEARED
+1. Testing: upload various file types, verify completeness flag + gate clearing
+
+**Story Points:** 3
+
+-----
+
+### E-INT-5: Entry Letter Response Submission
+
+**Business Objective:** Customer submits response to entry letter via portal. System updates IC state to trigger investigation phase.
+
+#### US_INT-3.2-1: Design Entry Letter Response API Payload
+
+**Acceptance Criteria:**
+
+1. Portal → SF API endpoint: POST `/services/apexrest/entry-letter-response`
+1. Payload:
+- ic_id (Salesforce IC record ID, required)
+- response_date (ISO 8601 datetime, required)
+- response_content (text, optional—customer’s written response)
+- supporting_files (array of file IDs from US_INT-3.1, optional)
+- submitter_email (string, required—for portal user identification)
+1. Validation:
+- IC must exist and be in AWAITING_CUSTOMER_RESPONSE state
+- Response must not be submitted after 60-day objection window expires
+
+**Story Points:** 2
+
+-----
+
+#### US_INT-3.2-2: Implement Entry Letter Response State Transition
+
+**Acceptance Criteria:**
+
+1. SF Apex REST handler receives entry letter response:
+- Validate IC state = AWAITING_CUSTOMER_RESPONSE
+- Create custom record Entry_Letter_Response__c or log via Investigation_Action_c:
+  - response_date, response_content, submitter_email
+  - linked to IC
+1. Auto-transition IC state:
+- Set IC.Investigation_Status__c = “INVESTIGATING”
+- Set Entry_Response_Received_Date__c = response_date
+- Log Investigation_Action_c event: type=ENTRY_RESPONSE_RECEIVED
+1. Trigger investigator notification:
+- Email to IC.OwnerId: “Entry letter response received on {response_date}. Case transitioned to INVESTIGATING. Continue investigation.”
+1. Return HTTP 201 + receipt confirmation to portal
+
+**Story Points:** 3
+
+-----
+
+### E-INT-6: Objection Submission
+
+**Business Objective:** Customer submits objection to exit letter/assessment during 60-day objection window. System updates IC state to trigger re-investigation.
+
+#### US_INT-3.3-1: Design Objection Submission API Payload
+
+**Acceptance Criteria:**
+
+1. Portal → SF API endpoint: POST `/services/apexrest/objection-submission`
+1. Payload:
+- ic_id (Salesforce IC record ID, required)
+- objection_date (ISO 8601 datetime, required)
+- objection_reason (text, required—customer’s stated reason)
+- objection_files (array of file IDs, optional—supporting docs)
+- submitter_email (string, required)
+1. Validation:
+- IC must exist and be in AWAITING_OBJECTION state
+- Objection_Submitted_Date__c must be ≤ Objection_Window_End_Date__c (TODAY ≤ exit_letter_sent_date + 60d)
+
+**Story Points:** 2
+
+-----
+
+#### US_INT-3.3-2: Implement Objection State Transition & Re-Investigation Trigger
+
+**Acceptance Criteria:**
+
+1. SF Apex REST handler receives objection:
+- Validate IC state = AWAITING_OBJECTION AND within 60-day window
+- Create Objection__c record linked to IC:
+  - objection_date, objection_reason, supporting files
+- Set IC.Investigation_Status__c = “INVESTIGATING” (re-investigation)
+- Set Objection_Received_Date__c = objection_date
+- Set Objection_Received_Flag__c = TRUE
+- Log Investigation_Action_c event: type=OBJECTION_RECEIVED
+1. Trigger re-investigation workflow:
+- Email to IC.OwnerId: “Objection received on {objection_date}. Case returned to INVESTIGATING. Re-investigate and provide updated findings.”
+- Create Task: “Process Objection – IC-{IC_ID}”
+  - Assigned to: IC owner (investigator)
+  - Due: TODAY + 10 days
+  - Priority: HIGH
+1. Reset SLA timers (if applicable):
+- Evidence_Deadline may reset or extended (business decision)
+1. Return HTTP 201 + objection receipt to portal
+
+**Story Points:** 3
+
+-----
+
+-----
+
+## Epic: Communications System Integration (Letter Generation & Dispatch)
+
+### E-INT-7: Entry Letter Generation & Dispatch
+
+**Business Objective:** When IC is allocated to investigator (C3), system generates entry letter and dispatches via post. Comms System generates PDF, adds to queue for mailing.
+
+#### US_INT-4.1-1: Design Entry Letter Generation API Payload
+
+**Acceptance Criteria:**
+
+1. SF → Comms System API endpoint: POST `/api/comms/letter-generate`
+1. Payload:
+- ic_id (Salesforce IC record ID, required)
+- letter_type (enum: “ENTRY_LETTER”, “EXIT_LETTER”, “REMINDER”, required)
+- taxpayer_name (string, required)
+- taxpayer_address (string, required—street, suburb, postcode)
+- revenue_line (string, required—e.g., “Land Tax”)
+- investigation_summary (text, optional—brief case summary)
+- ic_reference (string, required—for customer reply reference)
+- response_deadline (ISO 8601 date, required—e.g., Entry_Letter_Date + 30 days)
+- attachment_files (array of file IDs if EXIT_LETTER with assessment bundle, optional)
+1. Validation: all required fields must be present
+1. Error codes: 400 (bad payload), 422 (invalid address format), 500 (template error)
+
+**Story Points:** 2
+
+-----
+
+#### US_INT-4.1-2: Implement Entry Letter Generation & Dispatch Trigger
+
+**Acceptance Criteria:**
+
+1. Trigger: IC.Investigation_Status__c = “ALLOCATED” (investigator assigned)
+1. SF Apex flow/process:
+- Query: IC records where Status__c = “ALLOCATED” AND Entry_Letter_Sent__c = FALSE
+- For each IC: build payload (US_INT-4.1-1)
+- POST to Comms System
+1. Comms System receives POST:
+- Validates payload
+- Selects entry letter template (configurable per revenue line)
+- Populates template with taxpayer + IC data
+- Generates PDF
+- Queues for physical mail (if physical) or email (if email letter)
+1. Comms System returns HTTP 202 (Accepted) with:
+- letter_id (unique ID for this generated letter)
+- dispatch_status (QUEUED, IN_PROGRESS, DISPATCHED, FAILED)
+- estimated_dispatch_date
+1. SF receives response:
+- Set Entry_Letter_Sent__c = TRUE
+- Set Entry_Letter_Sent_Date__c = TODAY
+- Set Entry_Letter_Comms_ID__c = letter_id (for reconciliation)
+- Log Investigation_Action_c event: type=ENTRY_LETTER_SENT
+1. Set SLA gate: Entry_Response_Due_Date__c = TODAY + 30 days (customer must respond)
+
+**Story Points:** 5
+
+-----
+
+#### US_INT-4.1-3: Implement Entry Letter Dispatch Confirmation Callback
+
+**Acceptance Criteria:**
+
+1. Comms System notifies SF when letter is physically dispatched (or email sent):
+- POST to SF webhook: `/services/apexrest/comms-callback`
+- Payload: letter_id, dispatch_status, dispatch_date, tracking_id (if physical mail)
+1. SF receives callback:
+- Find IC by Entry_Letter_Comms_ID__c = letter_id
+- Update: Entry_Letter_Dispatch_Confirmed__c = TRUE, Entry_Letter_Dispatch_Date__c = dispatch_date
+- Log Investigation_Action_c event: type=ENTRY_LETTER_DISPATCHED, timestamp=dispatch_date
+1. If dispatch fails:
+- SF receives callback with dispatch_status = FAILED
+- Alert SF admin: “Entry letter failed to dispatch for IC-{IC_ID}. Manual intervention required.”
+- Create Task for admin: “Retry or manually mail entry letter – IC-{IC_ID}”
+
+**Story Points:** 3
+
+-----
+
+#### US_INT-4.1-4: Implement Entry Letter SLA Monitoring (T+0 Trigger)
+
+**Acceptance Criteria:**
+
+1. SLA: Entry letter must be sent by T+0 (case allocation date)
+1. Scheduled job: “Entry Letter SLA Monitor” runs daily at 06:00 UTC
+- Query: IC records where Investigation_Status__c = “ALLOCATED” AND Entry_Letter_Sent__c = FALSE AND days_since_allocated ≥ 1
+- Alert Investigation Program Lead: “Entry letter not sent for IC-{IC_ID} (allocated {days} days ago). Investigate delay.”
+1. Entry_Letter_SLA_Met__c calculated field: IF(Entry_Letter_Sent_Date__c ≤ Allocated_Date__c, TRUE, FALSE)
+1. C8 dashboard: show % of entry letters sent on-time
+
+**Story Points:** 2
+
+-----
+
+### E-INT-8: Exit Letter Generation & Dispatch (with Assessment Bundle)
+
+**Business Objective:** When IC approval gate is passed (C7), exit letter is generated (optionally with assessment bundle) and dispatched to customer. Objection window timer starts.
+
+#### US_INT-4.2-1: Design Exit Letter Generation API Payload
+
+**Acceptance Criteria:**
+
+1. SF → Comms System API endpoint: POST `/api/comms/letter-generate`
+1. Payload (extends US_INT-4.1-1):
+- letter_type = “EXIT_LETTER”
+- assessment_bundle (conditional):
+  - IF Assessment_Liability__c populated:
+    - assessment_liability (currency amount)
+    - assessment_date
+    - assessment_summary (findings text)
+    - assessment_file_id (Salesforce Files ID for PDF attachment)
+  - ELSE: assessment_bundle = NULL (no assessment conducted)
+- exit_reason (enum: “INVESTIGATION_COMPLETE”, “NO_GROUNDS”, “WITHDRAWN”, required)
+- objection_deadline (ISO 8601 date = dispatch_date + 60 days)
+1. Validation: if assessment_bundle is present, all fields must be populated
+
+**Story Points:** 2
+
+-----
+
+#### US_INT-4.2-2: Implement Exit Letter Generation & Dispatch Trigger
+
+**Acceptance Criteria:**
+
+1. Trigger: IC.Approval_Status__c = “APPROVED” (C7 approval passed)
+1. SF Apex flow/process:
+- Query: IC records where Approval_Status__c = “APPROVED” AND Exit_Letter_Sent__c = FALSE
+- For each IC:
+  a. Finalize scope + assessment (merge if required)
+  b. Build exit letter payload (US_INT-4.2-1)
+  c. If Assessment_Liability__c populated: attach assessment PDF to payload
+  d. POST to Comms System
+1. Comms System receives POST:
+- Generates exit letter PDF (using revenue-line-specific template)
+- If assessment_bundle provided: attach assessment PDF as second document in envelope
+- Queues for dispatch (physical mail + assessment bundle as enclosure)
+1. Comms System returns HTTP 202 with letter_id + estimated dispatch date
+1. SF receives response:
+- Set Exit_Letter_Sent__c = TRUE
+- Set Exit_Letter_Sent_Date__c = TODAY
+- Set Exit_Letter_Comms_ID__c = letter_id
+- Set Objection_Window_Start_Date__c = TODAY
+- Set Objection_Window_End_Date__c = TODAY + 60 days
+- Set Objection_Window_Status__c = “ACTIVE”
+- Transition IC state: FINALIZING_EXIT → AWAITING_OBJECTION
+- Log Investigation_Action_c event: type=EXIT_LETTER_SENT
+
+**Story Points:** 5
+
+-----
+
+#### US_INT-4.2-3: Implement Exit Letter Dispatch Confirmation & Objection Window Start
+
+**Acceptance Criteria:**
+
+1. Comms System callback when exit letter dispatched:
+- POST to SF webhook with letter_id, dispatch_date, tracking_id
+1. SF receives callback:
+- Find IC by Exit_Letter_Comms_ID__c = letter_id
+- Update: Exit_Letter_Dispatch_Confirmed__c = TRUE, Exit_Letter_Dispatch_Date__c = dispatch_date
+- Set Objection_Window_Started_Date__c = dispatch_date (official start)
+- Calculate objection_window_end_date = dispatch_date + 60 days
+- Log Investigation_Action_c event: type=EXIT_LETTER_DISPATCHED
+1. Start objection window monitoring (US_INT-4.3-2)
+
+**Story Points:** 2
+
+-----
+
+### E-INT-9: SLA-Triggered Communications (T+7, Day 55)
+
+**Business Objective:** System auto-sends reminder communications at key SLA milestones (T+7 warning, Day 55 objection reminder).
+
+#### US_INT-4.3-1: Design T+7 Warning Reminder (Evidence Hard Stop Approaching)
+
+**Acceptance Criteria:**
+
+1. Trigger: Scheduled job “T+7 SLA Warning” runs daily at 09:00 UTC
+1. Query: IC records where:
+- Investigation_Status__c = “INVESTIGATING”
+- Evidence_Deadline = TODAY (i.e., T+7 has arrived)
+- Evidence_Complete__c = FALSE
+- T7_Warning_Sent__c = FALSE
+1. For each IC:
+- Send email reminder to IC owner (investigator):
+  - Subject: “[URGENT] Evidence Deadline Today – IC-{IC_ID}”
+  - Body: “The T+7 evidence deadline has arrived. Evidence is NOT marked complete. You must submit evidence immediately or case will be blocked.”
+  - Include link to IC in Salesforce
+- Create Task: “Evidence Deadline – Submit Now or Face Hard Stop”
+  - Due: TODAY
+  - Priority: URGENT
+- Log Investigation_Action_c event: type=T7_WARNING_SENT
+- Set T7_Warning_Sent__c = TRUE
+
+**Story Points:** 3
+
+-----
+
+#### US_INT-4.3-2: Design Day 55 Objection Window Reminder
+
+**Acceptance Criteria:**
+
+1. Trigger: Scheduled job “Objection Window Reminder” runs daily at 09:00 UTC
+1. Query: IC records where:
+- Objection_Window_Status__c = “ACTIVE”
+- days_until_objection_deadline = 5 (i.e., Day 55 of 60-day window)
+- Day_55_Reminder_Sent__c = FALSE
+1. For each IC:
+- Send email reminder to taxpayer (via portal notification or email):
+  - Subject: “Final Reminder: Objection Deadline Approaching – 5 Days Remaining”
+  - Body: “You have 5 days remaining to lodge an objection to the assessment. After {objection_deadline_date}, the case will be closed.”
+  - Include link to portal objection form
+- Create Task for Investigation Program Lead: “Monitor objections – Case approaching closure date”
+- Log Investigation_Action_c event: type=DAY_55_REMINDER_SENT
+- Set Day_55_Reminder_Sent__c = TRUE
+
+**Story Points:** 3
+
+-----
+
+-----
+
+## Epic: TRIM Integration (Evidence Storage & Access)
+
+### E-INT-10: TRIM Folder Link Validation
+
+**Business Objective:** Investigator enters TRIM folder path in IC. System validates the link and provides a working hyperlink for accessing internal sensitive documents without duplicating files in Salesforce.
+
+#### US_INT-5.1-1: Design TRIM Folder Path Validation API
+
+**Acceptance Criteria:**
+
+1. SF → TRIM API endpoint: POST `/api/trim/validate-folder`
+1. Payload:
+- folder_path (string, required—UNC path or TRIM reference, e.g., “\trim-server\investigations\IC-12345”)
+- ic_id (Salesforce IC record ID, required)
+1. TRIM system receives request:
+- Checks if folder path exists in TRIM
+- Checks if path is accessible (not deleted, not archived)
+- Returns HTTP 200 (valid) or 404 (not found) or 403 (not accessible)
+1. If valid: return folder metadata (folder name, created date, last modified date, item count)
+
+**Story Points:** 3
+
+-----
+
+#### US_INT-5.1-2: Implement TRIM Folder Link Validation on IC Save
+
+**Acceptance Criteria:**
+
+1. Custom field on IC: TRIM_Folder_Path__c (text, 255 chars)
+1. When investigator enters TRIM_Folder_Path__c and saves IC:
+- Validation rule: IF TRIM_Folder_Path__c is not empty THEN validate
+- SF makes API call to TRIM (US_INT-5.1-1)
+1. If validation succeeds:
+- Allow save
+- Generate hyperlink: TRIM_Folder_URL__c = “https://trim-portal.gov.au/browse?path={folder_path}”
+- Allow investigator to click link to open TRIM folder in browser
+- Log Investigation_Action_c event: type=TRIM_LINK_VALIDATED
+1. If validation fails (404 or 403):
+- Block save with error message: “TRIM folder path is invalid or inaccessible. Check path and permissions.”
+- Log: type=TRIM_LINK_VALIDATION_FAILED
+- Require investigator to correct path before saving
+1. Optional: on-the-fly refresh button: allow investigator to re-validate path if TRIM folder moved
+
+**Story Points:** 5
+
+-----
+
+#### US_INT-5.1-3: Implement TRIM Access Audit Logging
+
+**Acceptance Criteria:**
+
+1. Optional feature (if TRIM can integrate):
+- When investigator clicks TRIM_Folder_URL__c hyperlink, attempt to log access in Salesforce
+- Requires TRIM webhook callback: “User {email} accessed folder at {timestamp}”
+- SF receives callback and logs to Investigation_Action_c: type=TRIM_ACCESS, timestamp=access_time, user=email
+1. If webhook not feasible:
+- Manual logging: investigator can log access via Task/Note in IC after accessing TRIM
+1. Purpose: audit trail for compliance (who accessed what sensitive docs, when)
+
+**Story Points:** 3
+
+-----
+
+#### US_INT-5.1-4: Configure TRIM Folder Security & Permissions
+
+**Acceptance Criteria:**
+
+1. TRIM folder permissions align with SF RBAC:
+- Investigator (SF role) = can read TRIM folder (no edit, no delete)
+- Team Lead (SF role) = can read TRIM folder + archived access
+- System Admin (SF role) = can read TRIM folder + full audit
+1. TRIM security groups configured:
+- Investigations_Readers: investigator users only
+- Investigations_Leads: team lead users
+1. Testing: verify SF user cannot access TRIM folder if TRIM permission not granted (principle of least privilege)
+
+**Story Points:** 2
+
+-----
+
+-----
+
+## Epic: Batch Processes & Scheduled Jobs
+
+### E-INT-11: Daily SLA Monitoring & Escalation Batch
+
+**Objective:** Consolidated batch job for all daily SLA checks (T+7 warning, T+10 hard stop, entry letter SLA, assessment memo SLA, objection window).
+
+#### US_INT-6.1-1: Implement Consolidated SLA Batch Job
+
+**Acceptance Criteria:**
+
+1. Scheduled Apex batch job: “Daily_SLA_Monitor” scheduled daily at 00:30 UTC (after PIC → IC APIs quiet)
+1. Single batch processes all IC records:
+- Check T+7 evidence deadline (send warning if TODAY)
+- Check T+10 evidence hard stop (block progression if TODAY + incomplete)
+- Check entry letter SLA (alert if allocated >1d without letter)
+- Check assessment memo SLA (create escalation task if >5 days without response)
+- Check objection window Day 55 (send reminder if deadline is in 5 days)
+- Check 60-day objection window expiration (auto-close case if deadline reached)
+1. Batch processes max 200 records per invocation (Salesforce limit)
+1. Logs all actions to Investigation_Action_c
+1. Failure handling: if batch fails, email SF admin with error details + retry count
+
+**Story Points:** 8
+
+-----
+
+#### US_INT-6.1-2: Implement Weekly Integration Health Report
+
+**Acceptance Criteria:**
+
+1. Scheduled report: “Weekly Integration Health” runs every Monday 08:00 UTC
+1. Report aggregates:
+- PIC → IC API: call count, success %, avg response time, failures by day
+- IC Close API: call count, success %, failures
+- Portal uploads: file count, file types, completeness check pass rate
+- Entry letter dispatch: count, % on-time, failures
+- Exit letter dispatch: count, % on-time, failures
+- Assessment memo SLA: count sent, count received, avg response time, overdue count
+- Email-to-Case: count linked, failures
+1. Threshold alerts: if any integration <95% success, flag for investigation
+1. Email report to: Integration_Contact__c (custom setting)
+
+**Story Points:** 3
+
+-----
+
+-----
+
+## Epic: Integration Testing & Deployment
+
+### E-INT-12: Integration Test Strategy
+
+#### US_INT-7.1-1: Define Integration Test Scenarios
+
+**Acceptance Criteria:**
+
+1. Happy path scenarios:
+- PIC created in ESYS → IC created in SF (verify all fields mapped)
+- Investigator sends assessment memo → revenue specialist replies → auto-link to IC (verify attachment linked, liability populated)
+- Customer uploads evidence via portal → auto-linked to IC (verify file stored, receipt logged)
+- Entry letter sent → dispatched by Comms System → confirmation received (verify SLA met)
+- Exit letter approved → dispatched → objection window started (verify 60-day timer begins)
+- Objection received → IC re-investigation triggered (verify status transition)
+- 60-day window expires → IC closed → PIC closed in ESYS (verify both systems updated)
+1. Failure scenarios:
+- PIC → IC API fails 3 times → alert + manual retry
+- Assessment memo non-response >5 days → escalation task created
+- Portal file >20MB → rejected with error to user
+- TRIM folder path invalid → validation error, save blocked
+- Exit letter dispatch fails → alert + manual retry
+- IC close API fails → alert + Program Lead manual close override
+1. Edge cases:
+- Multiple PICs for same taxpayer → verify each gets separate IC
+- Objection received on Day 60 (last day) → verify accepted
+- Objection received on Day 61 → verify rejected (outside window)
+- Assessment memo reply with no attachment → verify investigator must manually enter liability
+
+**Story Points:** 5
+
+-----
+
+#### US_INT-7.1-2: Implement Integration Test Suite (Apex)
+
+**Acceptance Criteria:**
+
+1. Apex test classes created for each integration:
+- TestPICToICAPI: mock ESYS API call, verify IC created with correct fields
+- TestICCloseAPI: mock Salesforce close trigger, verify API call to ESYS
+- TestAssessmentMemoEmail: mock email send + reply auto-link
+- TestPortalEvidenceUpload: mock file upload, verify Salesforce Files created
+- TestEntryLetterDispatch: mock Comms System call, verify letter SLA gate
+- TestExitLetterDispatch: mock Comms System call, verify objection window started
+1. Each test class covers:
+- Happy path (95%+ coverage)
+- Error handling (400, 500 responses)
+- Boundary conditions (max file size, SLA edge cases)
+1. Test coverage: >85% of integration code
+1. Tests documented with comments explaining expected behavior
+
+**Story Points:** 13
+
+-----
+
+#### US_INT-7.1-3: Implement Manual Testing & UAT Checklist
+
+**Acceptance Criteria:**
+
+1. UAT test cases created (spreadsheet format):
+- Manual test steps for each integration scenario (happy path + failure)
+- Test data prep: sample PICs in ESYS, test portal users, test Comms System endpoints
+- Expected results: what should be created in SF, what emails should send, what links should work
+1. UAT environment:
+- SF sandbox = exact copy of production (same custom objects, fields, flows)
+- ESYS test instance = configured for test API calls
+- Portal test instance = configured for file upload testing
+- Comms System test instance = test email generation
+1. UAT sign-off: business stakeholders (investigator, team lead, program lead, admin) sign off on each test case
+1. Defect log: any failures logged with severity + remediation
+
+**Story Points:** 8
+
+-----
+
+-----
+
+## Implementation Sequencing
+
+### Phase 1 (Months 1–2): Foundation APIs
+
+- E-INT-1: PIC Creation API (US_INT-1.1-1 through 1.1-4)
+- E-INT-2: IC Close API (US_INT-1.2-1 through 1.2-3)
+- Dependencies: Salesforce C1/C3 record types + basic case creation must be ready
+
+### Phase 2 (Months 2–3): Email & Assessment
+
+- E-INT-3: Assessment Memo (US_INT-2.1-1 through 2.1-4)
+- E-INT-4/5/6: Portal integration (all user stories)
+- Dependencies: C3 case management + investigation status workflow
+
+### Phase 3 (Months 3–4): Communications & TRIM
+
+- E-INT-7: Entry Letter (US_INT-4.1-1 through 4.1-4)
+- E-INT-8: Exit Letter (US_INT-4.2-1 through 4.2-3)
+- E-INT-9: SLA Communications (US_INT-4.3-1 through 4.3-2)
+- E-INT-10: TRIM Integration (all user stories)
+- Dependencies: C4 scope planning + C7 approval gates
+
+### Phase 4 (Month 4): Monitoring & Testing
+
+- E-INT-11: Batch Jobs (US_INT-6.1-1 through 6.1-2)
+- E-INT-12: Testing (US_INT-7.1-1 through 7.1-3)
+- Dependencies: All prior phases complete + UAT data ready
+
+-----
+
+## Configuration & Custom Settings Reference
+
+### Assessment_Memo_SLA__c (Custom Setting)
+
+```
+Assessment_Memo_SLA_Days__c = 5 (days before escalation)
+Escalation_Response_SLA_Days__c = 1 (days for investigator to respond)
+Enable_Auto_Escalation_to_PL__c = TRUE
+Program_Lead_Escalation_Days__c = 3 (days before PL escalation)
+```
+
+### Evidence_Completeness_Rule__c (Custom Setting)
+
+```
+Rule = "AT_LEAST_ONE_FILE" (or custom logic)
+Auto_Update_Evidence_Complete__c = TRUE
+```
+
+### Integration_API_Config__c (Custom Setting)
+
+```
+PIC_To_IC_Endpoint = "https://sf-org.my.salesforce.com/services/apexrest/pic-intake"
+IC_Close_Endpoint = "https://esys.gov.au/api/pic/close"
+Portal_Evidence_Endpoint = "https://sf-org.my.salesforce.com/services/apexrest/evidence-upload"
+Comms_Letter_Endpoint = "https://comms-system.gov.au/api/comms/letter-generate"
+TRIM_Validate_Endpoint = "https://trim.gov.au/api/trim/validate-folder"
+API_Key_ESYS = "****" (encrypted)
+API_Key_Portal = "****" (encrypted)
+API_Key_Comms = "****" (encrypted)
+```
+
+-----
+
+## Success Criteria & Rollout
+
+**Go-Live Readiness:**
+
+- All Phase 1–4 epics complete + tested
+- API health monitoring: >99% success rate across all integrations
+- SLA tracking: all gates (T+0, T+5, T+7, T+10, PW-005, 60d) automated + monitored
+- Audit trail: 100% of state transitions + external API calls logged to Investigation_Action_c
+- UAT sign-off: business stakeholders approved all scenarios + defect log zero-blocking
+
+**Rollout Strategy:**
+
+- Parallel run: ESYS/SF both active for 2 weeks (manual PIC duplication, compare results)
+- Cutover: disable PIC creation directly in SF; all new PICs via ESYS API only
+- Monitoring: daily integration health reports first month; weekly thereafter
+- Support: dedicated integration support contact (24h response SLA for P1 API failures)
+
+-----
+
+**Total Estimation:** ~130 story points across all integration epics

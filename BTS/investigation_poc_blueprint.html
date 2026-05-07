@@ -1,0 +1,484 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRO Investigations – POC Service Blueprint</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; }
+body { overflow: hidden; }
+
+.app { display: flex; flex-direction: column; width: 100vw; height: 100vh; }
+
+.topbar {
+display: flex; align-items: center; justify-content: space-between;
+padding: 0 16px; height: 64px;
+background: linear-gradient(90deg, #2563eb 0%, #1d4ed8 100%); color: white; flex-shrink: 0;
+}
+.topbar-title { font-size: 16px; font-weight: 700; }
+.topbar-meta { font-size: 11px; color: rgba(255,255,255,0.8); line-height: 1.3; }
+
+.warning-banner {
+display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+background: #fef3c7; border-bottom: 1px solid #f59e0b;
+color: #92400e; font-size: 12px; font-weight: 600;
+}
+
+.legend {
+display: flex; align-items: center; gap: 16px; padding: 10px 16px;
+background: white; border-bottom: 1px solid #e0e4ed; flex-shrink: 0;
+font-size: 9px; font-weight: 600; overflow-x: auto;
+}
+.legend-item { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+.legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+.main-content { display: flex; flex: 1; overflow: hidden; }
+.grid-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.grid-wrapper { flex: 1; overflow: auto; }
+
+.grid {
+display: grid;
+grid-template-columns: 100px repeat(6, 160px);
+gap: 0;
+width: max-content;
+min-width: 100%;
+}
+
+.header-cell {
+position: sticky; top: 0; z-index: 20;
+padding: 0;
+background: #f8fafc; border-bottom: 2px solid #2563eb;
+display: flex; align-items: stretch;
+min-height: 85px;
+}
+
+.header-corner { width: 100px; border-right: 1px solid #e0e4ed; }
+
+.header-stage {
+width: 160px; padding: 6px 4px;
+display: flex; align-items: center; justify-content: center;
+text-align: center; flex-direction: column; gap: 2px;
+background: #2563eb; color: white; border-right: 1px solid #1e40af;
+font-size: 8px; font-weight: 700; line-height: 1.15;
+cursor: pointer; transition: background 0.15s;
+}
+.header-stage:hover { background: #1e40af; }
+.header-stage.selected { background: #1e3a8a; }
+
+.stage-code { font-size: 9px; font-weight: 700; }
+.stage-gate { font-size: 7px; opacity: 0.75; margin-top: 2px; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 2px; }
+
+.lane-header {
+position: sticky; left: 0; z-index: 10;
+width: 100px; padding: 8px 4px;
+background: #f8fafc; border-bottom: 1px solid #edf0f5; border-right: 1px solid #e0e4ed;
+display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+cursor: pointer; transition: background 0.15s;
+user-select: none; font-size: 8px; font-weight: 700; text-transform: uppercase; text-align: center;
+line-height: 1;
+}
+.lane-header:hover { background: #f1f5f9; }
+.lane-icon { font-size: 13px; }
+
+.cell {
+padding: 6px; border-bottom: 1px solid #edf0f5; border-right: 1px solid #e0e4ed;
+min-height: 85px; display: flex; flex-direction: column; gap: 3px;
+cursor: pointer; transition: background 0.15s, border-color 0.15s;
+font-size: 8px; line-height: 1.3; color: #1a1a2e; word-wrap: break-word;
+}
+.cell:hover { border-color: #2563eb; box-shadow: inset 0 0 8px rgba(37,99,235,0.1); }
+.cell.selected { border: 2px solid #2563eb; background: #eff6ff; }
+
+.cell-main { flex: 1; font-weight: 600; color: #0f172a; }
+
+.badge {
+display: inline-flex; align-items: center; gap: 2px;
+padding: 1px 4px; border-radius: 2px; font-size: 7px; font-weight: 600;
+width: fit-content;
+}
+.badge.gate { background: #fee2e2; color: #991b1b; }
+.badge.manual { background: #e0e7ff; color: #3730a3; }
+.badge.sync { background: #dbeafe; color: #0c4a6e; }
+
+.badges { display: flex; flex-wrap: wrap; gap: 2px; margin-top: 2px; }
+
+.side-panel {
+width: 0; overflow: hidden; transition: width 0.25s ease;
+background: white; border-left: 1px solid #e0e4ed; flex-shrink: 0;
+display: flex; flex-direction: column;
+}
+.side-panel.open { width: 420px; }
+
+.panel-header {
+padding: 14px 16px 12px; border-bottom: 1px solid #e8eaf0; flex-shrink: 0;
+position: relative;
+}
+.panel-badge {
+display: inline-flex; align-items: center; gap: 4px;
+font-size: 8px; font-weight: 700; text-transform: uppercase;
+padding: 2px 6px; border-radius: 2px; margin-bottom: 6px;
+}
+.panel-title { font-size: 14px; font-weight: 700; color: #2563eb; margin-bottom: 3px; }
+.panel-stage { font-size: 10px; color: #6b7280; }
+.panel-close {
+position: absolute; top: 12px; right: 12px;
+background: none; border: none; cursor: pointer; font-size: 18px;
+color: #9ca3af; transition: color 0.15s;
+}
+.panel-close:hover { color: #374151; }
+
+.panel-body {
+flex: 1; overflow-y: auto; padding: 14px 16px;
+display: flex; flex-direction: column; gap: 12px;
+}
+
+.section-title { font-size: 9px; font-weight: 700; text-transform: uppercase; color: #2563eb; margin-bottom: 4px; }
+.section-body { font-size: 10px; color: #374151; line-height: 1.5; }
+
+.bullet-list { font-size: 9px; color: #374151; line-height: 1.6; white-space: pre-wrap; font-family: Segoe UI, sans-serif; }
+
+.detail-box {
+background: #f1f5f9; border-left: 2px solid #2563eb; padding: 8px;
+border-radius: 2px; font-size: 9px; line-height: 1.4;
+}
+
+.divider { height: 1px; background: #f1f5f9; }
+
+.tag { display: inline-block; padding: 2px 6px; background: #dbeafe; color: #0c4a6e; border-radius: 2px; font-size: 8px; font-weight: 500; margin-right: 3px; margin-bottom: 2px; }
+
+.manual-note { background: #ede9fe; border-left: 2px solid #7c3aed; padding: 6px; border-radius: 2px; font-size: 8px; color: #5b21b6; margin-top: 4px; }
+</style>
+
+</head>
+<body>
+
+<div class="app">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">📋 SRO Investigations – POC Service Blueprint (3-Month Delivery)</div>
+      <div class="topbar-meta">Configuration-only, Manual Workflows | 6 Stages × 6 Lanes | Click stage headers for PURPOSE | Click cells for DETAIL</div>
+    </div>
+    <button onclick="exportToCSV()" style="padding: 8px 16px; background: white; color: #2563eb; border: 2px solid #2563eb; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 12px; transition: all 0.15s;">📥 Export to CSV</button>
+  </div>
+
+  <div class="warning-banner">
+    ⚠️ <strong>POC Service Blueprint:</strong> Configuration-only delivery. No webhooks, no custom objects, no automation. Manual workflows validated in POC. Phase 2+ roadmap shows where automation happens. <a href="#" style="color: #92400e; text-decoration: underline;">See Phase 2+ roadmap</a>
+  </div>
+
+  <div class="legend">
+    <span style="font-weight: 700; margin-right: 8px;">Legend:</span>
+    <div class="legend-item"><div class="legend-dot" style="background: #fee2e2;"></div><span>Gate (Manual Check)</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background: #e0e7ff;"></div><span>Manual Process</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background: #dbeafe;"></div><span>Data Cache/Read-only</span></div>
+  </div>
+
+  <div class="main-content">
+    <div class="grid-area">
+      <div class="grid-wrapper">
+        <div class="grid" id="grid"></div>
+      </div>
+    </div>
+
+```
+<div class="side-panel" id="side-panel">
+  <div id="panel-content"></div>
+</div>
+```
+
+  </div>
+</div>
+
+<script>
+const STAGES = [
+  { id: 's1', code: 'S1', name: 'Intake & Assignment', gate: 'Case created & TL assigned (manual)' },
+  { id: 's2', code: 'S2', name: 'Scope Definition', gate: 'Plan approved (manual, 2d SLA)' },
+  { id: 's3', code: 'S3', name: 'Evidence Engagement', gate: 'Deadline T+10 passed (manual deadline)' },
+  { id: 's4', code: 'S4', name: 'Analysis & QA', gate: 'QA approved (manual review, 3d SLA)' },
+  { id: 's5', code: 'S5', name: 'Assessment & Approval', gate: 'TL approved (manual sign-off, 2d SLA)' },
+  { id: 's6', code: 'S6', name: 'Post-Closure & Reporting', gate: 'Case archived (manual close)' },
+];
+
+const LANES = [
+  { id: 'subject', label: 'Subject/Taxpayer', icon: '👤', color: '#2563eb', bg: '#eff6ff' },
+  { id: 'investigator', label: 'Investigator', icon: '🔍', color: '#2563eb', bg: '#eff6ff' },
+  { id: 'teamlead', label: 'Team Lead', icon: '✅', color: '#2563eb', bg: '#eff6ff' },
+  { id: 'salesforce', label: 'Salesforce', icon: '☁️', color: '#0891b2', bg: '#ecfdf5' },
+  { id: 'esys', label: 'eSys', icon: '🖥', color: '#6366f1', bg: '#eef2ff' },
+  { id: 'process', label: 'Process Gate', icon: '⚙️', color: '#dc2626', bg: '#fee2e2' },
+];
+
+const DATA = {
+  s1: {
+    subject: { text: 'No action', purpose: 'No taxpayer contact at S1. Internal intake only.', detail: ['Taxpayer NOT notified at intake', 'Internal SRO screening only', 'First notification at S2 (entry letter)'], gates: [], sla: '-', sync: '-', manual: true, tags: ['Internal'] },
+    investigator: { text: 'Complete intake form (MANUAL)', purpose: 'Validate PIC. Confirm jurisdiction + priority + revenue line.', detail: ['Log into Salesforce Case (created manually or from CSV bulk load)', 'Review pre-populated data: taxpayer, ABN, revenue line, PIC amount', 'Complete Intake Checklist: Jurisdiction (validate), Priority (High/Medium/Low), Revenue lines in scope', 'Submit to TL for approval'], gates: ['Intake checklist complete'], sla: '24h', sync: 'eSys read-only (display)', manual: true, tags: ['Form', 'Manual'] },
+    teamlead: { text: 'Review & assign (MANUAL)', purpose: 'Validate investigator assignment. Confirm intake completeness.', detail: ['Review intake form completeness', 'Manually assign case to investigator (or accept default)', 'Review capacity: does investigator have bandwidth?', 'Approve via Approval Process (click Approve button)', 'Assignment confirmed (no digital signature in POC)'], gates: ['TL approval'], sla: '24h', sync: '-', manual: true, tags: ['Approval', 'Manual'] },
+    salesforce: { text: 'Case creation (CSV OR MANUAL)', purpose: 'Store case. Accept intake data. Enforce gate.', detail: ['OPTION 1 (recommended): CSV bulk load from eSys export', '  • Salesforce Data Loader upsert (Account lookup, Case creation)', '  • Pre-populate: Account, Priority, Revenue_Line__c, PIC_Amount', 'OPTION 2 (small volumes): Investigator creates case manually in SF', 'Gate: Intake checklist 100% complete AND TL approved', 'Status: Intake Complete (ready to move to S2)'], gates: ['Case created', 'Intake complete'], sla: '24h gate', sync: 'CSV load (batch)', manual: true, tags: ['Gate', 'Manual'] },
+    esys: { text: 'PIC exported (MANUAL)', purpose: 'eSys provides PIC data via CSV export. SF consumes one-way.', detail: ['eSys user exports PIC queue to CSV (daily or on-demand)', 'CSV includes: PIC_ID, Taxpayer, ABN, Revenue Line, Amount, Priority', 'Salesforce Data Loader reads CSV, creates/upserts cases', 'NO webhook. NO real-time integration. Manual export/load.'], gates: ['-'], sla: 'Daily (batch)', sync: 'CSV read-only', manual: true, tags: ['Export'] },
+    process: { text: 'S1 Gate (MANUAL CHECK)', purpose: 'Manual gate. TL confirms prerequisites before S2.', detail: ['GATE: Before proceeding to S2, TL manually confirms:', '  ✓ Case created in Salesforce', '  ✓ Intake form 100% complete', '  ✓ Investigator assigned and acknowledged', '  ✓ Jurisdiction validated', 'If missing: TL creates task, returns to Investigator', 'No auto-escalation in POC (TL is responsible)'], gates: ['Intake complete'], sla: '24h', sync: '-', manual: true, tags: ['Hard gate', 'Manual'] }
+  },
+  s2: {
+    subject: { text: 'FIRST NOTIFICATION: Entry letter (MANUAL)', purpose: 'First taxpayer communication. Explain scope + evidence deadline T+10.', detail: ['Investigator drafts entry letter (using Word template)', 'Letter includes: scope, revenue lines, evidence requirements, T+10 deadline', 'TL reviews & approves letter (email or Teams)', 'Investigator prints/emails letter manually to taxpayer', 'Date stamped upon delivery (investigator records date in case)'], gates: ['Letter sent'], sla: '2-5 days', sync: '-', manual: true, tags: ['First notice', 'Manual'] },
+    investigator: { text: 'Define scope, draft letter (MANUAL)', purpose: 'Lock down investigation scope. Identify evidence strategy. Issue letter.', detail: ['Complete Scope form: which revenue lines? what period?', 'Create Investigation_Revenue_Line__c records (manual data entry)', 'Draft entry letter using Word template (merge fields: taxpayer, deadline, scope)', 'Email letter to TL for review', 'On TL approval: print/email letter to taxpayer, log date in case'], gates: ['Scope locked', 'Letter sent'], sla: '3 days + 2d TL review', sync: 'Manual - no sync', manual: true, tags: ['Scope lock', 'Manual'] },
+    teamlead: { text: 'Review & approve scope (MANUAL)', purpose: 'Validate scope is defensible and complete. Approve letter.', detail: ['Review Investigation Plan: scope, period, letter draft', 'Check: are revenue lines correct? Period reasonable?', 'Approve via Approval Process (2-day SLA)', 'If revision needed: use Task to return to Investigator', 'On approval: scope is considered locked (manual governance)'], gates: ['TL approval'], sla: '2-day SLA', sync: '-', manual: true, tags: ['Approval', 'Manual'] },
+    salesforce: { text: 'Scope storage, letter template (MANUAL)', purpose: 'Record scope decisions. Store letter draft. Enforce gate.', detail: ['Scope form: Revenue_Lines_in_Scope, Period dates, Evidence_Strategy stored in Case notes', 'Letter template: native Salesforce template (merge fields: Case.Account.Name, Case.PIC_Date, scope summary)', 'Investigation_Revenue_Line__c records created (manual, one per revenue line)', 'On TL approval: Case.Status = Scope Locked (informational)', 'NO data sync to eSys in POC (investigators manage periods manually)'], gates: ['Scope locked'], sla: '3+2 days', sync: 'None', manual: true, tags: ['Gate', 'Manual'] },
+    esys: { text: 'Revenue line data (READ-ONLY)', purpose: 'Provide valuation context. Investigators reference, not sync.', detail: ['Salesforce displays eSys Detected_Amount__c (cached, read-only)', 'Investigator sees: what does eSys value this revenue line at?', 'Used for context only. NO sync back to eSys.', 'If eSys data changes: investigator must refresh manually (button click)'], gates: ['-'], sla: 'On-demand', sync: 'Read-only display', manual: true, tags: ['Read-only'] },
+    process: { text: 'S2 Gate (MANUAL CHECK)', purpose: 'Manual gate. TL confirms scope locked + letter sent before S3.', detail: ['GATE: Before proceeding to S3, TL manually confirms:', '  ✓ Scope form completed (revenue lines, period)', '  ✓ Investigation_Revenue_Line__c records created', '  ✓ Letter drafted and reviewed', '  ✓ Letter date recorded', 'If missing: create task for Investigator', 'No auto-enforcement in POC'], gates: ['Scope locked', 'Plan approved'], sla: '3+2 days', sync: '-', manual: true, tags: ['Hard gate', 'Manual'] }
+  },
+  s3: {
+    subject: { text: 'Upload evidence (MANUAL)', purpose: 'Respond to entry letter. Submit evidence by T+10 deadline.', detail: ['Upload documents to Salesforce portal (or email/mail)', 'Portal shows countdown to T+10 deadline', 'Evidence types: invoices, bank statements, contracts, third-party docs', 'No auto-reminders (investigator tracks manually)'], gates: ['Evidence received'], sla: 'T+10 from letter', sync: '-', manual: true, tags: ['Portal', 'Manual'] },
+    investigator: { text: 'Track evidence, request clarifications (MANUAL)', purpose: 'Monitor deadline. Ensure evidence completeness. Request clarifications.', detail: ['Manually track evidence receipts in Case.Files (Salesforce)', 'Note in case comments: what evidence received, when, from whom', 'If incomplete: send clarification email to taxpayer', 'Monitor deadline: manually check calendar for T+10 date', 'Create manual task reminder if needed (Salesforce Task)', 'Validate quality: readable? relevant? complete?', 'If OK: mark ready for analysis'], gates: ['Evidence received', 'Quality validated'], sla: 'T+10', sync: 'TRIM reference (manual)', manual: true, tags: ['Quality check', 'Manual'] },
+    teamlead: { text: 'Monitor deadline (MANUAL)', purpose: 'Track T+10 deadline. Escalate if needed.', detail: ['Check dashboard/email alerts (if set up): which cases approaching T+10?', 'At T+7: TL manually creates task reminder', 'At T+10: TL checks if evidence received', 'If evidence late: decide: extend deadline OR proceed with available evidence', 'Create task to Investigator if extension needed', 'No auto-escalation in POC (TL responsibility)'], gates: ['Monitored'], sla: '1d review', sync: '-', manual: true, tags: ['Escalation', 'Manual'] },
+    salesforce: { text: 'Evidence storage, deadline tracking (MANUAL)', purpose: 'Store evidence links. Manual SLA tracking.', detail: ['Salesforce Files: link to evidence documents (uploaded by taxpayer or investigator)', 'TRIM_Folder_Path__c: reference to TRIM folder (TRIM stores files, SF links only)', 'Case.Comments: investigator notes when evidence received, quality assessment', 'NO auto-task creation at T+7/T+10 in POC (TL creates manually)', 'NO SLA batch job (TL monitors manually)', 'Evidence deadline: manually tracked in case or calendar'], gates: ['Deadline passed'], sla: 'T+10 (manual)', sync: 'TRIM link only', manual: true, tags: ['Gate', 'Manual'] },
+    esys: { text: 'No action', purpose: 'eSys not involved in evidence collection. Read-only context only.', detail: ['eSys valuation displayed for context (read-only)', 'No evidence synced to eSys', 'TRIM is sole authority for evidence storage'], gates: ['-'], sla: '-', sync: 'Read-only context', manual: true, tags: ['Passive'] },
+    process: { text: 'S3 Gate (MANUAL CHECK)', purpose: 'Manual gate. TL confirms evidence deadline passed + validated.', detail: ['GATE: Before proceeding to S4, TL manually confirms:', '  ✓ T+10 deadline has passed', '  ✓ Evidence receipt confirmed (logged in case)', '  ✓ Evidence quality validated (readable, complete)', 'If deadline missed: TL decides extend OR proceed with available evidence', 'TL creates task if extension needed', 'If OK: case ready for analysis'], gates: ['Deadline passed', 'Quality OK'], sla: 'T+10', sync: '-', manual: true, tags: ['Hard gate', 'Manual'] }
+  },
+  s4: {
+    subject: { text: 'Passive (no action)', purpose: 'Investigation proceeds internally. No taxpayer contact.', detail: ['Evidence is analyzed by investigator internally', 'Portal shows status: In Analysis', 'Taxpayer may be contacted if clarification needed (rare)'], gates: ['-'], sla: '-', sync: '-', manual: true, tags: ['Passive'] },
+    investigator: { text: 'Analyze evidence (MANUAL)', purpose: 'Compare declared vs detected. Document findings. Prepare recommendation.', detail: ['Review evidence against internal records (ESYS data)', 'Create analysis notes in Case.Findings_Summary__c (text field, no structure)', 'Manually calculate: Detected - Declared = Discrepancy', 'Document any variances found (fraud indicators, timing mismatches, etc.)', 'Prepare recommendation: Assessment needed? Or No Finding?', 'Create case notes/attachments with analysis (Excel spreadsheet or PDF)', 'If complex: consult Legal via email (external to SF workflow)', 'Submit case to TL with recommendation'], gates: ['Findings documented'], sla: '7 days', sync: 'Manual - no sync', manual: true, tags: ['Analysis', 'Manual'] },
+    teamlead: { text: 'QA review & approval (MANUAL)', purpose: 'Review findings. Validate recommendation. Approve or revise.', detail: ['Review investigator\'s analysis: findings, calculations, recommendation', 'Check: are findings supported by evidence? Is recommendation defensible?', 'If high-risk (>$100k liability): escalate to Compliance Officer (email)', 'Approve via Approval Process (3-day SLA)', 'If revision needed: return to Investigator with feedback', 'On approval: findings are locked (no further edits, manual governance)'], gates: ['QA approved'], sla: '3-day SLA', sync: '-', manual: true, tags: ['QA', 'Manual'] },
+    salesforce: { text: 'Findings storage (MANUAL)', purpose: 'Record analysis. Store documents. Manual gate.', detail: ['Case.Findings_Summary__c: investigator writes analysis narrative (no structure)', 'Attachments: investigator attaches Excel analysis, PDF report, etc.', 'NO Investigation_Discrepancy__c objects in POC (would need custom object)', 'Case.Status = Pending QA (while TL reviews)', 'On TL approval: Case.Status = QA Approved', 'NO formula validation in POC (TL manually checks calculations)'], gates: ['Pending QA', 'QA approved'], sla: '7+3 days', sync: 'None', manual: true, tags: ['Gate', 'Manual'] },
+    esys: { text: 'Prior case data (READ-ONLY)', purpose: 'Reference prior cases for consistency. No sync.', detail: ['Investigator queries eSys manually (separate system access)', 'Checks prior investigation outcomes for similar cases', 'Used for precedent/consistency check (not automated)', 'SF does not pull prior case data automatically'], gates: ['-'], sla: 'On-demand', sync: 'Read-only (manual query)', manual: true, tags: ['Read-only'] },
+    process: { text: 'S4 Gate (MANUAL CHECK)', purpose: 'Manual gate. TL confirms QA approved + findings documented.', detail: ['GATE: Before proceeding to S5, TL manually confirms:', '  ✓ Findings documented (Case.Findings_Summary__c completed)', '  ✓ Evidence analysis complete', '  ✓ Recommendation prepared (Assessment or No Finding)', '  ✓ QA review complete & approved', 'If high-risk: escalate to Compliance (email)', 'If OK: case ready for approval stage'], gates: ['QA passed'], sla: '7+3 days', sync: '-', manual: true, tags: ['Hard gate', 'Manual'] }
+  },
+  s5: {
+    subject: { text: 'SECOND NOTIFICATION (MANUAL)', purpose: 'Assessment Notice (if findings) OR Closure Letter (if no findings).', detail: ['Assessment Notice: decision, liability amount, appeal rights, payment instructions', 'Closure Letter: no findings, case closed', '60-day objection window starts (if Assessment)', 'Delivered via mail or email (manual by investigator)'], gates: ['Notice delivered'], sla: '2 days', sync: '-', manual: true, tags: ['Second notice', 'Manual'] },
+    investigator: { text: 'Prepare closure documents (MANUAL)', purpose: 'Final validation. Draft Assessment Notice or Closure Letter. Submit to TL.', detail: ['If Findings: draft Assessment Notice (using Word template)', '  • Include: decision, liability amount, reasoning, appeal rights', 'If No Findings: draft Closure Letter (using Word template)', 'Submit documents to TL for approval', 'On TL approval: prepare for mailing (print/email)'], gates: ['Complete', 'Submitted'], sla: '1 day', sync: '-', manual: true, tags: ['Submit', 'Manual'] },
+    teamlead: { text: 'Final review & approval (MANUAL)', purpose: 'Review assessment/closure decision. Approve and sign off.', detail: ['Review Assessment Notice or Closure Letter draft', 'Check: decision clear? liability calculation reasonable? appeal rights stated?', 'Approve via Approval Process (2-day SLA)', 'Sign-off recorded (no digital signature capture in POC, but approval logged)', 'If revision needed: return to Investigator', 'On approval: case ready for notification to taxpayer'], gates: ['TL approved'], sla: '2-day SLA', sync: '-', manual: true, tags: ['Signature', 'Manual'] },
+    salesforce: { text: 'Assessment storage & notification (MANUAL)', purpose: 'Store assessment decision. Record date sent.', detail: ['Case.Assessment_Status__c: Assessment or Closure Decision', 'Case.Assessed_Amount__c: liability amount (if applicable)', 'Date sent: manually recorded by investigator', 'NO sync to eSys in POC. Operations team manually receives email: "Assessment ready"', 'Operations uses case data to create Assessment in eSys (external)', 'Case.Status = Assessment Approved'], gates: ['Approved', 'Notice sent'], sla: '1+2 days', sync: 'Email notification only', manual: true, tags: ['Gate', 'Manual'] },
+    esys: { text: 'Assessment created (EXTERNAL)', purpose: 'Operations creates Assessment in eSys. SF notifies via email.', detail: ['Investigator sends email to Operations: "Case [ID] ready for assessment"', 'Attaches case summary, liability calculation, assessment notice', 'Operations team creates Assessment in eSys (manual data entry)', 'Assessment ID generated (investigator manually logs in case for reference)', 'NO API sync in POC. NO webhook. Fully manual handoff.'], gates: ['Created'], sla: '<1h (email latency)', sync: 'Email handoff only', manual: true, tags: ['External'] },
+    process: { text: 'S5 Gate (MANUAL CHECK)', purpose: 'Manual gate. TL confirms assessment ready + notice drafted.', detail: ['GATE: Before proceeding to S6, TL manually confirms:', '  ✓ Assessment or Closure decision documented', '  ✓ Notice drafted and reviewed', '  ✓ TL approved', '  ✓ Notice date recorded', 'Email to Operations: case ready for assessment creation', 'If OK: case ready for closure tracking (S6)'], gates: ['Approved', 'Notice sent'], sla: '1+2 days', sync: 'Email handoff', manual: true, tags: ['Final gate', 'Manual'] }
+  },
+  s6: {
+    subject: { text: 'Manage objection window (MANUAL)', purpose: 'If Assessment: 60-day objection period. Track deadline.', detail: ['If Assessment issued: 60-day objection window from notice date', 'Taxpayer can lodge objection via mail/email (contact investigator)', 'If No Findings: no objection window (case closed)', 'Objections tracked manually (investigator notes in case)'], gates: ['Objection window tracked'], sla: '60 days', sync: '-', manual: true, tags: ['Statutory right', 'Manual'] },
+    investigator: { text: 'Close case & document lessons (MANUAL)', purpose: 'Mark complete. Capture lessons. Archive.', detail: ['Set Case.Status = Closed', 'Complete Lessons_Learned__c field (text): what went well? What improved?', 'Document any patterns observed (optional notes)', 'Note: what would help future investigations like this?', 'Case archived (read-only, >7 years retention)'], gates: ['Archived'], sla: '1 day', sync: '-', manual: true, tags: ['Archive', 'Manual'] },
+    teamlead: { text: 'Monitor & manage objections (MANUAL)', purpose: 'Track objection window. If objection received, assess merit.', detail: ['Monitor 60-day objection window (calendar reminder)', 'If objection received: create task in Salesforce', 'Assess objection: Withdraw? Uphold? Escalate to Legal?', 'Document decision in case notes', 'Update Case.Objection_Status__c with outcome'], gates: ['Approved', 'Objections triaged'], sla: '1 day', sync: '-', manual: true, tags: ['Objection', 'Manual'] },
+    salesforce: { text: 'Closure & reporting (MANUAL)', purpose: 'Record closure. Update dashboards. Archive case.', detail: ['Case.Status = Closed (read-only)', 'Dashboards auto-update from case data (hourly refresh)', 'Reports show: cases closed, cycle time, investigator hours, outcomes', 'If objection: case reopens as follow-up task (manual)', 'NO auto-closure. Case manually marked complete.'], gates: ['Archived'], sla: '1 day', sync: '-', manual: true, tags: ['Archive', 'Manual'] },
+    esys: { text: 'No sync', purpose: 'eSys Assessment remains in eSys. No closure sync in POC.', detail: ['Assessment finalized in eSys (external)', 'Investigators do not update eSys', 'If refund needed: Operations processes in eSys (external to SF)'], gates: ['-'], sla: '-', sync: 'None', manual: true, tags: ['External'] },
+    process: { text: 'S6 Complete (MANUAL CHECK)', purpose: 'Manual closure. Case archived. Workflow complete.', detail: ['GATE: Investigation complete when:', '  ✓ Case marked Closed in Salesforce', '  ✓ Lessons learned documented', '  ✓ Objection window tracked (if Assessment)', '  ✓ Case archived (read-only, >7 years retention)', 'Metrics generated: cycle time, outcome, cost (from case data)', 'Dashboard updated (daily refresh)'], gates: ['All gates passed'], sla: 'Continuous', sync: '-', manual: true, tags: ['Complete', 'Manual'] }
+  }
+};
+
+let selected = null;
+let selectedStage = null;
+
+function render() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  
+  const headerCorner = document.createElement('div');
+  headerCorner.className = 'header-cell header-corner';
+  grid.appendChild(headerCorner);
+  
+  STAGES.forEach(stage => {
+    const headerCell = document.createElement('div');
+    headerCell.className = 'header-cell header-stage';
+    if (selectedStage === stage.id) headerCell.classList.add('selected');
+    headerCell.innerHTML = `<div class="stage-code">${stage.code}</div><div>${stage.name}</div><div class="stage-gate">${stage.gate}</div>`;
+    headerCell.onclick = () => {
+      selectedStage = selectedStage === stage.id ? null : stage.id;
+      selected = null;
+      render();
+      renderPanel();
+    };
+    grid.appendChild(headerCell);
+  });
+
+  LANES.forEach(lane => {
+    const laneHeader = document.createElement('div');
+    laneHeader.className = 'lane-header';
+    laneHeader.innerHTML = `<span class="lane-icon">${lane.icon}</span><span>${lane.label}</span>`;
+    grid.appendChild(laneHeader);
+
+    STAGES.forEach(stage => {
+      const cell = document.createElement('div');
+      const data = DATA[stage.id]?.[lane.id];
+      
+      cell.className = 'cell';
+      cell.style.background = lane.bg;
+      
+      if (data) {
+        const activity = document.createElement('div');
+        activity.className = 'cell-main';
+        activity.textContent = data.text;
+        cell.appendChild(activity);
+
+        const badges = document.createElement('div');
+        badges.className = 'badges';
+        if (data.gates && data.gates.length > 0 && data.gates[0] !== '-') {
+          const gateBadge = document.createElement('div');
+          gateBadge.className = 'badge gate';
+          gateBadge.textContent = '⚠ GATE';
+          badges.appendChild(gateBadge);
+        }
+        if (data.manual) {
+          const manualBadge = document.createElement('div');
+          manualBadge.className = 'badge manual';
+          manualBadge.textContent = '✍ MANUAL';
+          badges.appendChild(manualBadge);
+        }
+        if (data.sync && data.sync !== '-' && data.sync !== 'None') {
+          const syncBadge = document.createElement('div');
+          syncBadge.className = 'badge sync';
+          syncBadge.textContent = '📖 Read-only';
+          badges.appendChild(syncBadge);
+        }
+        cell.appendChild(badges);
+        
+        cell.onclick = () => {
+          selected = { stage: stage.id, lane: lane.id, data, stageName: stage.name, laneName: lane.label };
+          selectedStage = null;
+          render();
+          renderPanel();
+        };
+        cell.style.cursor = 'pointer';
+      }
+      
+      if (selected?.stage === stage.id && selected?.lane === lane.id) {
+        cell.classList.add('selected');
+      }
+      
+      grid.appendChild(cell);
+    });
+  });
+}
+
+function renderPanel() {
+  const panelDiv = document.getElementById('side-panel');
+  const content = document.getElementById('panel-content');
+  
+  if (!selectedStage && !selected) {
+    panelDiv.classList.remove('open');
+    return;
+  }
+
+  if (selectedStage) {
+    const stage = STAGES.find(s => s.id === selectedStage);
+    const purposes = {
+      s1: { purpose: 'Translate PIC into Salesforce case (manual or CSV load). Assign to investigator. Validate jurisdiction.', why: 'Cases must be in Salesforce before investigation can begin. Manual intake ensures quality (vs auto-import).', success: 'Case created in Salesforce. Intake form 100% complete. TL assigned investigator. Ready for S2.', gate: '24h hard stop (manual TL check). Intake complete AND investigator assigned.' },
+      s2: { purpose: 'Define investigation scope manually. Lock scope. Issue entry letter (first taxpayer contact).', why: 'Scope is the boundary. Investigator + TL agree upfront what to investigate (written record). Entry letter documents deadline.', success: 'Scope form completed (revenue lines, period). TL approved. Entry letter issued + dated.', gate: '5+2 days (manual TL check). Scope locked + letter sent. Ready for evidence phase.' },
+      s3: { purpose: 'Collect evidence from taxpayer within T+10 deadline. Manually track deadline. Validate completeness.', why: 'Hard deadline prevents indefinite waiting. Quality validation ensures analysis is sound. Investigator manages end-to-end.', success: 'Evidence uploaded to SF/TRIM by T+10. Quality validated (readable, complete, on-topic). Ready for analysis.', gate: 'T+10 hard stop (manual TL check). Deadline passed + receipt confirmed + quality OK.' },
+      s4: { purpose: 'Analyze evidence manually. Document findings in case notes. Prepare recommendation. TL reviews.', why: 'Analysis is core. Investigator writes narrative (not structured). TL does QA review to catch errors before handoff.', success: 'Findings documented in Case.Findings_Summary__c. Evidence analysis complete. TL approved recommendation.', gate: '7+3 days (manual TL check). Findings locked + QA approved. Ready for assessment.' },
+      s5: { purpose: 'Finalize assessment or closure (TL approval). Draft notice. Notify taxpayer. Email Operations.', why: 'TL sign-off is gate before irreversible actions. Manual drafting ensures quality. Operations team creates Assessment in eSys (external).', success: 'Assessment Notice or Closure Letter drafted + TL approved. Date recorded. Sent to taxpayer. Email to Operations.', gate: '1+2 days (manual TL check). Notice sent + Operations notified. Ready for closure.' },
+      s6: { purpose: 'Close case. Archive. Track objection window (if Assessment). Capture lessons learned.', why: 'Closure is not instant—60-day objection window is statutory right (if assessed). Lessons learned drive improvements. Archive for compliance (>7y retention).', success: 'Case marked Closed. Objection window tracked (60d from notice, if applicable). Lessons documented. Archived (read-only).', gate: 'Continuous (manual TL check). Case archived + objections tracked. Workflow complete.' }
+    };
+    const p = purposes[selectedStage];
+    content.innerHTML = `
+      <div class="panel-header">
+        <button class="panel-close" onclick="selectedStage=null; render(); renderPanel();">✕</button>
+        <div class="panel-badge" style="background: #eff6ff; color: #2563eb;">${stage.code}</div>
+        <div class="panel-title">${stage.name}</div>
+        <div class="panel-stage">Stage Purpose (POC)</div>
+      </div>
+      <div class="panel-body">
+        <div><div class="section-title">🎯 Purpose</div><div class="detail-box" style="background: #eff6ff; border-left-color: #2563eb;">${p.purpose}</div></div>
+        <div class="divider"></div>
+        <div><div class="section-title">❓ Why This Stage?</div><div class="section-body">${p.why}</div></div>
+        <div class="divider"></div>
+        <div><div class="section-title">✅ Success Criteria</div><div class="detail-box" style="background: #ecfdf5; border-left-color: #10b981;">${p.success}</div></div>
+        <div class="divider"></div>
+        <div><div class="section-title">🚫 Gate</div><div class="detail-box" style="background: #fee2e2; border-left-color: #dc2626; color: #991b1b;">${p.gate}</div></div>
+        <div style="background: #ede9fe; border-left: 2px solid #7c3aed; padding: 8px; border-radius: 2px; margin-top: 12px; font-size: 9px; color: #5b21b6;"><strong>POC Note:</strong> All gates are manual (TL confirms prerequisites). No automation, no webhooks, no auto-escalation in POC.</div>
+      </div>
+    `;
+  } else if (selected) {
+    const data = selected.data;
+    const lane = LANES.find(l => l.id === selected.lane);
+    
+    content.innerHTML = `
+      <div class="panel-header">
+        <button class="panel-close" onclick="selected=null; render(); renderPanel();">✕</button>
+        <div class="panel-badge" style="background: ${lane.bg}; color: ${lane.color};">${lane.icon} ${selected.laneName}</div>
+        <div class="panel-title">${data.text}</div>
+        <div class="panel-stage">${selected.stageName}</div>
+      </div>
+      <div class="panel-body">
+        <div><div class="section-title">Purpose</div><div class="detail-box">${data.purpose}</div></div>
+        <div class="divider"></div>
+        <div><div class="section-title">Details</div><div class="bullet-list">${Array.isArray(data.detail) ? data.detail.map(d => '• ' + d).join('\n') : data.detail}</div></div>
+        ${data.manual ? `<div class="manual-note">✍ <strong>Manual Process:</strong> This action is performed manually. No automation. Investigator or TL is responsible.</div>` : ''}
+        ${data.gates && data.gates.length > 0 && data.gates[0] !== '-' ? `<div class="divider"></div><div><div class="section-title">Gates</div><div class="detail-box">${data.gates.join(', ')}</div></div>` : ''}
+        <div class="divider"></div>
+        <div><div class="section-title">SLA</div><div class="detail-box">${data.sla}</div></div>
+        ${data.sync && data.sync !== '-' && data.sync !== 'None' ? `<div class="divider"></div><div><div class="section-title">Data Handling</div><div class="detail-box">${data.sync}</div></div>` : ''}
+        ${data.tags && data.tags.length > 0 ? `<div class="divider"></div><div><div class="section-title">Tags</div>${data.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
+      </div>
+    `;
+  }
+  
+  panelDiv.classList.add('open');
+}
+
+function exportToCSV() {
+  const headers = ['Stage', 'Code', 'Lane', 'Role', 'Action', 'Purpose', 'Details', 'Gates', 'SLA', 'Data Handling', 'Tags'];
+  const rows = [];
+  
+  Object.keys(DATA).forEach(stageId => {
+    const stage = STAGES.find(s => s.id === stageId);
+    const stageData = DATA[stageId];
+    
+    LANES.forEach(lane => {
+      const cellData = stageData[lane.id];
+      if (cellData) {
+        const detailsStr = Array.isArray(cellData.detail) 
+          ? cellData.detail.join('; ')
+          : cellData.detail;
+        
+        const gatesStr = cellData.gates && cellData.gates.length > 0 && cellData.gates[0] !== '-'
+          ? cellData.gates.join('; ')
+          : '';
+        
+        const tagsStr = cellData.tags && cellData.tags.length > 0
+          ? cellData.tags.join('; ')
+          : '';
+        
+        const syncStr = cellData.sync || '';
+        
+        rows.push([
+          stage.code,
+          stage.code,
+          lane.label,
+          cellData.text,
+          cellData.purpose,
+          detailsStr,
+          gatesStr,
+          cellData.sla,
+          syncStr,
+          tagsStr
+        ]);
+      }
+    });
+  });
+  
+  function escapeCSV(val) {
+    if (val === null || val === undefined) return '';
+    const str = String(val);
+    if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+      return '"' + str.replace(/"/g, '""') + '"';
+    }
+    return str;
+  }
+  
+  let csv = headers.map(escapeCSV).join(',') + '\n';
+  rows.forEach(row => {
+    csv += row.map(escapeCSV).join(',') + '\n';
+  });
+  
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'sro_investigations_poc_blueprint_' + new Date().toISOString().slice(0,10) + '.csv');
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+render();
+</script>
+
+</body>
+</html>

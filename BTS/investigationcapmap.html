@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -86,44 +87,9 @@ body {
   border-color: #059669;
 }
 
-.filter-button.active.partial {
-  background: #1e40af;
-  border-color: #1e40af;
-}
-
 .filter-button.active.out-of-scope {
   background: #dc2626;
   border-color: #dc2626;
-}
-
-.filter-button.active.step-1 {
-  background: var(--s1);
-  border-color: var(--s1);
-  color: white;
-}
-
-.filter-button.active.step-2 {
-  background: var(--s2);
-  border-color: var(--s2);
-  color: white;
-}
-
-.filter-button.active.step-3 {
-  background: var(--s3);
-  border-color: var(--s3);
-  color: white;
-}
-
-.filter-button.active.step-4 {
-  background: var(--s4);
-  border-color: var(--s4);
-  color: white;
-}
-
-.filter-button.active.step-5 {
-  background: var(--s5);
-  border-color: var(--s5);
-  color: white;
 }
 
 .filter-label {
@@ -139,30 +105,6 @@ body {
   display: flex;
   align-items: baseline;
   gap: 16px;
-}
-
-.btn-activity-flow {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 8px 16px;
-  font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  color: #1461a8;
-  background: #f0f6ff;
-  border: 1px solid #bcd4f5;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.15s;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.btn-activity-flow:hover {
-  background: #deeafc;
-  border-color: #1461a8;
-  color: #0d4a85;
 }
 
 h1 {
@@ -223,42 +165,8 @@ h1 {
 .stage-swimlane:nth-child(3) .stage-header { background: var(--s3); }
 .stage-swimlane:nth-child(4) .stage-header { background: var(--s4); }
 .stage-swimlane:nth-child(5) .stage-header { background: var(--s5); }
-.stage-swimlane:nth-child(6) .stage-header { background: var(--s6); }
 
 .stage-track {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-top: none;
-  border-radius: 0 0 6px 6px;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-height: 420px;
-}
-
-.enabling-section {
-  width: 240px;
-  flex-shrink: 0;
-}
-
-.enabling-header {
-  padding: 12px 14px;
-  border-radius: 6px 6px 0 0;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  text-align: center;
-  min-height: 58px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  background: var(--se);
-}
-
-.enabling-track {
   background: var(--surface);
   border: 1px solid var(--border);
   border-top: none;
@@ -314,17 +222,6 @@ h1 {
   border-left-color: var(--s5); background: var(--s5-bg); color: var(--text-primary);
   border-color: #f0dfa0; box-shadow: 0 1px 4px rgba(154,108,0,0.08);
 }
-.stage-swimlane:nth-child(6) .capability-card:hover,
-.stage-swimlane:nth-child(6) .capability-card.active {
-  border-left-color: var(--s6); background: var(--s6-bg); color: var(--text-primary);
-  border-color: #e9d5ff; box-shadow: 0 1px 4px rgba(107,33,168,0.08);
-}
-
-.enabling-section .capability-card:hover,
-.enabling-section .capability-card.active {
-  border-left-color: var(--se); background: var(--se-bg); color: var(--text-primary);
-  border-color: #fecaca; box-shadow: 0 1px 4px rgba(124,45,18,0.08);
-}
 
 .scope-badge {
   font-size: 9px;
@@ -355,21 +252,6 @@ h1 {
   border: 1px solid #fcd34d;
   font-size: 10px;
   margin-left: 4px;
-}
-
-.scope-badge.external-system {
-  background: #f3e8e8;
-  color: #7c2d12;
-  border: 1px solid #d4756e;
-  font-size: 10px;
-  margin-left: 4px;
-}
-
-
-.scope-badge.partial { display: none; /* Hidden - moved to out-of-scope */
-  background: #dbeafe;
-  color: #1e40af;
-  border: 1px solid #93c5fd;
 }
 
 /* Panel */
@@ -413,13 +295,6 @@ h1 {
   text-transform: uppercase; font-weight: 600;
   margin-bottom: 6px;
 }
-.stage-1 { color: var(--s1); }
-.stage-2 { color: var(--s2); }
-.stage-3 { color: var(--s3); }
-.stage-4 { color: var(--s4); }
-.stage-5 { color: var(--s5); }
-.stage-6 { color: var(--s6); }
-.stage-e { color: var(--se); }
 
 .panel-title {
   font-family: 'Inter Tight', sans-serif;
@@ -457,6 +332,45 @@ h1 {
   color: var(--text-muted); font-size: 18px; line-height: 1.1;
 }
 
+.scope-box {
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.scope-box.in-scope {
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  color: #166534;
+}
+
+.scope-box.out-of-scope {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #991b1b;
+}
+
+.scope-box.partial {
+  background: #dbeafe;
+  border: 1px solid #93c5fd;
+  color: #1e40af;
+}
+
+.scope-box-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.scope-box-subtitle {
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
 .pill-group { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
 .pill {
   font-size: 11px; font-weight: 500;
@@ -465,29 +379,11 @@ h1 {
   border: 1px solid var(--border);
 }
 
-.systems-group {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-}
-
-.system-label {
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  font-size: 10px;
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
-  display: block;
-}
-
 .system-pills {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
+  margin-top: 8px;
 }
 
 .system-pill {
@@ -499,43 +395,124 @@ h1 {
   color: #374151;
 }
 
-.system-pill.primary {
-  background: #dbeafe;
-  border-color: #93c5fd;
-  color: #1e40af;
-  font-weight: 500;
+@media (max-width: 768px) {
+  body { padding: 20px 16px 40px; }
+  .panel { width: 100%; right: -100%; }
 }
 
-.system-pill.secondary {
-  background: #f0fdf4;
-  border-color: #bbf7d0;
+/* Scope Explanation Panel */
+.scope-panel {
+  background: #f9fafb;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.scope-panel-header {
+  padding: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.2s ease;
+}
+
+.scope-panel-header:hover {
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+}
+
+.scope-panel-header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.scope-panel-icon {
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.scope-panel-icon.open {
+  transform: rotate(180deg);
+}
+
+.scope-panel-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.scope-panel-content.open {
+  max-height: 2000px;
+}
+
+.scope-panel-body {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .scope-panel-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.scope-section-box {
+  padding: 14px;
+  border-radius: 6px;
+  border-left: 4px solid var(--border);
+}
+
+.scope-section-box.in-scope {
+  background: #dcfce7;
+  border-left-color: #059669;
+}
+
+.scope-section-box h4 {
+  font-size: 12px;
+  font-weight: 700;
+  color: #166534;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.scope-section-box p {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #15803d;
+  margin: 0;
+}
+
+.scope-stats {
+  display: flex;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 1px solid #d1fae5;
+  margin-top: 12px;
+  padding-top: 12px;
+}
+
+.scope-stat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
   color: #166534;
 }
 
-.system-pill.workaround {
-  background: #fef3c7;
-  border-color: #fcd34d;
-  color: #92400e;
-  font-style: italic;
-}
-
-@media (max-width: 1400px) {
-  .swimlane-container { gap: 10px; }
-  .stage-swimlane { min-width: 160px; }
-  .enabling-section { width: 200px; }
-}
-@media (max-width: 1100px) {
-  .swimlane-wrapper { flex-direction: column; }
-  .enabling-section { width: 100%; }
-  .swimlane-container { width: 100%; }
-}
-@media (max-width: 768px) {
-  body { padding: 20px 16px 40px; }
-  .header { flex-direction: column; gap: 4px; }
-  .swimlane-container { flex-direction: column; }
-  .panel { width: 100%; right: -100%; }
-  .stage-track { min-height: auto; }
-  .enabling-track { min-height: auto; }
+.scope-stat-number {
+  font-size: 16px;
+  font-weight: 700;
 }
 ```
 
@@ -546,97 +523,203 @@ h1 {
 <div class="header">
   <div class="header-left">
     <h1>SRO Investigations Capability Map</h1>
-    <span class="subtitle">Current-state · Investigation value stages</span>
-  </div>
-  <a href="investigationactivityflow.html" class="btn-activity-flow" target="_blank">
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M3 7H11M11 7L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    Investigation Activity Flow
-  </a>
-</div>
-
-<!-- POC SCOPE STATEMENT - COLLAPSIBLE -->
-
-<div style="background: #dcfce7; border: 2px solid #059669; border-radius: 8px; margin-bottom: 32px; overflow: hidden;">
-  <button onclick="togglePOCScope()" style="width: 100%; padding: 16px 20px; background: #059669; color: white; border: none; font-family: 'Inter Tight', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
-    <span>3-Month POC Scope & Viability Gates</span>
-    <span id="pocToggleIcon" style="font-size: 16px; transition: transform 0.3s;">▼</span>
-  </button>
-
-  <div id="pocScopeContent" style="padding: 20px; display: none;">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 16px;">
-      <div>
-        <h3 style="font-size: 12px; font-weight: 700; color: #059669; margin-bottom: 8px;">✓ What POC Delivers (7 Capabilities)</h3>
-        <ul style="font-size: 12px; color: #4b5563; margin: 0; padding-left: 18px; line-height: 1.6;">
-          <li>Single system of record (replace ESYS/CM9/email)</li>
-          <li>Mandatory TL/Legal approval workflow</li>
-          <li>Complete audit trail of all decisions</li>
-          <li>Real-time case visibility to executives</li>
-          <li>Expected 15-25% cycle time improvement</li>
-          <li>Investigators document full case lifecycle</li>
-          <li>Unified case history & findings</li>
-        </ul>
-      </div>
-
-```
-  <div>
-    <h3 style="font-size: 12px; font-weight: 700; color: #b45309; margin-bottom: 8px;">✗ What POC Does NOT Do (Phase 2+)</h3>
-    <ul style="font-size: 12px; color: #4b5563; margin: 0; padding-left: 18px; line-height: 1.6;">
-      <li>Auto-create cases from PICs (manual intake)</li>
-      <li>Fetch evidence from external systems (manual upload)</li>
-      <li>Generate notices (investigators draft in Word)</li>
-      <li>Issue assessments (Operations does in ESYS)</li>
-      <li>Route approvals via automation (manual record)</li>
-      <li>Integrate with ESYS, CM9, ATO, council systems</li>
-      <li>Auto-calculate liabilities (Excel-based)</li>
-    </ul>
+    <span class="subtitle">3-Month POC · 30 Capabilities</span>
   </div>
 </div>
-
-<div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 6px; padding: 12px; margin-top: 16px;">
-  <p style="font-size: 12px; color: #166534; margin: 0;"><strong>Viability Success Criteria:</strong> Investigators adopt Salesforce over ESYS/CM9 for case documentation. Approval cycle time drops from 5 days to 2 days. Executives get real-time visibility of cases in flight. Cycle time improves 15%+. If all met → Green-light Phase 2 automation.</p>
-</div>
-
-<div style="background: #fffbf0; border: 1px solid #fcd34d; border-radius: 6px; padding: 12px; margin-top: 12px;">
-  <p style="font-size: 11px; color: #92400e; margin: 0;"><strong>Key Assumption:</strong> POC proves Salesforce can be the <em>single source of truth</em> for investigation data. Automation (Phase 2+) comes after we validate the case model works and investigators prefer it to current systems.</p>
-</div>
-```
-
-  </div>
-</div>
-
-<script>
-function togglePOCScope() {
-  var content = document.getElementById('pocScopeContent');
-  var icon = document.getElementById('pocToggleIcon');
-  
-  if (content.style.display === 'none') {
-    content.style.display = 'block';
-    icon.style.transform = 'rotate(180deg)';
-  } else {
-    content.style.display = 'none';
-    icon.style.transform = 'rotate(0deg)';
-  }
-}
-
-// Start collapsed
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('pocScopeContent').style.display = 'none';
-  document.getElementById('pocToggleIcon').style.transform = 'rotate(0deg)';
-});
-</script>
 
 <div class="filter-group" style="margin-bottom: 24px;">
   <span class="filter-label">Filter by scope:</span>
-  <button class="filter-button active in-scope" onclick="toggleFilter('in-scope', this)">In Scope for POC</button>
-
-<button class="filter-button active out-of-scope" onclick="toggleFilter('out-of-scope', this)">Out of Scope for POC</button>
-<button class="filter-button" onclick="resetFilters()" style="margin-left: auto;">Reset</button>
-
+  <button class="filter-button active in-scope" onclick="toggleFilter('in-scope', this)">In Scope (7)</button>
+  <button class="filter-button active out-of-scope" onclick="toggleFilter('out-of-scope', this)">Out of Scope (23)</button>
+  <button class="filter-button" onclick="resetFilters()" style="margin-left: auto;">Reset</button>
 </div>
 
-<!-- Step filters removed for 3-month POC focus -->
+<!-- Scope Explanation Panel -->
+
+<div class="scope-panel">
+  <div class="scope-panel-header" onclick="toggleScopePanel()">
+    <div class="scope-panel-header-title">
+      <span class="scope-panel-icon" id="scopePanelIcon">▼</span>
+      <span>POC Scope Overview & Definitions</span>
+    </div>
+    <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Click to expand</span>
+  </div>
+  <div class="scope-panel-content" id="scopePanelContent">
+    <div class="scope-panel-body">
+      <div class="scope-section-box in-scope" style="grid-column: 1 / -1;">
+        <h4>✓ In Scope (7 Capabilities)</h4>
+        <p><strong>What it means:</strong> Core investigation case management features that POC delivers and validates. Investigators will actively use these in day-to-day work.</p>
+        <p><strong>Examples:</strong> Investigation Intake & Triage • Investigation Case Management • Jurisdiction & Authority Validation • Investigation Planning • Evidence & Information Capture • Evidence Analysis & Decision Support • Internal Approvals • Investigation Reporting & Performance Insights</p>
+        <div class="scope-stats">
+          <div class="scope-stat">
+            <span class="scope-stat-number">7</span>
+            <span>capabilities</span>
+          </div>
+          <div class="scope-stat">
+            <span class="scope-stat-number">100%</span>
+            <span>POC coverage</span>
+          </div>
+        </div>
+      </div>
+
+```
+  <div class="scope-section-box" style="background: #fee2e2; border-left-color: #dc2626; grid-column: 1 / -1;">
+    <h4 style="color: #991b1b;">✗ Out of Scope (23 Capabilities)</h4>
+    <p style="color: #7f1d1d;"><strong>What it means:</strong> Features that POC does NOT include. These are upstream (intelligence, intake automation), downstream (objections, post-closure), external (system integration, APIs), or infrastructure concerns (data pipelines, governance).</p>
+    <p style="color: #7f1d1d;"><strong>Why:</strong> POC validates ONLY case management core. Everything else is deferred to Phase 2+ or owned by other teams.</p>
+    <p style="color: #7f1d1d; margin-top: 8px;"><strong>Examples:</strong> Intelligence & Referral • Risk Indicators • Data Integration • Automated & Bulk Initiation • External Search • Cross-Revenue Coordination • Knowledge Management • Technology & Systems Integration • Policy Governance • and 14 more...</p>
+    <div class="scope-stats" style="border-top-color: #fecaca;">
+      <div class="scope-stat" style="color: #991b1b;">
+        <span class="scope-stat-number">23</span>
+        <span>capabilities</span>
+      </div>
+      <div class="scope-stat" style="color: #991b1b;">
+        <span class="scope-stat-number">Phase 2+</span>
+        <span>planned</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scope-section-box in-scope" style="grid-column: 1 / -1;">
+    <h4>📋 Technical Enablers (In Scope)</h4>
+    <p><strong>Required to deliver POC:</strong> Data mapping & CSV load (accounts, seed PICs) • Case record types (PIC/IC) • Assignment rules & escalation (SLA enforcement) • List views & record views • Role hierarchy & permissions • Salesforce REST APIs (read-only eSys context) • Manual eSys sync (daily cache) • Data Loader validation</p>
+    <p style="margin-top: 8px;"><strong>NOT Included (Phase 2+):</strong> MuleSoft middleware • Real-time webhooks • Automated ETL pipelines • System integrations • Bulk API 2.0 • SSO integration</p>
+  </div>
+
+  <div class="scope-section-box" style="background: #dbeafe; border-left-color: #0284c7; grid-column: 1 / -1;">
+    <h4 style="color: #0c4a6e;">🎯 Success Criteria</h4>
+    <p style="color: #0c4a6e;"><strong>POC Succeeds When:</strong></p>
+    <ul style="color: #0c4a6e; margin-top: 8px; padding-left: 20px; font-size: 12px; line-height: 1.6;">
+      <li>✓ Adoption >80% (investigators daily active users in Salesforce)</li>
+      <li>✓ Approval cycle improves 5d → 2d (avg, 80% within SLA)</li>
+      <li>✓ Case closure cycle improves 15%+ (toward 60d target)</li>
+      <li>✓ Team leads see real-time visibility (dashboards adopted)</li>
+      <li>✓ All 7 capabilities operationally stable (no critical bugs)</li>
+    </ul>
+    <p style="margin-top: 12px; color: #0c4a6e;"><strong>Green Light:</strong> ≥4/5 criteria met → Approve Phase 2 automation &amp; integration.</p>
+  </div>
+
+  <div style="grid-column: 1 / -1; padding: 14px; background: #f3f4f6; border-radius: 6px;">
+    <h4 style="font-size: 12px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Capability Scope Summary</h4>
+    <div style="overflow-x: auto; font-size: 11px;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="border-bottom: 2px solid #d1d5db;">
+            <th style="text-align: left; padding: 8px; font-weight: 600; color: var(--text-primary);">Capability</th>
+            <th style="text-align: center; padding: 8px; font-weight: 600; color: var(--text-primary);">Scope</th>
+            <th style="text-align: left; padding: 8px; font-weight: 600; color: var(--text-primary);">Reason / Ownership</th>
+            <th style="text-align: left; padding: 8px; font-weight: 600; color: var(--text-primary);">Phase 2+</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid #e5e7eb; background: #dcfce7;">
+            <td style="padding: 6px 8px; color: #166534;"><strong>Investigation Intake & Triage</strong></td>
+            <td style="text-align: center; padding: 6px 8px; color: #166534;"><strong>IN</strong></td>
+            <td style="padding: 6px 8px; color: #166534;">Core case lifecycle decision</td>
+            <td style="padding: 6px 8px; color: #166534;">—</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e5e7eb; background: #dcfce7;">
+            <td style="padding: 6px 8px; color: #166534;"><strong>Investigation Case Management</strong></td>
+            <td style="text-align: center; padding: 6px 8px; color: #166534;"><strong>IN</strong></td>
+            <td style="padding: 6px 8px; color: #166534;">Central purpose of system</td>
+            <td style="padding: 6px 8px; color: #166534;">—</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e5e7eb; background: #dcfce7;">
+            <td style="padding: 6px 8px; color: #166534;"><strong>Investigation Planning</strong></td>
+            <td style="text-align: center; padding: 6px 8px; color: #166534;"><strong>IN</strong></td>
+            <td style="padding: 6px 8px; color: #166534;">Scope boundary setting</td>
+            <td style="padding: 6px 8px; color: #166534;">—</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e5e7eb; background: #dcfce7;">
+            <td style="padding: 6px 8px; color: #166534;"><strong>Evidence & Information Capture</strong></td>
+            <td style="text-align: center; padding: 6px 8px; color: #166534;"><strong>IN</strong></td>
+            <td style="padding: 6px 8px; color: #166534;">Core to case documentation</td>
+            <td style="padding: 6px 8px; color: #166534;">—</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e5e7eb; background: #dcfce7;">
+            <td style="padding: 6px 8px; color: #166534;"><strong>Evidence Analysis & Decision Support</strong></td>
+            <td style="text-align: center; padding: 6px 8px; color: #166534;"><strong>IN</strong></td>
+            <td style="padding: 6px 8px; color: #166534;">Findings & conclusions</td>
+            <td style="padding: 6px 8px; color: #166534;">—</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e5e7eb; background: #dcfce7;">
+            <td style="padding: 6px 8px; color: #166534;"><strong>Internal Approvals</strong></td>
+            <td style="text-align: center; padding: 6px 8px; color: #166534;"><strong>IN</strong></td>
+            <td style="padding: 6px 8px; color: #166534;">Formal sign-off workflow</td>
+            <td style="padding: 6px 8px; color: #166534;">—</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e5e7eb; background: #dcfce7;">
+            <td style="padding: 6px 8px; color: #166534;"><strong>Investigation Reporting & Performance Insights</strong></td>
+            <td style="text-align: center; padding: 6px 8px; color: #166534;"><strong>IN</strong></td>
+            <td style="padding: 6px 8px; color: #166534;">Real-time visibility</td>
+            <td style="padding: 6px 8px; color: #166534;">—</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e5e7eb; background: #fee2e2;">
+            <td style="padding: 6px 8px; color: #7f1d1d;"><strong>Intelligence & Referral</strong></td>
+            <td style="text-align: center; padding: 6px 8px; color: #7f1d1d;"><strong>OUT</strong></td>
+            <td style="padding: 6px 8px; color: #7f1d1d;">Pre-investigation / COI</td>
+            <td style="padding: 6px 8px; color: #7f1d1d;">PIC API</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e5e7eb; background: #fee2e2;">
+            <td style="padding: 6px 8px; color: #7f1d1d;"><strong>Risk Indicators</strong></td>
+            <td style="text-align: center; padding: 6px 8px; color: #7f1d1d;"><strong>OUT</strong></td>
+            <td style="padding: 6px 8px; color: #7f1d1d;">Upstream analytics / COI</td>
+            <td style="padding: 6px 8px; color: #7f1d1d;">Risk import</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e5e7eb; background: #fee2e2;">
+            <td style="padding: 6px 8px; color: #7f1d1d;"><strong>Data Integration</strong></td>
+            <td style="text-align: center; padding: 6px 8px; color: #7f1d1d;"><strong>OUT</strong></td>
+            <td style="padding: 6px 8px; color: #7f1d1d;">Infrastructure / IT</td>
+            <td style="padding: 6px 8px; color: #7f1d1d;">Data pipelines</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e5e7eb; background: #fee2e2;">
+            <td style="padding: 6px 8px; color: #7f1d1d;"><strong>Automated & Bulk Initiation</strong></td>
+            <td style="text-align: center; padding: 6px 8px; color: #7f1d1d;"><strong>OUT</strong></td>
+            <td style="padding: 6px 8px; color: #7f1d1d;">Data processing / COI</td>
+            <td style="padding: 6px 8px; color: #7f1d1d;">API automation</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e5e7eb; background: #fee2e2;">
+            <td style="padding: 6px 8px; color: #7f1d1d;"><strong>External & Internal Search</strong></td>
+            <td style="text-align: center; padding: 6px 8px; color: #7f1d1d;"><strong>OUT</strong></td>
+            <td style="padding: 6px 8px; color: #7f1d1d;">Agentic AI Phase 4</td>
+            <td style="padding: 6px 8px; color: #7f1d1d;">Research portal</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e5e7eb; background: #fee2e2;">
+            <td style="padding: 6px 8px; color: #7f1d1d;"><strong>Cross-Revenue Coordination</strong></td>
+            <td style="text-align: center; padding: 6px 8px; color: #7f1d1d;"><strong>OUT</strong></td>
+            <td style="padding: 6px 8px; color: #7f1d1d;">AI coordination Phase 4</td>
+            <td style="padding: 6px 8px; color: #7f1d1d;">Case linking</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e5e7eb; background: #fee2e2;">
+            <td style="padding: 6px 8px; color: #7f1d1d;"><strong>Information Requests</strong></td>
+            <td style="text-align: center; padding: 6px 8px; color: #7f1d1d;"><strong>OUT</strong></td>
+            <td style="padding: 6px 8px; color: #7f1d1d;">LetterPro Phase 2+</td>
+            <td style="padding: 6px 8px; color: #7f1d1d;">LetterPro integration</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e5e7eb; background: #fee2e2;">
+            <td style="padding: 6px 8px; color: #7f1d1d;"><strong>Objections & Dispute Management</strong></td>
+            <td style="text-align: center; padding: 6px 8px; color: #7f1d1d;"><strong>OUT</strong></td>
+            <td style="padding: 6px 8px; color: #7f1d1d;">Operations/Compliance</td>
+            <td style="padding: 6px 8px; color: #7f1d1d;">Advanced workflow</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e5e7eb; background: #fee2e2;">
+            <td style="padding: 6px 8px; color: #7f1d1d;" colspan="4"><em style="font-size: 10px;">+ 15 more out-of-scope capabilities (Knowledge, Improvement, Workforce, Tech Integration, Analytics, Policy, Sanctions, Exceptions, Flags, Periods, Calculation, Legal, Info Mgmt, Effort Tracking, Prioritisation)</em></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="scope-section-box" style="background: #f0faf5; border-left-color: #059669; grid-column: 1 / -1;">
+    <h4 style="color: #166534;">🎯 Key Principle</h4>
+    <p style="color: #166534;"><strong>POC validates the case management core is sound.</strong> It does NOT attempt to solve: upstream intake automation, external data integration, advanced workflows & AI, infrastructure concerns, or governance/policy frameworks.</p>
+    <p style="color: #166534; margin-top: 8px;"><strong>Success = </strong>Investigators adopt Salesforce for case documentation, TLs approve via workflow, executives see real-time visibility. Everything else is Phase 2+.</p>
+  </div>
+</div>
+```
+
+  </div>
+</div>
 
 <div class="swimlane-wrapper">
 <div class="swimlane-container">
@@ -644,55 +727,55 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="stage-swimlane">
     <div class="stage-header">Stage 1: Intake</div>
     <div class="stage-track">
-      <div class="capability-card" onclick="openPanel('intelligence','Intelligence &amp; Referral Management','Identify Issues &amp; Triggers',1)" data-scope="out-of-scope" data-step="step-out">Intelligence &amp; Referral Management<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge external-system">→ External System</span></div>
-      <div class="capability-card" onclick="openPanel('risk','Risk Indicators &amp; Analytics','Identify Issues &amp; Triggers',1)" data-scope="out-of-scope" data-step="step-out">Risk Indicators &amp; Analytics<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge external-system">→ External System</span></div>
-      <div class="capability-card" onclick="openPanel('sourceIntegration','Source &amp; Data Integration','Identify Issues &amp; Triggers',1)" data-scope="out-of-scope" data-step="step-out">Source &amp; Data Integration<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge external-system">→ External System</span></div>
+      <div class="capability-card" onclick="openPanel('intelligence','Intelligence & Referral Management',1)" data-scope="out-of-scope">Intelligence & Referral Management<span class="scope-badge out-of-scope">Out Of Scope</span></div>
+      <div class="capability-card" onclick="openPanel('risk','Risk Indicators & Analytics',1)" data-scope="out-of-scope">Risk Indicators & Analytics<span class="scope-badge out-of-scope">Out Of Scope</span></div>
+      <div class="capability-card" onclick="openPanel('sourceIntegration','Source & Data Integration',1)" data-scope="out-of-scope">Source & Data Integration<span class="scope-badge out-of-scope">Out Of Scope</span></div>
     </div>
   </div>
 
   <div class="stage-swimlane">
     <div class="stage-header">Stage 2: Triage</div>
     <div class="stage-track">
-      <div class="capability-card" onclick="openPanel('intake','Investigation Intake &amp; Triage','Triage &amp; Initiate Case',2)" data-scope="in-scope" data-step="step-1">Investigation Intake &amp; Triage<span class="scope-badge in-scope">In Scope</span></div>
-      <div class="capability-card" onclick="openPanel('jurisdiction','Jurisdiction &amp; Authority Validation','Triage &amp; Initiate Case',2)" data-scope="in-scope" data-step="step-1">Jurisdiction &amp; Authority Validation<span class="scope-badge in-scope">In Scope</span></div>
-      <div class="capability-card" onclick="openPanel('caseMgmt','Investigation Case Management','Triage &amp; Initiate Case',2)" data-scope="in-scope" data-step="step-1">Investigation Case Management<span class="scope-badge in-scope">In Scope</span></div>
-      <div class="capability-card" onclick="openPanel('bulkInitiation','Automated &amp; Bulk Investigation Initiation','Triage &amp; Initiate Case',2)" data-scope="out-of-scope" data-step="step-out">Automated &amp; Bulk Investigation Initiation<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge external-system">→ External System</span></div>
-      <div class="capability-card" onclick="openPanel('activityEffort','Investigation Activity &amp; Effort Tracking','Triage &amp; Initiate Case',2)" data-scope="out-of-scope" data-step="step-2">Investigation Activity &amp; Effort Tracking<span class="scope-badge out-of-scope">Out of Scope for POC</span><span class="scope-badge future-scope">→ Future Scope</span></div>
-      <div class="capability-card" onclick="openPanel('prioritisation','Case Prioritisation &amp; Workload Balancing','Triage &amp; Initiate Case',2)" data-scope="out-of-scope" data-step="step-2">Case Prioritisation &amp; Workload Balancing<span class="scope-badge out-of-scope">Out of Scope for POC</span><span class="scope-badge future-scope">→ Future Scope</span></div>
+      <div class="capability-card" onclick="openPanel('intake','Investigation Intake & Triage',2)" data-scope="in-scope">Investigation Intake & Triage<span class="scope-badge in-scope">In Scope</span></div>
+      <div class="capability-card" onclick="openPanel('jurisdiction','Jurisdiction & Authority Validation',2)" data-scope="in-scope">Jurisdiction & Authority Validation<span class="scope-badge in-scope">In Scope</span></div>
+      <div class="capability-card" onclick="openPanel('caseMgmt','Investigation Case Management',2)" data-scope="in-scope">Investigation Case Management<span class="scope-badge in-scope">In Scope</span></div>
+      <div class="capability-card" onclick="openPanel('bulkInitiation','Automated & Bulk Investigation Initiation',2)" data-scope="out-of-scope">Automated & Bulk Investigation Initiation<span class="scope-badge out-of-scope">Out Of Scope</span></div>
+      <div class="capability-card" onclick="openPanel('activityEffort','Investigation Activity & Effort Tracking',2)" data-scope="out-of-scope">Investigation Activity & Effort Tracking<span class="scope-badge out-of-scope">Out Of Scope</span></div>
+      <div class="capability-card" onclick="openPanel('prioritisation','Case Prioritisation & Workload Balancing',2)" data-scope="out-of-scope">Case Prioritisation & Workload Balancing<span class="scope-badge out-of-scope">Out Of Scope</span></div>
     </div>
   </div>
 
   <div class="stage-swimlane">
-    <div class="stage-header">Stage 3: Planning &amp; Evidence</div>
+    <div class="stage-header">Stage 3: Planning & Evidence</div>
     <div class="stage-track">
-      <div class="capability-card" onclick="openPanel('planning','Investigation Planning','Plan &amp; Gather Evidence',3)" data-scope="in-scope" data-step="step-1">Investigation Planning<span class="scope-badge in-scope">In Scope</span></div>
-      <div class="capability-card" onclick="openPanel('requests','Information Requests','Plan &amp; Gather Evidence',3)" data-scope="out-of-scope" data-step="step-2">Information Requests<span class="scope-badge out-of-scope">Out of Scope for POC</span><span class="scope-badge future-scope">→ Future Scope</span></div>
-      <div class="capability-card" onclick="openPanel('evidence','Evidence &amp; Information Capture','Plan &amp; Gather Evidence',3)" data-scope="in-scope" data-step="step-1">Evidence &amp; Information Capture<span class="scope-badge in-scope">In Scope</span></div>
-      <div class="capability-card" onclick="openPanel('search','External &amp; Internal Search Management','Plan &amp; Gather Evidence',3)" data-scope="out-of-scope" data-step="step-4">External &amp; Internal Search Management<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge future-scope">→ Future Scope</span></div>
-      <div class="capability-card" onclick="openPanel('flags','Investigation Flags &amp; Non-Issue Controls','Plan &amp; Gather Evidence',3)" data-scope="out-of-scope" data-step="step-3">Investigation Flags &amp; Non-Issue Controls<span class="scope-badge out-of-scope">Out of Scope for POC</span><span class="scope-badge future-scope">→ Future Scope</span></div>
-      <div class="capability-card" onclick="openPanel('crossRevenue','Cross-Revenue Investigation Coordination','Plan &amp; Gather Evidence',3)" data-scope="out-of-scope" data-step="step-4">Cross-Revenue Investigation Coordination<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge future-scope">→ Future Scope</span></div>
+      <div class="capability-card" onclick="openPanel('planning','Investigation Planning',3)" data-scope="in-scope">Investigation Planning<span class="scope-badge in-scope">In Scope</span></div>
+      <div class="capability-card" onclick="openPanel('requests','Information Requests',3)" data-scope="out-of-scope">Information Requests<span class="scope-badge out-of-scope">Out Of Scope</span></div>
+      <div class="capability-card" onclick="openPanel('evidence','Evidence & Information Capture',3)" data-scope="in-scope">Evidence & Information Capture<span class="scope-badge in-scope">In Scope</span></div>
+      <div class="capability-card" onclick="openPanel('search','External & Internal Search Management',3)" data-scope="out-of-scope">External & Internal Search Management<span class="scope-badge out-of-scope">Out Of Scope</span></div>
+      <div class="capability-card" onclick="openPanel('flags','Investigation Flags & Non-Issue Controls',3)" data-scope="out-of-scope">Investigation Flags & Non-Issue Controls<span class="scope-badge out-of-scope">Out Of Scope</span></div>
+      <div class="capability-card" onclick="openPanel('crossRevenue','Cross-Revenue Investigation Coordination',3)" data-scope="out-of-scope">Cross-Revenue Investigation Coordination<span class="scope-badge out-of-scope">Out Of Scope</span></div>
     </div>
   </div>
 
   <div class="stage-swimlane">
-    <div class="stage-header">Stage 4: Analysis &amp; Decision</div>
+    <div class="stage-header">Stage 4: Analysis & Decision</div>
     <div class="stage-track">
-      <div class="capability-card" onclick="openPanel('infoMgmt','Investigation Information Management','Assess &amp; Decide',4)" data-scope="in-scope" data-step="step-1">Investigation Information Management<span class="scope-badge in-scope">In Scope</span></div>
-      <div class="capability-card" onclick="openPanel('analysis','Evidence Analysis &amp; Decision Support','Assess &amp; Decide',4)" data-scope="in-scope" data-step="step-1">Evidence Analysis &amp; Decision Support<span class="scope-badge in-scope">In Scope</span></div>
-      <div class="capability-card" onclick="openPanel('legal','Legal &amp; Policy Review','Assess &amp; Decide',4)" data-scope="in-scope" data-step="step-1">Legal &amp; Policy Review<span class="scope-badge in-scope">In Scope</span></div>
-      <div class="capability-card" onclick="openPanel('periodRevenue','Investigation Period &amp; Revenue Line Management','Assess &amp; Decide',4)" data-scope="in-scope" data-step="step-1">Investigation Period &amp; Revenue Line Management<span class="scope-badge in-scope">In Scope</span></div>
-      <div class="capability-card" onclick="openPanel('calculation','Calculation &amp; Scenario Modelling','Assess &amp; Decide',4)" data-scope="out-of-scope" data-step="step-3">Calculation &amp; Scenario Modelling<span class="scope-badge out-of-scope">Out of Scope for POC</span><span class="scope-badge future-scope">→ Future Scope</span></div>
+      <div class="capability-card" onclick="openPanel('infoMgmt','Investigation Information Management',4)" data-scope="out-of-scope">Investigation Information Management<span class="scope-badge out-of-scope">Out Of Scope</span></div>
+      <div class="capability-card" onclick="openPanel('analysis','Evidence Analysis & Decision Support',4)" data-scope="in-scope">Evidence Analysis & Decision Support<span class="scope-badge in-scope">In Scope</span></div>
+      <div class="capability-card" onclick="openPanel('legal','Legal & Policy Review',4)" data-scope="out-of-scope">Legal & Policy Review<span class="scope-badge out-of-scope">Out Of Scope</span></div>
+      <div class="capability-card" onclick="openPanel('periodRevenue','Investigation Period & Revenue Line Management',4)" data-scope="out-of-scope">Investigation Period & Revenue Line Management<span class="scope-badge out-of-scope">Out Of Scope</span></div>
+      <div class="capability-card" onclick="openPanel('calculation','Calculation & Scenario Modelling',4)" data-scope="out-of-scope">Calculation & Scenario Modelling<span class="scope-badge out-of-scope">Out Of Scope</span></div>
     </div>
   </div>
 
   <div class="stage-swimlane">
-    <div class="stage-header">Stage 5: Approval &amp; Closure</div>
+    <div class="stage-header">Stage 5: Approval & Closure</div>
     <div class="stage-track">
-      <div class="capability-card" onclick="openPanel('sanctions','Sanctions &amp; Remedies Management','Enforce &amp; Govern Outcomes',5)" data-scope="out-of-scope" data-step="step-out">Sanctions &amp; Remedies Management<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge future-scope">→ Future Scope</span></div>
-      <div class="capability-card" onclick="openPanel('approvals','Internal Approvals','Enforce &amp; Govern Outcomes',5)" data-scope="in-scope" data-step="step-1">Internal Approvals<span class="scope-badge in-scope">In Scope</span></div>
-      <div class="capability-card" onclick="openPanel('governance','Governed Exception &amp; Override Management','Enforce &amp; Govern Outcomes',5)" data-scope="out-of-scope" data-step="step-out">Governed Exception &amp; Override Management<span class="scope-badge out-of-scope">Out Of Scope</span><span class="scope-badge external-system">→ External System</span></div>
-      <div class="capability-card" onclick="openPanel('reporting','Investigation Reporting &amp; Performance Insights','Enforce &amp; Govern Outcomes',5)" data-scope="in-scope" data-step="step-5">Investigation Reporting &amp; Performance Insights<span class="scope-badge in-scope">In Scope</span></div>
-      <div class="capability-card" onclick="openPanel('objections','Objections &amp; Dispute Management','Enforce &amp; Govern Outcomes',5)" data-scope="in-scope" data-step="step-5">Objections &amp; Dispute Management<span class="scope-badge in-scope">In Scope</span></div>
+      <div class="capability-card" onclick="openPanel('sanctions','Sanctions & Remedies Management',5)" data-scope="out-of-scope">Sanctions & Remedies Management<span class="scope-badge out-of-scope">Out Of Scope</span></div>
+      <div class="capability-card" onclick="openPanel('approvals','Internal Approvals',5)" data-scope="in-scope">Internal Approvals<span class="scope-badge in-scope">In Scope</span></div>
+      <div class="capability-card" onclick="openPanel('governance','Governed Exception & Override Management',5)" data-scope="out-of-scope">Governed Exception & Override Management<span class="scope-badge out-of-scope">Out Of Scope</span></div>
+      <div class="capability-card" onclick="openPanel('reporting','Investigation Reporting & Performance Insights',5)" data-scope="in-scope">Investigation Reporting & Performance Insights<span class="scope-badge in-scope">In Scope</span></div>
+      <div class="capability-card" onclick="openPanel('objections','Objections & Dispute Management',5)" data-scope="out-of-scope">Objections & Dispute Management<span class="scope-badge out-of-scope">Out Of Scope</span></div>
     </div>
   </div>
 
@@ -701,213 +784,248 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <div class="panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
 <div class="panel" id="panel">
-  <button class="panel-close" onclick="closePanel()">X</button>
+  <button class="panel-close" onclick="closePanel()">✕</button>
   <div class="panel-stage-badge" id="panelStage"></div>
   <h2 class="panel-title" id="panelTitle"></h2>
   <div id="panelContent"></div>
 </div>
 
-<!-- ROADMAP LEGEND - FULL WIDTH BELOW STAGES -->
-
-<div style="width: 100%; margin-top: 60px; padding-top: 40px; padding-bottom: 40px; border-top: 3px solid #e5e7eb;">
-  <h2 style="font-family: 'Inter Tight', sans-serif; font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 0.5px;">3-Month POC vs Future Phases</h2>
-
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; max-width: 100%;">
-    <!-- POC -->
-    <div style="padding: 20px; background: #dcfce7; border-left: 4px solid #059669; border-radius: 6px;">
-      <h3 style="font-family: 'Inter Tight', sans-serif; font-size: 13px; font-weight: 700; color: #059669; margin-bottom: 8px;">Phase 1: POC (3 Months)</h3>
-      <p style="font-size: 12px; color: #4b5563; line-height: 1.5; margin: 0;"><strong>7 Core Capabilities:</strong> Case management, intake & triage, planning, evidence capture, analysis & decision support, internal approvals, reporting & insights.</p>
-      <p style="font-size: 12px; color: #4b5563; line-height: 1.5; margin: 8px 0 0 0;"><strong>Scope:</strong> Single system of record. Manual intake, evidence, approvals. Investigators document full case in Salesforce. TLs approve with audit trail. Execs see real-time visibility.</p>
-    </div>
-
-```
-<!-- Phase 2 -->
-<div style="padding: 20px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 6px;">
-  <h3 style="font-family: 'Inter Tight', sans-serif; font-size: 13px; font-weight: 700; color: #b45309; margin-bottom: 8px;">Phase 2+ (6-12 Months)</h3>
-  <p style="font-size: 12px; color: #4b5563; line-height: 1.5; margin: 0;"><strong>Add:</strong> Auto-case creation from PICs, integrated evidence fetching, advanced workflows, notice generation templates, flag synchronisation with ESYS, analytics & learning capture.</p>
-  <p style="font-size: 12px; color: #4b5563; line-height: 1.5; margin: 8px 0 0 0;"><strong>Outcome:</strong> End-to-end case automation. Investigators focus on analysis; Salesforce handles intake, routing, documentation, notifications.</p>
-</div>
-```
-
-  </div>
-</div>
-
 <script>
-var STAGE_CLASS = {1:'stage-1',2:'stage-2',3:'stage-3',4:'stage-4',5:'stage-5',6:'stage-6',7:'stage-e'};
-
-var CAPABILITY_CONTENT = {
+const CAPABILITY_DATA = {
+  intake: {
+    description: 'Assess PIC validity, scope and materiality; decide whether to proceed, defer or kill; and route eligible matters into investigation cases.',
+    scopeInScope: 'Triage decisions (proceed/defer/kill) are core case lifecycle decisions. Case record stores triage outcome, criteria applied, and rationale. Investigations team inputs decisions directly into Salesforce. Replaces manual screening in Lotus Notes.'
+  },
+  jurisdiction: {
+    description: 'Confirm that SRO has jurisdiction, the correct revenue line is engaged, and the relevant legislative powers apply before proceeding.',
+    scopeInScope: 'Jurisdiction and authority validation is a mandatory case intake control. Case record captures validation outcome and any jurisdiction flags/challenges. Team leader sign-off on jurisdiction decisions happens within case workflow.'
+  },
+  caseMgmt: {
+    description: 'Create, maintain and close investigation cases in Salesforce, ensuring correct entity linkage, related-case mapping and status tracking.',
+    scopeInScope: 'Case management is the central purpose of the system. PIC/IC record types manage case lifecycle, entity linkage, related-case mapping, and status tracking from initiation through closure. Salesforce becomes the single source of truth for investigation cases.'
+  },
+  planning: {
+    description: 'Define investigation scope, years/periods, hypotheses and evidence strategy, including governance checkpoints with team leaders.',
+    scopeInScope: 'Investigation plans establish scope boundaries and evidence strategy. Case record stores plan document, key dates, methodology decisions, and TL approvals. Replaces informal Word documents and email approvals.'
+  },
+  evidence: {
+    description: 'Capture, log and organise all incoming evidence (documents, screenshots, bank statements, council responses) into a traceable case file.',
+    scopeInScope: 'Evidence capture and organization are core to case documentation. Case record links to evidence packs, maintains metadata, timestamps, and completeness status. Investigators reference evidence directly within case context. Replaces scattered CM9 files and shared drives.'
+  },
+  analysis: {
+    description: 'Analyse evidence against internal records and hypotheses, identify discrepancies and support investigators with tools and frameworks to reach consistent conclusions.',
+    scopeInScope: 'Evidence analysis and findings are recorded within case documentation. Case record captures analytical conclusions, variance findings, and preliminary fraud patterns supporting downstream decisions. Replaces manual analysis notes and spreadsheets.'
+  },
+  approvals: {
+    description: 'Govern approvals for complex decisions, refunds, NFAs and statutory notices, including TL, peer and executive review.',
+    scopeInScope: 'Investigation closure requires formal approval before handoff to operations. Case record captures approval workflow chain, approver comments, sign-off timestamps, and decision outcomes. Approval process rules enforce delegation authority and SLA tracking. Replaces email sign-off chains.'
+  },
+  reporting: {
+    description: 'Provide reporting on investigation volumes, cycle times, outcomes, revenue impacts and pain points to support governance and improvement.',
+    scopeInScope: 'Case record is the single source of truth for investigation outcomes and timelines. Built-in dashboards and reports provide real-time visibility to team leaders and executives on case volumes, cycle times, effort, and outcomes. Eliminates month-end manual reporting.'
+  },
   intelligence: {
-    description: 'Manage all incoming intelligence, referrals and project picks (PICs) from COI, IR database, Lotus Notes, email and external sources, ensuring they are captured, logged and routed into a consistent intake process.',
-    keywords: ['Intelligence','Referral','Intake','Consistency'],
-    inputs: ['COI allocations, IR database referrals, Lotus Notes entries, project emails, external agency referrals, internal intelligence reports'],
-    outputs: ['Registered PICs with source, context and basic risk notes; referral queues; traceable audit trail'],
-    painPoints: ['PIC arrival method inconsistency','Unclear PIC origin','Missing context','Manual routing errors','No centralised intake queue','No standardised submission format'],
-    opportunities: ['Implement centralised case intake queue with single PIC submission format','Auto-tag source and risk','Provide dashboards of referral volumes and conversion to investigations'],
-    primarySystem: 'Lotus Notes',
-    secondarySystems: ['COI (IR database)', 'Email'],
-    workarounds: ['Manual PIC spreadsheets', 'Email forwarding chains'],
-    scopeExplanation: 'Out of Salesforce Scope for POC. Intelligence sourcing and PIC intake is a pre-investigation function owned by COI and Intelligence teams. Investigations receives PICs as inputs via referral queues, not as system-managed capability. Salesforce case management begins after PIC is triaged and passed to investigations. Intelligence capture and routing belong to upstream intake systems, not investigation case management.'
+    description: 'Manage all incoming intelligence, referrals and project picks (PICs) from upstream sources, ensuring they are captured, logged and routed into a consistent intake process.',
+    scopeExplanation: 'Intelligence sourcing, PIC intake, and referral routing are pre-investigation functions owned by COI and Intelligence teams. They occur BEFORE Salesforce case creation. Investigations receives completed PICs as inputs from upstream queues. Salesforce case management begins AFTER a PIC is triaged and passed to investigations.',
+    ownership: 'COI Intelligence Team',
+    phase2: 'Integrate PIC API for auto-case creation from upstream queues'
   },
   risk: {
-    description: 'Define, maintain and apply risk indicators, scoring models and analytics that identify high-risk entities, properties and behaviours across Duties, FOG, Land Tax and Payroll.',
-    keywords: ['Risk','Analytics','Scoring','Prioritise'],
-    inputs: ['Transaction data, historical audit outcomes, FIM lists, KOI/COI data, ESYS records, external datasets (ASIC, ABR, VWA, AUSTRAC)'],
-    outputs: ['Risk-rated PIC lists, flags on entities/properties, prioritised candidate pools for investigation projects'],
-    painPoints: ['Risk ratings not explained to operational teams','Manual interpretation of scores','Limited visibility of cross-revenue risk','No standardised thresholds for high risk'],
-    opportunities: ['Document rating methodologies','Expose risk drivers to investigators','Align risk thresholds with triage rules','Feed analytics into automated and bulk initiation'],
-    primarySystem: 'Ad-hoc analysis',
-    secondarySystems: ['ESYS', 'COI'],
-    workarounds: ['Excel risk models', 'Manual scoring sheets', 'Offline analytics']
-  ,scopeExplanation: 'Out of Salesforce Scope for POC. Risk analytics and profiling are upstream intelligence functions, not investigation case management. Risk ratings are inputs to investigations, not managed within the investigation lifecycle. Future phases may integrate risk dashboards.'},
+    description: 'Define, maintain and apply risk indicators, scoring models and analytics that identify high-risk entities, properties and behaviours.',
+    scopeExplanation: 'Risk analytics and profiling are upstream intelligence functions performed by data teams and COI. Risk scores/flags are INPUTS to investigations, not managed within the investigation lifecycle. Salesforce consumes risk data but does not own the scoring model or analytics engine.',
+    ownership: 'Analytics/COI',
+    phase2: 'Import risk scores into case for visibility; feed investigation outcomes back into risk models'
+  },
   sourceIntegration: {
     description: 'Integrate upstream data sources and external feeds into a consistent investigations view, reducing manual re-keying and fragmented context.',
-    keywords: ['Integration','Data','Systems','Efficiency'],
-    inputs: ['ESYS extracts, CM9 metadata, FOG Online, council data, external registries, upstream project files'],
-    outputs: ['Consolidated entity/property view; pre-populated PIC records; reduced duplication across systems'],
-    painPoints: ['System integration gaps','Manual data re-entry','Investigators accessing 10+ systems in parallel'],
-    opportunities: ['Build APIs and data pipelines into a single investigations platform','Enable unified search and pre-population of case data'],
-    primarySystem: 'None (gap)',
-    secondarySystems: ['ESYS', 'CM9', 'FOG Online'],
-    workarounds: ['Manual copy-paste between systems', 'Investigators maintain local copies']
-  ,scopeExplanation: 'Out of Salesforce Scope for POC. Data integration and consolidation are infrastructure/platform responsibilities, not investigation case management. Salesforce consumes integrated data but does not own the integration layer. Future roadmaps will address data pipeline architecture.'},
-  intake: {description: '[Step 1 - Foundation & Data Model] Assess PIC validity, scope and materiality; decide whether to proceed, defer or kill; and route eligible matters into investigation cases.',keywords: ['Triage','Screen','Prioritise','Allocate'],inputs: ['PIC details, prior audit history, entity records, risk scores, referral notes'],outputs: ['Triage decisions (proceed/defer/kill), prioritised queues, closed PICs with reasons, initial scope notes'],painPoints: ['Manual eligibility assessment across multiple systems','No integrated duplication check','Unclear kill criteria','No formal approval gate for kill decisions'],opportunities: ['Build integrated duplication and prior-audit checks','Codify triage rules','Require team leader sign-off on kills','Capture structured reasons for analytics'],primarySystem: 'Lotus Notes',secondarySystems: ['ESYS', 'CM9'],workarounds: ['Spreadsheet tracking of triage decisions', 'Email sign-offs'],scopeInScope: 'Salesforce Step 1 - Foundation & Data Model (POC). Investigation triage decisions (proceed/defer/kill) are core case lifecycle decisions. Case record stores triage outcome, criteria applied, and rationale. Investigations team inputs decisions directly into Salesforce.'},
-  jurisdiction: {description: '[Step 1 - Foundation & Data Model] Confirm that SRO has jurisdiction, the correct revenue line is engaged, and the relevant legislative powers apply before proceeding.',keywords: ['Authority','Jurisdiction','Legislation','Validate'],inputs: ['PIC facts, entity location, transaction type, legislation references, prior decisions'],outputs: ['Confirmed jurisdiction/authority status, documented rationale, redirected cases where SRO is not the correct body'],painPoints: ['Manual interpretation of jurisdiction','Scattered guidance','Risk of proceeding on out-of-scope matters'],opportunities: ['Provide jurisdiction decision trees','Embed authority checks into intake workflow','Link to legal guidance library'],primarySystem: 'Lotus Notes',secondarySystems: [],workarounds: ['Manual legal reference lookup', 'TL consultation'],scopeInScope: 'Salesforce Step 1 - Foundation & Data Model (POC). Jurisdiction and authority validation is a mandatory case intake control. Case record captures validation outcome and any jurisdiction flags/challenges. Team leader sign-off on jurisdiction decisions happens within case workflow.'},
-  caseMgmt: {description: '[Step 1 - Foundation & Data Model] Create, maintain and close investigation cases in ESYS/COI, ensuring correct entity linkage, related-case mapping and status tracking.',keywords: ['Case','Lifecycle','Status','Ownership'],inputs: ['Investigation plan, PIC details, entity master data, related entity mapping'],outputs: ['Investigation cases with IDs, linked entities, related cases, lifecycle statuses and closure records'],painPoints: ['Manual entity matching','Risk of misattribution','Manual closure in multiple systems','Orphaned records'],opportunities: ['Implement entity master validation and match-confidence checks','Unify case closure across ESYS/CM9/Lotus Notes','Provide a single case dashboard'],primarySystem: 'ESYS',secondarySystems: ['CM9', 'Lotus Notes'],workarounds: ['Manual related-case spreadsheets', 'Cross-system closure checklist'],scopeInScope: 'Salesforce Step 1 - Foundation & Data Model (POC). Investigation case management is the central purpose of the system. PIC/IC record types manage case lifecycle, entity linkage, related-case mapping, and status tracking from initiation through closure.'},
-  bulkInitiation: {description: 'Initiate investigations in bulk from project lists (e.g., FOG candidate lists, risk picks) using rules-based triggers and templates.',keywords: ['Bulk','Automate','Validate','Initiate'],inputs: ['FIM lists, risk-rated PIC spreadsheets, project rules, reclaim-by dates, cross-revenue flags'],outputs: ['Bulk-created investigation cases, pre-populated with key dates, risk ratings and cross-revenue indicators'],painPoints: ['Manual vetting and allocation','Missing reclaim-by dates','No automated matching algorithm','Manual cross-revenue checks'],opportunities: ['Require upstream lists to include critical dates and flags','Automate case creation and allocation based on rules','Pre-flag cross-revenue properties'],primarySystem: 'ESYS',secondarySystems: [],workarounds: ['Manual case creation in batches', 'Spreadsheet pre-population'],scopeExplanation: 'Out of Salesforce Scope for POC. Bulk case creation from upstream lists is a data processing function handled by upstream systems. Salesforce receives initiated cases but does not own batch creation workflows. Future roadmaps may automate bulk intake.'},
-  activityEffort: {description: '[Step 2 - Workflow & Assignment Rules] Track investigation actions, time spent, status and ageing across all cases for operational management and performance reporting.',keywords: ['Action Log','Effort','Time','Visibility'],inputs: ['Action sheets/logs, ESYS status changes, CM9 notes, time entries, workload dashboards'],outputs: ['Case ageing reports, effort summaries, workload views by investigator and revenue line'],painPoints: ['Manual action sheet entry','Not systematically enforced','Limited visibility of ageing and bottlenecks'],opportunities: ['Auto-capture key events from ESYS/email','Standardise action logs','Provide real-time dashboards for TLs and executives'],primarySystem: 'Spreadsheets',secondarySystems: ['ESYS', 'CM9'],workarounds: ['Manual action log spreadsheets', 'Email status updates'],scopePartial: 'Salesforce Step 2 - Workflow & Assignment Rules (POC). Case record auto-captures key activity events and milestones (case created, evidence logged, findings recorded, legal review completed, approval submitted, case closed) with timestamps. Provides activity timeline and case history visible within investigation record. External time-tracking and effort systems remain separate; Salesforce links to effort data for visibility but does not own time capture. Step 3+ will integrate time-tracking system for complete effort tracking within Salesforce.'},
-  prioritisation: {description: '[Step 2 - Workflow & Assignment Rules] Prioritise cases based on risk, expiry/time-bar constraints and complexity, and balance workloads across investigators and grades.',keywords: ['Prioritise','Workload','Capacity','Rules'],inputs: ['Risk scores, reclaim-by dates, statutory expiry windows, investigator capacity, case complexity indicators'],outputs: ['Prioritised work queues, allocation decisions, visibility of high-risk/expiring cases'],painPoints: ['Manual prioritisation by TL','Expiry constraints not systematically flagged','No predictive capacity modelling'],opportunities: ['Implement automated prioritisation rules and expiry dashboards','Support TLs with capacity and complexity modelling'],primarySystem: 'Team leader judgement',secondarySystems: ['ESYS'],workarounds: ['Manual case list reviews', 'Whiteboard tracking'],scopePartial: 'Salesforce Step 2 - Workflow & Assignment Rules (POC). Case dashboards and reports provide real-time visibility of case age, status, investigator workload, and at-risk cases (overdue, high-value, expiring). Team leaders use dashboards to manually prioritise workload and make allocation decisions. Automated prioritisation rules and capacity-based allocation remain deferred to Step 3+. Step 2 enables informed manual prioritisation through visibility.'},
-  planning: {description: '[Step 1 - Foundation & Data Model] Define investigation scope, years/periods, hypotheses and evidence strategy, including governance checkpoints with team leaders.',keywords: ['Scope','Plan','Strategy','Governance'],inputs: ['Background research, PIC issue, entity structure, TL guidance, revenue-line requirements'],outputs: ['Documented investigation plan, scope boundaries, evidence list, decision on desktop vs field (when applicable)'],painPoints: ['Scope informal','No standard template','Scope creep','Conditional pathways not documented','Governance review SLAs unclear'],opportunities: ['Create standard planning templates per revenue line','Define escalation criteria','Record TL decisions','Support re-scoping with light-weight approvals'],primarySystem: 'Word/Desktop',secondarySystems: ['Lotus Notes'],workarounds: ['Informal scope notes', 'Email TL sign-off'],scopeInScope: 'Salesforce Step 1 - Foundation & Data Model (POC). Investigation plans establish scope boundaries and evidence strategy. Case record stores plan document, key dates, methodology decisions, and TL approvals. Plan versions tracked with case history.'},
-  requests: {description: '[Step 2 - Workflow & Assignment Rules] Design, issue and manage entry letters, reminders and follow-up requests for information from customers and third parties.',keywords: ['Request','Notice','Statutory','Follow-up'],inputs: ['Investigation plan, evidence requirements, customer contact details, statutory powers, templates'],outputs: ['Entry letters, reminder letters, targeted clarification requests, documented response windows'],painPoints: ['Entry letters take 2–3 hours to prepare','Templates not version-controlled','Response timeframes inconsistent','Reminder process manual'],opportunities: ['Auto-populate letters from case data','Standardise response policies','Automate reminder triggers','Expand template library for complex combinations'],primarySystem: 'LetterPro (deferred)',secondarySystems: ['Word'],workarounds: ['Manual letter drafting', 'Email-based reminders', 'Shared template library'],scopePartial: 'Salesforce Step 2 - Workflow & Assignment Rules (POC). Basic letter generation for entry and exit letters using native Salesforce document templates with case data merge fields. Investigators generate, review, and print letters within Salesforce. Multi-tenant template support via custom metadata for revenue line and program type. Advanced capabilities (sophisticated versioning, approval workflows, conditional template logic) deferred to LetterPro integration in Step 4+. Reminder workflow remains manual via email for Step 2.'},
-  evidence: {description: '[Step 1 - Foundation & Data Model] Capture, log and organise all incoming evidence (documents, screenshots, bank statements, council responses) into a traceable case file.',keywords: ['Evidence','Document','Capture','Organise'],inputs: ['Customer documents, third-party responses, screenshots, system exports, phone notes'],outputs: ['Organised evidence packs, file action sheets, CM9 records with timestamps and completeness status'],painPoints: ['Manual screenshot collection','No DMS','Email attachments scattered','Manual logging','No OCR','Duplicates common'],opportunities: ['Implement automated evidence export from ESYS','Introduce DMS with email-to-case','Standardise indexing','Use OCR and metadata tagging'],primarySystem: 'CM9',secondarySystems: ['Email', 'Shared drive'],workarounds: ['Email attachment storage', 'Shared drive folders', 'Manual indexing'],scopeInScope: 'Salesforce Step 1 - Foundation & Data Model (POC). Evidence capture and organization are core to case documentation. Case record links to evidence packs, maintains metadata, timestamps, and completeness status. Investigators reference evidence directly within case context.'},
-  search: {description: 'Conduct and manage internal and external searches (ESYS, ASIC, ABN, VWA, AUSTRAC, FOG Online, councils) to build a complete picture of the entity and property.',keywords: ['Search','Query','Research','Integration'],inputs: ['Entity identifiers, property details, PIC triggers, investigation scope'],outputs: ['Background research summaries, cross-revenue flags, occupancy permit dates, risk indicators'],painPoints: ['10+ systems accessed in parallel','Manual collation','FOG Online not integrated','Council responses slow and inconsistent'],opportunities: ['Build an integrated research portal','Integrate FOG Online and council data where possible','Provide standard search checklists per revenue line'],primarySystem: 'ESYS, ASIC, ABN, VWA',secondarySystems: ['FOG Online', 'Council websites', 'AUSTRAC'],workarounds: ['Manual copy-paste of search results', 'Email council queries'],scopeExplanation: 'Salesforce Step 4 - Agentic AI & Integration. Background research and external/internal searches will be federated through Agentic AI integration. Step 4 will connect investigation cases to external research portals and provide unified search capability. Phase 1-3 remains manual via separate research systems.'},
-  flags: {description: '[Step 3 - Data Seeding & Synchronisation] Apply and manage investigation flags and non-issue indicators to prevent inappropriate assessments and to document non-pursuit decisions.',keywords: ['Flag','Hold','Control','Protect'],inputs: ['PIC data, investigation plan, early findings, system flags (e.g., leases non-issue indicators)'],outputs: ['Applied flags, non-issue markers, documented reasons for non-pursuit, controlled assessment behaviour'],painPoints: ['Screenshot requirements unclear','Rejection criteria for flags not transparent','Removal of flags depends on processor expertise'],opportunities: ['Clarify control rationale','Automate flag application/removal','Standardise non-issue criteria and documentation'],primarySystem: 'ESYS',secondarySystems: ['CM9'],workarounds: ['Manual case notes', 'Email processor alerts'],scopePartial: 'Salesforce Step 3 - Data Seeding & Synchronisation (POC). Case record displays investigation flag status (active investigation, non-issue marked) and flag dates for visibility and control awareness. Flag application logic and automation remain in ESYS and operational systems. Salesforce records flag state but does not execute flag application rules. Step 3 synchronises flag status with ESYS in real-time.'},
-  crossRevenue: {description: 'Coordinate investigations that span FOG, Duties, Land Tax and Payroll, ensuring shared evidence, consistent narratives and efficient case setup/closure.',keywords: ['Cross-Revenue','Coordinate','Link','Efficiency'],inputs: ['Cross-revenue flags, background searches, linked case IDs, shared evidence packs'],outputs: ['Linked cases, primary/secondary case designations, combined reports, harmonised customer communications'],painPoints: ['Late detection of cross-revenue issues','Duplicate case setup','Dual reporting requirements','Admin overhead for secondary cases'],opportunities: ['Pre-flag cross-revenue properties','Standardise primary/secondary patterns','Create short statutory reason templates for secondary closures'],primarySystem: 'Ad-hoc coordination',secondarySystems: ['ESYS', 'CM9'],workarounds: ['Manual linked-case spreadsheets', 'Cross-team email coordination'],scopeExplanation: 'Salesforce Step 4 - Agentic AI & Integration. Cross-revenue case coordination will be addressed through AI-driven case linking and relationship mapping. System will suggest related cases and manage multi-case workflows. Step 4+ will standardise cross-revenue patterns and automate coordination logic.'},
-  infoMgmt: {description: '[Step 1 - Foundation & Data Model] Manage working papers, analysis notes, calculation worksheets and case documentation so that evidence and reasoning are traceable and reviewable.',keywords: ['Organise','Synthesise','Structure','Review'],inputs: ['Organised evidence, working templates, action notes, background research'],outputs: ['Structured working papers, investigation reports, calculation files, case notes'],painPoints: ['Manual organisation','Inconsistent templates','Scattered notes across CM9, email and spreadsheets','Variable report quality'],opportunities: ['Standardise report and worksheet templates','Use version control','Embed mandatory sections for evidence and rationale'],primarySystem: 'Word/Excel',secondarySystems: ['CM9', 'Shared drive'],workarounds: ['Inconsistent folder structures', 'Email document exchange'],scopeInScope: 'Salesforce Step 1 - Foundation & Data Model (POC). Investigation information management organizes working papers and analysis notes within case context. Case record stores structured investigation summary, findings notes, and document links supporting decision-making.'},
-  analysis: {description: '[Step 1 - Foundation & Data Model] Analyse evidence against internal records and hypotheses, identify discrepancies and support investigators with tools and frameworks to reach consistent conclusions.',keywords: ['Analyse','Calculate','Assess','Decide'],inputs: ['Customer documents, internal records, reconciliations, bank statements, search results'],outputs: ['Analysis summaries, variance findings, fraud patterns, preliminary conclusions'],painPoints: ['Highly manual analysis','Bank statements 250+ pages','No standardised analysis format','Repeated analysis loops'],opportunities: ['Provide analysis tools (e.g., Excel bank-statement analyser)','Create decision trees and checklists','Reduce rework by strengthening completeness checks earlier'],primarySystem: 'Excel',secondarySystems: ['ESYS'],workarounds: ['Manual bank statement marking', 'Variance calculation spreadsheets'],scopeInScope: 'Salesforce Step 1 - Foundation & Data Model (POC). Evidence analysis and findings are recorded within case documentation. Case record captures analytical conclusions, variance findings, and preliminary fraud patterns supporting downstream decisions.'},
-  legal: {description: '[Step 1 - Foundation & Data Model] Apply legislation and SRO policy to the facts, resolve interpretation questions and ensure decisions are legally robust and consistent.',keywords: ['Legal','Policy','Advice','Review'],inputs: ['Evidence analysis, legislation, policy documents, precedent cases, TL/legal advice'],outputs: ['Documented findings, legal rationale, policy interpretations, decisions on voluntary disclosure status and penalties'],painPoints: ['Interpretation variance across investigators','Limited central guidance','Voluntary disclosure status not formally documented','Escalation criteria unclear'],opportunities: ['Build a legal/policy knowledge base','Define escalation rules','Require written voluntary disclosure statements','Standardise penalty decision logic'],primarySystem: 'Lotus Notes',secondarySystems: [],workarounds: ['Manual legislation lookups', 'TL/legal team consultation'],scopeInScope: 'Salesforce Step 1 - Foundation & Data Model (POC). Legal and policy review outcomes are case governance controls. Case record documents legal advice applied, interpretation decisions, and compliance rationale supporting investigation decisions.'},
-  periodRevenue: {description: '[Step 1 - Foundation & Data Model] Manage investigation periods, statutory time-bars, and revenue-line-specific rules (e.g., FOG 5-year reclaim, Land Tax TAA dates, Payroll periods).',keywords: ['Periodise','Revenue Line','Aggregate','Calculate'],inputs: ['Transaction dates, occupancy permits, TAA/FOG rules, expiry windows, revenue-line policies'],outputs: ['Confirmed investigation periods, documented time-bar decisions, aligned treatment across revenue lines'],painPoints: ['Manual date lookups','Expiry constraints not systematically flagged','Cross-revenue periods not harmonised'],opportunities: ['Auto-populate key dates','Provide expiry dashboards','Standardise period selection rules across revenue lines'],primarySystem: 'Excel',secondarySystems: ['ESYS', 'FOG Online'],workarounds: ['Period calculation spreadsheets', 'Manual expiry date tracking'],scopeInScope: 'Salesforce Step 1 - Foundation & Data Model (POC). Investigation periods and revenue line management determine scope and calculation boundaries. Case record stores confirmed investigation periods, time-bar decisions, and revenue line context.'},
-  calculation: {description: '[Step 3 - Data Seeding & Synchronisation] Quantify liabilities, penalties, interest and adjustments using standardised tools, and model alternative scenarios where discretion or different interpretations apply.',keywords: ['Calculate','Model','Quantify','Scenario'],inputs: ['Findings, rates, penalty rules, voluntary disclosure status, calculation worksheets'],outputs: ['Verified calculations, scenario comparisons, assessed & penalty worksheets, inputs to assessments and notices'],painPoints: ['Excel-based calculations not system-integrated','Formula errors','Inconsistent methods','Limited audit trail'],opportunities: ['Automate calculations in core systems','Implement validated templates','Add version control and independent review for high-value cases'],primarySystem: 'Excel',secondarySystems: ['ESYS'],workarounds: ['Complex Excel models', 'Manual formula verification'],scopePartial: 'Salesforce Step 3 - Data Seeding & Synchronisation (POC). Case record stores final approved liability amount, penalty calculation, and key calculation assumptions. Investigators input or copy final calculation outcomes into case record for documentation. Calculation engine, scenario modelling, and formula validation remain Excel-based and owned by analysts. Step 4+ may embed validated calculation templates within Salesforce.'},
-  sanctions: {description: 'Execute assessments, repayment notices, penalties and other remedies, and manage handoff to debt recovery and payment processing.',keywords: ['Penalty','Interest','Remedy','Apply'],inputs: ['Approved findings, calculations, statutory grounds, system assessment functions'],outputs: ['Assessments, FOG repayment notices, updated liabilities in ESYS/FOG nodes, debt recovery referrals'],painPoints: ['FOG assessments locked to investigations node','Non-investigation staff cannot see payment status','ESYS assessment failures','Manual handoff to debt recovery'],opportunities: ['Provide read-only payment views to call centre','Add validation and error logging for assessments','Define SLAs and priority tags for debt recovery handoff'],primarySystem: 'ESYS',secondarySystems: ['FOG Online'],workarounds: ['Manual assessment forms', 'Email debt recovery notifications'],scopeExplanation: 'Out of Salesforce Scope for POC. Operations calculates liability in ESYS and system auto-generates assessments. Investigations role is limited to: triggering closure memo to Operations, being notified when assessment is ready, and preparing exit letter. Liability calculation and assessment generation are operational responsibilities. Salesforce scope covers case closure notification and exit letter workflow only.'},
-  approvals: {description: '[Step 1 - Foundation & Data Model] Govern approvals for complex decisions, refunds, NFAs and statutory notices, including TL, peer and executive review.',keywords: ['Approve','Delegate','Authorise','Sign-off'],inputs: ['Investigation reports, calculations, discretion recommendations, outcome proposals'],outputs: ['Approved or revised decisions, documented approval trails, release from mandatory peer review for experienced staff'],painPoints: ['TL sign-off bottlenecks (e.g., FOG notices)','Subjective release criteria','No SLAs','Variable review rigor'],opportunities: ['Define tiered sign-off rules','Set SLAs','Expand reviewer pools','Formalise release criteria','Track approval metrics'],primarySystem: 'Email',secondarySystems: ['Lotus Notes'],workarounds: ['Email sign-off chains', 'Approval spreadsheets'],scopeInScope: 'Salesforce Step 1 - Foundation & Data Model (POC). Investigation closure requires formal approval before handoff to operations. Case record captures approval workflow chain, approver comments, sign-off timestamps, and decision outcomes. Approval process rules enforce delegation authority and manage SLA tracking. Investigators propose findings and submit for approval; approvers review required fields and evidence completeness within defined workflow. Replaces email sign-off chains and approval spreadsheets with auditable, trackable approval process linked directly to case lifecycle.'},
-  governance: {description: 'Manage exceptions, overrides and discretionary decisions (e.g., FOG discretion, penalty remissions) within a controlled, documented framework.',keywords: ['Exception','Override','Govern','Oversight'],inputs: ['Discretion requests, hardship evidence, policy guidelines, prior precedent'],outputs: ['Granted/denied discretion decisions, revised notices, documented exception rationales'],painPoints: ['Subjective discretion decisions','No automated consistency checks','Limited visibility of precedent'],opportunities: ['Create discretion decision checklists','Log decisions in a searchable repository','Use analytics to monitor consistency'],primarySystem: 'Lotus Notes',secondarySystems: [],workarounds: ['Manual precedent lookups', 'Subjective TL decisions'],scopeExplanation: 'Out of Salesforce Scope for POC. Exception and override management are governance and policy concerns requiring executive oversight. Salesforce records decisions but does not own the governance framework. Future roadmaps will embed exception governance.'},
-  reporting: {description: '[Step 5 - Reporting, Dashboards & Analytics] Provide reporting on investigation volumes, cycle times, outcomes, revenue impacts and pain points to support governance and improvement.',keywords: ['Report','Insights','Governance','Performance'],inputs: ['Case data, action logs, assessment outcomes, approval records, pain point logs'],outputs: ['Performance dashboards, trend reports, SLA adherence metrics, improvement themes'],painPoints: ['Fragmented data across ESYS, CM9, Lotus Notes','Manual reporting','Limited visibility of end-to-end cycle time'],opportunities: ['Build a master case dashboard','Integrate data sources','Track SLAs and bottlenecks','Feed insights into continuous improvement'],primarySystem: 'Excel',secondarySystems: ['ESYS'],workarounds: ['Manual data extraction', 'Month-end reporting spreadsheets'],scopeInScope: 'Salesforce Step 5 - Reporting, Dashboards & Analytics (POC). Case record is the single source of truth for investigation outcomes and timelines. Built-in dashboards and reports provide real-time visibility to team leaders and executives on case volumes, cycle times, effort, and outcomes. Eliminates month-end manual reporting from spreadsheets and replaces fragmented ESYS/CM9/Lotus Notes data with unified case data.'},
-  objections: {description: '[Step 5 - Reporting, Dashboards & Analytics] Manage post-issue objections, disputes and customer escalations, ensuring consistent treatment and clear communication.',keywords: ['Dispute','Escalation','Resolution','Communication'],inputs: ['Objection letters, customer complaints, assessment records, investigation reports'],outputs: ['Objection decisions, amended assessments, dispute correspondence, lessons for upstream communication'],painPoints: ['No formal escalation path for post-issue disputes','Emotional impact on staff','Amendments triggered by accountant retractions'],opportunities: ['Create dispute protocols','Provide plain-language guides','Link objection outcomes back into planning and communication templates'],primarySystem: 'Email',secondarySystems: ['ESYS'],workarounds: ['Email dispute tracking', 'Manual amendment forms'],scopeInScope: 'Salesforce Step 5 - Reporting, Dashboards & Analytics (POC). Post-closure objections and disputes are tracked as case follow-up events. Case record maintains objection outcomes, amendments, and lessons feeding back into exit communication. Objection reporting provides visibility on post-closure quality and customer disputes.'},
-  knowledge: {description: 'Capture, curate and share investigation knowledge, including precedents, technical interpretations, templates and good-practice examples.',keywords: ['Knowledge','Precedent','Template','Guidance'],inputs: ['Investigation reports, legal advice, peer review feedback, annual file reviews, procedure documents'],outputs: ['Knowledge base, guidance notes, updated templates, training materials'],painPoints: ['Procedure documents scattered across CM9','Discovery friction','Debated report formats','Limited visibility of precedent'],opportunities: ['Create a central procedure registry','Maintain a legal/technical wiki','Link guidance directly from case screens'],primarySystem: 'Lotus Notes',secondarySystems: ['Shared drive'],workarounds: ['Scattered procedure files', 'Informal knowledge transfer'],scopeExplanation: 'Out of Salesforce Scope for POC. Knowledge management and procedure documentation belong to a central knowledge repository and wiki, not investigation case management. Salesforce may link to knowledge but does not own the library. Future roadmaps will integrate knowledge links.'},
-  improvement: {description: 'Systematically collect pain points and improvement ideas from investigations and convert them into prioritised change initiatives.',keywords: ['Improve','Design','Feedback','Backlog'],inputs: ['Pain point logs, annual file review findings, performance insights, staff feedback, customer feedback'],outputs: ['Improvement backlog, prioritised initiatives, implemented changes, feedback loops to teams'],painPoints: ['Pain point capture sporadic','Suggestions not tracked to implementation','No formal governance for improvement projects'],opportunities: ['Introduce structured feedback forms at case closure','Run quarterly retrospectives','Track improvement actions and outcomes'],primarySystem: 'Ad-hoc',secondarySystems: [],workarounds: ['Informal feedback', 'Annual file review comments'],scopeExplanation: 'Out of Salesforce Scope for POC. Continuous improvement and design are organizational change management functions, not case system responsibilities. Salesforce may capture feedback but does not own improvement initiatives. Future roadmaps will formalise feedback loops.'},
-  workforce: {description: 'Plan and manage investigation workforce capacity, skills, mentoring and release from peer review across revenue lines.',keywords: ['Workforce','Capacity','Skills','Mentoring'],inputs: ['Workload metrics, case complexity, staff grades, mentoring arrangements, training needs'],outputs: ['Allocation strategies, mentoring plans, release decisions, training programs'],painPoints: ['Manual workload assessment','Mentor bottlenecks','Subjective release criteria','Risk of burnout'],opportunities: ['Use dashboards for capacity planning','Formalise mentoring and release rubrics','Align training with capability gaps'],primarySystem: 'Team leader judgement',secondarySystems: ['ESYS'],workarounds: ['Manual capacity spreadsheets', 'Informal mentoring'],scopeExplanation: 'Out of Salesforce Scope for POC. Workforce planning, capacity management, and mentoring are HR and team leadership functions, not case system responsibilities. Future roadmaps may provide capacity dashboards.'},
-  technology: {description: 'Provide and maintain the technology stack that supports investigations, including ESYS, CM9, research tools and analysis utilities.',keywords: ['Tools','Systems','Technology','Integration'],inputs: ['System requirements, user feedback, integration needs, security and compliance constraints'],outputs: ['Stable, integrated tools; new features (e.g., evidence export, dashboards); reduced manual workarounds'],painPoints: ['System integration gaps','Manual re-entry','Limited automation','Evidence capture bottlenecks'],opportunities: ['Prioritise high-impact integrations','Automate repetitive tasks','Co-design tools with investigators'],primarySystem: 'ESYS',secondarySystems: ['CM9', 'Lotus Notes', 'FOG Online'],workarounds: ['IT support tickets', 'Ad-hoc tool requests'],scopeExplanation: 'Out of Salesforce Scope for POC. Technology stack maintenance and integration are IT infrastructure responsibilities, not investigation case management. Salesforce is one component of the technology stack. Future roadmaps will address system integrations.'},
-  analytics: {description: 'Provide data infrastructure and analytics capabilities to support risk modelling, performance reporting and insight generation.',keywords: ['Data','Analytics','Dashboard','Insight'],inputs: ['Case data, assessment outcomes, external datasets, operational metrics'],outputs: ['Risk models, performance dashboards, trend analyses, scenario simulations'],painPoints: ['Fragmented data','Manual reporting','Limited visibility of cross-revenue patterns'],opportunities: ['Build a unified investigations data mart','Standardise metrics','Support advanced analytics for targeting and improvement'],primarySystem: 'None (gap)',secondarySystems: ['ESYS', 'Excel'],workarounds: ['Manual data mart extracts', 'Excel analytics'],scopeExplanation: 'Out of Salesforce Scope for POC. Data and analytics platform is a centralized infrastructure concern providing insights across the organization, not a case management responsibility. Future roadmaps will build unified data mart.'},
-  policy: {description: 'Govern the creation, approval, versioning and communication of investigation policies, procedures and templates.',keywords: ['Policy','Procedure','Governance','Version Control'],inputs: ['Legislative changes, policy decisions, improvement outcomes, staff feedback'],outputs: ['Current procedures, controlled templates, policy updates, communicated changes'],painPoints: ['Scattered procedure documents','Outdated templates','Inconsistent application of rules'],opportunities: ['Centralise procedures','Implement version control','Link policies directly into workflows','Schedule regular reviews'],primarySystem: 'Lotus Notes',secondarySystems: ['Shared drive'],workarounds: ['Multiple procedure versions', 'Email policy updates'],scopeExplanation: 'Out of Salesforce Scope for POC. Policy and procedure governance is a document management and compliance function, not investigation case management. Salesforce may link to policies but does not manage the governance process. Future roadmaps will centralise procedures.'}
+    scopeExplanation: 'Data integration and consolidation are infrastructure/platform responsibilities, not investigation case management. Salesforce consumes pre-integrated data but does not own the integration layer (APIs, ETL, data pipelines). Data pipeline architecture is a separate infrastructure workstream.',
+    ownership: 'IT/Data Platform Team',
+    phase2: 'Build data pipeline for ESYS, Council, Valuation Services, STP/VWA, utilities integration'
+  },
+  bulkInitiation: {
+    description: 'Initiate investigations in bulk from project lists using rules-based triggers and templates.',
+    scopeExplanation: 'Bulk case creation from upstream project lists (FOG candidates, risk picks) is a data processing function. Salesforce receives initiated cases but does not own batch creation workflows or rules-based triggering. Bulk intake automation requires upstream system changes (COI, data pipelines).',
+    ownership: 'COI/Data Platform',
+    phase2: 'Automate via API integration with COI/project lists'
+  },
+  activityEffort: {
+    description: 'Track investigation actions, time spent, status and ageing across all cases for operational management and performance reporting.',
+    scopeExplanation: 'Case record auto-captures key activity milestones and events within Investigation_Action__c audit trail. But systematic effort tracking (time entries, resource allocation) requires integration with dedicated time/resource management systems or timekeeping module.',
+    ownership: 'HR/Timekeeping System',
+    phase2: 'Integrate time-tracking system for complete effort tracking within Salesforce'
+  },
+  prioritisation: {
+    description: 'Prioritise cases based on risk, expiry/time-bar constraints and complexity, and balance workloads across investigators.',
+    scopeExplanation: 'Dashboards and reports provide real-time visibility of case age, status, investigator workload, and at-risk cases. Team leaders use this visibility to MANUALLY prioritise and allocate work. Automated prioritisation rules and capacity-based allocation are Phase 2+ features.',
+    ownership: 'Team Leaders (supported by Salesforce dashboards in POC)',
+    phase2: 'Automated prioritisation rules, capacity-based allocation, workload balancing'
+  },
+  requests: {
+    description: 'Design, issue and manage entry letters, reminders and follow-up requests for information from customers and third parties.',
+    scopeExplanation: 'Letter generation workflow and management are outside POC. Investigators manually draft letters using Word templates and email/print them. Advanced request management (LetterPro integration, automated reminders, follow-up escalations) is Phase 2+.',
+    ownership: 'Investigators (manual); LetterPro (Phase 2+)',
+    phase2: 'LetterPro integration for automated letter management and follow-up tracking'
+  },
+  search: {
+    description: 'Conduct and manage internal and external searches (ESYS, ASIC, ABN, VWA, AUSTRAC, FOG Online, councils) to build a complete picture of the entity and property.',
+    scopeExplanation: 'Background research (ESYS, ASIC, ABN, VWA, AUSTRAC, FOG Online, council searches) will be federated through Agentic AI integration in Phase 4. POC does not include research portal or unified search capability. Investigators continue using separate systems in parallel.',
+    ownership: 'Agentic AI/Integration (Phase 4)',
+    phase2: 'AI-driven research portal and unified search'
+  },
+  flags: {
+    description: 'Apply and manage investigation flags and non-issue indicators to prevent inappropriate assessments and to document non-pursuit decisions.',
+    scopeExplanation: 'Flag application logic and automation remain in ESYS and operational systems. POC does not execute flag application rules or automated controls. Flags display in case record for context only.',
+    ownership: 'ESYS (Phase 3 data sync)',
+    phase2: 'Real-time flag synchronisation with ESYS and automated flag application'
+  },
+  crossRevenue: {
+    description: 'Coordinate investigations that span multiple revenue lines, ensuring shared evidence, consistent narratives and efficient case setup/closure.',
+    scopeExplanation: 'Cross-revenue case coordination will be addressed through AI-driven case linking and relationship mapping in Phase 4. System will suggest related cases and manage multi-case workflows. POC does not include cross-revenue detection or relationship mapping.',
+    ownership: 'Agentic AI (Phase 4)',
+    phase2: 'AI-driven case linking and multi-case workflows'
+  },
+  infoMgmt: {
+    description: 'Manage working papers, analysis notes, calculation worksheets and case documentation so that evidence and reasoning are traceable and reviewable.',
+    scopeExplanation: 'Advanced information management (version control, structured templates, auto-indexing) is deferred. Case record stores basic notes and documents as metadata, but does not manage sophisticated information architecture.',
+    ownership: 'Salesforce (basic metadata), Phase 2+ (advanced templates)',
+    phase2: 'Advanced templates, version control, auto-indexing'
+  },
+  legal: {
+    description: 'Apply legislation and SRO policy to the facts, resolve interpretation questions and ensure decisions are legally robust and consistent.',
+    scopeExplanation: 'Legal advice process remains external. Investigators consult legal team via email/teams. POC does not automate or workflow legal consultation. Case record stores legal decision applied as metadata only.',
+    ownership: 'Legal Team (POC); Salesforce (Phase 2+)',
+    phase2: 'Embed legal decision trees and policy guidance'
+  },
+  periodRevenue: {
+    description: 'Manage investigation periods, statutory time-bars, and revenue-line-specific rules.',
+    scopeExplanation: 'Automated period calculation and expiry tracking are deferred. Investigators manually confirm periods using external spreadsheets. Case record stores period metadata only.',
+    ownership: 'Spreadsheets (POC); Salesforce (Phase 3+)',
+    phase2: 'Auto-populate key dates, provide expiry dashboards, enforce time-bar rules'
+  },
+  calculation: {
+    description: 'Quantify liabilities, penalties, interest and adjustments using standardised tools, and model alternative scenarios.',
+    scopeExplanation: 'Calculation engine, formula validation, and scenario modelling remain Excel-based and owned by analysts. Case record stores final calculation outcome as metadata only.',
+    ownership: 'Excel/Analysts (POC); Salesforce (Phase 4+)',
+    phase2: 'Embed validated calculation templates within Salesforce'
+  },
+  sanctions: {
+    description: 'Execute assessments, repayment notices, penalties and other remedies, and manage handoff to debt recovery and payment processing.',
+    scopeExplanation: 'Operations calculates liability in ESYS and system auto-generates assessments. Investigations role limited to triggering closure memo and being notified when assessment is ready. Assessment generation, penalty application, and payment processing are operational responsibilities.',
+    ownership: 'Operations/ESYS',
+    phase2: 'Closer integration with ESYS assessment workflow'
+  },
+  governance: {
+    description: 'Manage exceptions, overrides and discretionary decisions within a controlled, documented framework.',
+    scopeExplanation: 'Exception and override management are governance and policy concerns requiring executive oversight. Salesforce records decisions but does not own the governance framework (discretion criteria, approval authorities, audit rules).',
+    ownership: 'Compliance/Executive (policy); Salesforce (Phase 2+)',
+    phase2: 'Embed exception governance with approval matrices and audit rules'
+  },
+  objections: {
+    description: 'Manage post-issue objections, disputes and customer escalations, ensuring consistent treatment and clear communication.',
+    scopeExplanation: 'Objection management is outside POC scope. Post-closure objection tracking is an operational concern, not an investigation case management feature. Advanced objection workflow (categorization, routing, re-analysis) is Phase 2+.',
+    ownership: 'Operations/Compliance (Phase 2+); Salesforce (Phase 2+)',
+    phase2: 'Advanced objection workflow, categorization, routing logic, and re-analysis tracking'
+  },
+  knowledge: {
+    description: 'Capture, curate and share investigation knowledge, including precedents, technical interpretations, templates and good-practice examples.',
+    scopeExplanation: 'Knowledge management and procedure documentation belong to a central knowledge repository and wiki, not investigation case management. Salesforce may link to knowledge but does not own the library.',
+    ownership: 'Central Knowledge Repository',
+    phase2: 'Integrate knowledge links from Salesforce case screens'
+  },
+  improvement: {
+    description: 'Systematically collect pain points and improvement ideas from investigations and convert them into prioritised change initiatives.',
+    scopeExplanation: 'Improvement initiatives are organizational change management, not case system responsibilities. Salesforce may capture feedback (lessons learned field at closure), but feedback aggregation, improvement backlog prioritization, change tracking are separate.',
+    pocScope: 'Capture lessons learned field at case closure',
+    ownership: 'Program Management/Improvement Team',
+    phase2: 'Aggregate learnings into improvement backlog with feedback loops'
+  },
+  workforce: {
+    description: 'Plan and manage investigation workforce capacity, skills, mentoring and release from peer review across revenue lines.',
+    scopeExplanation: 'Workforce planning, mentoring, and release criteria are HR and team leadership functions. POC provides capacity dashboards (case count, workload by investigator) to support manual planning. Automated allocation deferred.',
+    pocScope: 'Real-time workload dashboards for manual capacity planning',
+    ownership: 'HR/Team Leaders (POC dashboards support)',
+    phase2: 'Automated capacity-based allocation, mentoring workflows'
+  },
+  technology: {
+    description: 'Provide and maintain the technology stack that supports investigations, including systems, research tools and analysis utilities.',
+    scopeExplanation: 'Technology stack maintenance and integration are IT infrastructure responsibilities. Salesforce is one component. Future roadmaps will address system integrations (ESYS, CM9, FOG Online, council data, utilities).',
+    ownership: 'IT/Infrastructure',
+    phase2: 'Build APIs and integration pipelines for core systems'
+  },
+  analytics: {
+    description: 'Provide data infrastructure and analytics capabilities to support risk modelling, performance reporting and insight generation.',
+    scopeExplanation: 'Centralized data and analytics platform is infrastructure concern providing insights across the organization. Salesforce is a data SOURCE, not the analytics platform.',
+    ownership: 'IT/Data Platform Team',
+    phase2: 'Build unified investigations data mart and analytics'
+  },
+  policy: {
+    description: 'Govern the creation, approval, versioning and communication of investigation policies, procedures and templates.',
+    scopeExplanation: 'Policy and procedure governance is document management and compliance function. Salesforce may link to policies but does not manage the governance process (versioning, approval, review scheduling).',
+    ownership: 'Central Procedure Repository/Compliance',
+    phase2: 'Integrate procedure links from Salesforce case screens'
+  }
 };
 
-function openPanel(capId, title, stage, stageNum) {
-  var content = CAPABILITY_CONTENT[capId];
-  if (!content) return;
+function openPanel(capId, title, stageNum) {
+  const data = CAPABILITY_DATA[capId];
+  if (!data) return;
 
-  var badge = document.getElementById('panelStage');
-  if (badge) {
-    badge.textContent = stage;
-    badge.className = 'panel-stage-badge ' + STAGE_CLASS[stageNum];
-  }
-  
-  var titleEl = document.getElementById('panelTitle');
-  if (titleEl) titleEl.innerHTML = title;
+  document.getElementById('panelStage').textContent = 'Stage ' + stageNum;
+  document.getElementById('panelTitle').innerHTML = title;
 
-  var html = '';
-  
-  if (content.scopeExplanation) {
-    html += '<div class="panel-section" style="background:#fee2e2;border:1px solid #fca5a5;border-radius:5px;padding:12px;margin-bottom:16px;"><div class="panel-section-title" style="border:none;color:#991b1b;margin-bottom:6px;">Out of Scope for POC</div><p style="color:#991b1b;margin:0;">' + content.scopeExplanation + '</p></div>';
-  }
-  
-  if (content.scopeInScope) {
-    html += '<div class="panel-section" style="background:#dcfce7;border:1px solid #86efac;border-radius:5px;padding:12px;margin-bottom:16px;"><div class="panel-section-title" style="border:none;color:#166534;margin-bottom:6px;">In Scope for POC</div><p style="color:#166534;margin:0;">' + content.scopeInScope + '</p></div>';
-  }
-  
-  if (content.scopePartial) {
-    html += '<div class="panel-section" style="background:#dbeafe;border:1px solid #93c5fd;border-radius:5px;padding:12px;margin-bottom:16px;"><div class="panel-section-title" style="border:none;color:#1e40af;margin-bottom:6px;">Deferred to Phase 2+</div><p style="color:#1e40af;margin:0;">' + content.scopePartial + '</p></div>';
-  }
-  
-  if (content.description) {
-    html += '<div class="panel-section"><div class="panel-section-title">Description</div><p>' + content.description + '</p>';
-    if (content.keywords && content.keywords.length > 0) {
-      html += '<div class="pill-group">';
-      for (var i = 0; i < content.keywords.length; i++) {
-        html += '<span class="pill">' + content.keywords[i] + '</span>';
-      }
-      html += '</div>';
-    }
-    html += '</div>';
-  }
-  
-  var sections = [['inputs','Inputs'],['outputs','Outputs'],['painPoints','Pain Points'],['opportunities','Opportunities']];
-  for (var s = 0; s < sections.length; s++) {
-    var key = sections[s][0];
-    var label = sections[s][1];
-    if (content[key] && content[key].length > 0) {
-      html += '<div class="panel-section"><div class="panel-section-title">' + label + '</div><ul>';
-      for (var j = 0; j < content[key].length; j++) {
-        html += '<li>' + content[key][j] + '</li>';
-      }
-      html += '</ul></div>';
-    }
-  }
-  
-  html += '<div class="systems-group">';
-  html += '<div class="system-row"><label class="system-label">Primary System</label><div class="system-pills">';
-  html += '<span class="system-pill primary">' + (content.primarySystem || 'Not mapped') + '</span>';
-  html += '</div></div>';
-  
-  if (content.secondarySystems && content.secondarySystems.length > 0) {
-    html += '<div class="system-row"><label class="system-label">Secondary Systems</label><div class="system-pills">';
-    for (var k = 0; k < content.secondarySystems.length; k++) {
-      html += '<span class="system-pill secondary">' + content.secondarySystems[k] + '</span>';
-    }
-    html += '</div></div>';
-  }
-  
-  if (content.workarounds && content.workarounds.length > 0) {
-    html += '<div class="system-row"><label class="system-label">Current Workarounds</label><div class="system-pills">';
-    for (var w = 0; w < content.workarounds.length; w++) {
-      html += '<span class="system-pill workaround">' + content.workarounds[w] + '</span>';
-    }
-    html += '</div></div>';
-  }
-  
-  html += '</div>';
+  let html = '';
 
-  var contentEl = document.getElementById('panelContent');
-  if (contentEl) contentEl.innerHTML = html;
-  
-  var panel = document.getElementById('panel');
-  if (panel) panel.classList.add('open');
-  
-  var overlay = document.getElementById('panelOverlay');
-  if (overlay) overlay.classList.add('visible');
+  // Scope explanation box
+  if (data.scopeInScope) {
+    html += `<div class="scope-box in-scope"><span class="scope-box-title">✓ In Scope for POC</span>${data.scopeInScope}</div>`;
+  } else if (data.scopePartial) {
+    html += `<div class="scope-box partial"><span class="scope-box-title">⚠ Partial Scope</span>${data.scopePartial}</div>`;
+  } else if (data.scopeExplanation) {
+    html += `<div class="scope-box out-of-scope"><span class="scope-box-title">✗ Out of Scope</span>${data.scopeExplanation}</div>`;
+  }
+
+  // POC Scope (if partial/deferred)
+  if (data.pocScope) {
+    html += `<div class="panel-section"><div class="panel-section-title">POC Scope</div><p>${data.pocScope}</p></div>`;
+  }
+
+  // Description
+  if (data.description) {
+    html += `<div class="panel-section"><div class="panel-section-title">Description</div><p>${data.description}</p></div>`;
+  }
+
+  // Ownership
+  if (data.ownership) {
+    html += `<div class="panel-section"><div class="panel-section-title">Ownership</div><p>${data.ownership}</p></div>`;
+  }
+
+  // Phase 2+ Plan
+  if (data.phase2) {
+    html += `<div class="panel-section"><div class="panel-section-title">Phase 2+ Plan</div><p>${data.phase2}</p></div>`;
+  }
+
+  document.getElementById('panelContent').innerHTML = html;
+
+  document.getElementById('panel').classList.add('open');
+  document.getElementById('panelOverlay').classList.add('visible');
 }
 
 function closePanel() {
-  var panel = document.getElementById('panel');
-  if (panel) panel.classList.remove('open');
-  
-  var overlay = document.getElementById('panelOverlay');
-  if (overlay) overlay.classList.remove('visible');
+  document.getElementById('panel').classList.remove('open');
+  document.getElementById('panelOverlay').classList.remove('visible');
+}
+
+function toggleScopePanel() {
+  const content = document.getElementById('scopePanelContent');
+  const icon = document.getElementById('scopePanelIcon');
+  content.classList.toggle('open');
+  icon.classList.toggle('open');
 }
 
 var activeFilters = {
   'in-scope': true,
-  'partial': true,
   'out-of-scope': true
 };
-
-var activeStepFilters = {
-  'step-1': true,
-  'step-2': true,
-  'step-3': true,
-  'step-4': true,
-  'step-5': true,
-  'step-out': true
-};
-// Step filters disabled for 3-month POC - all steps visible
 
 function toggleFilter(scope, button) {
   activeFilters[scope] = !activeFilters[scope];
@@ -916,246 +1034,27 @@ function toggleFilter(scope, button) {
 }
 
 function resetFilters() {
-  activeFilters = {
-    'in-scope': true,
-    'partial': true,
-    'out-of-scope': true
-  };
-  activeStepFilters = {
-    'step-1': true,
-    'step-2': true,
-    'step-3': true,
-    'step-4': true,
-    'step-5': true,
-    'step-out': true
-  };
-  var buttons = document.querySelectorAll('.filter-button');
-  for (var i = 0; i < buttons.length; i++) {
-    if (buttons[i].textContent.indexOf('Reset') === -1) {
-      buttons[i].classList.add('active');
-    }
-  }
-  applyFilters();
-}
-
-function toggleStepFilter(step, button) {
-  activeStepFilters[step] = !activeStepFilters[step];
-  button.classList.toggle('active');
-  applyFilters();
-}
-
-function resetStepFilters() {
-  activeStepFilters = {
-    'step-1': true,
-    'step-2': true,
-    'step-3': true,
-    'step-4': true,
-    'step-5': true,
-    'step-out': true
-  };
-  var stepButtons = document.querySelectorAll('.filter-button.step-1, .filter-button.step-2, .filter-button.step-3, .filter-button.step-4, .filter-button.step-5');
-  for (var i = 0; i < stepButtons.length; i++) {
-    stepButtons[i].classList.add('active');
-  }
+  activeFilters = { 'in-scope': true, 'out-of-scope': true };
+  document.querySelectorAll('.filter-button:not([onclick*="resetFilters"])').forEach(btn => {
+    btn.classList.add('active');
+  });
   applyFilters();
 }
 
 function applyFilters() {
-  var cards = document.querySelectorAll('.capability-card');
-  for (var i = 0; i < cards.length; i++) {
-    var scope = cards[i].getAttribute('data-scope');
-    var step = cards[i].getAttribute('data-step');
-    
-    // Default to true if attribute missing (show card)
-    var scopeMatch = scope ? activeFilters[scope] : true;
-    var stepMatch = step ? activeStepFilters[step] : true;
-    
-    // Only show if both match AND both filters have the key active
-    if (scopeMatch && stepMatch) {
-      cards[i].style.display = '';
-      cards[i].style.visibility = 'visible';
+  document.querySelectorAll('.capability-card').forEach(card => {
+    const scope = card.getAttribute('data-scope');
+    if (activeFilters[scope]) {
+      card.style.display = '';
     } else {
-      cards[i].style.display = 'none';
-      cards[i].style.visibility = 'hidden';
+      card.style.display = 'none';
     }
-  }
+  });
 }
 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closePanel();
 });
-</script>
-
-<!-- FEEDBACK & COMMENTS SECTION -->
-
-<div style="margin-top: 80px; padding-top: 60px; border-top: 3px solid #e5e7eb; margin-bottom: 40px;">
-  <h2 style="font-family: 'Inter Tight', sans-serif; font-size: 16px; font-weight: 700; color: #374151; margin-bottom: 12px;">Feedback & Comments</h2>
-  <p style="font-size: 13px; color: #6b7280; margin-bottom: 20px;">Use this section to capture feedback, questions, or concerns about the 3-month POC scope. All comments are saved locally in your browser.</p>
-
-  <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px;">
-    <div style="margin-bottom: 16px;">
-      <label style="font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 6px;">Your Name / Role</label>
-      <input type="text" id="commentAuthor" placeholder="e.g., Mark - Business Architect" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 12px; box-sizing: border-box;">
-    </div>
-
-```
-<div style="margin-bottom: 16px;">
-  <label style="font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 6px;">Comment / Feedback</label>
-  <textarea id="commentText" placeholder="e.g., Concern about manual evidence upload, question about LetterPro integration timeline, suggestion for Phase 2..." style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 12px; box-sizing: border-box; font-family: Arial, sans-serif; min-height: 80px; resize: vertical;"></textarea>
-</div>
-
-<div style="display: flex; gap: 8px; margin-bottom: 20px;">
-  <button onclick="addComment()" style="padding: 8px 16px; background: #059669; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Save Comment</button>
-  <button onclick="clearCommentForm()" style="padding: 8px 16px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Clear</button>
-  <button onclick="exportComments()" style="padding: 8px 16px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: auto;">Export as Text</button>
-  <button onclick="clearAllComments()" style="padding: 8px 16px; background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">Clear All</button>
-</div>
-
-<div id="commentsList" style="max-height: 400px; overflow-y: auto;">
-  <!-- Comments will appear here -->
-</div>
-```
-
-  </div>
-</div>
-
-<script>
-// Comments Storage
-const COMMENTS_KEY = 'sro_poc_comments';
-
-// Initialize comments on page load
-function initializeComments() {
-  loadAndDisplayComments();
-}
-
-// Add a new comment
-function addComment() {
-  var author = document.getElementById('commentAuthor').value.trim();
-  var text = document.getElementById('commentText').value.trim();
-  
-  if (!author || !text) {
-    alert('Please fill in both name and comment');
-    return;
-  }
-  
-  // Create comment object
-  var comment = {
-    id: Date.now(),
-    author: author,
-    text: text,
-    timestamp: new Date().toLocaleString('en-AU', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric', 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    })
-  };
-  
-  // Get existing comments
-  var comments = JSON.parse(localStorage.getItem(COMMENTS_KEY) || '[]');
-  comments.unshift(comment); // Add to top
-  
-  // Save to localStorage
-  localStorage.setItem(COMMENTS_KEY, JSON.stringify(comments));
-  
-  // Clear form
-  clearCommentForm();
-  
-  // Reload display
-  loadAndDisplayComments();
-}
-
-// Load and display comments
-function loadAndDisplayComments() {
-  var comments = JSON.parse(localStorage.getItem(COMMENTS_KEY) || '[]');
-  var listDiv = document.getElementById('commentsList');
-  
-  if (comments.length === 0) {
-    listDiv.innerHTML = '<p style="font-size: 12px; color: #9ca3af; text-align: center; padding: 20px;">No comments yet. Be the first to provide feedback.</p>';
-    return;
-  }
-  
-  var html = '<div style="border-top: 1px solid #e5e7eb; padding-top: 12px;">';
-  
-  for (var i = 0; i < comments.length; i++) {
-    var comment = comments[i];
-    html += '<div style="background: white; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; margin-bottom: 12px;">';
-    html += '<div style="display: flex; justify-content: space-between; align-items: flex-start;">';
-    html += '<div>';
-    html += '<p style="font-size: 12px; font-weight: 600; color: #374151; margin: 0 0 4px 0;">' + comment.author + '</p>';
-    html += '<p style="font-size: 11px; color: #9ca3af; margin: 0 0 8px 0;">' + comment.timestamp + '</p>';
-    html += '</div>';
-    html += '<button onclick="deleteComment(' + comment.id + ')" style="background: #fee2e2; color: #991b1b; border: none; border-radius: 4px; padding: 4px 8px; font-size: 11px; cursor: pointer;">Delete</button>';
-    html += '</div>';
-    html += '<p style="font-size: 12px; color: #4b5563; margin: 0; line-height: 1.5; white-space: pre-wrap;">' + comment.text + '</p>';
-    html += '</div>';
-  }
-  
-  html += '</div>';
-  listDiv.innerHTML = html;
-}
-
-// Delete a comment
-function deleteComment(id) {
-  if (!confirm('Delete this comment?')) return;
-  
-  var comments = JSON.parse(localStorage.getItem(COMMENTS_KEY) || '[]');
-  comments = comments.filter(function(c) { return c.id !== id; });
-  localStorage.setItem(COMMENTS_KEY, JSON.stringify(comments));
-  loadAndDisplayComments();
-}
-
-// Clear comment form
-function clearCommentForm() {
-  document.getElementById('commentAuthor').value = '';
-  document.getElementById('commentText').value = '';
-  document.getElementById('commentAuthor').focus();
-}
-
-// Export comments as text
-function exportComments() {
-  var comments = JSON.parse(localStorage.getItem(COMMENTS_KEY) || '[]');
-  
-  if (comments.length === 0) {
-    alert('No comments to export');
-    return;
-  }
-  
-  var text = 'SRO Investigations Capability Map - Feedback Export\n';
-  text += 'Generated: ' + new Date().toLocaleString('en-AU') + '\n';
-  text += '=' + Array(70).join('=') + '\n\n';
-  
-  for (var i = 0; i < comments.length; i++) {
-    var comment = comments[i];
-    text += 'COMMENT ' + (i + 1) + '\n';
-    text += 'Author: ' + comment.author + '\n';
-    text += 'Date: ' + comment.timestamp + '\n';
-    text += 'Text:\n' + comment.text + '\n';
-    text += '\n' + Array(70).join('-') + '\n\n';
-  }
-  
-  // Create blob and download
-  var blob = new Blob([text], { type: 'text/plain' });
-  var url = window.URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'sro_capability_map_feedback_' + new Date().toISOString().slice(0,10) + '.txt';
-  document.body.appendChild(a);
-  a.click();
-  window.URL.revokeObjectURL(url);
-  document.body.removeChild(a);
-}
-
-// Clear all comments
-function clearAllComments() {
-  if (!confirm('Delete ALL comments? This cannot be undone.')) return;
-  localStorage.removeItem(COMMENTS_KEY);
-  loadAndDisplayComments();
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', initializeComments);
 </script>
 
 </body>

@@ -1,0 +1,413 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+body{font-family:'Segoe UI',Arial;margin:0;background:#f4f7fb;color:#1a2a3a}
+header{background:#1f5bd8;color:#fff;padding:16px 24px}
+.notice{background:#fff4d6;color:#8a4b12;padding:10px 24px;font-weight:600}
+.table-wrap{padding:16px}
+table{border-collapse:collapse;width:100%;table-layout:fixed}
+th,td{border:1px solid #ccd6e0;vertical-align:top}
+th{background:#245fe6;color:#fff;padding:10px}
+.lane{width:220px;background:#f0f3f8;font-weight:700;padding:12px}
+.cell{padding:10px;background:#fff}
+.cell-inner{cursor:pointer}
+.cell-title{font-weight:600;font-size:13px}
+.panel{display:none;padding:12px;margin-top:8px;background:#fafbfe;border-top:1px dashed #c9d3e0;font-size:12.5px}
+.integration{margin-top:8px;padding-left:10px;border-left:3px solid #1f5bd8;font-size:11px;color:#243042}
+</style><script>
+function togglePanel(id){const p=document.getElementById(id);if(!p)return;p.style.display=(p.style.display==='block')?'none':'block';}
+</script></head><body><header><h1>SRO Investigations – Service Blueprint (Target State)</h1></header><div class="notice">FINAL click-fixed version with integration comments restored.</div><div class="table-wrap"><table><tr><th></th><th>S1</th><th>S2</th><th>S3</th><th>S4</th><th>S5</th><th>S6</th></tr><tr><td class="lane">Subject/Taxpayer</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S1_Subject_Taxpayer')">
+    <div class="cell-title">Internal stage. No taxpayer notification.</div>
+  </div>
+  <div id="p_S1_Subject_Taxpayer" class="panel">
+    <strong>Purpose:</strong> Ensure investigations commence without premature customer contact.<br><br>
+    <strong>Detail:</strong> <br><br>
+    <strong>Requirement:</strong> At Stage S1, the system must support &#x27;Internal stage. No taxpayer notification.&#x27; for lane &#x27;Subject/Taxpayer&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S2_Subject_Taxpayer')">
+    <div class="cell-title">Formal notification. Scope, evidence requirements, deadline (T+10).</div>
+  </div>
+  <div id="p_S2_Subject_Taxpayer" class="panel">
+    <strong>Purpose:</strong> Formally notify the taxpayer and set expectations.<br><br>
+    <strong>Detail:</strong> Notice delivered<br><br>
+    <strong>Requirement:</strong> At Stage S2, the system must support &#x27;Formal notification. Scope, evidence requirements, deadline (T+10).&#x27; for lane &#x27;Subject/Taxpayer&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-004 Entry Letter</div><div>MSG-005 Dispatch</div></div>
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S3_Subject_Taxpayer')">
+    <div class="cell-title">Respond to entry letter. Upload evidence or mail by T+10.</div>
+  </div>
+  <div id="p_S3_Subject_Taxpayer" class="panel">
+    <strong>Purpose:</strong> Enable evidence submission.<br><br>
+    <strong>Detail:</strong> Evidence received<br><br>
+    <strong>Requirement:</strong> At Stage S3, the system must support &#x27;Respond to entry letter. Upload evidence or mail by T+10.&#x27; for lane &#x27;Subject/Taxpayer&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-007 Evidence Upload</div></div>
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S4_Subject_Taxpayer')">
+    <div class="cell-title">Investigation proceeds internally. No communication unless clarification needed.</div>
+  </div>
+  <div id="p_S4_Subject_Taxpayer" class="panel">
+    <strong>Purpose:</strong> Allow objective analysis without contact.<br><br>
+    <strong>Detail:</strong> <br><br>
+    <strong>Requirement:</strong> At Stage S4, the system must support &#x27;Investigation proceeds internally. No communication unless clarification needed.&#x27; for lane &#x27;Subject/Taxpayer&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S5_Subject_Taxpayer')">
+    <div class="cell-title">Assessment Notice (if findings) OR Closure Letter (if no findings). 60-day objection window.</div>
+  </div>
+  <div id="p_S5_Subject_Taxpayer" class="panel">
+    <strong>Purpose:</strong> Communicate investigation outcome.<br><br>
+    <strong>Detail:</strong> Notice delivered<br><br>
+    <strong>Requirement:</strong> At Stage S5, the system must support &#x27;Assessment Notice (if findings) OR Closure Letter (if no findings). 60-day objection window.&#x27; for lane &#x27;Subject/Taxpayer&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-014 Exit Letter</div><div>MSG-015 Dispatch</div></div>
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S6_Subject_Taxpayer')">
+    <div class="cell-title">If Assessment: 60-day objection window. Can lodge objection. If No Findings: closed.</div>
+  </div>
+  <div id="p_S6_Subject_Taxpayer" class="panel">
+    <strong>Purpose:</strong> Allow statutory objection rights.<br><br>
+    <strong>Detail:</strong> Objection window tracked<br><br>
+    <strong>Requirement:</strong> At Stage S6, the system must support &#x27;If Assessment: 60-day objection window. Can lodge objection. If No Findings: closed.&#x27; for lane &#x27;Subject/Taxpayer&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-017 Objection</div></div>
+  </div>
+</td></tr><tr><td class="lane">Investigator</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S1_Investigator')">
+    <div class="cell-title">Validate jurisdiction, priority, revenue line scope.</div>
+  </div>
+  <div id="p_S1_Investigator" class="panel">
+    <strong>Purpose:</strong> Ensure the case is valid and ready to work.<br><br>
+    <strong>Detail:</strong> Intake complete<br><br>
+    <strong>Requirement:</strong> At Stage S1, the system must support &#x27;Validate jurisdiction, priority, revenue line scope.&#x27; for lane &#x27;Investigator&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S2_Investigator')">
+    <div class="cell-title">Lock scope (revenue lines + period). Generate entry letter. Immutable.</div>
+  </div>
+  <div id="p_S2_Investigator" class="panel">
+    <strong>Purpose:</strong> Confirm investigation scope.<br><br>
+    <strong>Detail:</strong> Scope locked; Letter sent<br><br>
+    <strong>Requirement:</strong> At Stage S2, the system must support &#x27;Lock scope (revenue lines + period). Generate entry letter. Immutable.&#x27; for lane &#x27;Investigator&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S3_Investigator')">
+    <div class="cell-title">Monitor evidence deadline. Validate completeness. Escalate delays.</div>
+  </div>
+  <div id="p_S3_Investigator" class="panel">
+    <strong>Purpose:</strong> Ensure evidence is complete and usable.<br><br>
+    <strong>Detail:</strong> Letter sent; Evidence received; Quality validated<br><br>
+    <strong>Requirement:</strong> At Stage S3, the system must support &#x27;Monitor evidence deadline. Validate completeness. Escalate delays.&#x27; for lane &#x27;Investigator&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-007 Evidence Upload</div></div>
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S4_Investigator')">
+    <div class="cell-title">Compare Declared vs Detected. Create Discrepancy records. Prepare recommendation.</div>
+  </div>
+  <div id="p_S4_Investigator" class="panel">
+    <strong>Purpose:</strong> Analyse evidence and determine findings.<br><br>
+    <strong>Detail:</strong> Discrepancies locked; QA triggered<br><br>
+    <strong>Requirement:</strong> At Stage S4, the system must support &#x27;Compare Declared vs Detected. Create Discrepancy records. Prepare recommendation.&#x27; for lane &#x27;Investigator&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-009 Memo</div><div>MSG-010 Email-to-Case</div></div>
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S5_Investigator')">
+    <div class="cell-title">Final validation. Prepare case for TL approval. Lock documentation.</div>
+  </div>
+  <div id="p_S5_Investigator" class="panel">
+    <strong>Purpose:</strong> Prepare case for approval.<br><br>
+    <strong>Detail:</strong> Complete; Submitted<br><br>
+    <strong>Requirement:</strong> At Stage S5, the system must support &#x27;Final validation. Prepare case for TL approval. Lock documentation.&#x27; for lane &#x27;Investigator&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S6_Investigator')">
+    <div class="cell-title">Mark closed. Auto-generate Closure Report. Capture lessons. Archive.</div>
+  </div>
+  <div id="p_S6_Investigator" class="panel">
+    <strong>Purpose:</strong> Close and archive case.<br><br>
+    <strong>Detail:</strong> Archived<br><br>
+    <strong>Requirement:</strong> At Stage S6, the system must support &#x27;Mark closed. Auto-generate Closure Report. Capture lessons. Archive.&#x27; for lane &#x27;Investigator&#x27;.
+    
+  </div>
+</td></tr><tr><td class="lane">Team Lead</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S1_Team_Lead')">
+    <div class="cell-title">Validate case assigned to right investigator with capacity.</div>
+  </div>
+  <div id="p_S1_Team_Lead" class="panel">
+    <strong>Purpose:</strong> Ensure correct assignment and oversight.<br><br>
+    <strong>Detail:</strong> TL approval<br><br>
+    <strong>Requirement:</strong> At Stage S1, the system must support &#x27;Validate case assigned to right investigator with capacity.&#x27; for lane &#x27;Team Lead&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S2_Team_Lead')">
+    <div class="cell-title">Validate scope appropriate + defensible. Immutable once approved.</div>
+  </div>
+  <div id="p_S2_Team_Lead" class="panel">
+    <strong>Purpose:</strong> Approve and lock scope.<br><br>
+    <strong>Detail:</strong> TL approval<br><br>
+    <strong>Requirement:</strong> At Stage S2, the system must support &#x27;Validate scope appropriate + defensible. Immutable once approved.&#x27; for lane &#x27;Team Lead&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S3_Team_Lead')">
+    <div class="cell-title">Monitor T+10 deadline. Approve extensions if justified.</div>
+  </div>
+  <div id="p_S3_Team_Lead" class="panel">
+    <strong>Purpose:</strong> Monitor deadlines and escalation.<br><br>
+    <strong>Detail:</strong> Monitored<br><br>
+    <strong>Requirement:</strong> At Stage S3, the system must support &#x27;Monitor T+10 deadline. Approve extensions if justified.&#x27; for lane &#x27;Team Lead&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S4_Team_Lead')">
+    <div class="cell-title">Validate findings, calculations, recommendation. Approve or revise.</div>
+  </div>
+  <div id="p_S4_Team_Lead" class="panel">
+    <strong>Purpose:</strong> Assure quality before outcome.<br><br>
+    <strong>Detail:</strong> QA approved<br><br>
+    <strong>Requirement:</strong> At Stage S4, the system must support &#x27;Validate findings, calculations, recommendation. Approve or revise.&#x27; for lane &#x27;Team Lead&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-012 Approval Pending</div></div>
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S5_Team_Lead')">
+    <div class="cell-title">Final review. Approve assessment with digital signature. No edits after.</div>
+  </div>
+  <div id="p_S5_Team_Lead" class="panel">
+    <strong>Purpose:</strong> Approve final outcome.<br><br>
+    <strong>Detail:</strong> TL approved; Signature captured<br><br>
+    <strong>Requirement:</strong> At Stage S5, the system must support &#x27;Final review. Approve assessment with digital signature. No edits after.&#x27; for lane &#x27;Team Lead&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S6_Team_Lead')">
+    <div class="cell-title">Approve closure. Monitor objection window. Assess objection merit if received.</div>
+  </div>
+  <div id="p_S6_Team_Lead" class="panel">
+    <strong>Purpose:</strong> Oversee closure and objections.<br><br>
+    <strong>Detail:</strong> Approved; Objections triaged<br><br>
+    <strong>Requirement:</strong> At Stage S6, the system must support &#x27;Approve closure. Monitor objection window. Assess objection merit if received.&#x27; for lane &#x27;Team Lead&#x27;.
+    
+  </div>
+</td></tr><tr><td class="lane">Salesforce</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S1_Salesforce')">
+    <div class="cell-title">Create case from eSys PIC event. Pre-populate. Enforce gate.</div>
+  </div>
+  <div id="p_S1_Salesforce" class="panel">
+    <strong>Purpose:</strong> Provide a single investigation case record.<br><br>
+    <strong>Detail:</strong> Case created; Intake complete; TL approved<br><br>
+    <strong>Requirement:</strong> At Stage S1, the system must support &#x27;Create case from eSys PIC event. Pre-populate. Enforce gate.&#x27; for lane &#x27;Salesforce&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-001 ESYS → SF PIC_CREATED</div><div>MSG-002 Intake Gate</div><div>MSG-003 Allocated</div></div>
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S2_Salesforce')">
+    <div class="cell-title">Capture scope decisions. Auto-generate letter. Lock records. Gate.</div>
+  </div>
+  <div id="p_S2_Salesforce" class="panel">
+    <strong>Purpose:</strong> Record scope and issue correspondence.<br><br>
+    <strong>Detail:</strong> Revenue_Line locked; TL approved<br><br>
+    <strong>Requirement:</strong> At Stage S2, the system must support &#x27;Capture scope decisions. Auto-generate letter. Lock records. Gate.&#x27; for lane &#x27;Salesforce&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-004 Entry Letter</div><div>MSG-005 Dispatch</div><div>MSG-006 Await Response</div></div>
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S3_Salesforce')">
+    <div class="cell-title">Store evidence. Track receipt. Auto-escalate at T+7/T+10. Enforce gate.</div>
+  </div>
+  <div id="p_S3_Salesforce" class="panel">
+    <strong>Purpose:</strong> Track evidence and reminders.<br><br>
+    <strong>Detail:</strong> Deadline passed; Quality OK<br><br>
+    <strong>Requirement:</strong> At Stage S3, the system must support &#x27;Store evidence. Track receipt. Auto-escalate at T+7/T+10. Enforce gate.&#x27; for lane &#x27;Salesforce&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-007 Evidence Upload</div><div>MSG-008 Investigating</div></div>
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S4_Salesforce')">
+    <div class="cell-title">Create immutable Discrepancy records. Formula-validate (zero errors). Gate.</div>
+  </div>
+  <div id="p_S4_Salesforce" class="panel">
+    <strong>Purpose:</strong> Capture findings and approvals.<br><br>
+    <strong>Detail:</strong> Discrepancies locked; QA approved<br><br>
+    <strong>Requirement:</strong> At Stage S4, the system must support &#x27;Create immutable Discrepancy records. Formula-validate (zero errors). Gate.&#x27; for lane &#x27;Salesforce&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-009 Assessment Memo</div><div>MSG-010 Email-to-Case</div><div>MSG-011 Flags</div><div>MSG-012 Approval Pending</div></div>
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S5_Salesforce')">
+    <div class="cell-title">Create Assessment. TL approval gate (2-day SLA). Auto-generate notice. Trigger eSys.</div>
+  </div>
+  <div id="p_S5_Salesforce" class="panel">
+    <strong>Purpose:</strong> Issue and record outcome.<br><br>
+    <strong>Detail:</strong> Approved; Notice sent<br><br>
+    <strong>Requirement:</strong> At Stage S5, the system must support &#x27;Create Assessment. TL approval gate (2-day SLA). Auto-generate notice. Trigger eSys.&#x27; for lane &#x27;Salesforce&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-013 Approved</div><div>MSG-014 Exit Letter</div><div>MSG-015 Dispatch</div><div>MSG-016 Await Objection</div></div>
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S6_Salesforce')">
+    <div class="cell-title">Auto-generate Closure Report. Update dashboards (hourly). Archive case (immutable).</div>
+  </div>
+  <div id="p_S6_Salesforce" class="panel">
+    <strong>Purpose:</strong> Archive and report.<br><br>
+    <strong>Detail:</strong> Archived; Metrics recorded<br><br>
+    <strong>Requirement:</strong> At Stage S6, the system must support &#x27;Auto-generate Closure Report. Update dashboards (hourly). Archive case (immutable).&#x27; for lane &#x27;Salesforce&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-017 Objection</div><div>MSG-018 Reopen</div><div>MSG-019 Close</div><div>MSG-020 ESYS Close</div></div>
+  </div>
+</td></tr><tr><td class="lane">ESYS</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S1_eSys')">
+    <div class="cell-title">Send PIC event to Salesforce. Trigger case creation.</div>
+  </div>
+  <div id="p_S1_eSys" class="panel">
+    <strong>Purpose:</strong> Trigger case creation from PIC.<br><br>
+    <strong>Detail:</strong> IC created; Case linked<br><br>
+    <strong>Requirement:</strong> At Stage S1, the system must support &#x27;Send PIC event to Salesforce. Trigger case creation.&#x27; for lane &#x27;eSys&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-001 ESYS → SF PIC_CREATED</div></div>
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S2_eSys')">
+    <div class="cell-title">Sync scope to eSys. Cache valuation (read-only in SF).</div>
+  </div>
+  <div id="p_S2_eSys" class="panel">
+    <strong>Purpose:</strong> Align scope with source system.<br><br>
+    <strong>Detail:</strong> Synced<br><br>
+    <strong>Requirement:</strong> At Stage S2, the system must support &#x27;Sync scope to eSys. Cache valuation (read-only in SF).&#x27; for lane &#x27;eSys&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S3_eSys')">
+    <div class="cell-title">Provide valuation + prior case history. No sync.</div>
+  </div>
+  <div id="p_S3_eSys" class="panel">
+    <strong>Purpose:</strong> Provide contextual reference only.<br><br>
+    <strong>Detail:</strong> <br><br>
+    <strong>Requirement:</strong> At Stage S3, the system must support &#x27;Provide valuation + prior case history. No sync.&#x27; for lane &#x27;eSys&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S4_eSys')">
+    <div class="cell-title">Provide precedent for consistency check. Pre-fill assessment draft.</div>
+  </div>
+  <div id="p_S4_eSys" class="panel">
+    <strong>Purpose:</strong> Provide historical context.<br><br>
+    <strong>Detail:</strong> Precedent reviewed<br><br>
+    <strong>Requirement:</strong> At Stage S4, the system must support &#x27;Provide precedent for consistency check. Pre-fill assessment draft.&#x27; for lane &#x27;eSys&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S5_eSys')">
+    <div class="cell-title">Create immutable Assessment. Generate ID. Initiate payment processing.</div>
+  </div>
+  <div id="p_S5_eSys" class="panel">
+    <strong>Purpose:</strong> Create authoritative assessment.<br><br>
+    <strong>Detail:</strong> Created; ID synced<br><br>
+    <strong>Requirement:</strong> At Stage S5, the system must support &#x27;Create immutable Assessment. Generate ID. Initiate payment processing.&#x27; for lane &#x27;eSys&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S6_eSys')">
+    <div class="cell-title">Update IC status. Finalize Assessment. Process refunds. Sync closure.</div>
+  </div>
+  <div id="p_S6_eSys" class="panel">
+    <strong>Purpose:</strong> Reflect final closure.<br><br>
+    <strong>Detail:</strong> Finalized; Archived<br><br>
+    <strong>Requirement:</strong> At Stage S6, the system must support &#x27;Update IC status. Finalize Assessment. Process refunds. Sync closure.&#x27; for lane &#x27;eSys&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-020 ESYS Close</div></div>
+  </div>
+</td></tr><tr><td class="lane">Process Gate</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S1_Process_Gate')">
+    <div class="cell-title">Block S2 until intake complete and TL approved. 24h hard stop.</div>
+  </div>
+  <div id="p_S1_Process_Gate" class="panel">
+    <strong>Purpose:</strong> Ensure intake is complete before progressing.<br><br>
+    <strong>Detail:</strong> Intake → Scope<br><br>
+    <strong>Requirement:</strong> At Stage S1, the system must support &#x27;Block S2 until intake complete and TL approved. 24h hard stop.&#x27; for lane &#x27;Process Gate&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-002 Intake Gate</div><div>MSG-003 Allocated</div></div>
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S2_Process_Gate')">
+    <div class="cell-title">Block S3 until scope locked + TL approved + letter sent + eSys sync.</div>
+  </div>
+  <div id="p_S2_Process_Gate" class="panel">
+    <strong>Purpose:</strong> Ensure scope approved before evidence.<br><br>
+    <strong>Detail:</strong> Scope locked; Plan approved<br><br>
+    <strong>Requirement:</strong> At Stage S2, the system must support &#x27;Block S3 until scope locked + TL approved + letter sent + eSys sync.&#x27; for lane &#x27;Process Gate&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S3_Process_Gate')">
+    <div class="cell-title">Block S4 until deadline passed + quality validated. T+10 hard stop.</div>
+  </div>
+  <div id="p_S3_Process_Gate" class="panel">
+    <strong>Purpose:</strong> Ensure evidence conditions met.<br><br>
+    <strong>Detail:</strong> Deadline passed; Quality OK<br><br>
+    <strong>Requirement:</strong> At Stage S3, the system must support &#x27;Block S4 until deadline passed + quality validated. T+10 hard stop.&#x27; for lane &#x27;Process Gate&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S4_Process_Gate')">
+    <div class="cell-title">Block S5 until QA approved (3-day SLA). Escalate high-risk cases.</div>
+  </div>
+  <div id="p_S4_Process_Gate" class="panel">
+    <strong>Purpose:</strong> Ensure QA completed.<br><br>
+    <strong>Detail:</strong> QA passed; Risk assessed<br><br>
+    <strong>Requirement:</strong> At Stage S4, the system must support &#x27;Block S5 until QA approved (3-day SLA). Escalate high-risk cases.&#x27; for lane &#x27;Process Gate&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S5_Process_Gate')">
+    <div class="cell-title">Block S6 until TL approved + eSys created + notice issued. Dual pathway.</div>
+  </div>
+  <div id="p_S5_Process_Gate" class="panel">
+    <strong>Purpose:</strong> Ensure approval before closure.<br><br>
+    <strong>Detail:</strong> Approved; Notice sent<br><br>
+    <strong>Requirement:</strong> At Stage S5, the system must support &#x27;Block S6 until TL approved + eSys created + notice issued. Dual pathway.&#x27; for lane &#x27;Process Gate&#x27;.
+    
+  </div>
+</td>
+<td class="cell">
+  <div class="cell-inner" onclick="togglePanel('p_S6_Process_Gate')">
+    <div class="cell-title">Archive gate: all prerequisites complete. Workflow finished. Case immutable.</div>
+  </div>
+  <div id="p_S6_Process_Gate" class="panel">
+    <strong>Purpose:</strong> Ensure lawful closure.<br><br>
+    <strong>Detail:</strong> All gates passed<br><br>
+    <strong>Requirement:</strong> At Stage S6, the system must support &#x27;Archive gate: all prerequisites complete. Workflow finished. Case immutable.&#x27; for lane &#x27;Process Gate&#x27;.
+    <div class="integration"><strong>Integrations:</strong><div>MSG-019 Close</div><div>MSG-020 ESYS Close</div></div>
+  </div>
+</td></tr></table></div></body></html>

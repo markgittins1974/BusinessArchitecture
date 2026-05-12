@@ -172,9 +172,9 @@
 <div class="container">
 
   <div class="tabs">
-    <div class="tab active" onclick="showTab('exec', event)">Executive View</div>
-    <div class="tab" onclick="showTab('mgmt', event)">Management View</div>
-    <div class="tab" onclick="showTab('product', event)">Product View</div>
+    <div class="tab active" data-target="exec">Executive View</div>
+    <div class="tab" data-target="mgmt">Management View</div>
+    <div class="tab" data-target="product">Product View</div>
   </div>
 
   <!-- ================= EXECUTIVE VIEW ================= -->
@@ -327,19 +327,34 @@
     </div>
   </div>
 
-  <!-- ================= PRODUCT VIEW ================= -->
+ <!-- PRODUCT VIEW -->
   <div id="product" class="tab-content">
     <div class="grid">
 
       <div class="section">Intake & Validation</div>
-      <div class="card"><h3>Standardised intake</h3><p class="hmw">How might we create a single intake process so accountability is clear?</p></div>
-      <div class="card"><h3>Complete intake</h3><p class="hmw">How might we validate completeness early?</p></div>
+      <div class="card"><h3>👁️ Standardised intake</h3><p class="hmw">How might we create a single, standardised intake process so that accountability is clear from the point of entry?</p></div>
+      <div class="card"><h3>⚡ Complete intake</h3><p class="hmw">How might we validate completeness at intake so that rework is avoided later?</p></div>
+      <div class="card"><h3>⚡ Reduce duplication</h3><p class="hmw">How might we reduce duplicate data entry so that investigative effort is focused?</p></div>
 
       <div class="section">Triage & Prioritisation</div>
-      <div class="card"><h3>Joined‑up triage</h3><p class="hmw">How might we improve risk‑based prioritisation?</p></div>
+      <div class="card"><h3>🛡️ Joined‑up triage</h3><p class="hmw">How might we bring fragmented data together so that triage decisions are well‑informed?</p></div>
+      <div class="card"><h3>🛡️ Risk scoring</h3><p class="hmw">How might we apply consistent risk scoring so that prioritisation is defensible?</p></div>
+      <div class="card"><h3>⚡ Early low‑value cases</h3><p class="hmw">How might we identify low‑value cases early so that effort is proportionate?</p></div>
 
-      <div class="section">Evidence & Learning</div>
-      <div class="card"><h3>Systematic learning</h3><p class="hmw">How might we reuse insights from past cases?</p></div>
+      <div class="section">Investigation Planning</div>
+      <div class="card"><h3>👁️ Auditable plans</h3><p class="hmw">How might we make investigation plans explicit and auditable so that decisions are transparent?</p></div>
+      <div class="card"><h3>👁️ Streamlined approvals</h3><p class="hmw">How might we streamline approvals without losing oversight?</p></div>
+
+      <div class="section">Evidence, Resolution & Learning</div>
+      <div class="card"><h3>🛡️ Evidence interpretation</h3><p class="hmw">How might we improve consistency of evidence interpretation?</p></div>
+      <div class="card"><h3>⚡ Objections</h3><p class="hmw">How might we handle objections without repeat investigation?</p></div>
+      <div class="card"><h3>♻️ Systematic learning</h3><p class="hmw">How might we capture and reuse learnings so that each case improves future decisions?</p></div>
+
+      <div class="section">AI‑assisted Decision Support</div>
+      <div class="card">
+        <h3>🤖 AI‑supported judgement</h3>
+        <p class="hmw">How might we support investigators with AI‑assisted insight so that complex judgement is improved without replacing human decision‑making?</p>
+      </div>
 
     </div>
   </div>
@@ -349,12 +364,25 @@
 </div>
 
 <script>
-  function showTab(id, event) {
+  // Robust tab switching (works even if 'event' isn't passed)
+  function showTab(id, tabEl) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    event.currentTarget.classList.add('active');
+
+    const content = document.getElementById(id);
+    if (content) content.classList.add('active');
+
+    if (tabEl) tabEl.classList.add('active');
+    else {
+      const inferred = document.querySelector(`.tab[data-target="${id}"]`);
+      if (inferred) inferred.classList.add('active');
+    }
   }
+
+  // Bind click handlers
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => showTab(tab.dataset.target, tab));
+  });
 </script>
 
 </body>

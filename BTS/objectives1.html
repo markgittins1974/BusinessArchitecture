@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Case Management Transformation – Alignment Views</title>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Segoe UI, Arial, sans-serif;
+      background: #f7f8fa;
+      color: #1f1f1f;
+    }
+
+    header {
+      background: #003366;
+      color: #fff;
+      padding: 20px 32px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      max-width: 980px;
+      opacity: 0.9;
+    }
+
+    .container {
+      padding: 32px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .tab {
+      padding: 10px 16px;
+      background: #e6e9ef;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .tab.active {
+      background: #003366;
+      color: #fff;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .card p,
+    .card li {
+      margin: 0;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .card ul {
+      margin: 0;
+      padding-left: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .section {
+      grid-column: 1 / -1;
+      margin-top: 36px;
+      margin-bottom: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #003366;
+    }
+
+    .hmw {
+      border-left: 4px solid #003366;
+      padding-left: 12px;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding-top: 12px;
+      font-size: 13px;
+      color: #555;
+      border-top: 1px solid #ddd;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Case Management Transformation – Alignment Views</h1>
+  <p>
+    This artefact defines a shared success narrative and role‑alignment view.
+    It is not intended to serve as a benefits realisation, assurance, or delivery tracking artefact.
+  </p>
+</header>
+
+<div class="container">
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('exec', event)">Executive View</div>
+    <div class="tab" onclick="showTab('mgmt', event)">Management View</div>
+    <div class="tab" onclick="showTab('product', event)">Product View (HMWs)</div>
+  </div>
+
+  <!-- EXECUTIVE VIEW -->
+  <div id="exec" class="tab-content active">
+    <div class="grid">
+      <div class="card">
+        <h3>⚡ Faster resolution without increased risk</h3>
+        <ul>
+          <li>Investigations completed materially faster end‑to‑end</li>
+          <li>Low‑value or simple cases resolved early</li>
+          <li>Effort shifts to judgement and analysis</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>🛡️ Consistent and defensible outcomes</h3>
+        <ul>
+          <li>Standard frameworks and evidence use</li>
+          <li>Reduced variation in decisions</li>
+          <li>Fewer overturned cases</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>👁️ Clear line of sight and accountability</h3>
+        <ul>
+          <li>Traceable decision paths</li>
+          <li>Clear ownership and approvals</li>
+          <li>Lower audit burden</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>♻️ Learning system</h3>
+        <ul>
+          <li>Consistent capture of outcomes</li>
+          <li>Pattern‑based insights</li>
+          <li>Improving future decisions</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>🤖 AI‑enabled success</h3>
+        <ul>
+          <li>AI supports, not replaces, judgement</li>
+          <li>Improved synthesis and insight</li>
+          <li>Governed AI maturity</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MANAGEMENT VIEW -->
+  <div id="mgmt" class="tab-content">
+    <div class="grid">
+
+      <div class="card">
+        <h3>⚡ Managing resolution</h3>
+        <ul>
+          <li>Monitoring case ageing and bottlenecks by stage</li>
+          <li>Assessing volume and rationale for early closures</li>
+          <li>Identifying recurring rework drivers</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>🛡️ Managing consistency</h3>
+        <ul>
+          <li>Detecting outliers in risk scoring and decisions</li>
+          <li>Ensuring consistent use of assessment frameworks</li>
+          <li>Reviewing preliminary vs final outcome alignment</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>👁️ Managing accountability</h3>
+        <ul>
+          <li>Tracking approval turnaround times</li>
+          <li>Monitoring scope and plan changes</li>
+          <li>Reducing excessive handovers</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>♻️ Managing learning</h3>
+        <ul>
+          <li>Assessing quality of learning capture</li>
+          <li>Identifying recurring issues and patterns</li>
+          <li>Feeding insights into guidance and training</li>
+        </ul>
+      </div>
+
+      <!-- ✅ ADDITIVE AI MANAGEMENT CARD -->
+      <div class="card">
+        <h3>🤖 Managing AI‑supported decision‑making</h3>
+        <ul>
+          <li>Monitoring when AI‑assisted insight is used versus bypassed</li>
+          <li>Ensuring human accountability remains clear in AI‑supported judgements</li>
+          <li>Watching for drift, bias, or over‑reliance in AI‑assisted decisions</li>
+          <li>Ensuring AI use evolves in line with trust, policy, and governance expectations</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PRODUCT VIEW -->
+  <div id="product" class="tab-content">
+    <div class="grid">
+
+      <div class="section">Intake & Validation</div>
+      <div class="card"><h3>👁️ Standardised intake</h3><p class="hmw">How might we create a single, standardised intake process so that accountability is clear from the point of entry?</p></div>
+      <div class="card"><h3>⚡ Complete intake</h3><p class="hmw">How might we validate completeness at intake so that rework is avoided later?</p></div>
+      <div class="card"><h3>⚡ Reduce duplication</h3><p class="hmw">How might we reduce duplicate data entry so that investigative effort is focused?</p></div>
+
+      <div class="section">Triage & Prioritisation</div>
+      <div class="card"><h3>🛡️ Joined‑up triage</h3><p class="hmw">How might we bring fragmented data together so that triage decisions are well‑informed?</p></div>
+      <div class="card"><h3>🛡️ Risk scoring</h3><p class="hmw">How might we apply consistent risk scoring so that prioritisation is defensible?</p></div>
+      <div class="card"><h3>⚡ Early low‑value cases</h3><p class="hmw">How might we identify low‑value cases early so that effort is proportionate?</p></div>
+
+      <div class="section">Investigation Planning</div>
+      <div class="card"><h3>👁️ Auditable plans</h3><p class="hmw">How might we make investigation plans explicit and auditable so that decisions are transparent?</p></div>
+      <div class="card"><h3>👁️ Streamlined approvals</h3><p class="hmw">How might we streamline approvals without losing oversight?</p></div>
+
+      <div class="section">Evidence, Resolution & Learning</div>
+      <div class="card"><h3>🛡️ Evidence interpretation</h3><p class="hmw">How might we improve consistency of evidence interpretation?</p></div>
+      <div class="card"><h3>⚡ Objections</h3><p class="hmw">How might we handle objections without repeat investigation?</p></div>
+      <div class="card"><h3>♻️ Systematic learning</h3><p class="hmw">How might we capture and reuse learnings so that each case improves future decisions?</p></div>
+
+      <div class="section">AI‑assisted Decision Support</div>
+      <div class="card">
+        <h3>🤖 AI‑supported judgement</h3>
+        <p class="hmw">How might we support investigators with AI‑assisted insight so that complex judgement is improved without replacing human decision‑making?</p>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>Case Management Transformation · Alignment Views</footer>
+</div>
+
+<script>
+  function showTab(id, event) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+</script>
+
+</body>
+</html>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +10,7 @@
 
     body {
       margin: 0;
-      font-family: Segoe UI, Arial, sans-serif;
+      font-family: "Segoe UI", Arial, sans-serif;
       background: #f7f8fa;
       color: #1f1f1f;
     }
@@ -35,6 +36,7 @@
       padding: 32px;
     }
 
+    /* Tabs */
     .tabs {
       display: flex;
       gap: 12px;
@@ -58,6 +60,7 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
+    /* Cards & layout */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -80,20 +83,18 @@
       font-size: 18px;
     }
 
-    .card p,
-    .card li {
-      margin: 0;
-      line-height: 1.45;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-    }
-
     .card ul {
       margin: 0;
       padding-left: 18px;
       display: flex;
       flex-direction: column;
       gap: 6px;
+    }
+
+    .card li {
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .section {
@@ -108,6 +109,44 @@
     .hmw {
       border-left: 4px solid #003366;
       padding-left: 12px;
+    }
+
+    /* === EXECUTIVE PAIN ANCHORS === */
+    .pain-anchor {
+      margin-top: 8px;
+      padding-top: 10px;
+      border-top: 1px solid #e6e9ef;
+    }
+
+    .pain-anchor summary {
+      cursor: pointer;
+      font-weight: 700;          /* BOLD */
+      color: #003366;            /* DARK BLUE */
+      list-style: none;
+      user-select: none;
+    }
+
+    .pain-anchor summary::-webkit-details-marker { display: none; }
+
+    .pain-anchor summary::before {
+      content: "▸ ";
+      margin-right: 2px;
+    }
+
+    .pain-anchor[open] summary::before {
+      content: "▾ ";
+    }
+
+    .pain-anchor .pain-list {
+      margin: 10px 0 0;
+      padding-left: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .pain-anchor .pain-list li em {
+      font-style: italic;
     }
 
     footer {
@@ -126,7 +165,7 @@
   <h1>Case Management Transformation – Alignment Views</h1>
   <p>
     This artefact defines a shared success narrative and role‑alignment view.
-    It is not intended to serve as a benefits realisation, assurance, or delivery tracking artefact.
+    It is not a benefits realisation, assurance, or delivery tracking artefact.
   </p>
 </header>
 
@@ -135,12 +174,13 @@
   <div class="tabs">
     <div class="tab active" onclick="showTab('exec', event)">Executive View</div>
     <div class="tab" onclick="showTab('mgmt', event)">Management View</div>
-    <div class="tab" onclick="showTab('product', event)">Product View (HMWs)</div>
+    <div class="tab" onclick="showTab('product', event)">Product View</div>
   </div>
 
-  <!-- EXECUTIVE VIEW -->
+  <!-- ================= EXECUTIVE VIEW ================= -->
   <div id="exec" class="tab-content active">
     <div class="grid">
+
       <div class="card">
         <h3>⚡ Faster resolution without increased risk</h3>
         <ul>
@@ -148,6 +188,15 @@
           <li>Low‑value or simple cases resolved early</li>
           <li>Effort shifts to judgement and analysis</li>
         </ul>
+        <details class="pain-anchor">
+          <summary>Related operational pain points</summary>
+          <ul class="pain-list">
+            <li><em>"Half of PICs shouldn’t be investigations and still proceed too far"</em></li>
+            <li><em>"Low‑value cases progress deep into investigation due to lack of early decision criteria"</em></li>
+            <li><em>"Investigation planning often starts without a clear plan, causing delay and rework"</em></li>
+            <li><em>"Case closure takes longer than the investigation itself due to administrative steps"</em></li>
+          </ul>
+        </details>
       </div>
 
       <div class="card">
@@ -157,6 +206,15 @@
           <li>Reduced variation in decisions</li>
           <li>Fewer overturned cases</li>
         </ul>
+        <details class="pain-anchor">
+          <summary>Related operational pain points</summary>
+          <ul class="pain-list">
+            <li><em>"Risk assessment is subjective and inconsistent, with no consistent risk framework across teams"</em></li>
+            <li><em>"Evidence interpretation varies by investigator"</em></li>
+            <li><em>"Templates and notices are inconsistent, increasing rework and objection effort"</em></li>
+            <li><em>"Objections often require full re‑analysis, indicating defensibility gaps"</em></li>
+          </ul>
+        </details>
       </div>
 
       <div class="card">
@@ -166,6 +224,15 @@
           <li>Clear ownership and approvals</li>
           <li>Lower audit burden</li>
         </ul>
+        <details class="pain-anchor">
+          <summary>Related operational pain points</summary>
+          <ul class="pain-list">
+            <li><em>"PICs come from multiple sources with no consistent intake pathway"</em></li>
+            <li><em>"Lack of clear intake criteria leads to misrouted work and cases that shouldn’t proceed"</em></li>
+            <li><em>"Approvals are manual and email‑driven, which is slow and not auditable"</em></li>
+            <li><em>"No single source of truth for grouping or end‑to‑end status visibility"</em></li>
+          </ul>
+        </details>
       </div>
 
       <div class="card">
@@ -175,6 +242,15 @@
           <li>Pattern‑based insights</li>
           <li>Improving future decisions</li>
         </ul>
+        <details class="pain-anchor">
+          <summary>Related operational pain points</summary>
+          <ul class="pain-list">
+            <li><em>"Learnings are not captured systematically"</em></li>
+            <li><em>"Knowledge remains in individuals’ heads rather than reusable guidance"</em></li>
+            <li><em>"No structured mechanism to share insights or patterns across teams"</em></li>
+            <li><em>"Insights do not flow back into risk models or upstream teams"</em></li>
+          </ul>
+        </details>
       </div>
 
       <div class="card">
@@ -184,97 +260,92 @@
           <li>Improved synthesis and insight</li>
           <li>Governed AI maturity</li>
         </ul>
+        <details class="pain-anchor">
+          <summary>Related operational pain points</summary>
+          <ul class="pain-list">
+            <li><em>"Investigators spend excessive time manually searching and “Googling”"</em></li>
+            <li><em>"Large unstructured documents are difficult to analyse consistently"</em></li>
+            <li><em>"Payroll data arrives in many different formats"</em></li>
+            <li><em>"Evidence and documents are hard to find across CM9 and other repositories"</em></li>
+          </ul>
+        </details>
       </div>
+
     </div>
   </div>
 
-  <!-- MANAGEMENT VIEW -->
+  <!-- ================= MANAGEMENT VIEW ================= -->
   <div id="mgmt" class="tab-content">
     <div class="grid">
 
       <div class="card">
         <h3>⚡ Managing resolution</h3>
         <ul>
-          <li>Monitoring case ageing and bottlenecks by stage</li>
-          <li>Assessing volume and rationale for early closures</li>
-          <li>Identifying recurring rework drivers</li>
+          <li>Monitoring case ageing and bottlenecks</li>
+          <li>Assessing early closures</li>
+          <li>Identifying rework drivers</li>
         </ul>
       </div>
 
       <div class="card">
         <h3>🛡️ Managing consistency</h3>
         <ul>
-          <li>Detecting outliers in risk scoring and decisions</li>
-          <li>Ensuring consistent use of assessment frameworks</li>
-          <li>Reviewing preliminary vs final outcome alignment</li>
+          <li>Detecting decision outliers</li>
+          <li>Ensuring framework adherence</li>
+          <li>Reviewing outcome alignment</li>
         </ul>
       </div>
 
       <div class="card">
         <h3>👁️ Managing accountability</h3>
         <ul>
-          <li>Tracking approval turnaround times</li>
-          <li>Monitoring scope and plan changes</li>
-          <li>Reducing excessive handovers</li>
+          <li>Tracking approval turnaround</li>
+          <li>Managing scope creep</li>
+          <li>Reducing handovers</li>
         </ul>
       </div>
 
       <div class="card">
         <h3>♻️ Managing learning</h3>
         <ul>
-          <li>Assessing quality of learning capture</li>
-          <li>Identifying recurring issues and patterns</li>
-          <li>Feeding insights into guidance and training</li>
+          <li>Assessing insight quality</li>
+          <li>Identifying systemic issues</li>
+          <li>Feeding guidance and training</li>
         </ul>
       </div>
 
-      <!-- ✅ ADDITIVE AI MANAGEMENT CARD -->
       <div class="card">
         <h3>🤖 Managing AI‑supported decision‑making</h3>
         <ul>
-          <li>Monitoring when AI‑assisted insight is used versus bypassed</li>
-          <li>Ensuring human accountability remains clear in AI‑supported judgements</li>
-          <li>Watching for drift, bias, or over‑reliance in AI‑assisted decisions</li>
-          <li>Ensuring AI use evolves in line with trust, policy, and governance expectations</li>
+          <li>Monitoring AI usage boundaries</li>
+          <li>Maintaining human accountability</li>
+          <li>Detecting drift or bias</li>
+          <li>Ensuring policy‑aligned evolution</li>
         </ul>
       </div>
 
     </div>
   </div>
 
-  <!-- PRODUCT VIEW -->
+  <!-- ================= PRODUCT VIEW ================= -->
   <div id="product" class="tab-content">
     <div class="grid">
 
       <div class="section">Intake & Validation</div>
-      <div class="card"><h3>👁️ Standardised intake</h3><p class="hmw">How might we create a single, standardised intake process so that accountability is clear from the point of entry?</p></div>
-      <div class="card"><h3>⚡ Complete intake</h3><p class="hmw">How might we validate completeness at intake so that rework is avoided later?</p></div>
-      <div class="card"><h3>⚡ Reduce duplication</h3><p class="hmw">How might we reduce duplicate data entry so that investigative effort is focused?</p></div>
+      <div class="card"><h3>Standardised intake</h3><p class="hmw">How might we create a single intake process so accountability is clear?</p></div>
+      <div class="card"><h3>Complete intake</h3><p class="hmw">How might we validate completeness early?</p></div>
 
       <div class="section">Triage & Prioritisation</div>
-      <div class="card"><h3>🛡️ Joined‑up triage</h3><p class="hmw">How might we bring fragmented data together so that triage decisions are well‑informed?</p></div>
-      <div class="card"><h3>🛡️ Risk scoring</h3><p class="hmw">How might we apply consistent risk scoring so that prioritisation is defensible?</p></div>
-      <div class="card"><h3>⚡ Early low‑value cases</h3><p class="hmw">How might we identify low‑value cases early so that effort is proportionate?</p></div>
+      <div class="card"><h3>Joined‑up triage</h3><p class="hmw">How might we improve risk‑based prioritisation?</p></div>
 
-      <div class="section">Investigation Planning</div>
-      <div class="card"><h3>👁️ Auditable plans</h3><p class="hmw">How might we make investigation plans explicit and auditable so that decisions are transparent?</p></div>
-      <div class="card"><h3>👁️ Streamlined approvals</h3><p class="hmw">How might we streamline approvals without losing oversight?</p></div>
-
-      <div class="section">Evidence, Resolution & Learning</div>
-      <div class="card"><h3>🛡️ Evidence interpretation</h3><p class="hmw">How might we improve consistency of evidence interpretation?</p></div>
-      <div class="card"><h3>⚡ Objections</h3><p class="hmw">How might we handle objections without repeat investigation?</p></div>
-      <div class="card"><h3>♻️ Systematic learning</h3><p class="hmw">How might we capture and reuse learnings so that each case improves future decisions?</p></div>
-
-      <div class="section">AI‑assisted Decision Support</div>
-      <div class="card">
-        <h3>🤖 AI‑supported judgement</h3>
-        <p class="hmw">How might we support investigators with AI‑assisted insight so that complex judgement is improved without replacing human decision‑making?</p>
-      </div>
+      <div class="section">Evidence & Learning</div>
+      <div class="card"><h3>Systematic learning</h3><p class="hmw">How might we reuse insights from past cases?</p></div>
 
     </div>
   </div>
 
   <footer>Case Management Transformation · Alignment Views</footer>
+
 </div>
 
 <script>

@@ -156,6 +156,43 @@
       color: #555;
       border-top: 1px solid #ddd;
     }
+    /* === BUSINESS PROBLEM PANEL === */
+.business-problem-panel {
+  background: #ffffff;
+  border-left: 6px solid #003366;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.business-problem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+}
+
+.business-problem-panel h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  color: #003366;
+}
+
+.business-problem-panel ul {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.business-problem-panel li {
+  line-height: 1.5;
+}
+
+.business-problem-panel .emphasis {
+  font-weight: 700;
+}
   </style>
 </head>
 

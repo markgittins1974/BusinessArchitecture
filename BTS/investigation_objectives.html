@@ -1,258 +1,138 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Case Management Transformation – Alignment Views</title>
+<div id="exec" class="tab-content active">
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital@0;1&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+  <!-- BUSINESS PROBLEM PANEL -->
+  <div class="business-problem-panel">
+    <div class="business-problem-grid">
 
-    *, *::before, *::after { box-sizing: border-box; }
+      <div>
+        <h2>Business problem definition</h2>
+        <ul>
+          <li>Revenue and file targets are increasing.</li>
+          <li>Workforce is expanding, but case complexity is rising faster than productivity.</li>
+          <li class="emphasis">Current case management capability:</li>
+          <li>Limits effective AI adoption</li>
+          <li>Prevents scaling productivity</li>
+          <li>Constrains revenue realisation</li>
+        </ul>
+      </div>
 
-    body {
-      margin: 0;
-      font-family: "Source Sans Pro", sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
-      color: #2c3e50;
-      line-height: 1.6;
-    }
+      <div>
+        <h2>Without a modern, AI‑enabled platform</h2>
+        <ul>
+          <li>Investigations cannot meet future targets</li>
+          <li>Funded AI investment cannot be fully leveraged</li>
+          <li>Risk‑based compliance cannot scale fairly</li>
+        </ul>
+      </div>
 
-    header {
-      background: linear-gradient(135deg, #003366 0%, #004080 100%);
-      color: #fff;
-      padding: 40px 32px;
-      box-shadow: 0 4px 12px rgba(0,51,102,0.15);
-      border-bottom: 3px solid #00d4ff;
-    }
-
-    header h1 {
-      margin: 0;
-      font-family: "Crimson Text", serif;
-      font-size: 32px;
-      font-weight: 700;
-    }
-
-    header p {
-      margin: 12px 0 0;
-      max-width: 900px;
-      opacity: 0.95;
-      font-size: 15px;
-    }
-
-    .container {
-      padding: 40px 32px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 32px;
-      flex-wrap: wrap;
-    }
-
-    .tab {
-      padding: 12px 20px;
-      background: #fff;
-      border: 2px solid #e0e6ed;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .tab.active {
-      background: #003366;
-      color: #fff;
-      border-color: #003366;
-    }
-
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 24px;
-    }
-
-    .card {
-      background: #fff;
-      border-radius: 10px;
-      padding: 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      border-top: 4px solid #e0e6ed;
-      position: relative;
-    }
-
-    .card h3 {
-      margin: 0;
-      font-family: "Crimson Text", serif;
-      font-size: 20px;
-      color: #003366;
-    }
-
-    .weighting-badge {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: #003366;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 6px 10px;
-      border-radius: 4px;
-    }
-
-    .section {
-      grid-column: 1 / -1;
-      margin-top: 40px;
-      font-size: 24px;
-      font-weight: 700;
-      color: #003366;
-      border-bottom: 2px solid #e0e6ed;
-      padding-bottom: 10px;
-    }
-
-    .pain-anchor summary {
-      font-weight: 600;
-      color: #003366;
-      cursor: pointer;
-    }
-
-    footer {
-      margin-top: 48px;
-      padding-top: 16px;
-      font-size: 13px;
-      color: #999;
-      border-top: 1px solid #e0e6ed;
-      text-align: center;
-    }
-
-    .business-problem-panel {
-      background: #fff;
-      border-left: 6px solid #003366;
-      border-radius: 10px;
-      padding: 32px;
-      margin-bottom: 40px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-
-    .business-problem-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 40px;
-    }
-
-  </style>
-</head>
-
-<body>
-
-<header>
-  <h1>Case Management Transformation – Alignment Views</h1>
-  <p>
-    Better for customers, better for us – Reducing investigation completion times delivers faster, clearer outcomes for customers while strengthening our insights into non-compliance and improving revenue collection.
-  </p>
-</header>
-
-<div class="container">
-
-  <div class="tabs">
-    <div class="tab active" data-target="exec">Executive View</div>
-    <div class="tab" data-target="mgmt">Management View</div>
-    <div class="tab" data-target="product">Product View</div>
+    </div>
   </div>
 
-  <div id="exec" class="tab-content active">
+  <!-- EXEC CARDS -->
+  <div class="grid">
 
-    <div class="business-problem-panel">
-      <div class="business-problem-grid">
-
-        <div>
-          <h2>Business problem definition</h2>
-          <ul>
-            <li>Revenue and file targets are increasing.</li>
-            <li>Workforce is expanding, but case complexity is rising faster than productivity.</li>
-            <li><strong>Current case management capability:</strong></li>
-            <li>Limits effective AI adoption</li>
-            <li>Prevents scaling productivity</li>
-            <li>Constrains revenue realisation</li>
-          </ul>
-        </div>
-
-        <div>
-          <h2>Without a modern, AI‑enabled platform</h2>
-          <ul>
-            <li>Investigations cannot meet future targets</li>
-            <li>Funded AI investment cannot be fully leveraged</li>
-            <li>Risk-based compliance cannot scale fairly</li>
-          </ul>
-        </div>
-
-      </div>
+    <!-- 1 -->
+    <div class="card">
+      <div class="weighting-badge">20%</div>
+      <h3>⚡ Faster resolution without increased risk</h3>
+      <ul>
+        <li>Investigations completed materially faster end‑to‑end</li>
+        <li>Low‑value or simple cases resolved early</li>
+        <li>Effort shifts to judgement and analysis</li>
+      </ul>
+      <details class="pain-anchor">
+        <summary>Related operational pain points</summary>
+        <ul class="pain-list">
+          <li><em>"Half of PICs shouldn't be investigations and still proceed too far"</em></li>
+          <li><em>"Low‑value cases progress deep into investigation due to lack of early decision criteria"</em></li>
+          <li><em>"Investigation planning often starts without a clear plan, causing delay and rework"</em></li>
+          <li><em>"Case closure takes longer than the investigation itself due to administrative steps"</em></li>
+        </ul>
+      </details>
     </div>
 
-    <div class="grid">
-
-      <div class="card">
-        <div class="weighting-badge">20%</div>
-        <h3>⚡ Faster resolution without increased risk</h3>
-        <ul>
-          <li>Investigations completed materially faster end‑to‑end</li>
-          <li>Low‑value or simple cases resolved early</li>
-          <li>Effort shifts to judgement and analysis</li>
+    <!-- 2 -->
+    <div class="card">
+      <div class="weighting-badge">20%</div>
+      <h3>🛡️ Consistent and defensible outcomes</h3>
+      <ul>
+        <li>Standard frameworks and evidence use</li>
+        <li>Reduced variation in decisions</li>
+        <li>Fewer overturned cases</li>
+      </ul>
+      <details class="pain-anchor">
+        <summary>Related operational pain points</summary>
+        <ul class="pain-list">
+          <li><em>"Risk assessment is subjective and inconsistent, with no consistent risk framework across teams"</em></li>
+          <li><em>"Evidence interpretation varies by investigator"</em></li>
+          <li><em>"Templates and notices are inconsistent, increasing rework and objection effort"</em></li>
+          <li><em>"Objections often require full re‑analysis, indicating defensibility gaps"</em></li>
         </ul>
-      </div>
+      </details>
+    </div>
 
-      <div class="card">
-        <div class="weighting-badge">20%</div>
-        <h3>🛡️ Consistent and defensible outcomes</h3>
-        <ul>
-          <li>Standard frameworks and evidence use</li>
-          <li>Reduced variation in decisions</li>
-          <li>Fewer overturned cases</li>
+    <!-- 3 -->
+    <div class="card">
+      <div class="weighting-badge">20%</div>
+      <h3>👁️ Clear line of sight and accountability</h3>
+      <ul>
+        <li>Traceable decision paths</li>
+        <li>Clear ownership and approvals</li>
+        <li>Lower audit burden</li>
+      </ul>
+      <details class="pain-anchor">
+        <summary>Related operational pain points</summary>
+        <ul class="pain-list">
+          <li><em>"PICs come from multiple sources with no consistent intake pathway"</em></li>
+          <li><em>"Lack of clear intake criteria leads to misrouted work and cases that shouldn't proceed"</em></li>
+          <li><em>"Approvals are manual and email‑driven, which is slow and not auditable"</em></li>
+          <li><em>"No single source of truth for grouping or end‑to‑end status visibility"</em></li>
+          <li><em>"Work occurring outside the system of record (e.g. background work before case creation)"</em></li>
         </ul>
-      </div>
+      </details>
+    </div>
 
-      <div class="card">
-        <div class="weighting-badge">20%</div>
-        <h3>👁️ Clear line of sight and accountability</h3>
-        <ul>
-          <li>Traceable decision paths</li>
-          <li>Clear ownership and approvals</li>
-          <li>Lower audit burden</li>
+    <!-- 4 -->
+    <div class="card">
+      <div class="weighting-badge">20%</div>
+      <h3>♻️ Learning system</h3>
+      <ul>
+        <li>Consistent capture of outcomes</li>
+        <li>Pattern‑based insights</li>
+        <li>Improving future decisions</li>
+      </ul>
+      <details class="pain-anchor">
+        <summary>Related operational pain points</summary>
+        <ul class="pain-list">
+          <li><em>"Learnings are not captured systematically"</em></li>
+          <li><em>"Knowledge remains in individuals' heads rather than reusable guidance"</em></li>
+          <li><em>"No structured mechanism to share insights or patterns across teams"</em></li>
+          <li><em>"Insights do not flow back into risk models or upstream teams"</em></li>
         </ul>
-      </div>
+      </details>
+    </div>
 
+    <!-- 5 -->
+    <div class="card">
+      <div class="weighting-badge">20%</div>
+      <h3>🤖 AI‑enabled success</h3>
+      <ul>
+        <li>AI supports, not replaces, decisions</li>
+        <li>Improved synthesis and insight</li>
+        <li>Governed AI maturity</li>
+      </ul>
+      <details class="pain-anchor">
+        <summary>Related operational pain points</summary>
+        <ul class="pain-list">
+          <li><em>"Investigators spend excessive time manually searching and "Googling""</em></li>
+          <li><em>"Large unstructured documents are difficult to analyse consistently"</em></li>
+          <li><em>"Payroll data arrives in many different formats"</em></li>
+          <li><em>"Evidence and documents are hard to find across CM9 and other repositories"</em></li>
+        </ul>
+      </details>
     </div>
 
   </div>
 
 </div>
-
-<script>
-  function showTab(id, tabEl) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    tabEl.classList.add('active');
-  }
-
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => showTab(tab.dataset.target, tab));
-  });
-</script>
-
-<footer>
-  Case Management Transformation · Alignment Views
-</footer>
-
-</body>
-</html>
 ``

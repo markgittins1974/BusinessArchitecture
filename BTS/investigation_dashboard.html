@@ -1,0 +1,357 @@
+
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IC Statistical Analysis Dashboard</title>
+  <style>
+    :root {
+      --bg: #f3f6fb;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #dbe3ef;
+      --blue: #2563eb;
+      --red: #dc2626;
+      --purple: #7c3aed;
+      --green-bg: #dcfce7;
+      --green-tx: #166534;
+      --amber-bg: #fef3c7;
+      --amber-tx: #92400e;
+      --red-bg: #fee2e2;
+      --red-tx: #991b1b;
+      --shadow: 0 10px 30px rgba(15,23,42,0.08);
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); }
+    .container { max-width: 1480px; margin: 0 auto; padding: 28px; }
+    .hero { background: linear-gradient(135deg,#0f172a,#1d4ed8); color:white; border-radius:24px; padding:32px; box-shadow:var(--shadow); }
+    .hero h1 { margin:0 0 10px; font-size: 34px; }
+    .hero p { margin:6px 0; max-width: 980px; color: rgba(255,255,255,0.92); line-height:1.6; }
+    .grid { display:grid; gap:18px; margin-top:20px; }
+    .kpi-grid { grid-template-columns: repeat(4, minmax(0,1fr)); }
+    .two-col { grid-template-columns: 1.3fr 1fr; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:22px; box-shadow:var(--shadow); padding:20px; }
+    .metric .label { color: var(--muted); font-size:13px; margin-bottom:10px; text-transform:uppercase; letter-spacing:.04em; }
+    .metric .value { font-size:30px; font-weight:700; line-height:1.1; }
+    .metric .sub { margin-top:8px; color:var(--muted); font-size:13px; line-height:1.5; }
+    .section-title { font-size:22px; margin:0 0 14px; }
+    .chart-card { background:var(--card); border:1px solid var(--border); border-radius:22px; box-shadow:var(--shadow); padding:20px; }
+    .chart-card h3 { margin:0 0 14px; font-size:18px; }
+    .chart-svg { width:100%; height:auto; }
+    table { width:100%; border-collapse: collapse; font-size:14px; }
+    th, td { padding: 10px 12px; border-bottom:1px solid #e5e7eb; vertical-align: top; }
+    th { text-align:left; color:#334155; background:#f8fafc; position: sticky; top: 0; }
+    td.num { text-align:right; white-space:nowrap; font-variant-numeric: tabular-nums; }
+    .tbl-wrap { overflow:auto; max-height: 560px; border:1px solid var(--border); border-radius:16px; }
+    .chip { display:inline-block; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:600; }
+    .good { background: var(--green-bg); color: var(--green-tx); border-radius:10px; }
+    .warn { background: var(--amber-bg); color: var(--amber-tx); border-radius:10px; }
+    .bad { background: var(--red-bg); color: var(--red-tx); border-radius:10px; }
+    ul.insights { margin:0; padding-left: 20px; line-height:1.7; }
+    .footer-note { margin-top:18px; color:var(--muted); font-size:12px; line-height:1.6; }
+    @media (max-width: 1100px) {
+      .kpi-grid, .two-col { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 760px) {
+      .kpi-grid, .two-col { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 28px; }
+      .container { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <h1>IC Statistical Analysis Dashboard</h1>
+      <p>This dashboard summarises the Investigation Case (IC) statistics provided for selected revenue-line cohorts and highlights where timeliness, workload intensity and case mix appear most materially different.</p>
+      <p><strong>Analytical lens:</strong> focus on outside-90-day KPI performance, average hours per case, and share of each selected revenue-line total.</p>
+    </section>
+
+    <section class="grid kpi-grid">
+      <div class="card metric">
+        <div class="label">Largest Volume Cohort</div>
+        <div class="value">3,154</div>
+        <div class="sub">Land Tax – PPR (excl streamlined/simplified)</div>
+      </div>
+      <div class="card metric">
+        <div class="label">Worst Timeliness</div>
+        <div class="value">55.79%</div>
+        <div class="sub">VRLT FY2024/25</div>
+      </div>
+      <div class="card metric">
+        <div class="label">Highest Effort</div>
+        <div class="value">30.40 hrs</div>
+        <div class="sub">Payroll Tax – ATO/BAS Registered</div>
+      </div>
+      <div class="card metric">
+        <div class="label">Best Timeliness</div>
+        <div class="value">19.10%</div>
+        <div class="sub">Trust (incl PEXA NOA Full Audit, excl Streamlined)</div>
+      </div>
+    </section>
+
+    <section class="grid two-col">
+      <div class="chart-card"><h3>Outside 90-day KPI by cohort</h3>
+    <svg viewBox="0 0 760 386" class="chart-svg" role="img" aria-label="Outside 90-day KPI by cohort"><text x="8" y="50" font-size="12" fill="#1f2937">VRLT FY2024/25</text>
+        <rect x="300" y="32" width="340" height="28" rx="8" fill="#e5e7eb"></rect>
+        <rect x="300" y="32" width="316.1" height="28" rx="8" fill="#dc2626"></rect>
+        <text x="648" y="50" font-size="12" fill="#111827">55.79%</text><text x="8" y="92" font-size="12" fill="#1f2937">Payroll Tax – ATO/BAS Registered</text>
+        <rect x="300" y="74" width="340" height="28" rx="8" fill="#e5e7eb"></rect>
+        <rect x="300" y="74" width="304.9" height="28" rx="8" fill="#dc2626"></rect>
+        <text x="648" y="92" font-size="12" fill="#111827">53.81%</text><text x="8" y="134" font-size="12" fill="#1f2937">VRLT FY2025/26 YTD</text>
+        <rect x="300" y="116" width="340" height="28" rx="8" fill="#e5e7eb"></rect>
+        <rect x="300" y="116" width="244.3" height="28" rx="8" fill="#dc2626"></rect>
+        <text x="648" y="134" font-size="12" fill="#111827">43.11%</text><text x="8" y="176" font-size="12" fill="#1f2937">Payroll Tax – ATO/BAS Unregistered</text>
+        <rect x="300" y="158" width="340" height="28" rx="8" fill="#e5e7eb"></rect>
+        <rect x="300" y="158" width="200.9" height="28" rx="8" fill="#dc2626"></rect>
+        <text x="648" y="176" font-size="12" fill="#111827">35.45%</text><text x="8" y="218" font-size="12" fill="#1f2937">Land Tax – PPR (excl streamlined/simplified)</text>
+        <rect x="300" y="200" width="340" height="28" rx="8" fill="#e5e7eb"></rect>
+        <rect x="300" y="200" width="128.6" height="28" rx="8" fill="#dc2626"></rect>
+        <text x="648" y="218" font-size="12" fill="#111827">22.70%</text><text x="8" y="260" font-size="12" fill="#1f2937">Duties – Off the Plan</text>
+        <rect x="300" y="242" width="340" height="28" rx="8" fill="#e5e7eb"></rect>
+        <rect x="300" y="242" width="121.3" height="28" rx="8" fill="#dc2626"></rect>
+        <text x="648" y="260" font-size="12" fill="#111827">21.40%</text><text x="8" y="302" font-size="12" fill="#1f2937">Duties – PPR Concessions/Referrals</text>
+        <rect x="300" y="284" width="340" height="28" rx="8" fill="#e5e7eb"></rect>
+        <rect x="300" y="284" width="119.8" height="28" rx="8" fill="#dc2626"></rect>
+        <text x="648" y="302" font-size="12" fill="#111827">21.14%</text><text x="8" y="344" font-size="12" fill="#1f2937">Trust (incl PEXA NOA Full Audit, excl Streamlined)</text>
+        <rect x="300" y="326" width="340" height="28" rx="8" fill="#e5e7eb"></rect>
+        <rect x="300" y="326" width="108.2" height="28" rx="8" fill="#dc2626"></rect>
+        <text x="648" y="344" font-size="12" fill="#111827">19.10%</text></svg></div>
+      <div class="card">
+        <h2 class="section-title">Key Analytical Read-out</h2>
+        <ul class="insights"><li><strong>Largest volume cohort:</strong> Land Tax – PPR (excl streamlined/simplified) with 3,154 cases. This is the biggest scale lever for aggregate productivity improvement.</li><li><strong>Best timeliness:</strong> Trust (incl PEXA NOA Full Audit, excl Streamlined) at 19.10% outside KPI and 8.52 hours per case.</li><li><strong>Worst timeliness:</strong> VRLT FY2024/25 at 55.79% outside KPI, indicating major flow or capability issues.</li><li><strong>Highest effort:</strong> Payroll Tax – ATO/BAS Registered at 30.40 hours per case, making it the strongest efficiency-improvement candidate.</li><li><strong>Payroll Tax pattern:</strong> Registered cases are materially worse than Unregistered on both timeliness (53.81% vs 35.45% outside KPI) and effort (30.40 vs 22.77 hours per case).</li><li><strong>VRLT trend:</strong> FY2025/26 YTD timeliness is better than FY2024/25 (43.11% vs 55.79% outside KPI), but hours per case remain high (13.93 vs 13.22), suggesting process discipline may be improving faster than efficiency.</li><li><strong>Stable cohorts:</strong> Duties and most Land Tax/Trust cohorts cluster around ~19%–23% outside KPI and ~8.5–11.5 hours per case, suggesting more repeatable execution patterns.</li></ul>
+      </div>
+    </section>
+
+    <section class="grid two-col">
+      <div class="chart-card"><h3>Average hours per case by cohort</h3>
+    <svg viewBox="0 0 760 386" class="chart-svg" role="img" aria-label="Average hours per case by cohort"><text x="8" y="50" font-size="12" fill="#1f2937">Payroll Tax – ATO/BAS Registered</text>
+        <rect x="300" y="32" width="340" height="28" rx="8" fill="#e5e7eb"></rect>
+        <rect x="300" y="32" width="295.3" height="28" rx="8" fill="#7c3aed"></rect>
+        <text x="648" y="50" font-size="12" fill="#111827">30.40 hrs</text><text x="8" y="92" font-size="12" fill="#1f2937">Payroll Tax – ATO/BAS Unregistered</text>
+        <rect x="300" y="74" width="340" height="28" rx="8" fill="#e5e7eb"></rect>
+        <rect x="300" y="74" width="221.2" height="28" rx="8" fill="#7c3aed"></rect>
+        <text x="648" y="92" font-size="12" fill="#111827">22.77 hrs</text><text x="8" y="134" font-size="12" fill="#1f2937">VRLT FY2025/26 YTD</text>
+        <rect x="300" y="116" width="340" height="28" rx="8" fill="#e5e7eb"></rect>
+        <rect x="300" y="116" width="135.3" height="28" rx="8" fill="#7c3aed"></rect>
+        <text x="648" y="134" font-size="12" fill="#111827">13.93 hrs</text><text x="8" y="176" font-size="12" fill="#1f2937">VRLT FY2024/25</text>
+        <rect x="300" y="158" width="340" height="28" rx="8" fill="#e5e7eb"></rect>
+        <rect x="300" y="158" width="128.4" height="28" rx="8" fill="#7c3aed"></rect>
+        <text x="648" y="176" font-size="12" fill="#111827">13.22 hrs</text><text x="8" y="218" font-size="12" fill="#1f2937">Duties – PPR Concessions/Referrals</text>
+        <rect x="300" y="200" width="340" height="28" rx="8" fill="#e5e7eb"></rect>
+        <rect x="300" y="200" width="111.4" height="28" rx="8" fill="#7c3aed"></rect>
+        <text x="648" y="218" font-size="12" fill="#111827">11.47 hrs</text><text x="8" y="260" font-size="12" fill="#1f2937">Duties – Off the Plan</text>
+        <rect x="300" y="242" width="340" height="28" rx="8" fill="#e5e7eb"></rect>
+        <rect x="300" y="242" width="102.2" height="28" rx="8" fill="#7c3aed"></rect>
+        <text x="648" y="260" font-size="12" fill="#111827">10.52 hrs</text><text x="8" y="302" font-size="12" fill="#1f2937">Land Tax – PPR (excl streamlined/simplified)</text>
+        <rect x="300" y="284" width="340" height="28" rx="8" fill="#e5e7eb"></rect>
+        <rect x="300" y="284" width="91.9" height="28" rx="8" fill="#7c3aed"></rect>
+        <text x="648" y="302" font-size="12" fill="#111827">9.46 hrs</text><text x="8" y="344" font-size="12" fill="#1f2937">Trust (incl PEXA NOA Full Audit, excl Streamlined)</text>
+        <rect x="300" y="326" width="340" height="28" rx="8" fill="#e5e7eb"></rect>
+        <rect x="300" y="326" width="82.8" height="28" rx="8" fill="#7c3aed"></rect>
+        <text x="648" y="344" font-size="12" fill="#111827">8.52 hrs</text></svg></div>
+      <div class="card">
+        <h2 class="section-title">Improvement Priority Framing</h2>
+        <ul class="insights">
+          <li><strong>Scale lever:</strong> Land Tax PPR has the largest case volume, so small improvements can create large aggregate capacity release.</li>
+          <li><strong>Efficiency lever:</strong> Payroll Tax, particularly Registered, has the highest labour cost per case and very poor timeliness.</li>
+          <li><strong>Capability uplift lever:</strong> VRLT remains high-effort even where timeliness has improved, indicating a likely maturity, training or standardisation issue.</li>
+          <li><strong>Benchmark candidate:</strong> Trust is the strongest large-volume performer and may provide repeatable practices worth reusing.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="grid two-col">
+      <div class="card">
+        <h2 class="section-title">Cohort Detail</h2>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Cohort</th>
+                <th class='num'>Cases</th>
+                <th class='num'>Revenue-line total</th>
+                <th class='num'>Share</th>
+                <th class='num'>Outside KPI</th>
+                <th class='num'>Outside KPI %</th>
+                <th class='num'>Hours</th>
+                <th class='num'>Hours / case</th>
+              </tr>
+            </thead>
+            <tbody>
+      <tr>
+        <td>Land Tax – PPR (excl streamlined/simplified)</td>
+        <td class='num'>3,154</td>
+        <td class='num'>7,756</td>
+        <td class='num'>40.67%</td>
+        <td class='num'>716</td>
+        <td class='num good'>22.70%</td>
+        <td class='num'>29,844.88</td>
+        <td class='num good'>9.46</td>
+      </tr>
+    
+      <tr>
+        <td>Trust (incl PEXA NOA Full Audit, excl Streamlined)</td>
+        <td class='num'>2,340</td>
+        <td class='num'>7,756</td>
+        <td class='num'>30.17%</td>
+        <td class='num'>447</td>
+        <td class='num good'>19.10%</td>
+        <td class='num'>19,933.73</td>
+        <td class='num good'>8.52</td>
+      </tr>
+    
+      <tr>
+        <td>VRLT FY2024/25</td>
+        <td class='num'>466</td>
+        <td class='num'>956</td>
+        <td class='num'>48.74%</td>
+        <td class='num'>260</td>
+        <td class='num bad'>55.79%</td>
+        <td class='num'>6,159.98</td>
+        <td class='num warn'>13.22</td>
+      </tr>
+    
+      <tr>
+        <td>VRLT FY2025/26 YTD</td>
+        <td class='num'>726</td>
+        <td class='num'>980</td>
+        <td class='num'>74.08%</td>
+        <td class='num'>313</td>
+        <td class='num warn'>43.11%</td>
+        <td class='num'>10,110.75</td>
+        <td class='num warn'>13.93</td>
+      </tr>
+    
+      <tr>
+        <td>Payroll Tax – ATO/BAS Unregistered</td>
+        <td class='num'>409</td>
+        <td class='num'>2,022</td>
+        <td class='num'>20.23%</td>
+        <td class='num'>145</td>
+        <td class='num warn'>35.45%</td>
+        <td class='num'>9,311.46</td>
+        <td class='num bad'>22.77</td>
+      </tr>
+    
+      <tr>
+        <td>Payroll Tax – ATO/BAS Registered</td>
+        <td class='num'>420</td>
+        <td class='num'>2,022</td>
+        <td class='num'>20.77%</td>
+        <td class='num'>226</td>
+        <td class='num bad'>53.81%</td>
+        <td class='num'>12,766.98</td>
+        <td class='num bad'>30.40</td>
+      </tr>
+    
+      <tr>
+        <td>Duties – PPR Concessions/Referrals</td>
+        <td class='num'>752</td>
+        <td class='num'>1,635</td>
+        <td class='num'>45.99%</td>
+        <td class='num'>159</td>
+        <td class='num good'>21.14%</td>
+        <td class='num'>8,623.53</td>
+        <td class='num good'>11.47</td>
+      </tr>
+    
+      <tr>
+        <td>Duties – Off the Plan</td>
+        <td class='num'>430</td>
+        <td class='num'>1,635</td>
+        <td class='num'>26.30%</td>
+        <td class='num'>92</td>
+        <td class='num good'>21.40%</td>
+        <td class='num'>4,524.44</td>
+        <td class='num good'>10.52</td>
+      </tr>
+    </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <h2 class="section-title">Roll-up View</h2>
+        <div class="tbl-wrap" style="max-height:unset;">
+          <table>
+            <thead>
+              <tr>
+                <th>Revenue-line roll-up</th>
+                <th class='num'>Cases</th>
+                <th class='num'>Total</th>
+                <th class='num'>Share</th>
+                <th class='num'>Outside KPI</th>
+                <th class='num'>Outside KPI %</th>
+                <th class='num'>Hours</th>
+                <th class='num'>Hours / case</th>
+              </tr>
+            </thead>
+            <tbody>
+      <tr>
+        <td>Land Tax selected cohorts</td>
+        <td class='num'>5,494</td>
+        <td class='num'>7,756</td>
+        <td class='num'>70.84%</td>
+        <td class='num'>1,163</td>
+        <td class='num good'>21.17%</td>
+        <td class='num'>49,778.61</td>
+        <td class='num good'>9.06</td>
+      </tr>
+    
+      <tr>
+        <td>VRLT FY2024/25</td>
+        <td class='num'>466</td>
+        <td class='num'>956</td>
+        <td class='num'>48.74%</td>
+        <td class='num'>260</td>
+        <td class='num bad'>55.79%</td>
+        <td class='num'>6,159.98</td>
+        <td class='num warn'>13.22</td>
+      </tr>
+    
+      <tr>
+        <td>VRLT FY2025/26 YTD</td>
+        <td class='num'>726</td>
+        <td class='num'>980</td>
+        <td class='num'>74.08%</td>
+        <td class='num'>313</td>
+        <td class='num warn'>43.11%</td>
+        <td class='num'>10,110.75</td>
+        <td class='num warn'>13.93</td>
+      </tr>
+    
+      <tr>
+        <td>Payroll Tax selected cohorts</td>
+        <td class='num'>829</td>
+        <td class='num'>2,022</td>
+        <td class='num'>41.00%</td>
+        <td class='num'>371</td>
+        <td class='num warn'>44.75%</td>
+        <td class='num'>22,078.44</td>
+        <td class='num bad'>26.63</td>
+      </tr>
+    
+      <tr>
+        <td>Duties selected cohorts</td>
+        <td class='num'>1,182</td>
+        <td class='num'>1,635</td>
+        <td class='num'>72.29%</td>
+        <td class='num'>251</td>
+        <td class='num good'>21.24%</td>
+        <td class='num'>13,147.97</td>
+        <td class='num good'>11.12</td>
+      </tr>
+    </tbody>
+          </table>
+        </div>
+        <div class="footer-note">
+          <p><strong>Interpretation note:</strong> roll-ups reflect the selected cohorts supplied in the source figures, not necessarily every case type within the broader revenue line.</p>
+          <p><strong>Data note:</strong> hours worked are self-reported when eSys actions are recorded.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

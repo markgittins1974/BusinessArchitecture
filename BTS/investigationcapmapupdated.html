@@ -26,6 +26,18 @@ body {font-family: Inter, sans-serif; background:#f4f6f9; padding:20px; margin:0
 </head>
 <body>
 <h2>Investigation Capability Model</h2>
+
+<button onclick="exportCSV()" style="
+  margin-bottom:12px;
+  padding:8px 12px;
+  border:1px solid #ccc;
+  background:#fff;
+  border-radius:6px;
+  cursor:pointer;
+">
+Export to CSV
+</button>
+
 <div class="container" id="map"></div>
 <div class="overlay" id="overlay" onclick="closePanel()"></div>
 <div class="panel" id="panel">
@@ -81,6 +93,60 @@ function openPanel(i){
 }
 function closePanel(){overlay.classList.remove("open");panel.classList.remove("open");}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanel();});
+  function closePanel(){
+  overlay.classList.remove("open");
+  panel.classList.remove("open");
+}
+
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape') closePanel();
+});
+
+
+/* ✅ ADD STEP 2 HERE */
+function exportCSV(){
+  let rows = [];
+
+  rows.push([
+    "Stage",
+    "Capability",
+    "Description",
+    "Pain Points",
+    "Evidence"
+  ]);
+
+  data.forEach(stage => {
+    stage.capabilities.forEach(cap => {
+
+      const pain = cap.pain.join(" | ");
+      const evidence = cap.evidence.join(" | ");
+
+      rows.push([
+        stage.stage,
+        cap.title,
+        cap.desc,
+        pain,
+        evidence
+      ]);
+    });
+  });
+
+  const csvContent = rows.map(row => 
+    row.map(field => `"${field.replace(/"/g, '""')}"`).join(",")
+  ).join("\n");
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "investigation_capability_model.csv";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+</script>
+
 </script>
 </body>
 </html>

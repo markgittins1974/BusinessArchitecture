@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,132 +5,1100 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Investigation Capability Model</title>
 <style>
-body {font-family: Inter, sans-serif; background:#f4f6f9; padding:20px; margin:0;}
-.container{display:flex;gap:10px;overflow-x:auto;align-items:flex-start;}
-.column{min-width:220px;flex:0 0 auto;}
-.header{color:#fff;padding:10px;font-size:11px;font-weight:700;text-transform:uppercase;border-radius:6px 6px 0 0;text-align:center;min-height:60px;display:flex;align-items:center;justify-content:center;line-height:1.35;}
-.track{background:#fff;border:1px solid #ddd;border-top:none;padding:10px;display:flex;flex-direction:column;gap:8px;border-radius:0 0 6px 6px;min-height:560px;}
-.card{background:#fafafa;border:1px solid #e5e7eb;padding:8px;border-radius:6px;cursor:pointer;font-size:12px;}
-.card:hover{background:#fff;}
-.hint{font-size:10px;color:#777;margin-top:4px;}
-.s1{background:#0f7a4e;} .s2{background:#2563eb;} .s3{background:#6d28d9;} .s4{background:#b91c1c;} .s5{background:#92400e;} .s6{background:#0ea5e9;} .s7{background:#9333ea;} .s8{background:#15803d;} .s9{background:#1d4ed8;} .s10{background:#b45309;} .s11{background:#374151;} .s12{background:#111827;} .s13{background:#065f46;}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);display:none;} .overlay.open{display:block;}
-.panel{position:fixed;right:-520px;top:0;width:500px;height:100%;background:#fff;padding:20px;overflow:auto;transition:.3s;box-shadow:-4px 0 16px rgba(0,0,0,.16);}
-.panel.open{right:0;}
-.section{margin-top:14px;font-size:11px;font-weight:bold;color:#777;text-transform:uppercase;letter-spacing:.08em;}
-.panel p, li{font-size:13px;line-height:1.5;}
-.close{position:absolute;top:12px;right:12px;cursor:pointer;width:28px;height:28px;border:1px solid #ddd;border-radius:4px;display:flex;align-items:center;justify-content:center;background:#fafafa;}
-@media (max-width:768px){.panel{width:100%;right:-100%;} .column{min-width:200px;} body{padding:14px;}}
+body {
+  font-family: Inter, sans-serif;
+  background: #f4f6f9;
+  padding: 20px;
+  margin: 0;
+}
+
+h2 {
+  margin: 0 0 14px 0;
+  font-size: 22px;
+  color: #111827;
+}
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  align-items: centre;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+button {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+button:hover {
+  background: #f9fafb;
+}
+
+.container {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  align-items: flex-start;
+  padding-bottom: 6px;
+}
+
+.column {
+  min-width: 220px;
+  flex: 0 0 auto;
+}
+
+.header {
+  color: #fff;
+  padding: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 6px 6px 0 0;
+  text-align: centre;
+  min-height: 60px;
+  display: flex;
+  align-items: centre;
+  justify-content: centre;
+  line-height: 1.35;
+}
+
+.track {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-top: none;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: 0 0 6px 6px;
+  min-height: 560px;
+}
+
+.card {
+  background: #fafafa;
+  border: 1px solid #e5e7eb;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all .15s ease;
+}
+
+.card:hover {
+  background: #fff;
+  border-color: #cbd5e1;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
+}
+
+.card strong {
+  display: block;
+  line-height: 1.35;
+}
+
+.hint {
+  font-size: 10px;
+  color: #777;
+  margin-top: 4px;
+}
+
+.s1  { background: #0f7a4e; }
+.s2  { background: #2563eb; }
+.s3  { background: #6d28d9; }
+.s4  { background: #b91c1c; }
+.s5  { background: #92400e; }
+.s6  { background: #0ea5e9; }
+.s7  { background: #9333ea; }
+.s8  { background: #15803d; }
+.s9  { background: #1d4ed8; }
+.s10 { background: #b45309; }
+.s11 { background: #374151; }
+.s12 { background: #111827; }
+.s13 { background: #065f46; }
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  display: none;
+  z-index: 998;
+}
+
+.overlay.open {
+  display: block;
+}
+
+.panel {
+  position: fixed;
+  right: -520px;
+  top: 0;
+  width: 500px;
+  height: 100%;
+  background: #fff;
+  padding: 20px;
+  overflow: auto;
+  transition: .3s;
+  box-shadow: -4px 0 16px rgba(0,0,0,.16);
+  z-index: 999;
+}
+
+.panel.open {
+  right: 0;
+}
+
+.section {
+  margin-top: 14px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.panel h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 20px;
+  line-height: 1.3;
+  color: #111827;
+}
+
+.panel-meta {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.panel p,
+.panel li {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #111827;
+}
+
+.close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: flex;
+  align-items: centre;
+  justify-content: centre;
+  background: #fafafa;
+}
+
+.small-note {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+@media (max-width: 768px) {
+  .panel {
+    width: 100%;
+    right: -100%;
+  }
+
+  .column {
+    min-width: 200px;
+  }
+
+  body {
+    padding: 14px;
+  }
+}
 </style>
-</head>
-<body>
+</head><body>
+
 <h2>Investigation Capability Model</h2>
 
-<button onclick="exportCSV()" style="
-  margin-bottom:12px;
-  padding:8px 12px;
-  border:1px solid #ccc;
-  background:#fff;
-  border-radius:6px;
-  cursor:pointer;
-">
-Export to CSV
-</button>
+<div class="toolbar">
+  <button onclick="exportCSV()">Export to CSV</button>
+  <button onclick="expandAll()">Expand First Card in Each Stage</button>
+  <button onclick="scrollToStart()">Back to Start</button>
+</div>
 
 <div class="container" id="map"></div>
+
 <div class="overlay" id="overlay" onclick="closePanel()"></div>
+
 <div class="panel" id="panel">
   <div class="close" onclick="closePanel()">✖</div>
   <h3 id="title"></h3>
+  <div class="panel-meta" id="stageLabel"></div>
+
   <div class="section">Description</div>
   <p id="desc"></p>
+
   <div class="section">Pain Points</div>
   <ul id="pain"></ul>
+
   <div class="section">Evidence</div>
   <ul id="evidence"></ul>
 </div>
-<script>
-const data = [{"stageClass": "s1", "stage": "Stage 1: Intelligence & Lead Generation", "capabilities": [{"title": "Intelligence & Referral Management", "desc": "Capture, register and contextualise intelligence, referrals and allegations from multiple sources so potential compliance issues can be consistently recognised, understood and progressed for assessment.", "pain": ["Intelligence is captured inconsistently across channels resulting in fragmented visibility of potential issues.", "Referrals may be duplicated or lost due to absence of a structured intake process.", "Information quality varies significantly at entry, creating downstream rework during triage and investigation."], "evidence": ["Internal capability artefacts describe intake as ad hoc and coordinated through email and manual queues with inconsistent structure.", "Narrative material highlights limited visibility across investigation teams due to decentralised intake.", "BPMN intake processes show fragmented IR and PIC entry points, reinforcing need for structured capability."]}, {"title": "Lead Identification & Generation", "desc": "Identify potential investigation opportunities from patterns, triggers, analytical signals and emerging behavioural indicators so matters can be proactively surfaced rather than relying only on incoming referrals.", "pain": ["Opportunities are identified reactively instead of systematically.", "Trigger-based detection is inconsistent across teams.", "Manual identification leads to delayed detection or missed investigation opportunities."], "evidence": ["Internal artefacts reference use of risk indicators and analytical signals but indicate weak linkage to operational workflows.", "PIC lifecycle models show generation of cases separate to structured intake, confirming fragmentation."]}, {"title": "External Data Utilisation", "desc": "Use external information sources to strengthen visibility of potential risk, corroborate allegations and improve early identification of matters requiring further attention.", "pain": ["External data is disconnected from the investigation operating flow.", "Investigators manually interpret external data outputs, creating delay and inconsistency.", "Corroborating allegations early takes more effort than it should."], "evidence": ["Internal narrative material notes that third-party data is used in today’s environment but is not tightly linked to investigation action.", "Enrichment BPMN models show external or adjacent data being assembled to strengthen early assessment."]}, {"title": "Internal Signal Detection", "desc": "Detect potential non-compliance through analysis of internal operational, customer and revenue data so investigation opportunities can be identified earlier and more consistently.", "pain": ["Internal signals are not consistently converted into investigation opportunities.", "Detection relies heavily on manual review and local knowledge.", "Potential risks can remain hidden until a later stage."], "evidence": ["Internal capability material references behavioural signals, historical patterns and threshold breaches as inputs to identifying investigation candidates.", "Current-state processes assume internal operational data contributes to PIC and IR preparation prior to triage."]}]}, {"stageClass": "s2", "stage": "Stage 2: Lead Registration & Tracking", "capabilities": [{"title": "Lead Intake & Registration", "desc": "Bring potential matters into a structured intake pathway so each lead is recorded consistently, can be traced from origin, and is available for triage and governance.", "pain": ["Multiple intake channels create duplication and inconsistency.", "Leads can require repeated entry or manual preparation.", "Incomplete early information causes later delay and rework."], "evidence": ["Internal capability descriptions explicitly call for a clear hand-off into triage and note fragmented current-state intake handling.", "IR intake and PIC intake process models show that matters are brought in through structured stages before triage."]}, {"title": "Lead Tracking & Status Management", "desc": "Maintain visibility of lead progress, status and ownership from initial receipt through assessment, approval, closure or progression to formal investigation.", "pain": ["There is no single view of lead status across the pipeline.", "Manual tracking leads to outdated or inconsistent status information.", "Ownership can become unclear during hand-offs."], "evidence": ["Internal current-state notes describe manual queues, spreadsheets and email coordination, indicating limited structured visibility.", "Intake, triage and allocation BPMN models show multiple hand-off points that require explicit status control."]}, {"title": "Traceability & Audit Management", "desc": "Preserve a clear record of actions, decisions, changes and hand-offs so the handling of each lead can be understood, reviewed and defended.", "pain": ["Decision history is not always transparent or easy to reconstruct.", "Early actions and changes can be difficult to audit.", "Weak traceability increases governance effort later."], "evidence": ["Internal artefacts describe limited auditability of early decisions and highlight the need for clearer structured records.", "Several BPMN models include explicit update, validation and route-back activities, demonstrating the need for traceable hand-offs."]}, {"title": "Lead Portfolio Management", "desc": "Maintain an organised view of potential investigation opportunities so teams can monitor volume, mix, ageing, backlog and patterns across the pipeline.", "pain": ["Backlog and ageing are hard to see consistently.", "Teams cannot easily view the full lead portfolio in one place.", "Pipeline patterns are harder to monitor and manage proactively."], "evidence": ["Internal narrative material notes fragmented tracking and limited visibility across the investigations team.", "PIC assignment and pre-case models imply a need for an organised view of matters moving between readiness, allocation and closure."]}]}, {"stageClass": "s3", "stage": "Stage 3: Data Validation & Enrichment", "capabilities": [{"title": "Customer Identification & Resolution", "desc": "Identify the relevant customer, party, property or entity associated with a lead and resolve uncertainty so the matter can be assessed using the correct context.", "pain": ["Customer identification requires time-consuming reconciliation.", "Inconsistent identifiers create uncertainty and rework.", "Investigators spend effort confirming basic context instead of progressing the matter."], "evidence": ["The intake and enrichment BPMN models include customer identification, matching and linked-record checks before matters can proceed.", "Internal reality-check material notes investigators often need to chase context, re-enter details and reconcile inconsistent identifiers."]}, {"title": "Data Validation & Quality Management", "desc": "Confirm that required information is complete, accurate and usable, and identify where remediation is needed before a matter can progress confidently.", "pain": ["Missing or invalid information is often discovered late.", "Exception handling becomes reactive rather than controlled.", "Poor early data quality drives repeated rework."], "evidence": ["The enrichment and related intake processes explicitly show validation, completeness checks and exception loops.", "Internal current-state notes state that information quality and completeness varies at entry and creates downstream rework."]}, {"title": "Data Enrichment & Context Assembly", "desc": "Combine relevant information from available sources to build a fuller understanding of the lead, its context and its potential significance.", "pain": ["Context must be gathered manually from multiple places.", "It is difficult to form a complete picture early in the process.", "Fragmented information slows assessment and decisioning."], "evidence": ["The enrichment process shows customer record retrieval, intelligence context retrieval, aggregation and completeness validation.", "Internal artefacts describe the need to contextualise matters before effective triage and prioritisation."]}, {"title": "Data Integration & Structuring", "desc": "Bring together information from multiple sources in a consistent, usable form so it can support reliable assessment, prioritisation and downstream investigation work.", "pain": ["Relevant data is spread across different artefacts and tools.", "Information is not consistently structured for re-use.", "Cross-source interpretation increases administrative effort."], "evidence": ["Internal material notes that data is re-entered or reconciled manually across different artefacts and systems.", "The BPMN models show repeated preparation and consolidation activity prior to assessment and assignment."]}, {"title": "Duplicate Detection & Resolution", "desc": "Identify and manage overlapping or repeated leads so effort is not wasted, decisions remain coherent and related matters are handled consistently.", "pain": ["Duplicate matters can trigger duplicated effort.", "Related issues are not always handled coherently.", "Repeated leads reduce confidence in triage and prioritisation."], "evidence": ["Intake processes include duplicate or repeated-item checks as part of early processing.", "Internal pain-point material highlights duplicated or lost referrals as a current-state concern."]}]}, {"stageClass": "s4", "stage": "Stage 4: Triage Assessment & Decisioning", "capabilities": [{"title": "Investigation Assessment", "desc": "Assess whether a lead warrants investigation by considering risk, seriousness, completeness, relevance and likely value of further action.", "pain": ["Triage decisions rely too heavily on individual judgement.", "Similar matters may be assessed differently.", "Insufficient early assessment can create avoidable rework."], "evidence": ["The internal capability dataset defines initial triage as deciding whether a matter should proceed, be redirected or be closed and notes manual gating today.", "Triage processes show structured assessment before progression."]}, {"title": "Decision Framework Application", "desc": "Apply agreed assessment criteria, rules and judgement in a consistent way so triage outcomes are transparent, explainable and repeatable.", "pain": ["Decision logic is not consistently applied.", "It is difficult to explain why similar matters had different outcomes.", "Review and continuous improvement are harder without explicit criteria."], "evidence": ["Internal current-state notes highlight reliance on local heuristics and judgement-driven approaches across risk and triage.", "The triage evaluation process explicitly includes rule evaluation and recommendation activities."]}, {"title": "Risk & Validation Controls", "desc": "Apply checks that confirm the lead is suitable for progression, including quality, eligibility and risk-related controls that protect against poor or inconsistent decisions.", "pain": ["Unsuitable matters can progress too far before issues are identified.", "Quality and eligibility checks are not consistently applied.", "Risk logic is not always visible within decisioning."], "evidence": ["Internal risk capability material refers to behavioural signals, threshold breaches and prioritisation cues.", "Current-state intake and pre-case processes show explicit validation, readiness and progression checks."]}, {"title": "Information Gathering & Enquiries", "desc": "Obtain additional information needed to clarify a lead, close gaps in understanding and support a more confident progression or closure decision.", "pain": ["Additional information requests are often ad hoc.", "Missing context is discovered late in the process.", "Decisioning can stall while information is chased manually."], "evidence": ["The triage evaluation flow shows supporting information capture and rework loops where more detail is required.", "Internal narrative material notes evidence gaps are often discovered after initial triage."]}]}, {"stageClass": "s5", "stage": "Stage 5: Governance & Approval", "capabilities": [{"title": "Decision Governance & Approval", "desc": "Provide controlled oversight of important triage and progression decisions so matters move forward only with appropriate review, authority and accountability.", "pain": ["Approval pathways are informal and variable.", "Pending approvals are not always visible.", "Governance overhead increases when decision rights are not clear."], "evidence": ["Internal current-state descriptions note approvals are commonly handled through email or informal discussion, with limited visibility and incomplete audit trail.", "Triage BPMN models show explicit approval and authorisation steps before progression."]}, {"title": "Readiness Assessment", "desc": "Confirm that a matter is sufficiently complete, valid and suitable to move to the next stage of handling or investigation.", "pain": ["Work can be allocated or progressed before it is truly ready.", "Readiness is judged inconsistently.", "Poor readiness creates downstream delay and rework."], "evidence": ["PIC assignment BPMN models explicitly include readiness verification before assignment and before case progression.", "Internal current-state material refers to manual gating and incomplete early information affecting confident progression."]}, {"title": "Outcome Recording", "desc": "Record decisions, rationale, conditions and supporting context in a structured way so the basis for progression, deferral or closure is clear.", "pain": ["Decision rationale is not consistently recorded.", "Closure or progression reasons can be hard to reconstruct later.", "Inconsistent recording makes governance and assurance harder."], "evidence": ["Internal narrative material states triage decisions are often undocumented or inconsistently recorded.", "Triage and pre-case processes include explicit decision outcomes and recorded closure conditions."]}, {"title": "Lead Closure", "desc": "Conclude matters that should not proceed, ensuring the reason for closure is clear, proportionate and available for future reference or review.", "pain": ["Rejected or non-progressing matters are not always closed consistently.", "Organisational learning is lost when closure reasoning is weak.", "There is a risk of matters resurfacing without context."], "evidence": ["The triage and pre-case models show explicit decline or closure outcomes with recorded reasons.", "Internal pain-point material highlights limited visibility and auditability of early decisions, which closure controls help address."]}]}, {"stageClass": "s6", "stage": "Stage 6: Work Allocation", "capabilities": [{"title": "Work Demand Management", "desc": "Manage the flow of investigation work requests and available capacity so demand can be understood and responded to in an orderly way.", "pain": ["Demand for work is not always centrally visible.", "Allocation becomes reactive rather than planned.", "Capacity pressure is harder to anticipate and manage."], "evidence": ["PIC assignment models show explicit work request and assignment trigger points.", "Internal current-state materials note ad hoc coordination and manual handling, indicating weak demand visibility."]}, {"title": "Work Allocation", "desc": "Allocate accepted work to the appropriate investigator or team based on suitability, availability, skills and operational priorities.", "pain": ["Allocation depends heavily on manual coordination.", "The best fit between work type and investigator capability is not always clear.", "Inconsistent allocation can affect cycle time and quality."], "evidence": ["PIC assignment and processing flows explicitly show work allocation and hand-off to officers.", "Internal narrative material describes intake and allocation as ad hoc and coordinated through manual queues and email."]}, {"title": "Allocation Control", "desc": "Ensure only work that is sufficiently validated, approved and ready is assigned for active handling.", "pain": ["Immature or incomplete matters can be assigned too early.", "Investigators lose time validating basic readiness after allocation.", "Work can circulate before it is fit for action."], "evidence": ["PIC assignment models include explicit readiness checks before officer assignment.", "Pre-case processing then shows further validation, demonstrating why upstream allocation control matters."]}, {"title": "Workload Balancing", "desc": "Balance work across investigators and teams so effort is distributed fairly and capability is aligned to case complexity and urgency.", "pain": ["Workload can become uneven across investigators.", "Complexity and urgency are not always reflected in how work is distributed.", "Imbalanced workloads affect timeliness and consistency."], "evidence": ["Internal triage and segmentation material discusses workload balancing and different handling paths for simple versus complex matters.", "Allocation process models imply coordination of work across officers and teams."]}, {"title": "Allocation Tracking", "desc": "Maintain visibility of what work has been assigned, to whom, and at what stage, so allocation decisions remain transparent and manageable.", "pain": ["Allocation records are fragmented and manual.", "It is difficult to understand ownership at a point in time.", "Follow-up effort increases when assignment visibility is weak."], "evidence": ["PIC assignment models include update activities tied to assignment and downstream handling.", "Internal current-state notes reference ad hoc tracking and fragmented coordination artefacts."]}, {"title": "Work Notification", "desc": "Communicate assigned work and key context clearly to the receiving investigator or team so activity can commence without avoidable delay.", "pain": ["Assigned work can reach investigators without enough context.", "Manual notifications create delay and inconsistency.", "Poor hand-off communication increases clarification effort."], "evidence": ["PIC assignment models show explicit dispatch or distribution of assigned work to investigation officers.", "Internal current-state material notes heavy reliance on email and manual coordination for early-stage handling."]}]}, {"stageClass": "s7", "stage": "Stage 7: Pre-Case Processing", "capabilities": [{"title": "Work Review & Analysis", "desc": "Review assigned matters to understand the context, examine the available information and form an initial view of whether further investigation effort is justified.", "pain": ["Investigators spend time interpreting and validating matters after assignment.", "Assigned work may still need significant shaping before it is actionable.", "Upstream variation shifts effort into investigator-led review."], "evidence": ["The pre-case processing model explicitly begins with assigned work review and analysis before formal case creation.", "Internal current-state notes describe variable information completeness and reliance on manual judgement early in the flow."]}, {"title": "Validation & Due Diligence", "desc": "Perform the checks needed to confirm that the matter is credible, relevant and sufficiently grounded before formal investigation begins.", "pain": ["Assigned matters still require validation of basic facts and context.", "Insufficient early validation increases wasted effort.", "Due diligence is not consistently structured."], "evidence": ["The pre-case model explicitly includes verification and due diligence before deciding whether to create a case.", "Internal materials note that evidence or context gaps are often discovered later than ideal."]}, {"title": "Issue Classification & Risk Flagging", "desc": "Assign a structured classification to each matter based on evidence, relevance and risk to support consistent decision-making, prioritisation and routing across the investigation lifecycle.", "pain": ["Triage decisions rely heavily on subjective judgement and vary between investigators.", "Similar matters may be classified differently, resulting in inconsistent outcomes.", "Lack of structured classification reduces ability to prioritise and govern investigation workload effectively."], "evidence": ["Current-state process relies on investigator judgement rather than structured classification signals.", "BPMN triage flow shows decision variability without a standardised classification step.", "Pain points highlight inconsistency in triage and lack of decision traceability."]}, {"title": "Investigation Threshold Assessment", "desc": "Determine whether the matter meets the required threshold for a formal investigation, taking account of seriousness, evidence, relevance and likely value.", "pain": ["Threshold decisions vary between investigators.", "Some matters may proceed unnecessarily while others may be missed.", "Inconsistent thresholding affects effort and prioritisation."], "evidence": ["The pre-case model includes an explicit decision on whether investigation case creation is required.", "Internal triage material describes eligibility checks, thresholds and progression decisions as core but currently manual."]}, {"title": "Decision & Routing", "desc": "Decide whether the matter should proceed to investigation, be deferred for further work, be redirected, or be closed.", "pain": ["Routing outcomes are not always handled consistently.", "Deferral, redirection and closure can depend on local practice.", "Weak routing discipline creates avoidable rework."], "evidence": ["The pre-case model shows explicit routing pathways after investigator review, including close, escalate and proceed outcomes.", "Internal triage and initiation descriptions similarly define proceed, request more information or redirect patterns."]}, {"title": "Advisory & Escalation", "desc": "Seek guidance, review or escalation where a matter is sensitive, complex, ambiguous or requires senior judgement before progressing.", "pain": ["Complex matters rely on informal escalation pathways.", "Guidance requests are not always visible or structured.", "Decision quality can depend too heavily on who is consulted."], "evidence": ["The pre-case model includes explicit advice and escalation activity to the investigation team leader.", "Internal review and approval materials note current reliance on email and informal consultation for higher-risk questions."]}, {"title": "Pre-Case Closure", "desc": "Close non-actionable matters at the pre-case stage while preserving the reasoning and any useful context for future reference.", "pain": ["Non-progressing assigned matters are not always closed consistently.", "Closure reasoning can be lost, reducing organisational memory.", "Repeat handling risk increases when context is not retained."], "evidence": ["The pre-case model shows explicit closure paths with recorded reason for closure.", "Internal pain-point material highlights inconsistency and poor traceability in early decisions."]}, {"title": "Operational Synchronisation", "desc": "Keep relevant parties, records and tracking artefacts aligned so the status and handling of the matter remain consistent across the operating environment.", "pain": ["Different parties can hold different views of the same matter.", "Updates are spread across manual artefacts and communications.", "Misalignment increases duplication and coordination effort."], "evidence": ["PIC assignment and pre-case models include update and synchronisation steps after allocation and closure decisions.", "Internal current-state commentary highlights fragmented coordination and multiple manual artefacts across the process."]}]}, {"stageClass": "s8", "stage": "Stage 8: Case Creation", "capabilities": [{"title": "Investigation Case Initiation", "desc": "Establish a formal investigation matter with clear scope, identity, purpose and traceability so work can be managed through a recognised investigation lifecycle.", "pain": ["Case setup is manual and often duplicated across artefacts.", "Case details can drift when updates are recorded in different places.", "Formal investigation start points are not always cleanly controlled."], "evidence": ["The internal capability dataset explicitly defines case creation as establishing a consistent record and notes manual setup and duplicated data entry as current-state issues.", "The pre-case process identifies case creation as a distinct decision outcome after threshold assessment."]}, {"title": "Case Ownership Assignment", "desc": "Establish clear accountability for the case so responsibility for progress, decisions and coordination is understood from the outset.", "pain": ["Responsibility can be unclear at the point a matter becomes a formal case.", "Handover gaps create delay and duplicated effort.", "Case progression is harder to manage when ownership is weakly defined."], "evidence": ["Internal case and approval materials emphasise the need for clear ownership and visibility of who is responsible for what.", "Allocation and pre-case models show a clear distinction between assigned work and formal case progression, implying a formal ownership transition."]}]}, {"stageClass": "s9", "stage": "Stage 9: Planning & Engagement", "capabilities": [{"title": "Case Management", "desc": "Maintain structured oversight of the investigation from initiation through to closure, including status, milestones, artefacts, dependencies and key decisions.", "pain": ["Case details are spread across multiple artefacts and updates.", "Status and milestone visibility is limited.", "A fragmented case view increases administration and inconsistency."], "evidence": ["Internal capability material describes the need for a single source of truth for case status, milestones and key decisions and notes current manual duplication across environments.", "Supporting narrative content explains that updates can drift over time when recorded in different places."]}, {"title": "Investigation Planning", "desc": "Define the investigation approach, scope, lines of enquiry, activities, timelines and roles so work can proceed in a deliberate and reviewable way.", "pain": ["Planning approaches vary widely between investigators and teams.", "There is no consistently structured planning artefact.", "Poor planning visibility makes handover and review harder."], "evidence": ["The internal capability dataset describes investigation planning as defining scope, hypotheses, information needs, timelines and roles, and notes inconsistent template use today.", "Internal reality-check content refers to plans being created in unstructured documents and notes."]}, {"title": "Stakeholder Engagement", "desc": "Manage interaction with relevant internal and external stakeholders so communication is coordinated, purposeful and aligned to the needs of the investigation.", "pain": ["Stakeholder interactions can be fragmented across channels.", "Communication approaches vary and are not always visible to others.", "Poor coordination increases follow-up effort and risk of inconsistent messaging."], "evidence": ["Internal process and narrative material refers to external parties, internal reviewers and operational stakeholders participating throughout the investigation journey.", "Current-state evidence shows email-heavy coordination across investigations and related review activities."]}, {"title": "Entry Communication (Entry Letter)", "desc": "Issue formal communication to notify the commencement of an investigation, providing clarity on scope, expectations, and obligations to all relevant parties.", "pain": ["Investigation initiation is not consistently communicated to affected parties.", "Stakeholders lack clarity on when an investigation formally begins.", "Variation in communication approach creates inconsistencies in customer experience."], "evidence": ["Current engagement activities are handled via unstructured communication such as email.", "No standardised initiation communication is consistently applied across cases.", "Stakeholder engagement processes indicate fragmented communication practices."]}]}, {"stageClass": "s10", "stage": "Stage 10: Evidence Management", "capabilities": [{"title": "Evidence Capture", "desc": "Collect, register and manage evidence in a way that supports reliability, discoverability, traceability and confidence in subsequent findings.", "pain": ["Evidence is fragmented across channels and artefacts.", "Discoverability depends heavily on manual discipline.", "Versioning and completeness can be inconsistent."], "evidence": ["The internal capability dataset explicitly states evidence is fragmented across email, uploads and shared locations and then manually registered and filed.", "Internal current-state materials identify search effort, omission risk and administrative burden from fragmented evidence handling."]}, {"title": "Information Requests", "desc": "Issue, monitor and follow through on requests for information so required evidence can be obtained within expected timeframes and with clear accountability.", "pain": ["Requests and follow-ups are manually tracked.", "Missing reminders and overdue items slow the investigation.", "Status visibility varies between investigators and teams."], "evidence": ["The internal capability dataset describes requests and follow-ups as being tracked manually, commonly in spreadsheets and email, with limited automation or visibility.", "Information-gathering process modelling similarly highlights the need for follow-up and additional information loops."]}, {"title": "Information Management", "desc": "Maintain investigation materials, notes, submissions and supporting artefacts in an organised form so they can be understood, reviewed and reused.", "pain": ["Working papers and notes are not consistently structured.", "Reviewers can struggle to understand the case quickly.", "Reuse of prior material is harder than it should be."], "evidence": ["Internal materials describe manual capture of notes, submissions and related artefacts with limited structure and re-use.", "Evidence and interview support capabilities in the internal dataset reinforce the need for organised, reviewable investigation artefacts."]}]}, {"stageClass": "s11", "stage": "Stage 11: Analysis & Determination", "capabilities": [{"title": "Evidence Analysis", "desc": "Analyse information and evidence to establish facts, test hypotheses, identify inconsistencies and support defensible conclusions.", "pain": ["Analysis is performed using disconnected tools and local practice.", "Reasoning capture is inconsistent.", "High manual effort is required to turn evidence into a coherent narrative."], "evidence": ["The internal capability dataset describes analysis as being performed primarily in spreadsheets and investigator judgement, with significant manual effort required to assemble evidence into a decision-ready narrative.", "Internal narrative material emphasises reliance on individual expertise and fragmented tools."]}, {"title": "Determination & Modelling", "desc": "Assess likely outcomes, liabilities or scenarios using structured reasoning so conclusions are consistent, reviewable and proportionate.", "pain": ["Determinations rely on manual calculations and interpretation.", "Different cases can be reasoned through differently.", "The audit trail from evidence to conclusion is not always clear."], "evidence": ["Internal capability material on liability and decisioning notes manual assessment, spreadsheet use and inconsistency risk.", "Related current-state descriptions highlight copy-paste effort and heavy dependence on investigator expertise."]}, {"title": "Liability Calculation & Determination", "desc": "Assess and quantify the outcome of the investigation by analysing evidence, applying rules, and calculating liabilities or impacts in a structured and repeatable manner.", "pain": ["Calculations are performed manually leading to inconsistencies and potential errors.", "Different investigators may apply different approaches to determining outcomes.", "Auditability of calculations is limited due to fragmented working artefacts."], "evidence": ["Current-state analysis relies on spreadsheets and manual calculation processes.", "Investigator-driven analysis results in variation in outcomes and approach.", "Existing artefacts highlight manual effort in assembling decision-ready outputs."]}, {"title": "Legal & Policy Alignment", "desc": "Ensure proposed conclusions and actions are consistent with legislation, policy, precedent and the limits of authority.", "pain": ["Legal and policy review often relies on informal consultation.", "Application of precedent is not always transparently recorded.", "Governance effort increases when review rationale is weak."], "evidence": ["The internal capability dataset defines legal and policy review as validating findings against advice, policy and precedent and notes current reliance on informal consultation.", "Internal current-state material refers to review outcomes and rationale not always being documented in a structured way."]}, {"title": "Investigation Reporting", "desc": "Compile structured investigation outputs that summarise evidence, analysis, findings and decisions to support review, governance, and future reference.", "pain": ["Investigation outputs are not consistently structured across teams.", "Reviewers must interpret disparate and unstructured documentation.", "Knowledge from investigations is not easily reusable."], "evidence": ["Working papers and reports are created in unstructured formats such as documents and notes.", "Governance reviews rely on manually compiled case documentation.", "Lack of standardised reporting format reduces efficiency and consistency."]}]}, {"stageClass": "s12", "stage": "Stage 12: Approval & Execution", "capabilities": [{"title": "Decision Approval", "desc": "Obtain the internal endorsement required to proceed with significant conclusions, actions or communications so outcomes are properly governed.", "pain": ["Approvals are frequently handled through informal channels.", "It is hard to see pending approvals and bottlenecks.", "Approval rationale and conditions are not always fully traceable."], "evidence": ["The internal capability dataset states approvals are typically obtained through email or informal discussion, with limited workflow visibility and incomplete audit trail.", "Supporting narrative content notes slow progression when approvers are unavailable or approval status is unclear."]}, {"title": "Assessment & Outcome Generation", "desc": "Translate investigation determinations into formal, actionable outputs such as assessments, notices or enforcement actions, ensuring outcomes are structured, consistent and ready for execution.", "pain": ["Translation of decisions into formal outputs is manual and inconsistent.", "Variation in output formats creates downstream inefficiencies.", "Lack of structured outputs reduces clarity and traceability of outcomes."], "evidence": ["Outcome artefacts are generated manually following decision approval.", "Current-state processes indicate reliance on document-based outputs.", "Fragmentation between decision and execution stages is observed in process flows."]}, {"title": "Outcome Execution", "desc": "Carry through approved outcomes, actions or remedies in a controlled and traceable manner consistent with the investigation decision.", "pain": ["Execution approaches vary between investigators and teams.", "Administrative effort increases when outcome handling is manual.", "Consistency in applying actions or remedies is harder to assure."], "evidence": ["Internal capability material on sanctions, remedies and outcome notification notes manual execution pathways and dependence on local practice.", "Related current-state descriptions highlight manual document generation and fragmented execution activities."]}, {"title": "Outcome Communication (Exit Letter)", "desc": "Communicate the outcome of the investigation in a clear, formal and consistent manner, outlining decisions, actions taken, and next steps where applicable.", "pain": ["Outcome communication varies across cases and investigators.", "Stakeholders may not clearly understand investigation outcomes or next steps.", "Communication gaps result in increased follow-up and disputes."], "evidence": ["Outcome communication is currently handled through manual and inconsistent channels.", "No standardised communication templates are consistently applied.", "Post-investigation interactions indicate gaps in clarity and completeness of communication."]}, {"title": "Exception Governance", "desc": "Manage departures from standard rules, assumptions or pathways so exceptions are deliberate, justified and visible for review.", "pain": ["Exceptions and discretionary decisions are currently informal.", "Rationale for override decisions is not consistently structured.", "Governance review is weakened when exceptions cannot be clearly distinguished from standard decisions."], "evidence": ["The internal capability dataset explicitly defines governed exception and override management and notes that today’s controls are informal, with rationale captured mostly in free text or email.", "Internal governance material highlights the absence of a consistent control layer for exception handling."]}]}, {"stageClass": "s13", "stage": "Stage 13: Closure & Insights", "capabilities": [{"title": "Performance Reporting", "desc": "Produce reliable reporting and insight on volumes, timeliness, outcomes, quality and trends so leaders can oversee performance and target improvement.", "pain": ["Reporting is assembled manually and takes significant effort.", "Performance measures are hard to produce consistently.", "Real-time visibility of trends and bottlenecks is limited."], "evidence": ["The internal capability dataset describes reporting as primarily spreadsheet-based and discussion-driven, with limited end-to-end systemic insight.", "Internal current-state commentary states this constrains continuous improvement because throughput, cycle time and rework drivers are difficult to measure reliably."]}, {"title": "Dispute Management", "desc": "Manage post-outcome challenges, objections or disputes in a way that preserves fairness, traceability and continuity of the underlying matter.", "pain": ["Post-outcome challenges can become disconnected from the original matter context.", "Consistency in handling disputes is harder when records are fragmented.", "Continuity across the original matter and the challenge lifecycle is not always strong."], "evidence": ["Internal investigation and related compliance artefacts show that objection and dispute handling remains a recognised downstream requirement of the overall operating model.", "Your broader capability work positions challenge handling as part of the end-to-end lifecycle."]}, {"title": "Continuous Improvement", "desc": "Capture patterns, pain points and lessons from completed work so processes, controls and decision quality can improve over time.", "pain": ["Lessons learned are not consistently captured.", "Recurring issues reappear because improvement signals are fragmented.", "It is harder to prioritise change without a clear evidence base."], "evidence": ["Internal capability work references pain points, opportunities and the need for feedback loops across the current state.", "Your investigation capability and pain-point work explicitly aims to map current-state pain to future-state capability improvements."]}, {"title": "Knowledge Management", "desc": "Maintain reusable investigation knowledge, precedents, guidance and examples so capability is retained and applied more consistently across teams.", "pain": ["Knowledge is dispersed across documents, notes and individual practice.", "New staff rely heavily on local guidance and tacit knowledge.", "Reuse of precedents and good practice is inconsistent."], "evidence": ["Related internal capability work shows the importance of maintaining precedents, guidance and policy evidence as reusable knowledge assets.", "Current-state narrative material across investigation capabilities repeatedly highlights dependence on individual judgement and local practice, which this capability addresses."]}]}];
-const map=document.getElementById("map");
-const overlay=document.getElementById("overlay");
-const panel=document.getElementById("panel");
-const title=document.getElementById("title");
-const desc=document.getElementById("desc");
-const pain=document.getElementById("pain");
-const evidence=document.getElementById("evidence");
 
-data.forEach(stage=>{
-  const col=document.createElement("div");
-  col.className="column";
-  const h=document.createElement("div");
-  h.className="header "+stage.stageClass;
-  h.innerText=stage.stage;
-  const track=document.createElement("div");
-  track.className="track";
-  stage.capabilities.forEach(i=>{
-    const card=document.createElement("div");
-    card.className="card";
-    card.tabIndex=0;
-    card.innerHTML=`<strong>${i.title}</strong><div class="hint">Click for full detail</div>`;
-    card.onclick=()=>openPanel(i);
-    card.onkeypress=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openPanel(i);}};
+<script>
+const data = [
+  {
+    stageClass: "s1",
+    stage: "Stage 1: Intelligence & Lead Generation",
+    capabilities: [
+      {
+        title: "Intelligence & Referral Management",
+        desc: "Capture, register and manage intelligence, referrals, and allegations from multiple sources so potential compliance issues can be consistently recognised and progressed.",
+        pain: [
+          "Intelligence captured inconsistently across channels",
+          "Referrals duplicated or lost",
+          "Information quality varies significantly"
+        ],
+        evidence: [
+          "Email and manual queues used for intake",
+          "Limited visibility across teams",
+          "Fragmented IR/PIC entry points"
+        ]
+      },
+      {
+        title: "Lead Identification Management",
+        desc: "Identify potential investigation opportunities using patterns, triggers, and behavioural signals.",
+        pain: [
+          "Identification is reactive",
+          "Trigger detection inconsistent",
+          "Opportunities missed or delayed"
+        ],
+        evidence: [
+          "Weak linkage between analytics and operations",
+          "Separate processes for case generation"
+        ]
+      },
+      {
+        title: "External Data Utilisation",
+        desc: "Integrate external data sources to enhance detection and validation of potential risks.",
+        pain: [
+          "External data disconnected from workflow",
+          "Manual interpretation of data",
+          "Effort required to corroborate information"
+        ],
+        evidence: [
+          "External data not tightly integrated",
+          "Used ad hoc by investigators"
+        ]
+      },
+      {
+        title: "Internal Signal Detection",
+        desc: "Detect potential non-compliance using internal operational, customer and revenue data.",
+        pain: [
+          "Signals not consistently surfaced",
+          "Reliance on manual review",
+          "Risks identified too late"
+        ],
+        evidence: [
+          "Heavily dependent on investigator knowledge",
+          "Limited automation of detection"
+        ]
+      }
+    ]
+  },
+  {
+    stageClass: "s2",
+    stage: "Stage 2: Lead Registration & Tracking",
+    capabilities: [
+      {
+        title: "Lead Intake Management",
+        desc: "Manage intake of potential investigation leads in a structured and consistent manner.",
+        pain: [
+          "Multiple intake channels",
+          "Duplicate entry",
+          "No standard approach"
+        ],
+        evidence: [
+          "Email, spreadsheets and system fragmentation"
+        ]
+      },
+      {
+        title: "Lead Registration Management",
+        desc: "Register leads into a formal system of record with required attributes.",
+        pain: [
+          "Manual entry across systems",
+          "Missing or incomplete data"
+        ],
+        evidence: [
+          "Repeated data entry observed"
+        ]
+      },
+      {
+        title: "Lead Tracking Management",
+        desc: "Track leads through their lifecycle from intake to progression or closure.",
+        pain: [
+          "No single status view",
+          "Leads become stale or lost"
+        ],
+        evidence: [
+          "Spreadsheet-based tracking"
+        ]
+      },
+      {
+        title: "Lead Status Management",
+        desc: "Maintain consistent lifecycle states for leads.",
+        pain: [
+          "Status definitions vary",
+          "Progress unclear"
+        ],
+        evidence: [
+          "Manual updates, inconsistent states"
+        ]
+      },
+      {
+        title: "Traceability & Audit Management",
+        desc: "Maintain a complete audit trail of all actions and decisions.",
+        pain: [
+          "Poor auditability",
+          "Hard to reconstruct decisions"
+        ],
+        evidence: [
+          "Email and fragmented artefacts"
+        ]
+      },
+      {
+        title: "Lead Portfolio Management",
+        desc: "Provide visibility of pipeline volume, ageing and distribution.",
+        pain: [
+          "No holistic view",
+          "Poor backlog visibility"
+        ],
+        evidence: [
+          "No single reporting view"
+        ]
+      }
+    ]
+  },
+  {
+    stageClass: "s3",
+    stage: "Stage 3: Data Validation & Enrichment",
+    capabilities: [
+      {
+        title: "Customer Identification & Resolution",
+        desc: "Resolve and associate correct entities to cases.",
+        pain: [
+          "Complex matching",
+          "Multiple identifiers"
+        ],
+        evidence: [
+          "Manual reconciliation required"
+        ]
+      },
+      {
+        title: "Data Quality Management",
+        desc: "Ensure completeness, accuracy and consistency of data.",
+        pain: [
+          "Data quality issues surface late"
+        ],
+        evidence: [
+          "Rework required downstream"
+        ]
+      },
+      {
+        title: "Data Validation Management",
+        desc: "Validate information against rules and trusted sources.",
+        pain: [
+          "Reactive validation"
+        ],
+        evidence: [
+          "Validation loops in BPMN"
+        ]
+      },
+      {
+        title: "Data Enrichment & Context Management",
+        desc: "Build context by combining multiple information sources.",
+        pain: [
+          "Context assembled manually"
+        ],
+        evidence: [
+          "Fragmented data sources"
+        ]
+      },
+      {
+        title: "Data Integration Management",
+        desc: "Consolidate multi-source data into usable structure.",
+        pain: [
+          "No integrated view"
+        ],
+        evidence: [
+          "Multiple systems used"
+        ]
+      },
+      {
+        title: "Duplicate Management",
+        desc: "Identify and manage duplicate leads.",
+        pain: [
+          "Duplicate effort"
+        ],
+        evidence: [
+          "Duplicate PICs identified"
+        ]
+      }
+    ]
+  },
+  {
+    stageClass: "s4",
+    stage: "Stage 4: Triage Assessment & Decisioning",
+    capabilities: [
+      {
+        title: "Case Assessment Management",
+        desc: "Assess whether a lead warrants investigation.",
+        pain: [
+          "Subjective decisions"
+        ],
+        evidence: [
+          "Investigator-led assessment"
+        ]
+      },
+      {
+        title: "Decision Framework Management",
+        desc: "Apply consistent decision logic across cases.",
+        pain: [
+          "Inconsistent application"
+        ],
+        evidence: [
+          "Local heuristics"
+        ]
+      },
+      {
+        title: "Risk Assessment Management",
+        desc: "Evaluate risk level and impact.",
+        pain: [
+          "Risk subjectivity"
+        ],
+        evidence: [
+          "Variation in scoring"
+        ]
+      },
+      {
+        title: "Eligibility & Readiness Management",
+        desc: "Determine readiness for progression.",
+        pain: [
+          "Incomplete cases progress"
+        ],
+        evidence: [
+          "Rework required"
+        ]
+      },
+      {
+        title: "Information Requirement Management",
+        desc: "Identify and manage required additional information.",
+        pain: [
+          "Late discovery"
+        ],
+        evidence: [
+          "Rework loops"
+        ]
+      }
+    ]
+  },
+  {
+    stageClass: "s5",
+    stage: "Stage 5: Governance & Pre-Case Control",
+    capabilities: [
+      {
+        title: "Decision Governance & Approval Management",
+        desc: "Apply oversight and approval to decisions.",
+        pain: [
+          "Informal approval pathways"
+        ],
+        evidence: [
+          "Email-based approvals"
+        ]
+      },
+      {
+        title: "Case Readiness Management",
+        desc: "Ensure cases are ready before progression.",
+        pain: [
+          "Premature progression"
+        ],
+        evidence: [
+          "Validation gaps"
+        ]
+      },
+      {
+        title: "Decision Recording Management",
+        desc: "Capture decisions and rationale.",
+        pain: [
+          "Poor documentation"
+        ],
+        evidence: [
+          "Free-text notes"
+        ]
+      },
+      {
+        title: "Pre-Case Outcome Management",
+        desc: "Manage outcomes prior to case creation.",
+        pain: [
+          "Weak closure discipline"
+        ],
+        evidence: [
+          "Repeated effort"
+        ]
+      }
+    ]
+  },
+  {
+    stageClass: "s6",
+    stage: "Stage 6: Demand & Work Management",
+    capabilities: [
+      {
+        title: "Work Demand Management",
+        desc: "Manage and control the inflow of investigation work to ensure demand is visible, prioritised, and aligned to organisational objectives.",
+        pain: [
+          "No consolidated view of incoming work across channels",
+          "Demand fluctuates unpredictably and is difficult to forecast",
+          "High-risk work not consistently prioritised"
+        ],
+        evidence: []
+      },
+      {
+        title: "Work Queue Management",
+        desc: "Maintain structured queues of work items to enable prioritisation, sequencing and controlled processing.",
+        pain: [
+          "No single queue — work managed across email, spreadsheets, and systems",
+          "Items sit idle or are duplicated across queues",
+          "No clear prioritisation mechanism"
+        ],
+        evidence: []
+      },
+      {
+        title: "Work Distribution Management",
+        desc: "Distribute work across investigators and teams based on defined criteria such as priority, skill, and capacity.",
+        pain: [
+          "Work assigned manually by team leaders",
+          "Mismatch between case complexity and investigator capability",
+          "Frequent reassignment and delays"
+        ],
+        evidence: []
+      },
+      {
+        title: "Allocation Rule Governance",
+        desc: "Define and enforce rules governing how work is allocated and prioritised.",
+        pain: [
+          "Allocation rules are implicit or differ by team",
+          "Decisions depend on individual judgement rather than policy",
+          "No transparency in how work is assigned"
+        ],
+        evidence: []
+      },
+      {
+        title: "Workload Management",
+        desc: "Manage the distribution and balance of workload across resources to optimise efficiency and timeliness.",
+        pain: [
+          "Uneven workload distribution across investigators",
+          "Some investigators overloaded while others underutilised",
+          "Delays driven by bottlenecks rather than demand"
+        ],
+        evidence: []
+      },
+      {
+        title: "Work Tracking Management",
+        desc: "Track the ownership, status and progression of work items throughout their lifecycle.",
+        pain: [
+          "Fragmented tracking across multiple tools",
+          "No real-time view of ownership or progress",
+          "Manual effort required to establish status"
+        ],
+        evidence: []
+      },
+      {
+        title: "Work Communication Management",
+        desc: "Communicate work assignments, updates and changes to relevant stakeholders.",
+        pain: [
+          "Reliance on email for assignment and updates",
+          "Lack of context in handovers",
+          "High volume of clarification and follow-up"
+        ],
+        evidence: []
+      }
+    ]
+  },
+  {
+    stageClass: "s7",
+    stage: "Stage 7: Case Qualification (Pre-Case)",
+    capabilities: [
+      {
+        title: "Case Assessment Management",
+        desc: "Assess potential cases to determine relevance, seriousness and investigative value.",
+        pain: [
+          "Assessment criteria are not standardised",
+          "Similar cases assessed differently by different investigators",
+          "Heavy reliance on individual judgement"
+        ],
+        evidence: []
+      },
+      {
+        title: "Data Quality Management",
+        desc: "Ensure information used during qualification is complete, accurate and usable.",
+        pain: [
+          "Key data missing or incorrect",
+          "Data issues discovered late",
+          "Rework driven by poor upstream data"
+        ],
+        evidence: []
+      },
+      {
+        title: "Case Classification & Risk Assessment",
+        desc: "Classify cases and assess associated risk to support consistent prioritisation and decision-making.",
+        pain: [
+          "Risk scoring is subjective and inconsistent",
+          "Limited visibility of risk drivers",
+          "Difficulty prioritising across revenue lines"
+        ],
+        evidence: []
+      },
+      {
+        title: "Decision & Threshold Management",
+        desc: "Apply defined thresholds and decision rules to determine whether a case should proceed.",
+        pain: [
+          "No consistent thresholds for progression",
+          "Low-value cases proceed unnecessarily",
+          "High-value cases delayed due to unclear criteria"
+        ],
+        evidence: []
+      },
+      {
+        title: "Workflow Routing Management",
+        desc: "Direct cases to the appropriate pathway (progress, escalate, close) based on defined decision outcomes.",
+        pain: [
+          "Routing handled manually and inconsistently",
+          "Cases follow inefficient or incorrect paths",
+          "Rework caused by misrouting"
+        ],
+        evidence: []
+      },
+      {
+        title: "Rules-Based Automation",
+        desc: "Automate decisions and processing steps using predefined business rules.",
+        pain: [
+          "Manual execution of repeatable decisions",
+          "Low utilisation of automation opportunities",
+          "Inconsistent application of logic"
+        ],
+        evidence: []
+      },
+      {
+        title: "Exception & Escalation Management",
+        desc: "Identify, manage and escalate cases that fall outside standard conditions or require additional authority.",
+        pain: [
+          "Escalation pathways are informal",
+          "Limited visibility of escalated items",
+          "Decision outcomes influenced by who is consulted"
+        ],
+        evidence: []
+      },
+      {
+        title: "SLA & Time Management",
+        desc: "Monitor and enforce time-based service levels for case assessment and qualification.",
+        pain: [
+          "No enforcement of SLAs",
+          "Cases sit idle without action",
+          "Delays not identified proactively"
+        ],
+        evidence: []
+      },
+      {
+        title: "Pre-Case Outcome Management",
+        desc: "Manage outcomes of pre-case processing, including closure or progression to formal investigation.",
+        pain: [
+          "Weak closure discipline",
+          "Closed matters resurface due to lack of reasoning",
+          "Lack of clarity on why cases were not progressed"
+        ],
+        evidence: []
+      }
+    ]
+  },
+  {
+    stageClass: "s8",
+    stage: "Stage 8: Case Establishment",
+    capabilities: [
+      {
+        title: "Investigation Case Management",
+        desc: "Create and maintain a formal investigation case record as the system of record for all investigation activities.",
+        pain: [
+          "Case creation duplicated across systems",
+          "Case details become inconsistent over time",
+          "Lack of a single source of truth"
+        ],
+        evidence: []
+      },
+      {
+        title: "Case Ownership Management",
+        desc: "Assign and maintain clear accountability for each case.",
+        pain: [
+          "Ownership unclear at transition to case",
+          "Multiple handoffs create confusion",
+          "Responsibility unclear at key points"
+        ],
+        evidence: []
+      },
+      {
+        title: "Case Workflow Establishment",
+        desc: "Initiate structured workflows to govern case progression and activities.",
+        pain: [
+          "No consistent workflow initiation",
+          "Cases handled differently by investigators",
+          "Work starts without structure"
+        ],
+        evidence: []
+      },
+      {
+        title: "Case Structuring & Planning Management",
+        desc: "Define the structure, scope and initial plan for each investigation case.",
+        pain: [
+          "Plans are not consistently documented",
+          "No standard case structure",
+          "Difficult to review or hand over work"
+        ],
+        evidence: []
+      }
+    ]
+  },
+  {
+    stageClass: "s9",
+    stage: "Stage 9: Planning & Engagement",
+    capabilities: [
+      {
+        title: "Case Management",
+        desc: "Maintain visibility, control and coordination of investigation cases throughout their lifecycle.",
+        pain: [
+          "Case data spread across multiple tools",
+          "Status and progress unclear",
+          "High administrative overhead"
+        ],
+        evidence: []
+      },
+      {
+        title: "Investigation Planning Management",
+        desc: "Establish a structured plan for investigation activities, timelines and responsibilities.",
+        pain: [
+          "Planning varies by investigator",
+          "No standard templates",
+          "Plans not visible or reusable"
+        ],
+        evidence: []
+      },
+      {
+        title: "Stakeholder Engagement Management",
+        desc: "Manage communication and interactions with internal and external stakeholders.",
+        pain: [
+          "Stakeholder interactions fragmented",
+          "Multiple channels used inconsistently",
+          "Duplicate or conflicting communication"
+        ],
+        evidence: []
+      },
+      {
+        title: "Communication Management (Entry)",
+        desc: "Manage formal communication associated with initiation of investigation.",
+        pain: [
+          "Entry communication inconsistent",
+          "Stakeholders unclear on expectations",
+          "No standard templates"
+        ],
+        evidence: []
+      }
+    ]
+  },
+  {
+    stageClass: "s10",
+    stage: "Stage 10: Evidence Management",
+    capabilities: [
+      {
+        title: "Evidence Management",
+        desc: "Capture, store and manage evidence to support investigation activities.",
+        pain: [
+          "Evidence stored across multiple locations",
+          "Difficult to locate evidence",
+          "Risk of missing or duplicate evidence"
+        ],
+        evidence: []
+      },
+      {
+        title: "Information Request Management",
+        desc: "Manage requests for information and ensure timely response and tracking.",
+        pain: [
+          "Requests tracked manually",
+          "No visibility of outstanding requests",
+          "Follow-ups inconsistent"
+        ],
+        evidence: []
+      },
+      {
+        title: "Case Information Management",
+        desc: "Manage all documents, notes and working artefacts associated with the investigation.",
+        pain: [
+          "Notes and documents unstructured",
+          "Difficult to review cases quickly",
+          "Limited reuse of prior information"
+        ],
+        evidence: []
+      }
+    ]
+  },
+  {
+    stageClass: "s11",
+    stage: "Stage 11: Analysis & Determination",
+    capabilities: [
+      {
+        title: "Evidence Analysis",
+        desc: "Analyse collected evidence to establish facts and identify inconsistencies.",
+        pain: [
+          "Analysis reliant on spreadsheets",
+          "No consistency in approach",
+          "High manual effort"
+        ],
+        evidence: []
+      },
+      {
+        title: "Decision Modelling",
+        desc: "Model potential outcomes based on evidence and defined rules.",
+        pain: [
+          "Inconsistent reasoning across investigators",
+          "Limited traceability between evidence and outcome",
+          "No standard modelling approach"
+        ],
+        evidence: []
+      },
+      {
+        title: "Outcome Determination",
+        desc: "Determine the formal outcome of the investigation including liabilities or actions.",
+        pain: [
+          "Manual calculation of outcomes",
+          "Risk of errors",
+          "Inconsistent determination methods"
+        ],
+        evidence: []
+      },
+      {
+        title: "Legal & Policy Alignment",
+        desc: "Ensure investigation outcomes align with legislation, policy and precedent.",
+        pain: [
+          "Reliance on informal legal consultation",
+          "Inconsistent application of policy",
+          "Limited documentation of rationale"
+        ],
+        evidence: []
+      },
+      {
+        title: "Investigation Reporting",
+        desc: "Produce structured investigation outputs to support governance and decision-making.",
+        pain: [
+          "Reports unstructured",
+          "Difficult for reviewers to interpret",
+          "Low reuse of prior reports"
+        ],
+        evidence: []
+      }
+    ]
+  },
+  {
+    stageClass: "s12",
+    stage: "Stage 12: Approval & Execution",
+    capabilities: [
+      {
+        title: "Decision Approval",
+        desc: "Obtain appropriate approvals for investigation outcomes.",
+        pain: [
+          "Approval handled through email",
+          "Limited visibility of status",
+          "Delays in approvals"
+        ],
+        evidence: []
+      },
+      {
+        title: "Outcome Execution",
+        desc: "Execute approved investigation outcomes in a controlled and consistent manner.",
+        pain: [
+          "Execution varies between investigators",
+          "High manual effort",
+          "Inconsistent outcomes"
+        ],
+        evidence: []
+      },
+      {
+        title: "Outcome Communication Management",
+        desc: "Communicate investigation outcomes to stakeholders in a structured way.",
+        pain: [
+          "Communication inconsistent",
+          "Stakeholders unclear on outcomes",
+          "Increased disputes and follow-ups"
+        ],
+        evidence: []
+      },
+      {
+        title: "Exception Governance",
+        desc: "Manage exceptions and deviations from standard processes.",
+        pain: [
+          "Exceptions handled informally",
+          "No visibility of overrides",
+          "Governance risk"
+        ],
+        evidence: []
+      }
+    ]
+  },
+  {
+    stageClass: "s13",
+    stage: "Stage 13: Closure & Insights",
+    capabilities: [
+      {
+        title: "Performance Reporting",
+        desc: "Provide reporting on investigation performance and outcomes.",
+        pain: [
+          "Reporting manual and slow",
+          "Limited real-time visibility",
+          "Hard to identify trends"
+        ],
+        evidence: []
+      },
+      {
+        title: "Dispute Management",
+        desc: "Manage objections and disputes following investigation outcomes.",
+        pain: [
+          "Disputes disconnected from original case",
+          "Inconsistent handling",
+          "High rework"
+        ],
+        evidence: []
+      },
+      {
+        title: "Continuous Improvement",
+        desc: "Capture insights and improve processes based on investigation outcomes.",
+        pain: [
+          "Lessons not captured",
+          "Same issues repeated",
+          "Improvement not prioritised"
+        ],
+        evidence: []
+      },
+      {
+        title: "Knowledge Management",
+        desc: "Maintain reusable knowledge, guidance and precedents.",
+        pain: [
+          "Knowledge stored in documents and individuals",
+          "Difficult to onboard new staff",
+          "Inconsistent application of best practice"
+        ],
+        evidence: []
+      }
+    ]
+  }
+];
+
+const map = document.getElementById("map");
+const overlay = document.getElementById("overlay");
+const panel = document.getElementById("panel");
+const titleEl = document.getElementById("title");
+const stageLabel = document.getElementById("stageLabel");
+const descEl = document.getElementById("desc");
+const painEl = document.getElementById("pain");
+const evidenceEl = document.getElementById("evidence");
+
+data.forEach(stage => {
+  const col = document.createElement("div");
+  col.className = "column";
+
+  const h = document.createElement("div");
+  h.className = "header " + stage.stageClass;
+  h.innerText = stage.stage;
+
+  const track = document.createElement("div");
+  track.className = "track";
+
+  stage.capabilities.forEach(cap => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.tabIndex = 0;
+    card.innerHTML = `<strong>${cap.title}</strong><div class="hint">Click for full detail</div>`;
+    card.onclick = () => openPanel(stage.stage, cap);
+    card.onkeypress = (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openPanel(stage.stage, cap);
+      }
+    };
     track.appendChild(card);
   });
+
   col.appendChild(h);
   col.appendChild(track);
   map.appendChild(col);
 });
-function openPanel(i){
+
+function openPanel(stageName, item){
   overlay.classList.add("open");
   panel.classList.add("open");
-  title.innerText=i.title;
-  desc.innerText=i.desc;
-  pain.innerHTML="";
-  i.pain.forEach(x=>{let li=document.createElement("li");li.innerText=x;pain.appendChild(li);});
-  evidence.innerHTML="";
-  i.evidence.forEach(x=>{let li=document.createElement("li");li.innerText=x;evidence.appendChild(li);});
+  titleEl.innerText = item.title;
+  stageLabel.innerText = stageName;
+  descEl.innerText = item.desc;
+
+  painEl.innerHTML = "";
+  if (item.pain && item.pain.length) {
+    item.pain.forEach(x => {
+      const li = document.createElement("li");
+      li.innerText = x;
+      painEl.appendChild(li);
+    });
+  } else {
+    const li = document.createElement("li");
+    li.innerText = "No pain points loaded.";
+    painEl.appendChild(li);
+  }
+
+  evidenceEl.innerHTML = "";
+  if (item.evidence && item.evidence.length) {
+    item.evidence.forEach(x => {
+      const li = document.createElement("li");
+      li.innerText = x;
+      evidenceEl.appendChild(li);
+    });
+  } else {
+    const li = document.createElement("li");
+    li.innerText = "No evidence loaded.";
+    evidenceEl.appendChild(li);
+  }
 }
-  function closePanel(){
+
+function closePanel(){
   overlay.classList.remove("open");
   panel.classList.remove("open");
 }
 
-document.addEventListener('keydown', e=>{
-  if(e.key==='Escape') closePanel();
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closePanel();
 });
 
-
-/* ✅ ADD STEP 2 HERE */
 function exportCSV(){
   let rows = [];
-
-  rows.push([
-    "Stage",
-    "Capability",
-    "Description",
-    "Pain Points",
-    "Evidence"
-  ]);
+  rows.push(["Stage", "Capability", "Description", "Pain Points", "Evidence"]);
 
   data.forEach(stage => {
     stage.capabilities.forEach(cap => {
-
-      const pain = cap.pain.join(" | ");
-      const evidence = cap.evidence.join(" | ");
-
       rows.push([
         stage.stage,
         cap.title,
         cap.desc,
-        pain,
-        evidence
+        (cap.pain || []).join(" | "),
+        (cap.evidence || []).join(" | ")
       ]);
     });
   });
 
-  const csvContent = rows.map(row => 
-    row.map(field => `"${field.replace(/"/g, '""')}"`).join(",")
-  ).join("\n");
+  const csvContent = rows.map(row =>
+    row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(",")
+  ).join("\\n");
 
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
@@ -143,6 +1110,71 @@ function exportCSV(){
   link.click();
   document.body.removeChild(link);
 }
+
+function scrollToStart(){
+  document.querySelector(".container").scrollTo({ left: 0, behavior: "smooth" });
+}
+
+function expandAll(){
+  const firstAvailable = data
+    .map(stage => ({ stage: stage.stage, cap: stage.capabilities[0] }))
+    .filter(x => x.cap)[0];
+
+  if (firstAvailable) {
+    openPanel(firstAvailable.stage, firstAvailable.cap);
+  }
+}
 </script>
 </body>
 </html>
+<title>Investigation Capability Model</title>
+<style>
+body {font-family: Inter, sans-serif; background:#f4f6f9; padding:20px; margin:0;}
+h2 {margin:0 0 14px 0; font-size:22px; color:#111827;}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;}
+button{
+  padding:8px 12px;
+  border:1px solid #ccc;
+  background:#fff;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:12px;
+}
+button:hover{background:#f9fafb;}
+.container{display:flex;gap:10px;overflow-x:auto;align-items:flex-start;padding-bottom:6px;}
+.column{min-width:220px;flex:0 0 auto;}
+.header{
+  color:#fff;
+  padding:10px;
+  font-size:11px;
+  font-weight:700;
+  text-transform:uppercase;
+  border-radius:6px 6px 0 0;
+  text-align:center;
+  min-height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1.35;
+}
+.track{
+  background:#fff;
+  border:1px solid #ddd;
+  border-top:none;
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  border-radius:0 0 6px 6px;
+  min-height:560px;
+}
+.card{
+  background:#fafafa;
+  border:1px solid #e5e7eb;
+  padding:8px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:12px;
+  transition:all .15s ease;
+}
+.card:hover{background:#fff; border-color:#cbd5e1; box-shadow:0 1px 4px rgba(0,0,0,.05);}

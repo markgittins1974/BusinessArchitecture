@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRO Business Capability Map — L1 to L3</title>
+<style>
+  :root {
+    --vs1:#0f7a4e;  --vs1-bg:#f0faf5;
+    --vs2:#047857;  --vs2-bg:#ecfdf5;
+    --vs3:#1461a8;  --vs3-bg:#f0f6ff;
+    --vs4:#5b21b6;  --vs4-bg:#f5f3ff;
+    --vs5:#6d28d9;  --vs5-bg:#f7f4ff;
+    --vs6:#7c3aed;  --vs6-bg:#faf5ff;
+    --vs7:#b91c1c;  --vs7-bg:#fff4f4;
+    --vs8:#c2410c;  --vs8-bg:#fff7ed;
+    --vs9:#92400e;  --vs9-bg:#fffbf0;
+    --vs10:#78350f;  --vs10-bg:#fef3c7;
+    --vs11:#0369a1;  --vs11-bg:#eff6ff;
+    --vs12:#0ea5e9;  --vs12-bg:#f0f9ff;
+    --vs13:#0284c7;  --vs13-bg:#e0f2fe;
+    --vs14:#be185d;  --vs14-bg:#fff1f6;
+    --vs15:#9d174d;  --vs15-bg:#fdf2f8;
+    --vs16:#065f46;  --vs16-bg:#ecfdf5;
+    --vs17:#475569;  --vs17-bg:#f8fafc;
+    --vs18:#1e3a8a;  --vs18-bg:#eff6ff;
+    --border:#e2e5ea; --text:#111827; --muted:#6b7280;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Calibri','Segoe UI',system-ui,sans-serif; background:#f4f6f9; color:var(--text); }
+
+  .page-header { background:linear-gradient(135deg,#0f2a52 0%,#1e3f7a 100%); color:#fff; padding:24px 40px 18px; border-bottom:4px solid #e2b93f; }
+  .page-header h1 { font-size:22px; font-weight:700; letter-spacing:-.3px; }
+  .page-header p  { margin-top:4px; font-size:13px; opacity:.85; }
+  .page-header .meta { margin-top:10px; display:flex; gap:16px; font-size:11px; opacity:.7; flex-wrap:wrap; }
+
+  .toolbar { background:#1f2937; padding:7px 40px; display:flex; gap:7px; flex-wrap:wrap; align-items:center; }
+  .view-btn { padding:4px 11px; border:none; border-radius:5px; background:#374151; color:#fff; font-size:12px; cursor:pointer; font-family:inherit; white-space:nowrap; }
+  .view-btn:hover { background:#4b5563; }
+  .view-btn.active { background:#0f2a52; }
+
+  .legend { background:#fff; border-bottom:1px solid var(--border); padding:8px 40px; display:flex; gap:14px; align-items:center; flex-wrap:wrap; font-size:11px; }
+  .legend-item { display:flex; align-items:center; gap:4px; }
+  .legend-dot { width:10px; height:10px; border-radius:2px; }
+  .sys-legend { display:none; align-items:center; gap:7px; padding:2px 9px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:5px; font-size:11px; }
+  .sys-legend.visible { display:flex; }
+
+  .main { padding:20px 40px 60px; }
+
+  /* Accordion */
+  .vs-block { margin-bottom:24px; border-radius:9px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,.08); }
+  .vs-header { display:flex; align-items:center; padding:12px 18px; color:#fff; gap:11px; cursor:pointer; user-select:none; }
+  .vs-header:hover { filter:brightness(1.05); }
+  .vs-id    { font-size:10px; font-weight:700; opacity:.8; background:rgba(255,255,255,.2); padding:2px 7px; border-radius:18px; white-space:nowrap; }
+  .vs-name  { font-size:14px; font-weight:700; flex:1; }
+  .vs-count { font-size:11px; opacity:.75; white-space:nowrap; }
+  .vs-toggle{ font-size:16px; }
+  .vs-body  { background:#fff; border:1px solid var(--border); border-top:none; display:none; padding:13px; gap:9px; flex-wrap:wrap; }
+  .vs-body.open { display:flex; }
+
+  .cap-card  { flex:1 1 240px; max-width:340px; border:1px solid var(--border); border-radius:7px; overflow:hidden; background:#fafbfc; }
+  .cap-header{ display:flex; justify-content:space-between; align-items:flex-start; padding:8px 11px 6px; cursor:pointer; gap:7px; }
+  .cap-header:hover { background:#f0f4ff; }
+  .cap-title { font-size:13px; font-weight:600; flex:1; line-height:1.35; }
+  .cap-id    { font-size:10px; color:var(--muted); white-space:nowrap; margin-top:2px; }
+  .cap-arrow { font-size:11px; color:var(--muted); margin-top:3px; }
+
+  .sub-list { display:none; padding:4px 11px 8px; background:#fff; border-top:1px solid var(--border); }
+  .sub-list.open { display:block; }
+  .sub-item { font-size:11.5px; padding:3px 0 3px 11px; border-left:2px solid #e5e7eb; color:#374151; line-height:1.4; margin-bottom:2px; position:relative; }
+  .sub-item::before { content:"›"; position:absolute; left:3px; color:var(--muted); }
+
+  .proc-section { margin-top:6px; padding-top:6px; border-top:1px dashed #d1d5db; }
+  .proc-section-label { font-size:9.5px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px; }
+  .proc-link { display:flex; align-items:center; gap:4px; padding:3px 5px; margin:2px 0; border-radius:4px; text-decoration:none; font-size:11px; color:#1d4ed8; background:#eff6ff; border:1px solid #bfdbfe; }
+  .proc-link:hover { background:#dbeafe; }
+  .proc-cat  { font-size:9.5px; color:#64748b; background:#f1f5f9; padding:1px 4px; border-radius:7px; white-space:nowrap; }
+
+  /* Colour assignments */
+  .vs1 .vs-header { background:var(--vs1); }
+  .vs1 .cap-header:hover { background:var(--vs1-bg); }
+  .col-stage.vs1 .col-stage-hdr { background:var(--vs1);color:#fff; }
+  .vs2 .vs-header { background:var(--vs2); }
+  .vs2 .cap-header:hover { background:var(--vs2-bg); }
+  .col-stage.vs2 .col-stage-hdr { background:var(--vs2);color:#fff; }
+  .vs3 .vs-header { background:var(--vs3); }
+  .vs3 .cap-header:hover { background:var(--vs3-bg); }
+  .col-stage.vs3 .col-stage-hdr { background:var(--vs3);color:#fff; }
+  .vs4 .vs-header { background:var(--vs4); }
+  .vs4 .cap-header:hover { background:var(--vs4-bg); }
+  .col-stage.vs4 .col-stage-hdr { background:var(--vs4);color:#fff; }
+  .vs5 .vs-header { background:var(--vs5); }
+  .vs5 .cap-header:hover { background:var(--vs5-bg); }
+  .col-stage.vs5 .col-stage-hdr { background:var(--vs5);color:#fff; }
+  .vs6 .vs-header { background:var(--vs6); }
+  .vs6 .cap-header:hover { background:var(--vs6-bg); }
+  .col-stage.vs6 .col-stage-hdr { background:var(--vs6);color:#fff; }
+  .vs7 .vs-header { background:var(--vs7); }
+  .vs7 .cap-header:hover { background:var(--vs7-bg); }
+  .col-stage.vs7 .col-stage-hdr { background:var(--vs7);color:#fff; }
+  .vs8 .vs-header { background:var(--vs8); }
+  .vs8 .cap-header:hover { background:var(--vs8-bg); }
+  .col-stage.vs8 .col-stage-hdr { background:var(--vs8);color:#fff; }
+  .vs9 .vs-header { background:var(--vs9); }
+  .vs9 .cap-header:hover { background:var(--vs9-bg); }
+  .col-stage.vs9 .col-stage-hdr { background:var(--vs9);color:#fff; }
+  .vs10 .vs-header { background:var(--vs10); }
+  .vs10 .cap-header:hover { background:var(--vs10-bg); }
+  .col-stage.vs10 .col-stage-hdr { background:var(--vs10);color:#fff; }
+  .vs11 .vs-header { background:var(--vs11); }
+  .vs11 .cap-header:hover { background:var(--vs11-bg); }
+  .col-stage.vs11 .col-stage-hdr { background:var(--vs11);color:#fff; }
+  .vs12 .vs-header { background:var(--vs12); }
+  .vs12 .cap-header:hover { background:var(--vs12-bg); }
+  .col-stage.vs12 .col-stage-hdr { background:var(--vs12);color:#fff; }
+  .vs13 .vs-header { background:var(--vs13); }
+  .vs13 .cap-header:hover { background:var(--vs13-bg); }
+  .col-stage.vs13 .col-stage-hdr { background:var(--vs13);color:#fff; }
+  .vs14 .vs-header { background:var(--vs14); }
+  .vs14 .cap-header:hover { background:var(--vs14-bg); }
+  .col-stage.vs14 .col-stage-hdr { background:var(--vs14);color:#fff; }
+  .vs15 .vs-header { background:var(--vs15); }
+  .vs15 .cap-header:hover { background:var(--vs15-bg); }
+  .col-stage.vs15 .col-stage-hdr { background:var(--vs15);color:#fff; }
+  .vs16 .vs-header { background:var(--vs16); }
+  .vs16 .cap-header:hover { background:var(--vs16-bg); }
+  .col-stage.vs16 .col-stage-hdr { background:var(--vs16);color:#fff; }
+  .vs17 .vs-header { background:var(--vs17); }
+  .vs17 .cap-header:hover { background:var(--vs17-bg); }
+  .col-stage.vs17 .col-stage-hdr { background:var(--vs17);color:#fff; }
+  .vs18 .vs-header { background:var(--vs18); }
+  .vs18 .cap-header:hover { background:var(--vs18-bg); }
+  .col-stage.vs18 .col-stage-hdr { background:var(--vs18);color:#fff; }
+
+  /* Column view */
+  #col-map { display:none; flex-direction:row; gap:3px; height:calc(100vh - 155px); min-height:400px; padding:0 40px 16px; overflow-x:auto; }
+  .col-stage { display:flex; flex-direction:column; flex:1; min-width:0; }
+  .col-stage-hdr { padding:4px 4px 3px; display:flex; flex-direction:column; justify-content:flex-start; }
+  .col-vs-id    { font-size:8px; opacity:.75; margin-bottom:1px; }
+  .col-stage-title { font-size:9px; font-weight:700; line-height:1.2; margin-bottom:2px; }
+  .col-stage-desc  { font-size:6.5px; opacity:.88; line-height:1.3; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  .col-stage-body  { background:#fff; border:1px solid var(--border); border-top:none; flex:1; min-height:0; overflow:hidden; padding:2px 2px; display:flex; flex-direction:column; gap:1px; }
+  .col-stage-body.grid2 { display:grid; grid-template-columns:1fr 1fr; grid-auto-rows:1fr; overflow:hidden; gap:1px; }
+  .col-stage-body.grid2 .col-cap { flex:none; }
+  .col-cap { background:#f8fafc; border:1px solid var(--border); border-radius:2px; padding:2px 4px; color:var(--text); display:flex; align-items:center; justify-content:center; text-align:center; flex:1; min-height:0; overflow:hidden; }
+  .col-cap-name { font-size:10px; font-weight:600; line-height:1.25; width:100%; overflow:hidden; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; }
+
+  /* Systems overlay */
+  #col-map.sys-on .col-cap[data-sys="eSys"] { background:#dbeafe !important; border-color:#3b82f6 !important; }
+  #col-map.sys-on .col-cap[data-sys="eSys"] .col-cap-name { color:#1e3a8a; }
+
+  /* L1-only */
+  #col-map.l1-only .col-stage-body { display:none !important; }
+  #col-map.l1-only .col-stage      { flex:1 !important; }
+  #col-map.l1-only .col-stage-hdr  { min-height:70px; justify-content:center; }
+
+  @media print {
+    @page { size:A3 landscape; margin:5mm; }
+    body { background:#fff; }
+    .page-header { padding:10px 14px; }
+    .page-header h1 { font-size:14px; }
+    .toolbar,.legend,.main { display:none !important; }
+    #col-map { display:flex !important; height:auto !important; padding:0 3mm; gap:2px; overflow:visible; }
+    .col-stage-body { overflow:visible !important; }
+    .col-stage-body.grid2 { display:grid !important; grid-template-columns:1fr 1fr !important; }
+    .col-cap-name { font-size:7px !important; }
+    .col-stage-title { font-size:7.5px !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>SRO Business Capability Map</h1>
+  <p>State Revenue Office Victoria — Enterprise Business Capability Architecture L1 to L3</p>
+  <div class="meta">
+    <span>18 Capability Domains</span>
+    <span>75 L2 Capabilities</span>
+    <span>Source: SRO Enterprise Capability Model + LTX BTS</span>
+    <span>June 2026</span>
+  </div>
+</div>
+
+<div class="toolbar">
+  <button class="view-btn" id="expand-btn"    onclick="expandAll()">Expand All</button>
+  <button class="view-btn" id="col-view-btn"  onclick="toggleColView()">&#9783; Column View</button>
+  <button class="view-btn" id="l1-only-btn"   onclick="toggleL1Only()" style="background:#374151;">L1 Only</button>
+  <button class="view-btn" id="sys-overlay-btn" onclick="toggleSysOverlay()" style="background:#374151;">&#9899; Systems Off</button>
+  <button class="view-btn" onclick="downloadPPTX()" style="background:#7c3aed;">&#9647; Export PPTX</button>
+  <button class="view-btn" onclick="exportCSV()"    style="background:#065f46;">&#8595; Export CSV</button>
+  <button class="view-btn" onclick="printColView()" style="background:#374151;">&#128438; Print</button>
+  <div id="sys-legend" class="sys-legend">
+    <span style="font-size:11px;font-weight:700;color:#374151;">Systems:</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#3b82f6;border:1px solid #1d4ed8;display:inline-block;"></span>eSys</span>
+  </div>
+</div>
+
+<div class="legend">
+  <span style="font-weight:700;font-size:11px;color:#374151;">Domains:</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#0f7a4e;"></span>Customer</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#047857;"></span>Property</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#1461a8;"></span>Valuation</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#5b21b6;"></span>Exemptions</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#6d28d9;"></span>Eligibility</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#7c3aed;"></span>Applications</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#b91c1c;"></span>Liability</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#c2410c;"></span>Assessment</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#92400e;"></span>Reassessment</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#78350f;"></span>Amendment</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#0369a1;"></span>Returns</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#0ea5e9;"></span>Payment</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#0284c7;"></span>Refunds</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#be185d;"></span>Objection</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#9d174d;"></span>Investigation</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#065f46;"></span>Debt</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#475569;"></span>Transfer Duty</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#1e3a8a;"></span>Assurance</span>
+</div>
+
+<div id="col-map"></div>
+<div class="main" id="map"></div>
+
+<script>
+const capabilityMap = [
+  {
+    id: "SRO-01",
+    name: "Customer Management",
+    cls: "vs1",
+    capabilities: [
+      {
+        id: "SRO-01-L2-01", name: "Customer Data Management",
+        desc: "Establishes and maintains a uniquely identifiable customer record by assigning and managing a customer identifier and required identity attributes.",
+        l3: ["Customer Identification", "Customer Registration", "Identity Verification and Authentication", "Customer Address and Address Format Management", "Customer Data Verification and Validation", "Customer Profile Management", "Customer Contact Management"],
+        procedures: [
+          { name: "Duplicate Customers & Merge", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/duplicate.html", cat: "CRM", abs: true },
+          { name: "Change of Address", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/changeaddress.html", cat: "CRM", abs: true },
+          { name: "Change of Customer Details", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/changecustdet.html", cat: "CRM", abs: true }
+        ],
+      },
+      {
+        id: "SRO-01-L2-02", name: "Customer Service Request and Support Management",
+        desc: "Captures, tracks, and resolves customer enquiries across available service channels.",
+        l3: ["Enquiry Management", "Customer Identity Verification", "Complaint Management", "Service Level Management"],
+      },
+      {
+        id: "SRO-01-L2-03", name: "Customer Communication and Engagement",
+        desc: "Defines and manages the channels through which the organisation communicates with customers, including their availability and use.",
+        l3: ["Communication Channel Management", "Customer Notifications", "Customer Relationship Management"],
+      },
+    ]
+  },
+  {
+    id: "SRO-02",
+    name: "Property Management",
+    cls: "vs2",
+    capabilities: [
+      {
+        id: "SRO-02-L2-01", name: "Property Data Management",
+        desc: "Establishes and maintains uniquely identifiable property records using the attributes and references needed to locate and distinguish each property.",
+        l3: ["Property Identification", "Property Valuation", "Subdivision and Consolidation Management", "Property Address Management"],
+        procedures: [
+          { name: "Property Address Update", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/propertyaddressupdate.html", cat: "Property", abs: true },
+          { name: "Download Plans from Landata", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/plans.html", cat: "Property", abs: true }
+        ],
+      },
+      {
+        id: "SRO-02-L2-02", name: "Land Ownership Management",
+        desc: "Maintains property ownership records, transfers, ownership history, and related changes that impact administration and liability.",
+        l3: ["Property Ownership and Transfer Management"],
+        procedures: [
+          { name: "Land Ownership Transfer", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/landownershiptransfer.html", cat: "Land Tax", abs: true },
+          { name: "LOAN Party Process", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/loanparty.html", cat: "Land Tax", abs: true },
+          { name: "LOAN Property Process", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/loanproperty.html", cat: "Land Tax", abs: true },
+          { name: "LTX Trust Amendments", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/ltxtrustamendments.html", cat: "Land Tax", abs: true }
+        ],
+      },
+    ]
+  },
+  {
+    id: "SRO-03",
+    name: "Valuation",
+    cls: "vs3",
+    capabilities: [
+      {
+        id: "SRO-03-L2-01", name: "General Valuation Management",
+        desc: "Receive and apply general (VGV) valuations to Land Tax assessment cycle.",
+        l3: ["VGV general valuation application", "Valuation schedule maintenance", "Valuation data import from VGV"],
+        procedures: [
+          { name: "General Valuation Process", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/genval.html", cat: "Valuation", abs: true },
+          { name: "Supplementary Valuation Process", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/suppval.html", cat: "Valuation", abs: true },
+          { name: "Valuation Data Processing", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/valuationdataprocessing.html", cat: "Valuation", abs: true }
+        ],
+      },
+      {
+        id: "SRO-03-L2-02", name: "Supplementary Valuation Management",
+        desc: "Receive and apply supplementary valuations issued between general cycles.",
+        l3: ["Supplementary valuation application", "Impact assessment on existing assessments"],
+      },
+      {
+        id: "SRO-03-L2-03", name: "SRO-Requested Valuation Management",
+        desc: "Request and apply SRO-initiated valuations for specific properties.",
+        l3: ["SRO valuation request to VGV", "Outcome application to assessment"],
+      },
+      {
+        id: "SRO-03-L2-04", name: "Single Site Valuation Management",
+        desc: "Apply a single valuation across multiple related properties.",
+        l3: ["Single site designation", "Valuation spread across parcels"],
+      },
+      {
+        id: "SRO-03-L2-05", name: "Valuation Maintenance",
+        desc: "Maintain valuation records and reconcile against assessment data.",
+        l3: ["Valuation record correction", "Assessment cycle reconciliation"],
+      },
+    ]
+  },
+  {
+    id: "SRO-04",
+    name: "Exemption and Concession Management",
+    cls: "vs4",
+    capabilities: [
+      {
+        id: "SRO-04-L2-01", name: "Exemption Application Management",
+        desc: "Captures an exemption application and the required supporting information for processing.",
+        l3: ["Application Intake", "Application Assignment"],
+      },
+      {
+        id: "SRO-04-L2-02", name: "Exemption Processing",
+        desc: "Assesses whether the applicant or subject entity meets the criteria required for exemption.",
+        l3: ["Eligibility Determination", "Exemption Record Update", "Taxpayer Notification"],
+        procedures: [
+          { name: "Absentee Owner Surcharge (AOS)", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/aos.html", cat: "Land Tax", abs: true },
+          { name: "AOS Exemption Reporting", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/aosreporting.html", cat: "AOS", abs: true },
+          { name: "Build to Rent", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/buildtorent.html", cat: "Concessions", abs: true },
+          { name: "Apply PPL Exemption", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/ppl.html", cat: "Land Tax", abs: true },
+          { name: "Process Other Exemption Types", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/otherexemptions.html", cat: "Land Tax", abs: true }
+        ],
+      },
+      {
+        id: "SRO-04-L2-03", name: "Exemption Maintenance",
+        desc: "Defines and maintains exemption types, conditions, statuses, and other rules required for exemption administration.",
+        l3: ["Exemption Type Management"],
+      },
+    ]
+  },
+  {
+    id: "SRO-05",
+    name: "Eligibility Assessment",
+    cls: "vs5",
+    capabilities: [
+      {
+        id: "SRO-05-L2-01", name: "Eligibility Determination and Approval",
+        desc: "Determines whether the required eligibility conditions are met for the relevant process or benefit.",
+        l3: ["Eligibility Determination", "Eligibility Evaluation"],
+      },
+    ]
+  },
+  {
+    id: "SRO-06",
+    name: "Application Management",
+    cls: "vs6",
+    capabilities: [
+      {
+        id: "SRO-06-L2-01", name: "Application Processing",
+        desc: "Captures application details, supporting data, and required attachments for further processing.",
+        l3: ["Application Intake", "Application Review", "Application Approval", "Application Withdrawal"],
+      },
+      {
+        id: "SRO-06-L2-02", name: "Grant Disbursement Management",
+        desc: "Calculates the grant amount payable based on the applicable rules, values, and eligibility conditions.",
+        l3: ["Grant Amount Calculation"],
+      },
+    ]
+  },
+  {
+    id: "SRO-07",
+    name: "Liability Management",
+    cls: "vs7",
+    capabilities: [
+      {
+        id: "SRO-07-L2-01", name: "Liability Calculation",
+        desc: "Determines the tax amount to be applied using relevant rates, thresholds, and calculation rules.",
+        l3: ["Tax Rate Calculation"],
+        procedures: [
+          { name: "First Time Liability", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/ftl.html", cat: "Land Tax", abs: true }
+        ],
+      },
+      {
+        id: "SRO-07-L2-02", name: "Liability Interest and Penalties Management",
+        desc: "Calculates interest payable on outstanding liabilities using the applicable interest rules and periods.",
+        l3: ["Interest Calculation", "Penalty Calculation"],
+      },
+      {
+        id: "SRO-07-L2-03", name: "Liability Rate Maintenance",
+        desc: "Maintains core rate tables used in liability calculation, including historic and future-effective rates.",
+        l3: ["Rate Table Maintenance", "Penalty Rate Maintenance"],
+      },
+      {
+        id: "SRO-07-L2-04", name: "Liability Write-off Management",
+        desc: "Reviews and approves requests to write off liabilities in accordance with delegated authority and policy.",
+        l3: ["Liability Write-off Approval"],
+      },
+      {
+        id: "SRO-07-L2-05", name: "Periodic Liability Management",
+        desc: "Calculates periodic liabilities using the rules, thresholds, and data relevant to the applicable period.",
+        l3: ["Liability Calculation", "Liability Interest and Penalties Management", "Liability Rate Maintenance", "Liability Write-off Management"],
+      },
+      {
+        id: "SRO-07-L2-06", name: "Annual Liability Management",
+        desc: "Calculates annual liabilities using annual values, thresholds, and business rules.",
+        l3: ["Liability Calculation", "Liability Interest and Penalties Management", "Liability Rate Maintenance", "Liability Write-off Management"],
+        procedures: [
+          { name: "LTX Grouping", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/grouping.html", cat: "Land Tax", abs: true }
+        ],
+      },
+    ]
+  },
+  {
+    id: "SRO-08",
+    name: "Assessment Management",
+    cls: "vs8",
+    capabilities: [
+      {
+        id: "SRO-08-L2-01", name: "Assessment Generation and Issue",
+        desc: "Creates assessments individually based on specific transactions, cases, or manually initiated events.",
+        l3: ["Manual Assessment Generation", "Bulk Assessment Generation", "Digital Assessment Issue", "Assessment Notification"],
+      },
+      {
+        id: "SRO-08-L2-02", name: "Assessment Maintenance",
+        desc: "Updates issued assessment records to reflect corrected information, amended data, or changed circumstances.",
+        l3: ["Assessment Update", "Assessment Withdrawal", "Assessment Cancellation"],
+        procedures: [
+          { name: "Returned Unclaimed Amendment", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/returnamendment.html", cat: "Land Tax", abs: true }
+        ],
+      },
+      {
+        id: "SRO-08-L2-03", name: "Assessment Notice Printing",
+        desc: "Produces and distributes assessment notices using the organisation’s internal print and mail arrangements.",
+        l3: ["SRO Print and Mail", "External Mailhouse Print and Mail"],
+      },
+      {
+        id: "SRO-08-L2-04", name: "Assessment Storage and Retrieval",
+        desc: "Stores assessment records in digital form for retrieval, reference, reissue, and audit purposes.",
+        l3: ["Digital Assessment Storage"],
+      },
+      {
+        id: "SRO-08-L2-05", name: "Annual Reconciliation Assessment Management",
+        desc: "Determines the applicable annual assessment type and basis for annual reconciliation processing.",
+        l3: ["Annual Assessment Type Determination", "Annual Assessment Generation", "Annual Assessment Maintenance", "Annual Assessment Notice Printing", "Annual Assessment Storage and Retrieval"],
+      },
+    ]
+  },
+  {
+    id: "SRO-09",
+    name: "Reassessment Management",
+    cls: "vs9",
+    capabilities: [
+      {
+        id: "SRO-09-L2-01", name: "Reassessment Generation and Issue",
+        desc: "Creates reassessments individually where manual initiation or review is required.",
+        l3: ["Manual Reassessment Generation", "Bulk Reassessment Generation", "Digital Reassessment Issue", "Reassessment Notification"],
+      },
+      {
+        id: "SRO-09-L2-02", name: "Reassessment Notice Printing",
+        desc: "Produces and distributes reassessment notices using the organisation’s internal print and mail arrangements.",
+        l3: ["SRO Print and Mail", "External Mailhouse Print and Mail"],
+      },
+      {
+        id: "SRO-09-L2-03", name: "Reassessment Storage and Retrieval",
+        desc: "Stores reassessment records in digital form for retrieval, reissue, and audit access.",
+        l3: ["Digital Reassessment Storage"],
+      },
+      {
+        id: "SRO-09-L2-04", name: "Reassessment Maintenance",
+        desc: "Cancels a reassessment that was issued in error or is no longer valid.",
+        l3: ["Reassessment Cancellation", "Reassessment Update", "Reassessment Withdrawal"],
+      },
+      {
+        id: "SRO-09-L2-05", name: "Annual Reconciliation Reassessment Management",
+        desc: "Determines the applicable annual reassessment type based on annual reconciliation requirements.",
+        l3: ["Annual Reassessment Type Determination", "Annual Reassessment Generation", "Annual Reassessment Maintenance", "Annual Reassessment Notice Printing", "Annual Reassessment Storage and Retrieval"],
+      },
+    ]
+  },
+  {
+    id: "SRO-10",
+    name: "Amendment Management",
+    cls: "vs10",
+    capabilities: [
+      {
+        id: "SRO-10-L2-01", name: "Amendment Processing",
+        desc: "Captures and records requests to amend an existing record or assessment, including the reason for change and supporting information.",
+        l3: ["Amendment Request", "Amendment Review", "Assessment Update", "Amendment Withdrawal"],
+      },
+    ]
+  },
+  {
+    id: "SRO-11",
+    name: "Return Management",
+    cls: "vs11",
+    capabilities: [
+      {
+        id: "SRO-11-L2-01", name: "Periodic Return Management",
+        desc: "Creates periodic monthly returns based on submitted, calculated, or system-derived information.",
+        l3: ["Monthly Return Generation", "Deduction Management"],
+      },
+      {
+        id: "SRO-11-L2-02", name: "Reconciliation Return Management",
+        desc: "Creates or recreates monthly returns needed as part of reconciliation or return correction processes.",
+        l3: ["Monthly Return Generation", "Monthly Return Maintenance", "Annual Return Maintenance", "Deduction Management"],
+      },
+    ]
+  },
+  {
+    id: "SRO-12",
+    name: "Payment Management",
+    cls: "vs12",
+    capabilities: [
+      {
+        id: "SRO-12-L2-01", name: "Payment Options Management",
+        desc: "Defines and manages supported channels through which payments can be made.",
+        l3: ["Payment Channel Management", "Payment Instalment Management"],
+      },
+      {
+        id: "SRO-12-L2-02", name: "Payment Allocation Management",
+        desc: "Allocates received payments to the correct liabilities, accounts, or outstanding amounts.",
+        l3: ["Payment Allocation", "Payment Receipt", "Suspense Management", "Banking Exception Management", "Payment History", "Revenue Reporting"],
+        procedures: [
+          { name: "Suspense and Refunds", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/suspense.html", cat: "Land Tax", abs: true }
+        ],
+      },
+    ]
+  },
+  {
+    id: "SRO-13",
+    name: "Refunds Management",
+    cls: "vs13",
+    capabilities: [
+      {
+        id: "SRO-13-L2-01", name: "Refund Processing",
+        desc: "Creates a refund request or refund instruction based on overpayment, entitlement, or other valid reason for return of funds.",
+        l3: ["Refund Creation", "Refund Validation", "Refund Completion Import", "Refund Approval", "Refund Cancellation"],
+        procedures: [
+          { name: "Suspense and Refunds", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/suspense.html", cat: "Land Tax", abs: true }
+        ],
+      },
+      {
+        id: "SRO-13-L2-02", name: "Refund Payment Processing via Bank",
+        desc: "Exports approved refund instructions to the relevant banking or external payment mechanism for processing.",
+        l3: ["Approved and Issued Refund Export", "Refund Completion Import"],
+      },
+    ]
+  },
+  {
+    id: "SRO-14",
+    name: "Objection Management",
+    cls: "vs14",
+    capabilities: [
+      {
+        id: "SRO-14-L2-01", name: "Objection Receipt and Acknowledgement",
+        desc: "Captures an objection submission and the information needed to register and progress the objection.",
+        l3: ["Objection Intake", "Objection Acknowledgement"],
+        procedures: [
+          { name: "TARB Referrals & Determinations", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/tarbreferral.html", cat: "TARB", abs: true }
+        ],
+      },
+      {
+        id: "SRO-14-L2-02", name: "Objection Document Management",
+        desc: "Produces the documents required during objection handling, including letters, notices, and formal outputs.",
+        l3: ["Document Generation", "Documentation Management", "Objection Record Tracking"],
+      },
+      {
+        id: "SRO-14-L2-03", name: "Objection Review and Triage",
+        desc: "Assigns urgency or priority to objections based on impact, complexity, and business rules.",
+        l3: ["Objection Prioritisation", "Objection Workflow and Escalation", "Objection Validity and Relevance Assessment"],
+      },
+      {
+        id: "SRO-14-L2-04", name: "Comprehensive Objection Review",
+        desc: "Conducts detailed examination of objection content, issues raised, and the overall position under review.",
+        l3: ["Objection Review", "Supporting Documentation Analysis"],
+        procedures: [
+          { name: "Complying with Valuation Objection VCAT Orders", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/valuationobjection.html", cat: "Land Tax", abs: true }
+        ],
+      },
+      {
+        id: "SRO-14-L2-05", name: "Objection Resolution Planning",
+        desc: "Manages resolution of objections involving complex facts, multiple issues, or heightened risk or impact.",
+        l3: ["Complex Objection Resolution", "Alternative Dispute Resolution", "Appeals Management"],
+      },
+      {
+        id: "SRO-14-L2-06", name: "Continuous Improvement and Training",
+        desc: "Builds staff capability through objection-related training, guidance, and professional development activities.",
+        l3: ["Training and Professional Development", "Objection Handling Process Improvement"],
+      },
+      {
+        id: "SRO-14-L2-07", name: "Communication and Engagement",
+        desc: "Manages formal and informal communication associated with objection handling and outcomes.",
+        l3: ["Objection Correspondence Management", "Request for Information"],
+      },
+    ]
+  },
+  {
+    id: "SRO-15",
+    name: "Investigation & Compliance Management",
+    cls: "vs15",
+    capabilities: [
+      {
+        id: "SRO-15-L2-01", name: "Compliance Program Management",
+        desc: "Define and govern the compliance program strategy, objectives, and performance reporting.",
+      },
+      {
+        id: "SRO-15-L2-02", name: "Intelligence & Lead Generation",
+        desc: "Gather, analyse and prioritise intelligence to identify potential non-compliance leads.",
+        procedures: [
+          { name: "Investigation Capability Model (interactive)", file: "https://markgittins1974.github.io/BusinessArchitecture/BTS/investigationcapmapupdated.html", cat: "BTS", abs: true }
+        ],
+      },
+      {
+        id: "SRO-15-L2-03", name: "Lead Registration & Tracking",
+        desc: "Register and track compliance leads through their lifecycle from identification to triage.",
+      },
+      {
+        id: "SRO-15-L2-04", name: "Data Validation & Enrichment",
+        desc: "Validate lead data and enrich with supporting information from internal and external sources.",
+      },
+      {
+        id: "SRO-15-L2-05", name: "Triage Assessment & Decisioning",
+        desc: "Assess leads to determine whether formal investigation action is warranted.",
+      },
+      {
+        id: "SRO-15-L2-06", name: "Investigation Governance & Approval",
+        desc: "Apply governance controls and obtain required approvals before investigation commences.",
+      },
+      {
+        id: "SRO-15-L2-07", name: "Work Allocation",
+        desc: "Allocate investigation workload to staff based on capacity, skill and priority.",
+      },
+      {
+        id: "SRO-15-L2-08", name: "Pre-Case Processing",
+        desc: "Complete pre-case activities required before formal case creation.",
+      },
+      {
+        id: "SRO-15-L2-09", name: "Case Creation & Planning",
+        desc: "Formally open cases and develop the investigation plan and scope.",
+      },
+      {
+        id: "SRO-15-L2-10", name: "Evidence Management",
+        desc: "Collect, store, track and manage evidence gathered during an investigation.",
+      },
+      {
+        id: "SRO-15-L2-11", name: "Analysis & Determination",
+        desc: "Analyse evidence and determine the investigation outcome and liability position.",
+      },
+      {
+        id: "SRO-15-L2-12", name: "Approval & Execution",
+        desc: "Obtain approval and execute enforcement action or outcome communication.",
+      },
+      {
+        id: "SRO-15-L2-13", name: "Closure & Continuous Improvement",
+        desc: "Close completed cases and feed learnings back into compliance program improvement.",
+      },
+      {
+        id: "SRO-15-L2-14", name: "Audit Management",
+        desc: "Plan and conduct audits of compliance activities and controls.",
+      },
+      {
+        id: "SRO-15-L2-15", name: "Risk Management",
+        desc: "Identify, assess and manage risks associated with the compliance program.",
+      },
+      {
+        id: "SRO-15-L2-16", name: "Quality Assurance Management",
+        desc: "Assure the quality of investigation outcomes and case handling processes.",
+        procedures: [
+          { name: "Assessing QA Procedure", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/assessingqa.html", cat: "Land Tax", abs: true }
+        ],
+      },
+      {
+        id: "SRO-15-L2-17", name: "Interview Management",
+        desc: "Plan and conduct investigative interviews using structured techniques.",
+      },
+      {
+        id: "SRO-15-L2-18", name: "Fraud Detection and Prevention",
+        desc: "Develop and apply frameworks to detect, assess and prevent fraudulent behaviour.",
+      },
+    ]
+  },
+  {
+    id: "SRO-16",
+    name: "Debt Management",
+    cls: "vs16",
+    capabilities: [
+      {
+        id: "SRO-16-L2-01", name: "Debt Identification",
+        desc: "Maintains records of debtors and the core information needed to administer outstanding debt.",
+        l3: ["Debtor Record Maintenance", "Outstanding Debt Identification"],
+      },
+      {
+        id: "SRO-16-L2-02", name: "Debt Assessment",
+        desc: "Evaluates debt matters to determine recovery options, risk, and the appropriate course of action.",
+        l3: ["Debt Assessment", "Debtor Information Analysis"],
+      },
+      {
+        id: "SRO-16-L2-03", name: "Negotiation and Settlement",
+        desc: "Establishes and manages repayment arrangements agreed with debtors to satisfy outstanding debt over time.",
+        l3: ["Repayment Arrangements"],
+      },
+      {
+        id: "SRO-16-L2-04", name: "Debt Recovery Planning",
+        desc: "Identifies the appropriate recovery strategy or plan for a given debt matter.",
+        l3: ["Debt Recovery Plan Identification", "Debt Recovery Plan Development"],
+      },
+      {
+        id: "SRO-16-L2-05", name: "Complex Debt Resolution",
+        desc: "Engages internal or external stakeholders needed to progress or resolve complex debt matters.",
+        l3: ["Stakeholder Engagement", "Complex and High-value Debt Management"],
+        procedures: [
+          { name: "Insolvency", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/insolvency.html", cat: "Insolvency", abs: true }
+        ],
+      },
+      {
+        id: "SRO-16-L2-06", name: "Debt Portfolio Management",
+        desc: "Applies portfolio-level approaches to segment, manage, and optimise the treatment of debt matters.",
+        l3: ["Advanced Debt Portfolio Management", "Debt Portfolio Monitoring and Analysis"],
+      },
+      {
+        id: "SRO-16-L2-07", name: "Legal Enforcement and Remediation",
+        desc: "Co-ordinates legal enforcement activities, parties, and actions needed to pursue debt recovery.",
+        l3: ["Legal Enforcement Coordination", "Legal Enforcement Initiation"],
+      },
+      {
+        id: "SRO-16-L2-08", name: "Communication and Engagement",
+        desc: "Requests additional information required to assess, progress, or resolve a debt matter.",
+        l3: ["Request for Information", "Debt Correspondence Management"],
+      },
+    ]
+  },
+  {
+    id: "SRO-17",
+    name: "Transfer Duty Management",
+    cls: "vs17",
+    capabilities: [
+      {
+        id: "SRO-17-L2-01", name: "Documents and Lodgement Management",
+        desc: "Determines the required document type applicable to a transfer duty matter or submission.",
+        l3: ["Document Type Determination", "Document Type Maintenance", "Complex Lodgement Management", "Public and Internal Lodgement", "Transaction Type Determination", "Transaction Type Maintenance"],
+      },
+    ]
+  },
+  {
+    id: "SRO-18",
+    name: "Statutory Assurance",
+    cls: "vs18",
+    capabilities: [
+      {
+        id: "SRO-18-L2-01", name: "Land Tax Certificate Issuance",
+        desc: "Issue certificates confirming Land Tax status to conveyancers and financiers.",
+        l3: ["Certificate request intake", "Status verification", "Certificate generation and issue", "Fee calculation and processing"],
+        procedures: [
+          { name: "Property Clearance Certificate", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/pcc.html", cat: "Certificates", abs: true },
+          { name: "PCC Generation", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/pccgen.html", cat: "Certificates", abs: true },
+          { name: "Calculate PCC Fee", file: "https://markgittins1974.github.io/BusinessArchitecture/procedure/calpccfee.html", cat: "Certificates", abs: true }
+        ],
+      },
+      {
+        id: "SRO-18-L2-02", name: "Certificate Evidence & Record Management",
+        desc: "Maintain and retrieve certificate records for audit and reissue.",
+        l3: ["Certificate storage", "Audit trail maintenance", "Reissue management"],
+      },
+    ]
+  },
+];
+
+const colShortNames = {
+  "SRO-01": "Customer",
+  "SRO-02": "Property",
+  "SRO-03": "Valuation",
+  "SRO-04": "Exemptions",
+  "SRO-05": "Eligibility",
+  "SRO-06": "Applications",
+  "SRO-07": "Liability",
+  "SRO-08": "Assessment",
+  "SRO-09": "Reassessment",
+  "SRO-10": "Amendment",
+  "SRO-11": "Returns",
+  "SRO-12": "Payment",
+  "SRO-13": "Refunds",
+  "SRO-14": "Objection",
+  "SRO-15": "Investigation",
+  "SRO-16": "Debt",
+  "SRO-17": "Transfer Duty",
+  "SRO-18": "Assurance",
+};
+
+const colStageDescs = {
+  "SRO-01": "Manage customer identity, registration, profiles, addresses, contact details, and communication.",
+  "SRO-02": "Maintain property records, ownership, transfers, address data, and subdivision history.",
+  "SRO-03": "Receive, validate and apply site valuations from the Valuer-General to the assessment cycle.",
+  "SRO-04": "Process exemption and concession applications, determine eligibility, and maintain exemption types.",
+  "SRO-05": "Determine and evaluate eligibility conditions for applicable processes or entitlements.",
+  "SRO-06": "Receive, review, approve and disburse applications and grants.",
+  "SRO-07": "Calculate liabilities, apply rates, thresholds, interest, penalties and manage write-offs.",
+  "SRO-08": "Generate, issue, maintain, print and store assessments across periodic and annual cycles.",
+  "SRO-09": "Generate, issue, maintain, print and store reassessments across periodic and annual cycles.",
+  "SRO-10": "Receive, review and process amendment requests to existing assessments and records.",
+  "SRO-11": "Generate, maintain and process periodic and reconciliation returns and related deductions.",
+  "SRO-12": "Manage payment channels, allocate receipts, handle suspense, exceptions and revenue reporting.",
+  "SRO-13": "Create, validate, approve and pay refunds to customers via banking channels.",
+  "SRO-14": "Receive, triage, review and resolve objections through to resolution and continuous improvement.",
+  "SRO-15": "Manage the full investigation lifecycle from intelligence gathering through to enforcement and QA.",
+  "SRO-16": "Identify, assess, plan and recover outstanding debt including legal enforcement and insolvency.",
+  "SRO-17": "Manage transfer duty documents, lodgements, transaction types and complex transactions.",
+  "SRO-18": "Issue statutory Land Tax certificates and maintain certificate evidence and records.",
+};
+
+
+function downloadPPTX() {
+  const b64 = "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";
+  const bin = atob(b64);
+  const buf = new Uint8Array(bin.length);
+  for (let i=0;i<bin.length;i++) buf[i]=bin.charCodeAt(i);
+  const blob = new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.presentationml.presentation"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "SRO_Capability_Map.pptx"; a.click();
+}
+
+function csvEsc(v) {
+  v = String(v||'');
+  return (v.includes(',')||v.includes('"')||v.includes('\n')) ? '"'+v.replace(/"/g,'""')+'"' : v;
+}
+function exportCSV() {
+  const rows=[['Domain ID','Domain','Cap ID','Capability','Description','L3 Count','Procedures']];
+  capabilityMap.forEach(vs=>vs.capabilities.forEach(cap=>rows.push([
+    csvEsc(vs.id),csvEsc(vs.name),csvEsc(cap.id),csvEsc(cap.name),csvEsc(cap.desc||''),
+    cap.l3?cap.l3.length:0, cap.procedures?cap.procedures.length:0
+  ])));
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(rows.map(r=>r.join(',')).join('\n'));
+  a.download='SRO_Capability_Map.csv'; a.click();
+}
+function buildColumnView() {
+  const container=document.getElementById('col-map');
+  container.innerHTML='';
+  capabilityMap.forEach(vs=>{
+    const col=document.createElement('div');
+    col.className='col-stage '+vs.cls;
+    const isDense=vs.capabilities.length>=6;
+    if(isDense) col.style.flex='2';
+    const hdr=document.createElement('div');
+    hdr.className='col-stage-hdr';
+    hdr.innerHTML='<div class="col-vs-id">'+vs.id+'</div>'+
+      '<div class="col-stage-title">'+(colShortNames[vs.id]||vs.name)+'</div>'+
+      '<div class="col-stage-desc">'+(colStageDescs[vs.id]||'')+'</div>';
+    const body=document.createElement('div');
+    body.className='col-stage-body'+(isDense?' grid2':'');
+    const showDesc=vs.capabilities.length<=2;
+    vs.capabilities.forEach(cap=>{
+      const item=document.createElement('div');
+      item.className='col-cap';
+      item.dataset.sys=cap.sys||'eSys';
+      item.title=cap.name+(cap.desc?': '+cap.desc:'');
+      item.innerHTML='<div class="col-cap-name">'+cap.name+'</div>';
+      body.appendChild(item);
+    });
+    col.appendChild(hdr); col.appendChild(body); container.appendChild(col);
+  });
+}
+function printColView() {
+  if(document.getElementById('col-map').style.display!=='flex'){buildColumnView();document.getElementById('col-map').style.display='flex';}
+  window.print();
+}
+function toggleColView() {
+  const map=document.getElementById('map'),colMap=document.getElementById('col-map');
+  const btn=document.getElementById('col-view-btn'),expBtn=document.getElementById('expand-btn');
+  const isCol=colMap.style.display==='flex';
+  if(isCol){colMap.style.display='none';map.style.display='';btn.textContent='\u229E Column View';btn.classList.remove('active');expBtn.style.display='';}
+  else{buildColumnView();map.style.display='none';colMap.style.display='flex';btn.textContent='\u2630 Accordion View';btn.classList.add('active');expBtn.style.display='none';}
+}
+function toggleL1Only(){
+  const c=document.getElementById('col-map'),b=document.getElementById('l1-only-btn');
+  const on=c.classList.toggle('l1-only');
+  b.textContent=on?'L1 + L2':'L1 Only'; b.style.background=on?'#0f2a52':'#374151';
+}
+function toggleSysOverlay(){
+  const c=document.getElementById('col-map'),b=document.getElementById('sys-overlay-btn'),l=document.getElementById('sys-legend');
+  const on=c.classList.toggle('sys-on');
+  b.textContent=on?'\u2B24 Systems On':'\u2B24 Systems Off'; b.style.background=on?'#1d4ed8':'#374151';
+  l.classList.toggle('visible',on);
+}
+function toggleVS(vi){
+  const b=document.getElementById('vs-body-'+vi),t=document.getElementById('toggle-'+vi);
+  const o=b.classList.toggle('open'); if(t)t.textContent=o?'\u25B2':'\u25BC';
+}
+function toggleCap(vi,ci){
+  const s=document.getElementById('cap-sub-'+vi+'-'+ci),a=document.getElementById('cap-arrow-'+vi+'-'+ci);
+  const o=s.classList.toggle('open'); if(a)a.textContent=o?'\u25B2':'\u25BC';
+}
+function expandAll(){
+  capabilityMap.forEach((_,vi)=>{
+    const b=document.getElementById('vs-body-'+vi),t=document.getElementById('toggle-'+vi);
+    if(b)b.classList.add('open'); if(t)t.textContent='\u25B2';
+  });
+}
+function buildMap(){
+  const container=document.getElementById('map');
+  capabilityMap.forEach((vs,vi)=>{
+    const block=document.createElement('div'); block.className='vs-block '+vs.cls;
+    const hdr=document.createElement('div'); hdr.className='vs-header';
+    hdr.innerHTML='<span class="vs-id">'+vs.id+'</span><span class="vs-name">'+vs.name+'</span>'+
+      '<span class="vs-count">'+vs.capabilities.length+' capabilities</span>'+
+      '<span class="vs-toggle" id="toggle-'+vi+'">\u25BC</span>';
+    hdr.onclick=()=>toggleVS(vi);
+    const body=document.createElement('div'); body.className='vs-body'; body.id='vs-body-'+vi;
+    vs.capabilities.forEach((cap,ci)=>{
+      const card=document.createElement('div'); card.className='cap-card';
+      const ch=document.createElement('div'); ch.className='cap-header';
+      ch.innerHTML='<div><div class="cap-title">'+cap.name+'</div><div class="cap-id">'+cap.id+'</div>'+
+        (cap.desc?'<div style="font-size:11px;color:#6b7280;margin-top:2px;line-height:1.4;">'+cap.desc+'</div>':'')+
+        '</div><span class="cap-arrow" id="cap-arrow-'+vi+'-'+ci+'">\u25BC</span>';
+      ch.onclick=()=>toggleCap(vi,ci);
+      const sl=document.createElement('div'); sl.className='sub-list'; sl.id='cap-sub-'+vi+'-'+ci;
+      (cap.l3||[]).forEach(item=>{const li=document.createElement('div');li.className='sub-item';li.textContent=item;sl.appendChild(li);});
+      const procHtml=(cap.procedures&&cap.procedures.length)?
+        '<div class="proc-section"><div class="proc-section-label">\u{1F4CB} Procedures ('+cap.procedures.length+')</div>'+
+        cap.procedures.map(p=>'<a class="proc-link" href="'+p.file+'" target="_blank">'+p.name+' <span class="proc-cat">'+p.cat+'</span></a>').join('')+'</div>':'';
+      if(procHtml){const d=document.createElement('div');d.style.padding='0 11px 7px';d.innerHTML=procHtml;sl.appendChild(d);}
+      card.appendChild(ch); card.appendChild(sl); body.appendChild(card);
+    });
+    block.appendChild(hdr); block.appendChild(body); container.appendChild(block);
+  });
+}
+buildMap();
+toggleColView();
+</script>
+</body>
+</html>

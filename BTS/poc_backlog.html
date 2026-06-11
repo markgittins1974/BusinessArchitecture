@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -128,12 +129,22 @@ h1 {
 	<div class="story">Provide Balanced and Visible Work Allocation</div>
 	<div class="story">Enable Configuration of Officer Allocation Rules</div>
 	<div class="story">Allow Manual Reassignment of PICs</div>
-
+	<div class="story">Determine IC assignment outcome</div>
+	<div class="story">Assign IC work to investigator</div>
+	<div class="story">Allow manual Reassignment of IC </div>
+	<div class="story">Route IC to Appropriate Processing Queues</div>
     </div>
 </div>
 
 <div class="feature"><div class="feature-title">Workload Balancing</div><div class="feature-desc">Distribute work evenly across teams</div></div>
-<div class="feature"><div class="feature-title">Allocation Tracking</div><div class="feature-desc">Track ownership and allocation status</div></div>
+<div class="feature"><div class="feature-title">Allocation Tracking</div><div class="feature-desc">Track ownership and allocation status</div>
+
+<div class="stories">
+        <div class="story">Track ownership and status</div>
+    </div>
+</div>
+
+
 <div class="feature"><div class="feature-title">Work Notification</div><div class="feature-desc">Notify users of assigned work</div>
 
 <div class="stories">
@@ -162,12 +173,20 @@ h1 {
 
 <div class="stories">
         <div class="story">Review and Decide PIC Progression</div>
+	<div class="story">Review assigned IC work</div>
     </div>
 </div>
 
 
 <div class="feature"><div class="feature-title">Validation & Due Diligence</div><div class="feature-desc">Verify data accuracy</div></div>
-<div class="feature"><div class="feature-title">Issue Classification & Risk Flagging</div><div class="feature-desc">Identify risks</div></div>
+<div class="feature"><div class="feature-title">Issue Classification & Risk Flagging</div><div class="feature-desc">Identify risks</div>
+
+<div class="stories">
+        <div class="story">Assign non issue indicators</div>
+	<div class="story">Apply high-risk flag</div>
+    </div>
+</div>
+
 <div class="feature"><div class="feature-title">Investigation Threshold Assessment</div><div class="feature-desc">Determine escalation need</div>
 
 <div class="stories">
@@ -180,6 +199,7 @@ h1 {
 
 <div class="stories">
         <div class="story">Ensure Consistent and Visible PIC Decisioning</div>
+	<div class="story">Route IC decision outcome</div>
     </div>
 </div>
 
@@ -187,6 +207,7 @@ h1 {
 
 <div class="stories">
         <div class="story">Close PICs That Do Not Progress to Investigation</div>
+	<div class="story">Close non-progressing IC work</div>
     </div>
 </div>
 
@@ -222,9 +243,21 @@ h1 {
 <div class="column">
 <div class="column-header c6">EPIC 6 — CASE CREATION</div>
 
-<div class="feature"><div class="feature-title">Investigation Case Initiation</div><div class="feature-desc">Create cases from approved work</div></div>
-<div class="feature"><div class="feature-title">Case Ownership Assignment</div><div class="feature-desc">Assign accountable owner</div></div>
+<div class="feature"><div class="feature-title">Investigation Case Initiation</div><div class="feature-desc">Create cases from approved work</div>
 
+<div class="stories">
+        <div class="story"> Create case from originating input</div>
+	<div class="story"> Initiate case manually</div>
+	<div class="story"> Validate case creation trigger</div>
+	<div class="story"> Confirm case creation</div>
+    </div>
+</div>
+
+<div class="feature"><div class="feature-title">Case Ownership Assignment</div><div class="feature-desc">Assign accountable owner</div>
+<div class="stories">
+        <div class="story"> Assign case to responsible owner</div>
+	</div>
+</div>
 </div>
 
 <!-- EPIC 7 -->
@@ -322,247 +355,3 @@ ul {
 
 <body>
 
-<h1>User Story Backlog</h1>
-
-<div class="epic-title">EPIC: Work Allocation & Capacity Management</div>
-
-<div class="feature">
-<div class="feature-title">Work Demand Management</div>
-
-<div class="story">
-<div class="story-title">1. Structured Backlog Intake</div>
-<p>As a FIMB Analyst, I want to load validated PICs in a structured way so that demand is consistently captured and ready for prioritisation.</p>
-</div>
-
-<div class="story">
-<div class="story-title">2. Prioritised Backlog Visibility</div>
-<p>As a Team Leader, I want PICs organised into a prioritised backlog so that I can allocate work efficiently.</p>
-
-<details>
-<summary>Acceptance Criteria</summary>
-<ul>
-<li>Validated PICs loaded into a single backlog</li>
-<li>Each PIC has ID, validated status, ready for allocation</li>
-<li>Supports sorting (risk, age, revenue type)</li>
-<li>Visible across roles</li>
-<li>No spreadsheets required</li>
-<li>All backlog changes recorded</li>
-</ul>
-</details>
-</div>
-
-<div class="story">
-<div class="story-title">3. Automated Demand Evaluation</div>
-<p>As the system, I want to evaluate PICs so that simple cases auto-progress and complex cases go to review.</p>
-
-<details>
-<summary>Acceptance Criteria</summary>
-<ul>
-<li>All PICs evaluated using configurable rules</li>
-<li>Outcome recorded (Auto / Manual)</li>
-<li>Rules are auditable</li>
-<li>Auto cases progress immediately</li>
-<li>Manual cases routed with context</li>
-<li>No bypass or external tools</li>
-</ul>
-</details>
-</div>
-
-<div class="story">
-<div class="story-title">4. Auto vs Manual Segmentation</div>
-<p>As a Team Leader, I want visibility of auto vs manual PICs so that effort is focused appropriately.</p>
-
-<details>
-<summary>Acceptance Criteria</summary>
-<ul>
-<li>PIC labelled Auto or Manual</li>
-<li>Manual PICs appear in queue</li>
-<li>Auto PICs require no intervention</li>
-<li>Team-level visibility of split</li>
-</ul>
-</details>
-</div>
-
-<div class="story">
-<div class="story-title">5. Configurable Evaluation Control</div>
-<p>As a Manager, I want to enable or disable rules so that processing can be controlled.</p>
-
-<details>
-<summary>Acceptance Criteria</summary>
-<ul>
-<li>Evaluation can be enabled or disabled</li>
-<li>Setting is configurable and auditable</li>
-<li>Disabled routes all PICs to manual</li>
-<li>Existing PICs not impacted</li>
-</ul>
-</details>
-</div>
-
-</div>
-
-
-<div class="feature">
-<div class="feature-title">Work Allocation</div>
-
-<div class="story">
-<div class="story-title">6. Queue-Based Routing</div>
-<p>System routes PICs to queues so work reaches correct teams.</p>
-
-<details>
-<summary>Acceptance Criteria</summary>
-<ul>
-<li>All manual PICs routed</li>
-<li>Rules based (type, priority)</li>
-<li>Each PIC assigned to one queue</li>
-<li>No unassigned PICs</li>
-</ul>
-</details>
-</div>
-
-<div class="story">
-<div class="story-title">7. Queue Visibility</div>
-<p>Team Leaders can view queues to balance workload.</p>
-
-<details>
-<summary>Acceptance Criteria</summary>
-<ul>
-<li>Queue shows volume and status</li>
-<li>Real-time visibility</li>
-<li>Imbalances identifiable</li>
-</ul>
-</details>
-</div>
-
-<div class="story">
-<div class="story-title">8. Configurable Queue Rules</div>
-<p>Managers can configure routing rules.</p>
-
-<details>
-<summary>Acceptance Criteria</summary>
-<ul>
-<li>Rules editable without code</li>
-<li>Changes auditable</li>
-<li>Apply to new PICs</li>
-</ul>
-</details>
-</div>
-
-<div class="story">
-<div class="story-title">9. Officer Assignment</div>
-<p>System assigns PICs to officers.</p>
-
-<details>
-<summary>Acceptance Criteria</summary>
-<ul>
-<li>PIC assigned to officer</li>
-<li>Based on workload, skill</li>
-<li>Clear ownership recorded</li>
-<li>No manual step when rules active</li>
-</ul>
-</details>
-</div>
-
-<div class="story">
-<div class="story-title">10. Balanced Distribution</div>
-<p>Work distributed evenly.</p>
-
-<details>
-<summary>Acceptance Criteria</summary>
-<ul>
-<li>Workload visible per officer</li>
-<li>Imbalances identifiable</li>
-<li>Ownership traceable</li>
-</ul>
-</details>
-</div>
-
-<div class="story">
-<div class="story-title">11. Configurable Assignment Rules</div>
-<p>Business controls assignment logic.</p>
-
-<details>
-<summary>Acceptance Criteria</summary>
-<ul>
-<li>Rules configurable without code</li>
-<li>Based on workload, role</li>
-<li>Auditable changes</li>
-</ul>
-</details>
-</div>
-
-<div class="story">
-<div class="story-title">12. Manual Reassignment</div>
-<p>Team Leaders can manually reassign work.</p>
-</div>
-
-</div>
-
-
-<div class="feature">
-<div class="feature-title">Work Notification</div>
-
-<div class="story">
-<div class="story-title">13. Assignment Notification</div>
-<p>Officer notified when work assigned.</p>
-</div>
-
-</div>
-
-
-<div class="epic-title">EPIC: Pre-Case Assessment</div>
-
-<div class="feature">
-<div class="feature-title">Work Review & Analysis</div>
-
-<div class="story">
-<div class="story-title">14. PIC Review Decision</div>
-<p>Officer reviews and decides to progress or close.</p>
-
-<details>
-<summary>Acceptance Criteria</summary>
-<ul>
-<li>All PIC details visible</li>
-<li>Decision required (Proceed / Close)</li>
-<li>Reason recorded</li>
-<li>PIC cannot progress without decision</li>
-</ul>
-</details>
-</div>
-</div>
-
-
-<div class="epic-title">EPIC: Advisory & Escalation</div>
-
-<div class="feature">
-<div class="feature-title">Escalation Management</div>
-
-<div class="story">
-<div class="story-title">17. SLA Monitoring</div>
-<p>System tracks SLA and escalates breaches.</p>
-
-<details>
-<summary>Acceptance Criteria</summary>
-<ul>
-<li>SLA tracked per PIC</li>
-<li>Status visible (On Track / At Risk / Breached)</li>
-<li>Escalations triggered automatically</li>
-<li>Team Leader notified</li>
-<li>No external tracking</li>
-</ul>
-</details>
-</div>
-
-</div>
-
-<div class="feature">
-<div class="feature-title">Work Notification</div>
-
-<div class="story">
-<div class="story-title">18. SLA Breach Notification</div>
-<p>Team Leader notified on breach.</p>
-</div>
-
-</div>
-
-</body>
-</html>

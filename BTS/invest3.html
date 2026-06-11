@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Investigation Epic Capability Model</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f4f6f8;
+}
+
+h1 {
+    padding: 16px;
+    margin: 0;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+.container {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    padding: 16px;
+}
+
+.column {
+    min-width: 280px;
+    background: white;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+}
+
+.column-header {
+    padding: 12px;
+    color: white;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.feature {
+    background: #f1f2f4;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.feature-title {
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.feature-desc {
+    font-size: 11px;
+    color: #555;
+}
+
+/* Colours */
+.c1 { background:#1f7a4c; }
+.c2 { background:#305ec9; }
+.c3 { background:#6f2dbd; }
+.c4 { background:#c1121f; }
+.c5 { background:#8b4000; }
+.c6 { background:#2a9d8f; }
+.c7 { background:#264653; }
+.c8 { background:#e76f51; }
+
+.stories {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.story {
+    background: #ffffff;
+    border: 1px solid #d0d5dd;
+    padding: 6px 8px;
+    font-size: 11px;
+    border-radius: 4px;
+    color: #333;
+}
+
+/* optional: make it clearly a different layer */
+.story::before {
+    content: "User Story: ";
+    font-weight: bold;
+    color: #305ec9;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Investigation Epic Capability Model</h1>
+
+<div class="container">
+
+<!-- EPIC 1 -->
+<div class="column">
+<div class="column-header c1">EPIC 1 — WORK ALLOCATION & CAPACITY</div>
+
+<div class="feature">
+<div class="feature-title">Work Demand Management</div>
+<div class="feature-desc">Capture and manage incoming work demand</div>
+
+<div class="stories">
+        <div class="story">Provide Structured PIC Backlog Intake</div>
+        <div class="story">Auto-Organise and Prioritise PIC Backlog</div>
+        <div class="story">Automate PIC Evaluation and Routing Decision</div>
+        <div class="story">Provide Visibility of Auto vs Manual Processing</div>
+	<div class="story">Enable Configuration of PIC Evaluation Rules</div>
+    </div>
+</div>
+
+<div class="feature"><div class="feature-title">Work Prioritisation</div><div class="feature-desc">Rank work based on defined business criteria</div></div>
+<div class="feature"><div class="feature-title">Work Allocation</div><div class="feature-desc">Assign work to investigators</div>
+
+<div class="stories">
+        <div class="story">Route Manual PICs to Appropriate Processing Queues</div>
+        <div class="story">Provide Visibility of Workload Across Queues</div>
+        <div class="story">Enable Configuration of Queue Assignment Rules</div>
+        <div class="story">Auto-Assign PICs to Processing Officers</div>
+	<div class="story">Provide Balanced and Visible Work Allocation</div>
+	<div class="story">Enable Configuration of Officer Allocation Rules</div>
+	<div class="story">Allow Manual Reassignment of PICs</div>
+
+    </div>
+</div>
+
+<div class="feature"><div class="feature-title">Workload Balancing</div><div class="feature-desc">Distribute work evenly across teams</div></div>
+<div class="feature"><div class="feature-title">Allocation Tracking</div><div class="feature-desc">Track ownership and allocation status</div></div>
+<div class="feature"><div class="feature-title">Work Notification</div><div class="feature-desc">Notify users of assigned work</div>
+
+<div class="stories">
+        <div class="story">Notify Officers of Assigned PICs</div>
+        <div class="story">Notify Team Leaders of SLA Breaches</div>
+    </div>
+</div>
+
+</div>
+
+<!-- EPIC 2 -->
+<div class="column">
+<div class="column-header c2">EPIC 2 — READINESS & CONTROL</div>
+
+<div class="feature"><div class="feature-title">Readiness Assessment</div><div class="feature-desc">Check completeness before assignment</div></div>
+<div class="feature"><div class="feature-title">Allocation Control</div><div class="feature-desc">Enforce eligibility rules</div></div>
+<div class="feature"><div class="feature-title">Readiness Rule Management</div><div class="feature-desc">Define readiness rules</div></div>
+
+</div>
+
+<!-- EPIC 3 -->
+<div class="column">
+<div class="column-header c3">EPIC 3 — PRE-CASE ASSESSMENT</div>
+
+<div class="feature"><div class="feature-title">Work Review & Analysis</div><div class="feature-desc">Review assigned work</div>
+
+<div class="stories">
+        <div class="story">Review and Decide PIC Progression</div>
+    </div>
+</div>
+
+
+<div class="feature"><div class="feature-title">Validation & Due Diligence</div><div class="feature-desc">Verify data accuracy</div></div>
+<div class="feature"><div class="feature-title">Issue Classification & Risk Flagging</div><div class="feature-desc">Identify risks</div></div>
+<div class="feature"><div class="feature-title">Investigation Threshold Assessment</div><div class="feature-desc">Determine escalation need</div>
+
+<div class="stories">
+        <div class="story">Configure PIC Decision Options and Requirements</div>
+    </div>
+</div>
+
+
+<div class="feature"><div class="feature-title">Decision & Routing</div><div class="feature-desc">Route work outcomes</div>
+
+<div class="stories">
+        <div class="story">Ensure Consistent and Visible PIC Decisioning</div>
+    </div>
+</div>
+
+<div class="feature"><div class="feature-title">Pre-Case Closure</div><div class="feature-desc">Close non-progressing work</div>
+
+<div class="stories">
+        <div class="story">Close PICs That Do Not Progress to Investigation</div>
+    </div>
+</div>
+
+
+</div>
+
+<!-- EPIC 4 -->
+<div class="column">
+<div class="column-header c4">EPIC 4 — ADVISORY & ESCALATION</div>
+
+<div class="feature"><div class="feature-title">Advisory Requests</div><div class="feature-desc">Request expert guidance</div></div>
+<div class="feature"><div class="feature-title">Escalation Management</div><div class="feature-desc">Escalate complex matters</div>
+
+<div class="stories">
+        <div class="story">Monitor PIC Review SLA and Trigger Escalations</div>
+    </div>
+</div>
+
+
+</div>
+
+<!-- EPIC 5 -->
+<div class="column">
+<div class="column-header c5">EPIC 5 — OPERATIONAL SYNCHRONISATION</div>
+
+<div class="feature"><div class="feature-title">Operational Synchronisation</div><div class="feature-desc">Align information across systems</div></div>
+<div class="feature"><div class="feature-title">Status Management</div><div class="feature-desc">Maintain consistent status</div></div>
+<div class="feature"><div class="feature-title">Cross-System Alignment</div><div class="feature-desc">Ensure data consistency</div></div>
+
+</div>
+
+<!-- EPIC 6 -->
+<div class="column">
+<div class="column-header c6">EPIC 6 — CASE CREATION</div>
+
+<div class="feature"><div class="feature-title">Investigation Case Initiation</div><div class="feature-desc">Create cases from approved work</div></div>
+<div class="feature"><div class="feature-title">Case Ownership Assignment</div><div class="feature-desc">Assign accountable owner</div></div>
+
+</div>
+
+<!-- EPIC 7 -->
+<div class="column">
+<div class="column-header c7">EPIC 7 — CASE PLANNING</div>
+
+<div class="feature"><div class="feature-title">Case Management</div><div class="feature-desc">Maintain case overview</div></div>
+<div class="feature"><div class="feature-title">Investigation Planning</div><div class="feature-desc">Define structured plan</div></div>
+<div class="feature"><div class="feature-title">Investigation Activity Tracking</div><div class="feature-desc">Track tasks and progress</div></div>
+
+</div>
+
+<!-- EPIC 8 -->
+<div class="column">
+<div class="column-header c8">EPIC 8 — STAKEHOLDER ENGAGEMENT</div>
+
+<div class="feature"><div class="feature-title">Stakeholder Engagement</div><div class="feature-desc">Manage interactions</div></div>
+<div class="feature"><div class="feature-title">Entry Communication</div><div class="feature-desc">Issue initiation communications</div></div>
+<div class="feature"><div class="feature-title">Stakeholder Notification</div><div class="feature-desc">Notify stakeholders of updates</div></div>
+
+</div>
+
+</div>
+
+</body>
+</html>
+``

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Investigation POC - Epic to Feature Backlog</title>
-
+<script src="https://unpkg.com/pptxgenjs/dist/pptxgen.min.js"></script>
 <style>
 body {
     font-family: Arial, sans-serif;
@@ -97,6 +97,36 @@ h1 {
 <body>
 
 <h1>Investigation POC - Epic to Feature Backlog</h1>
+
+<div style="padding: 10px;">
+  <button onclick="exportToCSV()" style="
+    padding: 10px 16px;
+    background: #305ec9;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  ">
+    Export to CSV
+  </button>
+</div>
+
+
+<div style="padding: 10px;">
+  <button onclick="downloadPPTX()" style="
+    padding: 10px 16px;
+    background: #305ec9;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  ">
+    Export PPTX
+  </button>
+</div>
+
 
 <div class="container">
 
@@ -281,6 +311,106 @@ h1 {
 
 </div>
 
+<script>
+function exportToCSV() {
+    const rows = [];
+    rows.push(["Epic", "Feature", "User Story"]);
+
+    document.querySelectorAll(".column").forEach(column => {
+        const epic = column.querySelector(".column-header")?.innerText || "";
+        
+        column.querySelectorAll(".feature").forEach(featureCard => {
+            const feature = featureCard.querySelector(".feature-title")?.innerText || "";
+            const stories = featureCard.querySelectorAll(".story");
+
+            if (stories.length === 0) {
+                rows.push([epic, feature, ""]);
+            } else {
+                stories.forEach(story => {
+                    rows.push([
+                        epic,
+                        feature,
+                        story.innerText.replace("User Story: ", "").trim()
+                    ]);
+                });
+            }
+        });
+    });
+
+    const csvContent = rows.map(e => e.map(val => `"${val}"`).join(",")).join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "poc_backlog_export.csv";
+    link.click();
+}
+
+
+function downloadPPTX() {
+
+  if (typeof PptxGenJS === "undefined") {
+    alert("PPT library not loaded");
+    return;
+  }
+
+  const pptx = new PptxGenJS();
+
+  document.querySelectorAll(".column").forEach(column => {
+
+    const epic = column.querySelector(".column-header")?.innerText || "";
+
+    let slide = pptx.addSlide();
+
+    slide.addText(epic, {
+      x: 0.5,
+      y: 0.5,
+      fontSize: 18,
+      bold: true
+    });
+
+    let y = 1.2;
+
+    column.querySelectorAll(".feature").forEach(feature => {
+
+      const featureName = feature.querySelector(".feature-title")?.innerText || "";
+
+      slide.addText(featureName, {
+        x: 0.5,
+        y: y,
+        fontSize: 14,
+        bold: true
+      });
+
+      y += 0.3;
+
+      let count = 0;
+
+      feature.querySelectorAll(".story").forEach(story => {
+
+        if (count >= 5) return; // limit to prevent overflow
+
+        slide.addText("• " + story.innerText.replace("User Story: ", ""), {
+          x: 0.7,
+          y: y,
+          fontSize: 10
+        });
+
+        y += 0.25;
+        count++;
+      });
+
+      y += 0.2;
+    });
+
+  });
+
+  pptx.writeFile("POC_Backlog.pptx");
+}
+
+</script>
 </body>
 </html>
 ``

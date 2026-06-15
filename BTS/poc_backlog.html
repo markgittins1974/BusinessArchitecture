@@ -25,22 +25,41 @@
 
   <!-- Epics -->
   <div>
-    <div style="font-weight:bold; font-size:18px; color:#1f7a4c;">8</div>
+    <div id="epicCount" style="font-weight:bold; font-size:18px; color:#1f7a4c;">0</div>
     <div>Epics</div>
   </div>
 
   <!-- Features -->
   <div>
-    <div style="font-weight:bold; font-size:18px; color:#305ec9;">27</div>
+    <div id="featureCount" style="font-weight:bold; font-size:18px; color:#305ec9;">0</div>
     <div>Features</div>
   </div>
 
   <!-- Stories -->
   <div>
-    <div style="font-weight:bold; font-size:18px; color:#6f2dbd;">57</div>
+    <div id="storyCount" style="font-weight:bold; font-size:18px; color:#6f2dbd;">0</div>
     <div>User Stories</div>
   </div>
 
+  <!-- Rule % -->
+<div>
+  <div id="ruleCount" style="font-weight:bold; font-size:16px; color:#2563eb;">0%</div>
+  <div>Rule</div>
+</div>
+
+<!-- Human % -->
+<div>
+  <div id="humanCount" style="font-weight:bold; font-size:16px; color:#d97706;">0%</div>
+  <div>Human</div>
+</div>
+
+<!-- AI % -->
+<div>
+  <div id="aiCount" style="font-weight:bold; font-size:16px; color:#7c3aed;">0%</div>
+  <div>AI</div>
+</div>
+``
+  
   <!-- Insight -->
   <div style="margin-left:auto; font-size:12px; color:#555;">
     Majority concentrated in Work Allocation & Pre‑Case Assessment
@@ -173,7 +192,7 @@ body { font-family: Arial; margin:0; background:#f4f6f8; }
 <div class="story ai">Provide Balanced and Visible Work Allocation</div>
 <div class="story human">Enable Configuration of Officer Allocation Rules</div>
 <div class="story human">Allow Manual Reassignment of PICs</div>
-<div class="story ai">Determine IC Assignment Outcome</div>
+<div class="story rule">Determine IC Assignment Outcome</div>
 <div class="story rule">Assign IC Work to Investigator</div>
 <div class="story human">Allow Manual Reassignment of IC</div>
 <div class="story rule">Route IC to Appropriate Processing Queues</div>
@@ -259,7 +278,7 @@ body { font-family: Arial; margin:0; background:#f4f6f8; }
 <div class="feature">
 <div class="feature-title">Validation & Due Diligence</div>
 <div class="stories">
-<div class="story ai">Validate PIC Data Before Decision</div>
+<div class="story rule">Validate PIC Data Before Decision</div>
 <div class="story human">Capture Supporting Evidence for Decision</div>
 </div>
 </div>
@@ -282,7 +301,7 @@ body { font-family: Arial; margin:0; background:#f4f6f8; }
 <div class="feature">
 <div class="feature-title">Decision & Routing</div>
 <div class="stories">
-<div class="story ai">Ensure Consistent and Visible PIC Decisioning</div>
+<div class="story rule">Ensure Consistent and Visible PIC Decisioning</div>
 <div class="story rule">Route IC decision outcome</div>
 <div class="story rule">Trigger IC Creation Based on Decision Outcome</div>
 </div>
@@ -314,7 +333,7 @@ body { font-family: Arial; margin:0; background:#f4f6f8; }
 <div class="feature">
 <div class="feature-title">Escalation Management</div>
 <div class="stories">
-<div class="story ai">Monitor PIC Review SLA and Trigger Escalations</div>
+<div class="story rule">Monitor PIC Review SLA and Trigger Escalations</div>
 <div class="story human">Record Escalation Reason and Outcome</div>
 </div>
 </div>
@@ -370,7 +389,7 @@ body { font-family: Arial; margin:0; background:#f4f6f8; }
 <div class="feature">
 <div class="feature-title">Case Ownership Assignment</div>
 <div class="stories">
-<div class="story ai">Assign case to responsible owner</div>
+<div class="story rule">Assign case to responsible owner</div>
 </div>
 </div>
 
@@ -399,10 +418,10 @@ body { font-family: Arial; margin:0; background:#f4f6f8; }
 <div class="feature">
 <div class="feature-title">Investigation Activity Tracking</div>
 <div class="stories">
-<div class="story ai">Auto-create action record on process step completion</div>
- <div class="story ai">Record discrete action types mapped to process stages</div>
-  <div class="story ai">Generate action sheet at case closure</div>
-  <div class="story ai">Save action sheet to CM10 and record reference on IC</div>
+<div class="story rule">Auto-create action record on process step completion</div>
+ <div class="story rule">Record discrete action types mapped to process stages</div>
+  <div class="story rule">Generate action sheet at case closure</div>
+  <div class="story rule">Save action sheet to CM10 and record reference on IC</div>
 </div>
 </div>
 
@@ -420,45 +439,45 @@ body { font-family: Arial; margin:0; background:#f4f6f8; }
 <div class="feature">
 <div class="feature-title">Entry Communication</div>
 <div class="stories">
- <div class="story ai">Initiate NOI generation from template with pre-populated case variables</div>
-   <div class="story ai">Review and edit system-generated NOI before dispatch</div>
-   <div class="story ai">Determine customer contact method via MyLandTax, email, or postal hierarchy</div>
-   <div class="story ai">Send confirmed NOI via preferred contact method</div>
-   <div class="story ai">Save dispatched NOI to CM10 and record dispatch date</div>
-   <div class="story ai">Manually print and post NOI when no valid email exists</div>
+ <div class="story rule">Initiate NOI generation from template with pre-populated case variables</div>
+   <div class="story human">Review and edit system-generated NOI before dispatch</div>
+   <div class="story rule">Determine customer contact method via MyLandTax, email, or postal hierarchy</div>
+   <div class="story rule">Send confirmed NOI via preferred contact method</div>
+   <div class="story rule">Save dispatched NOI to CM10 and record dispatch date</div>
+   <div class="story rule">Manually print and post NOI when no valid email exists</div>
 </div>
 </div>
 
 <div class="feature">
 <div class="feature-title">Stakeholder Notification</div>
 <div class="stories">
-  <div class="story ai">Notify officer of approaching 5-day NOI dispatch SLA breach</div>
-  <div class="story ai">Notify officer when customer response deadline lapses</div>
-  <div class="story ai">Notify officer of approaching 2-day reminder letter window breach</div>
-  <div class="story ai">Notify officer when customer response is received</div>
+  <div class="story rule">Notify officer of approaching 5-day NOI dispatch SLA breach</div>
+  <div class="story rule">Notify officer when customer response deadline lapses</div>
+  <div class="story rule">Notify officer of approaching 2-day reminder letter window breach</div>
+  <div class="story rule">Notify officer when customer response is received</div>
 </div>
 </div>
 
 <div class="feature">
 <div class="feature-title">Response Management</div>
 <div class="stories">
-  <div class="story ai">Record customer response date and method against IC</div>
-  <div class="story ai">Send templated acknowledgement to customer within 2 business days</div>
-  <div class="story ai">Record whether customer response is complete or requires additional informationh</div>
-  <div class="story ai">Initiate Request for Information when customer response is insufficient</div>
-  <div class="story ai">Record RFI dispatch date and customer response deadline</div>
-  <div class="story ai">Record when customer response deadline lapses without response</div>
+  <div class="story rule">Record customer response date and method against IC</div>
+  <div class="story rule">Send templated acknowledgement to customer within 2 business days</div>
+  <div class="story rule">Record whether customer response is complete or requires additional information</div>
+  <div class="story rule">Initiate Request for Information when customer response is insufficient</div>
+  <div class="story rule">Record RFI dispatch date and customer response deadline</div>
+  <div class="story rule">Record when customer response deadline lapses without response</div>
 </div>
 </div>
 
   <div class="feature">
 <div class="feature-title">Reminder Communication</div>
 <div class="stories">
-  <div class="story ai">Initiate reminder letter generation when response deadline lapses</div>
-  <div class="story ai">Review and edit system-generated reminder letter before dispatch</div>
-  <div class="story ai">Attach original NOI to reminder letter retrieved from CM10</div>
-  <div class="story ai">Send confirmed reminder letter via original contact method</div>
-   <div class="story ai">Save dispatched reminder letter to CM10 and record dispatch date</div>
+  <div class="story rule">Initiate reminder letter generation when response deadline lapses</div>
+  <div class="story human">Review and edit system-generated reminder letter before dispatch</div>
+  <div class="story rule">Attach original NOI to reminder letter retrieved from CM10</div>
+  <div class="story rule">Send confirmed reminder letter via original contact method</div>
+   <div class="story rule">Save dispatched reminder letter to CM10 and record dispatch date</div>
 </div>
 </div>
 
@@ -469,31 +488,31 @@ body { font-family: Arial; margin:0; background:#f4f6f8; }
 <div class="feature">
 <div class="feature-title">Investigation Report</div>
 <div class="stories">
-<div class="story ai">Initiate investigation report within 10 business days of response or deadline lapse</div>
-  <div class="story ai">Pre-populate report template from PIC data, IR data, and completed checklist items</div>
-  <div class="story ai">Record analysis, findings, decision, and recommendations in investigation report</div>
-  <div class="story ai">Submit completed investigation report to TL review queue</div>
+<div class="story rule">Initiate investigation report within 10 business days of response or deadline lapse</div>
+  <div class="story rule">Pre-populate report template from PIC data, IR data, and completed checklist items</div>
+  <div class="story human">Record analysis, findings, decision, and recommendations in investigation report</div>
+  <div class="story rule">Submit completed investigation report to TL review queue</div>
 </div>
 </div>
 
   <div class="feature">
 <div class="feature-title">Review and Approval</div>
 <div class="stories">
-<div class="story ai">View and pick investigation reports from team review queue</div>
- <div class="story ai">Record review outcome against IC</div>
-  <div class="story ai">Escalate IC to AM or BM review queue when threshold criteria are met</div>
-  <div class="story ai">View and action cases in AM/BM approval queue</div>
-  <div class="story ai">Enforce approval routing rules based on defined thresholds</div>
+<div class="story human">View and pick investigation reports from team review queue</div>
+ <div class="story human">Record review outcome against IC</div>
+  <div class="story rule">Escalate IC to AM or BM review queue when threshold criteria are met</div>
+  <div class="story human">View and action cases in AM/BM approval queue</div>
+  <div class="story rule">Enforce approval routing rules based on defined thresholds</div>
 </div>
 </div>
 
     <div class="feature">
 <div class="feature-title">Outcome Communication</div>
 <div class="stories">
-<div class="story ai">Initiate outcome letter generation from template post-approval</div>
-   <div class="story ai">Review and edit system-generated outcome letter before dispatch</div>
-  <div class="story ai">Send confirmed outcome letter via preferred contact method</div>
-  <div class="story ai">Save dispatched outcome letter to CM10 and record dispatch date</div>
+<div class="story rule">Initiate outcome letter generation from template post-approval</div>
+   <div class="story human">Review and edit system-generated outcome letter before dispatch</div>
+  <div class="story rule">Send confirmed outcome letter via preferred contact method</div>
+  <div class="story rule">Save dispatched outcome letter to CM10 and record dispatch date</div>
 </div>
 </div>
 
@@ -501,11 +520,26 @@ body { font-family: Arial; margin:0; background:#f4f6f8; }
       <div class="feature">
 <div class="feature-title">Case Closure  </div>
 <div class="stories">
-<div class="story ai">Submit close file action confirming all mandatory closure conditions are met</div>
-   <div class="story ai">Save finalised action sheet to CM10 and record reference on IC</div>
-  <div class="story ai">Close IC upon confirmation of all closure conditions</div>
+<div class="story rule">Submit close file action confirming all mandatory closure conditions are met</div>
+   <div class="story rule">Save finalised action sheet to CM10 and record reference on IC</div>
+  <div class="story rule">Close IC upon confirmation of all closure conditions</div>
 </div>
 </div>
+
+<script>
+function calculateStats() {
+
+  const epics = document.querySelectorAll('.column').length;
+  const features = document.querySelectorAll('.feature').length;
+  const stories = document.querySelectorAll('.story').length;
+
+  document.getElementById('epicCount').innerText = epics;
+  document.getElementById('featureCount').innerText = features;
+  document.getElementById('storyCount').innerText = stories;
+}
+
+calculateStats();
+</script>
   
 </body>
 </html>

@@ -249,6 +249,10 @@ body { font-family: Arial; margin:0; background:#f4f6f8; }
 <div class="story human">Review assigned IC work</div>
 <div class="story rule">Require Mandatory Comment for PIC Decision</div>
 <div class="story rule">Record Decision Outcome with Timestamp</div>
+  <div class="story rule">Select revenue line(s) for non-issue application</div>
+  <div class="story rule">Select non-issue level (customer, registration, liability, or assessment)</div>
+  <div class="story rule">Create new under-investigation non-issue even when one already exists on the account</div>
+  <div class="story rule">Apply non-issues across multiple revenue lines on a single IC</div>
 </div>
 </div>
 
@@ -357,6 +361,9 @@ body { font-family: Arial; margin:0; background:#f4f6f8; }
 <div class="story rule">Create IC from PIC Proceed Decision</div>
 <div class="story rule">Create IC from TL Rejected Closure</div>
 <div class="story rule">Link IC to Originating PIC with Full History</div>
+  <div class="story rule">Create IC from COI trigger</div>
+  <div class="story rule">Create IC from IR trigger</div>
+  <div class="story rule">Record originating source reference (COI, IR, or PIC)</div>
 </div>
 </div>
 
@@ -383,13 +390,19 @@ body { font-family: Arial; margin:0; background:#f4f6f8; }
 <div class="feature-title">Investigation Planning</div>
 <div class="stories">
 <div class="story human">Create PIC Processing Plan</div>
+  <div class="story human">Generate and attach IC processing plan checklist at case creation</div>
+  <div class="story human">Display system-completed checklist steps to officer</div>
+  <div class="story human">Configure mandatory vs optional processing plan items</div>
 </div>
 </div>
 
 <div class="feature">
 <div class="feature-title">Investigation Activity Tracking</div>
 <div class="stories">
-<div class="story">— No stories defined (Gap / Future Scope)</div>
+<div class="story ai">Auto-create action record on process step completion</div>
+ <div class="story ai">Record discrete action types mapped to process stages</div>
+  <div class="story ai">Generate action sheet at case closure</div>
+  <div class="story ai">Save action sheet to CM10 and record reference on IC</div>
 </div>
 </div>
 
@@ -407,17 +420,92 @@ body { font-family: Arial; margin:0; background:#f4f6f8; }
 <div class="feature">
 <div class="feature-title">Entry Communication</div>
 <div class="stories">
-<div class="story">— No stories defined (Gap / Future Scope)</div>
+ <div class="story ai">Initiate NOI generation from template with pre-populated case variables</div>
+   <div class="story ai">Review and edit system-generated NOI before dispatch</div>
+   <div class="story ai">Determine customer contact method via MyLandTax, email, or postal hierarchy</div>
+   <div class="story ai">Send confirmed NOI via preferred contact method</div>
+   <div class="story ai">Save dispatched NOI to CM10 and record dispatch date</div>
+   <div class="story ai">Manually print and post NOI when no valid email exists</div>
 </div>
 </div>
 
 <div class="feature">
 <div class="feature-title">Stakeholder Notification</div>
 <div class="stories">
-<div class="story">— No stories defined (Gap / Future Scope)</div>
+  <div class="story ai">Notify officer of approaching 5-day NOI dispatch SLA breach</div>
+  <div class="story ai">Notify officer when customer response deadline lapses</div>
+  <div class="story ai">Notify officer of approaching 2-day reminder letter window breach</div>
+  <div class="story ai">Notify officer when customer response is received</div>
+</div>
+</div>
+
+<div class="feature">
+<div class="feature-title">Response Management</div>
+<div class="stories">
+  <div class="story ai">Record customer response date and method against IC</div>
+  <div class="story ai">Send templated acknowledgement to customer within 2 business days</div>
+  <div class="story ai">Record whether customer response is complete or requires additional informationh</div>
+  <div class="story ai">Initiate Request for Information when customer response is insufficient</div>
+  <div class="story ai">Record RFI dispatch date and customer response deadline</div>
+  <div class="story ai">Record when customer response deadline lapses without response</div>
+</div>
+</div>
+
+  <div class="feature">
+<div class="feature-title">Reminder Communication</div>
+<div class="stories">
+  <div class="story ai">Initiate reminder letter generation when response deadline lapses</div>
+  <div class="story ai">Review and edit system-generated reminder letter before dispatch</div>
+  <div class="story ai">Attach original NOI to reminder letter retrieved from CM10</div>
+  <div class="story ai">Send confirmed reminder letter via original contact method</div>
+   <div class="story ai">Save dispatched reminder letter to CM10 and record dispatch date</div>
+</div>
+</div>
+
+</div>
+<div class="column">
+<div class="column-header c8">EPIC 9 — Investigation Execution</div>
+
+<div class="feature">
+<div class="feature-title">Investigation Report</div>
+<div class="stories">
+<div class="story ai">Initiate investigation report within 10 business days of response or deadline lapse</div>
+  <div class="story ai">Pre-populate report template from PIC data, IR data, and completed checklist items</div>
+  <div class="story ai">Record analysis, findings, decision, and recommendations in investigation report</div>
+  <div class="story ai">Submit completed investigation report to TL review queue</div>
+</div>
+</div>
+
+  <div class="feature">
+<div class="feature-title">Review and Approval</div>
+<div class="stories">
+<div class="story ai">View and pick investigation reports from team review queue</div>
+ <div class="story ai">Record review outcome against IC</div>
+  <div class="story ai">Escalate IC to AM or BM review queue when threshold criteria are met</div>
+  <div class="story ai">View and action cases in AM/BM approval queue</div>
+  <div class="story ai">Enforce approval routing rules based on defined thresholds</div>
+</div>
+</div>
+
+    <div class="feature">
+<div class="feature-title">Outcome Communication</div>
+<div class="stories">
+<div class="story ai">Initiate outcome letter generation from template post-approval</div>
+   <div class="story ai">Review and edit system-generated outcome letter before dispatch</div>
+  <div class="story ai">Send confirmed outcome letter via preferred contact method</div>
+  <div class="story ai">Save dispatched outcome letter to CM10 and record dispatch date</div>
 </div>
 </div>
 
 
+      <div class="feature">
+<div class="feature-title">Case Closure  </div>
+<div class="stories">
+<div class="story ai">Submit close file action confirming all mandatory closure conditions are met</div>
+   <div class="story ai">Save finalised action sheet to CM10 and record reference on IC</div>
+  <div class="story ai">Close IC upon confirmation of all closure conditions</div>
+</div>
+</div>
+  
 </body>
 </html>

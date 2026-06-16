@@ -1,73 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Full Backlog - Complete Traceability</title>
-
-
-<!-- BACKLOG STATS -->
-<div style="
-  background:white;
-  margin: 10px 16px;
-  padding: 12px 16px;
-  border-radius: 6px;
-  border:1px solid #ddd;
-  display:flex;
-  gap:40px;
-  align-items:center;
-  font-size:13px;
-">
-
-  <!-- Section Title -->
-  <div style="font-weight:bold; min-width:120px;">
-    Backlog Stats
-  </div>
-
-  <!-- Epics -->
-  <div>
-    <div id="epicCount" style="font-weight:bold; font-size:18px; color:#1f7a4c;">0</div>
-    <div>Epics</div>
-  </div>
-
-  <!-- Features -->
-  <div>
-    <div id="featureCount" style="font-weight:bold; font-size:18px; color:#305ec9;">0</div>
-    <div>Features</div>
-  </div>
-
-  <!-- Stories -->
-  <div>
-    <div id="storyCount" style="font-weight:bold; font-size:18px; color:#6f2dbd;">0</div>
-    <div>User Stories</div>
-  </div>
-
-  <!-- Rule % -->
-<div>
-  <div id="ruleCount" style="font-weight:bold; font-size:16px; color:#2563eb;">0%</div>
-  <div>Rule</div>
-</div>
-
-<!-- Human % -->
-<div>
-  <div id="humanCount" style="font-weight:bold; font-size:16px; color:#d97706;">0%</div>
-  <div>Human</div>
-</div>
-
-<!-- AI % -->
-<div>
-  <div id="aiCount" style="font-weight:bold; font-size:16px; color:#7c3aed;">0%</div>
-  <div>AI</div>
-</div>
-``
-  
-  <!-- Insight -->
-  <div style="margin-left:auto; font-size:12px; color:#555;">
-    Majority concentrated in Work Allocation & Pre‑Case Assessment
-  </div>
-
-</div>
-
-
 <style>
 body { font-family: Arial; margin:0; background:#f4f6f8; }
 
@@ -123,39 +56,59 @@ body { font-family: Arial; margin:0; background:#f4f6f8; }
 
 <body>
 
-<h2 style="padding:10px;">User Story Backlog</h2>
+<!-- BACKLOG STATS -->
 <div style="
+  background:white;
+  margin: 10px 16px;
   padding: 12px 16px;
-  background: white;
-  border-bottom: 1px solid #ddd;
-  display: flex;
-  gap: 30px;
-  align-items: center;
-  font-size: 12px;
+  border-radius: 6px;
+  border:1px solid #ddd;
+  display:flex;
+  gap:40px;
+  align-items:center;
+  font-size:13px;
 ">
 
-  <div style="display:flex; align-items:center; gap:6px;">
-    <span style="border-left:4px solid #2563eb; padding-left:8px; font-weight:bold;">
-      Rule
-    </span>
-    <span>System executes deterministic logic</span>
+  <div style="font-weight:bold; min-width:120px;">
+    Backlog Stats
   </div>
 
-  <div style="display:flex; align-items:center; gap:6px;">
-    <span style="border-left:4px solid #d97706; padding-left:8px; font-weight:bold;">
-      Human
-    </span>
-    <span>User makes decision or performs action</span>
+  <div>
+    <div id="epicCount" style="font-weight:bold; font-size:18px; color:#1f7a4c;">0</div>
+    <div>Epics</div>
   </div>
 
-  <div style="display:flex; align-items:center; gap:6px;">
-    <span style="border-left:4px solid #7c3aed; padding-left:8px; font-weight:bold;">
-      AI Assist
-    </span>
-    <span>System provides recommendation or insight</span>
+  <div>
+    <div id="featureCount" style="font-weight:bold; font-size:18px; color:#305ec9;">0</div>
+    <div>Features</div>
+  </div>
+
+  <div>
+    <div id="storyCount" style="font-weight:bold; font-size:18px; color:#6f2dbd;">0</div>
+    <div>User Stories</div>
+  </div>
+
+  <div>
+    <div id="ruleCount" style="font-weight:bold; font-size:16px; color:#2563eb;">0%</div>
+    <div>Rule</div>
+  </div>
+
+  <div>
+    <div id="humanCount" style="font-weight:bold; font-size:16px; color:#d97706;">0%</div>
+    <div>Human</div>
+  </div>
+
+  <div>
+    <div id="aiCount" style="font-weight:bold; font-size:16px; color:#7c3aed;">0%</div>
+    <div>AI</div>
+  </div>
+
+  <div style="margin-left:auto; font-size:12px; color:#555;">
+    Majority concentrated in Work Allocation & Pre‑Case Assessment
   </div>
 
 </div>
+
 
 <div class="container">
 
@@ -526,6 +479,11 @@ body { font-family: Arial; margin:0; background:#f4f6f8; }
 </div>
 </div>
 
+  
+</div> <!-- closes EPIC 9 column -->
+</div> <!-- closes container -->
+
+  
 <script>
 function calculateStats() {
 
@@ -533,12 +491,26 @@ function calculateStats() {
   const features = document.querySelectorAll('.feature').length;
   const stories = document.querySelectorAll('.story').length;
 
+  const rule = document.querySelectorAll('.story.rule').length;
+  const human = document.querySelectorAll('.story.human').length;
+  const ai = document.querySelectorAll('.story.ai').length;
+
+  // Set totals
   document.getElementById('epicCount').innerText = epics;
   document.getElementById('featureCount').innerText = features;
   document.getElementById('storyCount').innerText = stories;
+
+  // Calculate %
+  if (stories > 0) {
+    document.getElementById('ruleCount').innerText = Math.round((rule / stories) * 100) + '%';
+    document.getElementById('humanCount').innerText = Math.round((human / stories) * 100) + '%';
+    document.getElementById('aiCount').innerText = Math.round((ai / stories) * 100) + '%';
+  }
 }
 
-calculateStats();
+// ✅ Make sure it runs AFTER page loads
+document.addEventListener('DOMContentLoaded', calculateStats);
+
 </script>
   
 </body>

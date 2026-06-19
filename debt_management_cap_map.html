@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debt Management Capability Model</title>
+
+<style>
+body {font-family: Inter, sans-serif; background:#f4f6f9; padding:20px; margin:0;}
+h2 {margin:0 0 14px 0; font-size:22px; color:#111827;}
+
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;}
+button{padding:8px 12px;border:1px solid #ccc;background:#fff;border-radius:6px;cursor:pointer;font-size:12px;}
+button:hover{background:#f9fafb;}
+
+.container{display:flex;gap:10px;overflow-x:auto;align-items:flex-start;padding-bottom:6px;}
+.column{min-width:240px;flex:0 0 auto;}
+
+.header{color:#fff;padding:10px;font-size:11px;font-weight:700;text-transform:uppercase;border-radius:6px 6px 0 0;text-align:center;min-height:60px;display:flex;align-items:center;justify-content:center;line-height:1.35;}
+
+.track{background:#fff;border:1px solid #ddd;border-top:none;padding:10px;display:flex;flex-direction:column;gap:8px;border-radius:0 0 6px 6px;min-height:560px;}
+
+.card{
+  background:#fafafa;
+  border:1px solid #e5e7eb;
+  padding:8px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:12px;
+  transition:all .15s ease;
+}
+
+.card:hover{background:#fff;border-color:#cbd5e1;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+
+.card.common {border-left:4px solid #16a34a;}
+.card.debt {border-left:4px solid #eab308;}
+
+.card small {display:block;color:#777;margin-top:4px;}
+
+.s1  { background:#0f7a4e; }
+.s2  { background:#2563eb; }
+.s3  { background:#6d28d9; }
+.s4  { background:#b91c1c; }
+.s5  { background:#92400e; }
+.s6  { background:#0ea5e9; }
+.s7  { background:#9333ea; }
+.s8  { background:#15803d; }
+.s9  { background:#1d4ed8; }
+.s10 { background:#b45309; }
+.s11 { background:#374151; }
+.s12 { background:#111827; }
+.s13 { background:#065f46; }
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);display:none;z-index:998;}
+.overlay.open{display:block;}
+
+.panel{
+  position:fixed;
+  right:-520px;
+  top:0;
+  width:500px;
+  height:100%;
+  background:#fff;
+  padding:20px;
+  overflow:auto;
+  transition:.3s;
+  box-shadow:-4px 0 16px rgba(0,0,0,.16);
+  z-index:999;
+}
+.panel.open{right:0;}
+
+.close{
+  position:absolute;
+  top:12px;
+  right:12px;
+  cursor:pointer;
+  width:28px;
+  height:28px;
+  border:1px solid #ddd;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.section {margin-top:16px;font-size:11px;font-weight:bold;color:#777;text-transform:uppercase;}
+
+.panel h3{margin:0;font-size:20px;margin-bottom:6px;}
+
+.panel p{font-size:13px;line-height:1.5;}
+
+.label {font-weight:bold;color:#333;margin-top:10px;}
+
+</style>
+</head>
+
+<body>
+
+<h2>Debt Management Capability Model (Aligned to Investigation)</h2>
+
+<div class="toolbar">
+  <button onclick="expandAll()">Expand First Card</button>
+  <button onclick="scrollToStart()">Back to Start</button>
+</div>
+
+<div class="container" id="map"></div>
+
+<div class="overlay" id="overlay" onclick="closePanel()"></div>
+
+<div class="panel" id="panel">
+<div class="close" onclick="closePanel()">✖</div>
+
+<h3 id="title"></h3>
+<div id="stageLabel"></div>
+
+<div class="section">Investigation</div>
+<p id="inv"></p>
+
+<div class="section">Debt</div>
+<p id="debt"></p>
+
+<div class="section">Type</div>
+<p id="type"></p>
+
+</div>
+
+<script>
+
+const data = [
+
+/* =========================
+STAGE 1
+========================= */
+{
+stageClass:"s1",
+stage:"Stage 1: Intelligence & Lead Generation",
+capabilities:[
+{title:"Intelligence & Referral Management",type:"COMMON",inv:"Capture referrals and intelligence.",debt:"Capture system-generated triggers and referrals."},
+{title:"Lead Identification Management",type:"COMMON",inv:"Identify investigation opportunities.",debt:"Identify debts requiring action."},
+{title:"External Data Utilisation",type:"COMMON",inv:"Use third-party data.",debt:"Use external data to support recovery."},
+{title:"Internal Signal Detection",type:"COMMON",inv:"Detect anomalies.",debt:"Detect overdue events."},
+{title:"Event Detection & Processing",type:"COMMON",inv:"Detect investigation triggers.",debt:"Detect overdue, default and breach triggers."}
+]},
+
+/* =========================
+STAGE 2
+========================= */
+{
+stageClass:"s2",
+stage:"Stage 2: Lead Registration & Tracking",
+capabilities:[
+{title:"Lead Intake Management",type:"COMMON",inv:"Manage intake.",debt:"Manage debt events."},
+{title:"Lead Registration Management",type:"COMMON",inv:"Register leads.",debt:"Create recovery cases."},
+{title:"Lead Tracking Management",type:"COMMON",inv:"Track leads.",debt:"Track cases."},
+{title:"Lead Status Management",type:"COMMON",inv:"Maintain status.",debt:"Maintain case status."},
+{title:"Traceability & Audit Management",type:"COMMON",inv:"Track actions.",debt:"Track recovery actions."},
+{title:"Lead Portfolio Management",type:"COMMON",inv:"Manage pipeline.",debt:"Manage portfolio."},
+{title:"Debt Portfolio Segmentation",type:"DEBT",inv:"N/A",debt:"Segment debt cohorts."}
+]},
+
+/* =========================
+STAGE 3
+========================= */
+{
+stageClass:"s3",
+stage:"Stage 3: Data Validation & Enrichment",
+capabilities:[
+{title:"Customer Identification & Resolution",type:"COMMON",inv:"Resolve identity.",debt:"Match liable entity."},
+{title:"Data Quality Management",type:"COMMON",inv:"Ensure data quality.",debt:"Ensure accurate debt data."},
+{title:"Data Validation Management",type:"COMMON",inv:"Validate data.",debt:"Validate debt data."},
+{title:"Data Enrichment & Context Management",type:"COMMON",inv:"Build context.",debt:"Build financial profile."},
+{title:"Duplicate Management",type:"COMMON",inv:"Identify duplicates.",debt:"Prevent duplicate cases."},
+{title:"Customer Behaviour Assessment",type:"COMMON",inv:"Assess engagement behaviour.",debt:"Assess willingness to pay."},
+{title:"Debt Position Calculation",type:"DEBT",inv:"N/A",debt:"Calculate balances and interest."}
+]},
+
+/* =========================
+STAGE 4
+========================= */
+{
+stageClass:"s4",
+stage:"Stage 4: Decisioning & Trigger Management",
+capabilities:[
+{title:"Case Assessment Management",type:"COMMON",inv:"Assess viability.",debt:"Assess priority."},
+{title:"Decision & Rule Execution Management",type:"COMMON",inv:"Apply rules.",debt:"Apply recovery logic."},
+{title:"Event Trigger Management",type:"COMMON",inv:"Trigger actions.",debt:"Trigger recovery actions."},
+{title:"Time-Based Processing",type:"COMMON",inv:"Manage deadlines.",debt:"Manage escalation timing."},
+{title:"Risk Assessment Management",type:"COMMON",inv:"Assess risk.",debt:"Assess recovery likelihood."},
+{title:"Eligibility & Readiness Management",type:"COMMON",inv:"Check readiness.",debt:"Check readiness."},
+{title:"Information Requirement Management",type:"COMMON",inv:"Identify gaps.",debt:"Identify missing data."},
+{title:"Recovery Strategy Selection",type:"DEBT",inv:"N/A",debt:"Select recovery path."}
+]},
+
+/* =========================
+STAGE 5
+========================= */
+{
+stageClass:"s5",
+stage:"Stage 5: Governance & Pre-Case Control",
+capabilities:[
+{title:"Decision Governance & Approval Management",type:"COMMON",inv:"Approve decisions.",debt:"Approve recovery pathways."},
+{title:"Case Readiness Management",type:"COMMON",inv:"Ensure readiness.",debt:"Ensure readiness."},
+{title:"Decision Recording Management",type:"COMMON",inv:"Record decisions.",debt:"Record decisions."},
+{title:"Pre-Case Outcome Management",type:"COMMON",inv:"Close or proceed.",debt:"Close or escalate."}
+]},
+
+/* =========================
+STAGE 6
+========================= */
+{
+stageClass:"s6",
+stage:"Stage 6: Work Management",
+capabilities:[
+{title:"Work Demand Management",type:"COMMON",inv:"Manage inflow.",debt:"Manage inflow."},
+{title:"Work Queue Management",type:"COMMON",inv:"Organise queues.",debt:"Organise queues."},
+{title:"Work Distribution Management",type:"COMMON",inv:"Assign work.",debt:"Assign cases."},
+{title:"Allocation Rule Governance",type:"COMMON",inv:"Manage rules.",debt:"Manage routing rules."},
+{title:"Workload Management",type:"COMMON",inv:"Balance workload.",debt:"Balance officers."},
+{title:"Work Tracking Management",type:"COMMON",inv:"Track progress.",debt:"Track cases."},
+{title:"Work Communication Management",type:"COMMON",inv:"Communicate assignments.",debt:"Communicate updates."},
+{title:"Case Prioritisation Management",type:"DEBT",inv:"N/A",debt:"Prioritise cases."},
+{title:"Campaign Work Allocation",type:"DEBT",inv:"N/A",debt:"Allocate campaigns."}
+]},
+
+/* =========================
+STAGE 7
+========================= */
+{
+stageClass:"s7",
+stage:"Stage 7: Case Qualification",
+capabilities:[
+{title:"Case Classification & Risk Assessment",type:"COMMON",inv:"Classify risk.",debt:"Classify risk."},
+{title:"Rules-Based Automation",type:"COMMON",inv:"Automate decisions.",debt:"Automate decisions."},
+{title:"Action Selection Management",type:"COMMON",inv:"Select next action.",debt:"Select next recovery action."},
+{title:"Exception & Escalation Management",type:"COMMON",inv:"Manage exceptions.",debt:"Escalate cases."},
+{title:"SLA & Time Management",type:"COMMON",inv:"Track SLA.",debt:"Track SLA."},
+{title:"Pre-Case Outcome Management",type:"COMMON",inv:"Close/proceed.",debt:"Close/proceed."}
+]},
+
+/* =========================
+STAGE 8
+========================= */
+{
+stageClass:"s8",
+stage:"Stage 8: Case Establishment",
+capabilities:[
+{title:"Case Management",type:"COMMON",inv:"Create case.",debt:"Create case."},
+{title:"Case Ownership Management",type:"COMMON",inv:"Assign owner.",debt:"Assign officer."},
+{title:"Case Workflow Establishment",type:"COMMON",inv:"Start workflow.",debt:"Start workflow."},
+{title:"Case Structuring & Planning Management",type:"COMMON",inv:"Structure case.",debt:"Structure cases."}
+]},
+
+/* =========================
+STAGE 9
+========================= */
+{
+stageClass:"s9",
+stage:"Stage 9: Planning & Engagement",
+capabilities:[
+{title:"Case Management",type:"COMMON",inv:"Coordinate case.",debt:"Coordinate case."},
+{title:"Activity Planning Management",type:"COMMON",inv:"Plan investigation.",debt:"Plan recovery."},
+{title:"Stakeholder Engagement Management",type:"COMMON",inv:"Engage stakeholders.",debt:"Engage customers."},
+{title:"Communication Event Management",type:"COMMON",inv:"Trigger comms.",debt:"Trigger reminders."},
+{title:"Communication Content Management",type:"COMMON",inv:"Manage content.",debt:"Manage templates."},
+{title:"Communication Delivery Management",type:"COMMON",inv:"Deliver comms.",debt:"Deliver notifications."},
+{title:"Communication Tracking & Audit",type:"COMMON",inv:"Track comms.",debt:"Track comms."},
+{title:"Reminder Strategy Management",type:"DEBT",inv:"N/A",debt:"Define reminders."}
+]},
+
+/* =========================
+STAGE 10
+========================= */
+{
+stageClass:"s10",
+stage:"Stage 10: Evidence & Information Management",
+capabilities:[
+{title:"Evidence Management",type:"COMMON",inv:"Manage evidence.",debt:"Manage records."},
+{title:"Information Request Management",type:"COMMON",inv:"Request info.",debt:"Request documents."},
+{title:"Case Information Management",type:"COMMON",inv:"Store artefacts.",debt:"Store interactions."}
+]},
+
+/* =========================
+STAGE 11
+========================= */
+{
+stageClass:"s11",
+stage:"Stage 11: Analysis & Determination",
+capabilities:[
+{title:"Evidence Analysis",type:"COMMON",inv:"Analyse evidence.",debt:"Analyse behaviour."},
+{title:"Decision Modelling",type:"COMMON",inv:"Model outcomes.",debt:"Model recovery."},
+{title:"Outcome Determination",type:"COMMON",inv:"Determine outcome.",debt:"Determine recovery outcome."},
+{title:"Legal & Policy Alignment",type:"COMMON",inv:"Align to policy.",debt:"Align to legislation."},
+{title:"Investigation Reporting",type:"COMMON",inv:"Produce reports.",debt:"Produce reports."},
+{title:"Debt Recovery Path Decisioning",type:"DEBT",inv:"N/A",debt:"Select optimal path."},
+{title:"Write-off Eligibility Assessment",type:"DEBT",inv:"N/A",debt:"Assess write-off."}
+]},
+
+/* =========================
+STAGE 12
+========================= */
+{
+stageClass:"s12",
+stage:"Stage 12: Approval & Execution",
+capabilities:[
+{title:"Decision Approval",type:"COMMON",inv:"Approve outcome.",debt:"Approve action."},
+{title:"Outcome Execution",type:"COMMON",inv:"Execute outcome.",debt:"Execute recovery actions."},
+{title:"Outcome Communication Management",type:"COMMON",inv:"Communicate result.",debt:"Notify customers."},
+{title:"Exception Governance",type:"COMMON",inv:"Manage overrides.",debt:"Manage overrides."},
+{title:"Execute Recovery Actions",type:"DEBT",inv:"N/A",debt:"Execute enforcement."},
+{title:"Payment Arrangement Execution",type:"DEBT",inv:"N/A",debt:"Manage arrangements."}
+]},
+
+/* =========================
+STAGE 13
+========================= */
+{
+stageClass:"s13",
+stage:"Stage 13: Closure & Insights",
+capabilities:[
+{title:"Performance Reporting",type:"COMMON",inv:"Report performance.",debt:"Report metrics."},
+{title:"Dispute Management",type:"COMMON",inv:"Handle disputes.",debt:"Handle objections."},
+{title:"Continuous Improvement",type:"COMMON",inv:"Improve processes.",debt:"Improve strategies."},
+{title:"Knowledge Management",type:"COMMON",inv:"Capture knowledge.",debt:"Capture patterns."},
+{title:"Case Lifecycle Management",type:"COMMON",inv:"Manage lifecycle.",debt:"Manage closure."},
+{title:"Debt Outcome Tracking",type:"DEBT",inv:"N/A",debt:"Track outcomes."}
+]}
+];
+const map=document.getElementById("map");
+const panel=document.getElementById("panel");
+const overlay=document.getElementById("overlay");
+
+data.forEach(stage=>{
+  const col=document.createElement("div");
+  col.className="column";
+
+  const h=document.createElement("div");
+  h.className="header "+stage.stageClass;
+  h.innerText=stage.stage;
+
+  const track=document.createElement("div");
+  track.className="track";
+
+  stage.capabilities.forEach(cap=>{
+    const card=document.createElement("div");
+    card.className="card "+(cap.type==="COMMON"?"common":"debt");
+    card.innerHTML=`<strong>${cap.title}</strong><small>${cap.type}</small>`;
+    card.onclick=()=>openPanel(stage.stage,cap);
+    track.appendChild(card);
+  });
+
+  col.appendChild(h);
+  col.appendChild(track);
+  map.appendChild(col);
+});
+
+function openPanel(stage,cap){
+  document.getElementById("title").innerText=cap.title;
+  document.getElementById("stageLabel").innerText=stage;
+  document.getElementById("inv").innerText=cap.inv;
+  document.getElementById("debt").innerText=cap.debt;
+  document.getElementById("type").innerText=cap.type;
+
+  overlay.classList.add("open");
+  panel.classList.add("open");
+}
+
+function closePanel(){
+  overlay.classList.remove("open");
+  panel.classList.remove("open");
+}
+
+function scrollToStart(){
+  document.querySelector(".container").scrollTo({left:0,behavior:"smooth"});
+}
+
+function expandAll(){
+  openPanel(data[0].stage,data[0].capabilities[0]);
+}
+
+</script>
+
+</body>
+</html>

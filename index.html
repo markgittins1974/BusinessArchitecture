@@ -526,20 +526,27 @@ const VIEWS = [
       { icon: '⋮⋮', iconBg: 'oklch(0.55 0.15 145 / 0.1)', iconColor: 'oklch(0.45 0.15 145)', name: 'Work Item Catalogue', sub: 'Catalogue of work items on hand and KPI tracking.', href: `${BASE}/operations/activities.html`, chip: null },
     ]
   },
-];
-
   {
-    id: 'Debt management',
+    id: 'debt',
     label: 'Debt Management View',
     dot: 'oklch(0.72 0.16 70)',
     accent: 'var(--amber)',
     chipClass: 'chip-amber',
-    chipText: 'Manager',
-    desc: 'Operational insights, pain points, and delivery tracking for debt management oversight.',
+    chipText: 'Operations'
+    desc: 'Capability model and operational view of the debt management lifecycle.',
     links: [
-      { icon: '⚑', iconBg: 'oklch(0.72 0.16 70 / 0.1)', iconColor: 'var(--amber-dk)', name: 'Debt Managment Capability Map', sub: '', href: `${BASE}/debtmanagement/debt_management_cap_map.html`, chip: null },
+      { 
+        icon: '▦', 
+        iconBg: 'oklch(0.72 0.16 70 / 0.1)', 
+        iconColor: 'var(--amber-dk)', 
+        name: 'Debt Management Capability Map', 
+        sub: 'End-to-end capability model aligned to investigations and recovery.', 
+        href: `${BASE}/debtmanagement/debt_management_cap_map.html`, 
+        chip: { text: 'Core Model', cls: 'chip-amber' } 
+      }
     ]
-  },
+  }
+];
 
 const VIEWS2 = [
   {

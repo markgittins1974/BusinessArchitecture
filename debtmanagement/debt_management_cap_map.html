@@ -134,11 +134,36 @@ STAGE 1
 stageClass:"s1",
 stage:"Stage 1: Intelligence & Lead Generation",
 capabilities:[
-{title:"Intelligence & Referral Management",type:"COMMON",inv:"Capture referrals and intelligence.",debt:"Capture system-generated triggers and referrals."},
-{title:"Lead Identification Management",type:"COMMON",inv:"Identify investigation opportunities.",debt:"Identify debts requiring action."},
-{title:"External Data Utilisation",type:"COMMON",inv:"Use third-party data.",debt:"Use external data to support recovery."},
-{title:"Internal Signal Detection",type:"COMMON",inv:"Detect anomalies.",debt:"Detect overdue events."},
-{title:"Event Detection & Processing",type:"COMMON",inv:"Detect investigation triggers.",debt:"Detect overdue, default and breach triggers."}
+{
+title:"Intelligence & Referral Management",
+type:"COMMON",
+inv:"Capture, register and manage incoming intelligence and referrals from internal and external sources. This includes recording structured and unstructured inputs, validating relevance, linking to entities, and maintaining traceability through subsequent investigation stages.",
+debt:"Capture and manage inbound referrals and system-generated recovery triggers, ensuring all inputs are validated, linked to the correct account, and traceable throughout the recovery lifecycle."
+},
+{
+title:"Lead Identification Management",
+type:"COMMON",
+inv:"Analyse available intelligence and data signals to identify potential investigation opportunities, determining whether sufficient risk or anomaly exists to justify further action.",
+debt:"Analyse account signals, balances and behaviour to identify debts requiring recovery intervention and prioritise them for follow-up."
+},
+{
+title:"External Data Utilisation",
+type:"COMMON",
+inv:"Retrieve and apply third-party data sources to enrich case context, support risk identification and improve decision-making accuracy during investigation initiation.",
+debt:"Use external data such as contact, property or financial information to support recovery decisions and improve customer targeting."
+},
+{
+title:"Internal Signal Detection",
+type:"COMMON",
+inv:"Monitor internal systems and datasets to detect anomalies, inconsistencies or patterns that may indicate non-compliance or investigation triggers.",
+debt:"Monitor internal systems for missed payments, account changes or behavioural signals indicating recovery action is required."
+},
+{
+title:"Event Detection & Processing",
+type:"COMMON",
+inv:"Continuously monitor for events such as missed responses, threshold breaches or intelligence updates, and evaluate them to determine whether a case should be initiated or progressed.",
+debt:"Detect events such as overdue payments, defaults or behavioural triggers and evaluate them to determine appropriate recovery actions or escalation."
+}
 ]},
 
 /* =========================
@@ -148,13 +173,48 @@ STAGE 2
 stageClass:"s2",
 stage:"Stage 2: Lead Registration & Tracking",
 capabilities:[
-{title:"Lead Intake Management",type:"COMMON",inv:"Manage intake.",debt:"Manage debt events."},
-{title:"Lead Registration Management",type:"COMMON",inv:"Register leads.",debt:"Create recovery cases."},
-{title:"Lead Tracking Management",type:"COMMON",inv:"Track leads.",debt:"Track cases."},
-{title:"Lead Status Management",type:"COMMON",inv:"Maintain status.",debt:"Maintain case status."},
-{title:"Traceability & Audit Management",type:"COMMON",inv:"Track actions.",debt:"Track recovery actions."},
-{title:"Lead Portfolio Management",type:"COMMON",inv:"Manage pipeline.",debt:"Manage portfolio."},
-{title:"Debt Portfolio Segmentation",type:"DEBT",inv:"N/A",debt:"Segment debt cohorts."}
+{
+title:"Lead Intake Management",
+type:"COMMON",
+inv:"Receive and capture investigation leads, validating inputs and preparing them for formal registration and assessment.",
+debt:"Receive and capture incoming debt events, ensuring they are validated and ready to be converted into structured recovery cases."
+},
+{
+title:"Lead Registration Management",
+type:"COMMON",
+inv:"Create formally tracked investigation cases, assigning identifiers, linking entities and establishing initial case structure.",
+debt:"Create recovery cases within the system, linking customer accounts, debt positions and initial status."
+},
+{
+title:"Lead Tracking Management",
+type:"COMMON",
+inv:"Track investigation leads from creation through to triage, monitoring progression, ownership and key actions.",
+debt:"Track recovery cases throughout their lifecycle, ensuring visibility of status changes and actions taken."
+},
+{
+title:"Lead Status Management",
+type:"COMMON",
+inv:"Maintain and update the lifecycle state of investigation leads to accurately reflect progress and readiness.",
+debt:"Maintain accurate case status throughout the recovery lifecycle, supporting visibility and control."
+},
+{
+title:"Traceability & Audit Management",
+type:"COMMON",
+inv:"Capture and maintain a full history of actions, decisions and interactions associated with each investigation lead.",
+debt:"Capture all recovery actions, communications and decisions to ensure full auditability and traceability."
+},
+{
+title:"Lead Portfolio Management",
+type:"COMMON",
+inv:"Manage the pipeline of investigation leads, providing visibility over volumes, risk and prioritisation.",
+debt:"Manage the portfolio of recovery cases, balancing workload and prioritising based on risk and value."
+},
+{
+title:"Debt Portfolio Segmentation",
+type:"DEBT",
+inv:"N/A",
+debt:"Segment debt cases into groups based on value, age, behaviour and risk to support targeted recovery strategies."
+}
 ]},
 
 /* =========================
@@ -164,13 +224,48 @@ STAGE 3
 stageClass:"s3",
 stage:"Stage 3: Data Validation & Enrichment",
 capabilities:[
-{title:"Customer Identification & Resolution",type:"COMMON",inv:"Resolve identity.",debt:"Match liable entity."},
-{title:"Data Quality Management",type:"COMMON",inv:"Ensure data quality.",debt:"Ensure accurate debt data."},
-{title:"Data Validation Management",type:"COMMON",inv:"Validate data.",debt:"Validate debt data."},
-{title:"Data Enrichment & Context Management",type:"COMMON",inv:"Build context.",debt:"Build financial profile."},
-{title:"Duplicate Management",type:"COMMON",inv:"Identify duplicates.",debt:"Prevent duplicate cases."},
-{title:"Customer Behaviour Assessment",type:"COMMON",inv:"Assess engagement behaviour.",debt:"Assess willingness to pay."},
-{title:"Debt Position Calculation",type:"DEBT",inv:"N/A",debt:"Calculate balances and interest."}
+{
+title:"Customer Identification & Resolution",
+type:"COMMON",
+inv:"Resolve and link customer identities across systems, ensuring a single, accurate view of the investigated entity.",
+debt:"Match debt records to the correct liable customer, ensuring accurate ownership and accountability."
+},
+{
+title:"Data Quality Management",
+type:"COMMON",
+inv:"Ensure all case data is accurate, complete and consistent before it is used in investigation decisions.",
+debt:"Validate and maintain accurate debt and customer data to support reliable recovery actions."
+},
+{
+title:"Data Validation Management",
+type:"COMMON",
+inv:"Verify that collected data meets defined rules and completeness requirements prior to further processing.",
+debt:"Validate financial and account data to ensure it is suitable for recovery decision-making."
+},
+{
+title:"Data Enrichment & Context Management",
+type:"COMMON",
+inv:"Enhance case data with additional context, including historical, behavioural and external insights to support investigation.",
+debt:"Enhance customer and account data to build a more complete financial profile supporting recovery planning."
+},
+{
+title:"Duplicate Management",
+type:"COMMON",
+inv:"Identify and resolve duplicate records to ensure data integrity and accurate case management.",
+debt:"Prevent duplicate debt cases and maintain a clean account structure for recovery activities."
+},
+{
+title:"Customer Behaviour Assessment",
+type:"COMMON",
+inv:"Assess customer responsiveness, cooperation and engagement patterns to inform investigation decisions.",
+debt:"Analyse payment and engagement behaviour to evaluate willingness and ability to repay debt."
+},
+{
+title:"Debt Position Calculation",
+type:"DEBT",
+inv:"N/A",
+debt:"Calculate the full debt position including balances, penalties, interest and adjustments to support recovery actions."
+}
 ]},
 
 /* =========================
@@ -180,15 +275,56 @@ STAGE 4
 stageClass:"s4",
 stage:"Stage 4: Decisioning & Trigger Management",
 capabilities:[
-{title:"Case Assessment Management",type:"COMMON",inv:"Assess viability.",debt:"Assess priority."},
-{title:"Decision & Rule Execution Management",type:"COMMON",inv:"Apply rules.",debt:"Apply recovery logic."},
-{title:"Event Trigger Management",type:"COMMON",inv:"Trigger actions.",debt:"Trigger recovery actions."},
-{title:"Time-Based Processing",type:"COMMON",inv:"Manage deadlines.",debt:"Manage escalation timing."},
-{title:"Risk Assessment Management",type:"COMMON",inv:"Assess risk.",debt:"Assess recovery likelihood."},
-{title:"Eligibility & Readiness Management",type:"COMMON",inv:"Check readiness.",debt:"Check readiness."},
-{title:"Information Requirement Management",type:"COMMON",inv:"Identify gaps.",debt:"Identify missing data."},
-{title:"Recovery Strategy Selection",type:"DEBT",inv:"N/A",debt:"Select recovery path."}
-]},
+{
+title:"Case Assessment Management",
+type:"COMMON",
+inv:"Assess investigation viability by evaluating risk, completeness and significance of the case to determine next steps.",
+debt:"Assess recovery case priority based on debt value, risk and customer behaviour."
+},
+{
+title:"Decision & Rule Execution Management",
+type:"COMMON",
+inv:"Apply structured rules to determine whether a case proceeds, requires more information or progresses despite gaps.",
+debt:"Apply recovery rules to determine case treatment, prioritisation and escalation pathways."
+},
+{
+title:"Event Trigger Management",
+type:"COMMON",
+inv:"Trigger actions such as information requests or escalation when defined investigation conditions are met.",
+debt:"Trigger recovery actions such as reminders or escalation based on account events and rules."
+},
+{
+title:"Time-Based Processing",
+type:"COMMON",
+inv:"Manage time-based controls such as response deadlines and SLA thresholds, triggering follow-ups or escalation when breached.",
+debt:"Manage time-driven processes such as reminder cycles, grace periods and escalation timelines."
+},
+{
+title:"Risk Assessment Management",
+type:"COMMON",
+inv:"Evaluate investigation risk levels to prioritise and guide case handling.",
+debt:"Assess likelihood of recovery based on financial and behavioural indicators."
+},
+{
+title:"Eligibility & Readiness Management",
+type:"COMMON",
+inv:"Determine whether the case has sufficient information and readiness to proceed to investigation.",
+debt:"Confirm whether a debt case is ready for recovery treatment based on data completeness."
+},
+{
+title:"Information Requirement Management",
+type:"COMMON",
+inv:"Identify gaps in evidence or information and determine what additional inputs are required.",
+debt:"Identify missing customer, financial or contact data required to proceed with recovery."
+},
+{
+title:"Recovery Strategy Selection",
+type:"DEBT",
+inv:"N/A",
+debt:"Determine the appropriate recovery strategy such as reminders, arrangements or enforcement based on case context."
+}
+]
+},
 
 /* =========================
 STAGE 5
@@ -197,10 +333,30 @@ STAGE 5
 stageClass:"s5",
 stage:"Stage 5: Governance & Pre-Case Control",
 capabilities:[
-{title:"Decision Governance & Approval Management",type:"COMMON",inv:"Approve decisions.",debt:"Approve recovery pathways."},
-{title:"Case Readiness Management",type:"COMMON",inv:"Ensure readiness.",debt:"Ensure readiness."},
-{title:"Decision Recording Management",type:"COMMON",inv:"Record decisions.",debt:"Record decisions."},
-{title:"Pre-Case Outcome Management",type:"COMMON",inv:"Close or proceed.",debt:"Close or escalate."}
+{
+title:"Decision Governance & Approval Management",
+type:"COMMON",
+inv:"Manage governance and approval of key investigation decisions before a matter proceeds further. This includes ensuring that triage outcomes, progression decisions, closure recommendations or escalation points are reviewed where required, supported by appropriate rationale, and aligned with internal policy, delegation and quality expectations.",
+debt:"Manage governance and approval of recovery pathway decisions before debt cases proceed into action. This includes confirming that decisions to progress, defer, escalate, approve arrangements or close cases are supported by appropriate information, authority and policy alignment."
+},
+{
+title:"Case Readiness Management",
+type:"COMMON",
+inv:"Confirm that an investigation matter has the required information, context, ownership and decision basis to progress to the next stage. This includes checking whether identity, risk, issue scope and supporting material are sufficiently complete to allow reliable case initiation or further assessment.",
+debt:"Confirm that a recovery case has sufficient customer, liability, balance and contact information to proceed with recovery activity. This ensures that cases are not progressed into action where essential recovery data is missing, unreliable or unresolved."
+},
+{
+title:"Decision Recording Management",
+type:"COMMON",
+inv:"Capture formal investigation decisions, including the decision made, the reason for the decision, supporting evidence, decision-maker and date. This ensures investigation decisions remain traceable and can be reviewed, audited or explained if challenged.",
+debt:"Capture formal recovery decisions, including pathway selection, approval outcomes, escalation decisions, arrangement decisions and case closure decisions. This ensures recovery actions are transparent, auditable and supported by recorded rationale."
+},
+{
+title:"Pre-Case Outcome Management",
+type:"COMMON",
+inv:"Determine and manage outcomes before a full investigation case is established. This includes closing matters that do not meet investigation criteria, redirecting matters to another pathway, or approving progression into case establishment where further work is justified.",
+debt:"Determine and manage outcomes before a debt case proceeds into active recovery. This includes closing events where recovery is not required, holding cases where information is incomplete, or escalating matters where recovery action is appropriate."
+}
 ]},
 
 /* =========================
@@ -210,15 +366,60 @@ STAGE 6
 stageClass:"s6",
 stage:"Stage 6: Work Management",
 capabilities:[
-{title:"Work Demand Management",type:"COMMON",inv:"Manage inflow.",debt:"Manage inflow."},
-{title:"Work Queue Management",type:"COMMON",inv:"Organise queues.",debt:"Organise queues."},
-{title:"Work Distribution Management",type:"COMMON",inv:"Assign work.",debt:"Assign cases."},
-{title:"Allocation Rule Governance",type:"COMMON",inv:"Manage rules.",debt:"Manage routing rules."},
-{title:"Workload Management",type:"COMMON",inv:"Balance workload.",debt:"Balance officers."},
-{title:"Work Tracking Management",type:"COMMON",inv:"Track progress.",debt:"Track cases."},
-{title:"Work Communication Management",type:"COMMON",inv:"Communicate assignments.",debt:"Communicate updates."},
-{title:"Case Prioritisation Management",type:"DEBT",inv:"N/A",debt:"Prioritise cases."},
-{title:"Campaign Work Allocation",type:"DEBT",inv:"N/A",debt:"Allocate campaigns."}
+{
+title:"Work Demand Management",
+type:"COMMON",
+inv:"Monitor and manage the volume of investigation work entering the pipeline. This includes understanding incoming demand, identifying peaks or backlogs, and ensuring investigation work can be planned and resourced effectively.",
+debt:"Monitor and manage the volume of recovery work entering the debt management pipeline. This includes assessing case inflow, demand patterns, overdue volumes and workloads to support effective recovery planning and operational control."
+},
+{
+title:"Work Queue Management",
+type:"COMMON",
+inv:"Organise investigation work into structured queues based on criteria such as case type, priority, complexity, status or team responsibility. This enables consistent access to work and supports orderly progression through the investigation lifecycle.",
+debt:"Organise recovery cases into queues based on debt value, age, risk, treatment type, status or recovery pathway. This supports efficient processing, prioritisation and allocation of debt cases."
+},
+{
+title:"Work Distribution Management",
+type:"COMMON",
+inv:"Assign investigation work to individuals or teams based on workload, skill, availability, case complexity or business rules. This ensures investigation matters are allocated to appropriate owners and can progress with clear accountability.",
+debt:"Assign recovery cases to officers, teams, pools or specialist pathways based on allocation criteria such as debt value, revenue type, complexity, workload or escalation status."
+},
+{
+title:"Allocation Rule Governance",
+type:"COMMON",
+inv:"Define, maintain and govern the rules used to allocate investigation work. This includes ensuring allocation rules are transparent, consistently applied, and aligned with operational priorities, skill requirements and governance expectations.",
+debt:"Define and maintain rules that determine how recovery cases are routed or assigned. This includes governance of thresholds, specialist handling rules, general pool allocation and escalation routing."
+},
+{
+title:"Workload Management",
+type:"COMMON",
+inv:"Monitor and balance investigation workload across staff and teams to prevent bottlenecks, uneven distribution or unmanaged delays. This supports productivity, accountability and timely case progression.",
+debt:"Monitor and balance recovery workload across officers, teams or queues to ensure cases progress efficiently and operational capacity is used effectively."
+},
+{
+title:"Work Tracking Management",
+type:"COMMON",
+inv:"Track the progress of investigation work items, including ownership, current stage, pending actions, overdue activities and completion status. This provides visibility over case movement and supports operational oversight.",
+debt:"Track the progress of recovery cases and associated actions, including assigned owner, recovery stage, next action, status changes and outstanding work."
+},
+{
+title:"Work Communication Management",
+type:"COMMON",
+inv:"Support communication about work allocation, case status and operational updates between investigators, team leaders and supporting staff. This ensures responsibilities, changes and work expectations are visible.",
+debt:"Support communication about recovery work allocation, case movement, officer responsibilities and operational updates to ensure recovery activity is coordinated and transparent."
+},
+{
+title:"Case Prioritisation Management",
+type:"DEBT",
+inv:"N/A",
+debt:"Prioritise debt cases based on factors such as debt value, age, risk, customer behaviour, likelihood of recovery and escalation urgency. This ensures recovery effort is focused on the cases that require the most timely or valuable intervention."
+},
+{
+title:"Campaign Work Allocation",
+type:"DEBT",
+inv:"N/A",
+debt:"Allocate debt cases into structured recovery campaigns or bulk treatment activities. This supports targeted recovery action across cohorts of similar cases, such as reminder campaigns, overdue cohorts or specific debt segments."
+}
 ]},
 
 /* =========================
@@ -228,12 +429,42 @@ STAGE 7
 stageClass:"s7",
 stage:"Stage 7: Case Qualification",
 capabilities:[
-{title:"Case Classification & Risk Assessment",type:"COMMON",inv:"Classify risk.",debt:"Classify risk."},
-{title:"Rules-Based Automation",type:"COMMON",inv:"Automate decisions.",debt:"Automate decisions."},
-{title:"Action Selection Management",type:"COMMON",inv:"Select next action.",debt:"Select next recovery action."},
-{title:"Exception & Escalation Management",type:"COMMON",inv:"Manage exceptions.",debt:"Escalate cases."},
-{title:"SLA & Time Management",type:"COMMON",inv:"Track SLA.",debt:"Track SLA."},
-{title:"Pre-Case Outcome Management",type:"COMMON",inv:"Close/proceed.",debt:"Close/proceed."}
+{
+title:"Case Classification & Risk Assessment",
+type:"COMMON",
+inv:"Classify investigation cases by type, complexity, risk and required handling pathway. This helps determine whether a case should be processed through a standard pathway, specialist pathway, escalation route or closure pathway.",
+debt:"Classify recovery cases by risk, value, age, behaviour and complexity. This supports prioritisation, routing, treatment selection and escalation decisions."
+},
+{
+title:"Rules-Based Automation",
+type:"COMMON",
+inv:"Use defined rules to automate repeatable investigation decisions or workflow steps where human judgement is not required. This includes applying thresholds, routing logic, completeness checks and standard progression rules.",
+debt:"Use defined rules to automate repeatable recovery decisions or actions such as routing, reminders, eligibility checks, escalation triggers or case status updates."
+},
+{
+title:"Action Selection Management",
+type:"COMMON",
+inv:"Determine the next appropriate investigation action based on case state, evidence availability, risk level, prior actions and lifecycle stage. This supports structured workflow progression and reduces inconsistent handling.",
+debt:"Determine the next appropriate recovery action based on debt status, customer behaviour, previous actions and recovery rules. This may include reminders, contact, arrangement options, escalation, hold or enforcement activity."
+},
+{
+title:"Exception & Escalation Management",
+type:"COMMON",
+inv:"Identify investigation matters that fall outside standard rules or pathways and route them for escalation, specialist review or management decision. This ensures unusual, high-risk or complex cases are handled appropriately.",
+debt:"Identify debt cases that require escalation or exception handling because they do not fit standard recovery rules, involve high risk, require specialist intervention, or need approval before further action."
+},
+{
+title:"SLA & Time Management",
+type:"COMMON",
+inv:"Track investigation timeframes, service levels, deadlines and ageing across the case lifecycle. This supports timely progression, escalation of delays and visibility of cases approaching breach points.",
+debt:"Track recovery timeframes, escalation windows, reminder intervals, case ageing and service expectations. This ensures debt cases move through recovery pathways within defined timing controls."
+},
+{
+title:"Pre-Case Outcome Management",
+type:"COMMON",
+inv:"Confirm the outcome of the qualification stage, including whether the matter should proceed to case establishment, be redirected, deferred, escalated or closed. This ensures only suitable matters continue into full case handling.",
+debt:"Confirm whether a debt case should proceed into active recovery, remain on hold, be escalated, be treated through a specific recovery pathway or be closed based on qualification results."
+}
 ]},
 
 /* =========================
@@ -243,10 +474,30 @@ STAGE 8
 stageClass:"s8",
 stage:"Stage 8: Case Establishment",
 capabilities:[
-{title:"Case Management",type:"COMMON",inv:"Create case.",debt:"Create case."},
-{title:"Case Ownership Management",type:"COMMON",inv:"Assign owner.",debt:"Assign officer."},
-{title:"Case Workflow Establishment",type:"COMMON",inv:"Start workflow.",debt:"Start workflow."},
-{title:"Case Structuring & Planning Management",type:"COMMON",inv:"Structure case.",debt:"Structure cases."}
+{
+title:"Case Management",
+type:"COMMON",
+inv:"Create and establish the investigation case as a controlled unit of work. This includes creating the case record, linking the correct customer or entity, capturing initial context, and enabling the case to be managed through its lifecycle.",
+debt:"Create and establish the recovery case as a controlled unit of work. This includes linking the debt, customer, account, balance and initial recovery status so that case activity can be managed and tracked."
+},
+{
+title:"Case Ownership Management",
+type:"COMMON",
+inv:"Assign clear ownership of the investigation case to an investigator, team or responsible role. This ensures accountability for progression, decisions, communication and closure.",
+debt:"Assign ownership of the recovery case to an officer, team, pool or specialist recovery function. This ensures accountability for managing recovery actions and outcomes."
+},
+{
+title:"Case Workflow Establishment",
+type:"COMMON",
+inv:"Initiate the appropriate workflow for the investigation case based on case type, risk, complexity and required handling path. This ensures the case follows a structured sequence of activities and decision points.",
+debt:"Initiate the appropriate workflow for the recovery case based on recovery pathway, debt profile, treatment type and escalation status. This ensures recovery actions are sequenced and controlled."
+},
+{
+title:"Case Structuring & Planning Management",
+type:"COMMON",
+inv:"Structure the investigation case into logical components such as issues, entities, evidence requirements, tasks and planned actions. This supports clear planning and enables more consistent investigation execution.",
+debt:"Structure the recovery case by organising relevant liabilities, customer details, actions, arrangements, holds, escalations and supporting information so recovery work can be managed coherently."
+}
 ]},
 
 /* =========================
@@ -256,14 +507,54 @@ STAGE 9
 stageClass:"s9",
 stage:"Stage 9: Planning & Engagement",
 capabilities:[
-{title:"Case Management",type:"COMMON",inv:"Coordinate case.",debt:"Coordinate case."},
-{title:"Activity Planning Management",type:"COMMON",inv:"Plan investigation.",debt:"Plan recovery."},
-{title:"Stakeholder Engagement Management",type:"COMMON",inv:"Engage stakeholders.",debt:"Engage customers."},
-{title:"Communication Event Management",type:"COMMON",inv:"Trigger comms.",debt:"Trigger reminders."},
-{title:"Communication Content Management",type:"COMMON",inv:"Manage content.",debt:"Manage templates."},
-{title:"Communication Delivery Management",type:"COMMON",inv:"Deliver comms.",debt:"Deliver notifications."},
-{title:"Communication Tracking & Audit",type:"COMMON",inv:"Track comms.",debt:"Track comms."},
-{title:"Reminder Strategy Management",type:"DEBT",inv:"N/A",debt:"Define reminders."}
+{
+title:"Case Management",
+type:"COMMON",
+inv:"Coordinate the active management of the investigation case, ensuring tasks, communications, evidence activities, decisions and stage progression are managed in a controlled and visible way.",
+debt:"Coordinate the active management of the recovery case, ensuring actions, communications, ownership, status changes and recovery pathway progression are controlled and visible."
+},
+{
+title:"Activity Planning Management",
+type:"COMMON",
+inv:"Plan the investigation activities required to progress the case, including evidence gathering, customer engagement, background checks, analysis tasks and review preparation. This ensures the investigation is structured and purposeful.",
+debt:"Plan recovery activities required to progress the case, including customer contact, reminder sequencing, arrangement consideration, escalation steps and follow-up actions."
+},
+{
+title:"Stakeholder Engagement Management",
+type:"COMMON",
+inv:"Manage engagement with customers, representatives, internal reviewers, team leaders and other stakeholders involved in the investigation. This ensures interactions are purposeful, recorded and aligned to the case plan.",
+debt:"Manage engagement with customers, representatives, internal recovery staff, legal support, management or external parties involved in the recovery process."
+},
+{
+title:"Communication Event Management",
+type:"COMMON",
+inv:"Trigger communications at defined points in the investigation lifecycle, including entry letters, information requests, acknowledgements, reminders and outcome communications. This ensures communications occur at the right time and are linked to case events.",
+debt:"Trigger recovery communications such as reminders, notices, demand letters, arrangement confirmations or escalation messages based on defined recovery events and timelines."
+},
+{
+title:"Communication Content Management",
+type:"COMMON",
+inv:"Manage the content, templates and wording used in investigation communications to ensure consistency, clarity, policy alignment and appropriate tone for customers or stakeholders.",
+debt:"Manage content and templates for recovery communications, ensuring messages are accurate, consistent, policy-aligned and appropriate for the stage of recovery."
+},
+{
+title:"Communication Delivery Management",
+type:"COMMON",
+inv:"Manage the delivery of investigation communications through appropriate channels, ensuring correspondence is issued, tracked and linked to the case record.",
+debt:"Manage the delivery of recovery communications through appropriate channels, ensuring reminders, notices and other messages are issued and recorded."
+},
+{
+title:"Communication Tracking & Audit",
+type:"COMMON",
+inv:"Record and maintain a complete history of investigation communications, including what was sent, when, to whom, through which channel and in relation to which case activity.",
+debt:"Record and maintain a complete history of recovery communications, including reminders, notices, contact attempts, responses and communication outcomes."
+},
+{
+title:"Reminder Strategy Management",
+type:"DEBT",
+inv:"N/A",
+debt:"Define and manage the sequence, timing and conditions for recovery reminders. This includes determining when reminders should be issued, when escalation should occur, and how reminder activity aligns with the recovery pathway."
+}
 ]},
 
 /* =========================
@@ -273,9 +564,24 @@ STAGE 10
 stageClass:"s10",
 stage:"Stage 10: Evidence & Information Management",
 capabilities:[
-{title:"Evidence Management",type:"COMMON",inv:"Manage evidence.",debt:"Manage records."},
-{title:"Information Request Management",type:"COMMON",inv:"Request info.",debt:"Request documents."},
-{title:"Case Information Management",type:"COMMON",inv:"Store artefacts.",debt:"Store interactions."}
+{
+title:"Evidence Management",
+type:"COMMON",
+inv:"Capture, store, classify and manage all evidence required to support the investigation. This includes customer documents, internal records, external data, correspondence, working papers and other artefacts required to support findings and decisions.",
+debt:"Capture and manage records required to support recovery activity, including financial records, customer communications, account information, arrangement details and supporting documents."
+},
+{
+title:"Information Request Management",
+type:"COMMON",
+inv:"Manage requests for additional information from customers or stakeholders, including issuing requests, tracking due dates, receiving responses, assessing completeness and following up where information remains outstanding.",
+debt:"Manage requests for information required to support recovery activity, including customer contact details, supporting documents, financial information, arrangement information or clarification needed to progress the case."
+},
+{
+title:"Case Information Management",
+type:"COMMON",
+inv:"Maintain a structured repository of all information associated with the investigation case, ensuring artefacts are organised, accessible, linked to the correct case and available for analysis, review and audit.",
+debt:"Maintain a structured record of all information associated with the recovery case, including customer details, debt information, communications, actions, documents and status history."
+}
 ]},
 
 /* =========================
@@ -285,13 +591,48 @@ STAGE 11
 stageClass:"s11",
 stage:"Stage 11: Analysis & Determination",
 capabilities:[
-{title:"Evidence Analysis",type:"COMMON",inv:"Analyse evidence.",debt:"Analyse behaviour."},
-{title:"Decision Modelling",type:"COMMON",inv:"Model outcomes.",debt:"Model recovery."},
-{title:"Outcome Determination",type:"COMMON",inv:"Determine outcome.",debt:"Determine recovery outcome."},
-{title:"Legal & Policy Alignment",type:"COMMON",inv:"Align to policy.",debt:"Align to legislation."},
-{title:"Investigation Reporting",type:"COMMON",inv:"Produce reports.",debt:"Produce reports."},
-{title:"Debt Recovery Path Decisioning",type:"DEBT",inv:"N/A",debt:"Select optimal path."},
-{title:"Write-off Eligibility Assessment",type:"DEBT",inv:"N/A",debt:"Assess write-off."}
+{
+title:"Evidence Analysis",
+type:"COMMON",
+inv:"Analyse collected evidence to determine what the information shows, whether it supports or disproves the issue under investigation, and what conclusions can reasonably be drawn.",
+debt:"Analyse financial behaviour, payment history, communication outcomes and case information to understand recovery position and determine appropriate next steps."
+},
+{
+title:"Decision Modelling",
+type:"COMMON",
+inv:"Evaluate possible investigation outcomes based on evidence, rules, risk and policy considerations. This supports consistent assessment of whether to proceed, close, escalate or recommend a particular outcome.",
+debt:"Evaluate possible recovery outcomes based on debt profile, customer behaviour, prior actions, recovery strategy and policy rules. This supports selection of the most appropriate treatment pathway."
+},
+{
+title:"Outcome Determination",
+type:"COMMON",
+inv:"Determine the investigation outcome based on analysis of evidence and applicable requirements. This may include no further action, assessment outcome, escalation, review or another formal resolution.",
+debt:"Determine the recovery outcome based on analysis of debt status, customer response, payments, arrangements, escalation activity and applicable policy."
+},
+{
+title:"Legal & Policy Alignment",
+type:"COMMON",
+inv:"Ensure investigation decisions, findings and actions are aligned with relevant legislation, policy, delegations and procedural expectations. This supports defensible and consistent outcomes.",
+debt:"Ensure recovery decisions, actions and escalation pathways align with relevant legislation, policies, delegations and debt management requirements."
+},
+{
+title:"Investigation Reporting",
+type:"COMMON",
+inv:"Prepare formal investigation reports or decision artefacts that document evidence, analysis, findings, rationale and recommended outcomes. This supports review, approval, audit and defensibility of final decisions.",
+debt:"Prepare debt-related reports or case summaries that document recovery position, actions taken, outcomes, rationale and recommendations for further action or closure."
+},
+{
+title:"Debt Recovery Path Decisioning",
+type:"DEBT",
+inv:"N/A",
+debt:"Determine the optimal recovery pathway for a debt case based on debt value, age, risk, prior actions, customer behaviour and policy rules. This may result in reminders, arrangements, escalation, enforcement, hold or closure."
+},
+{
+title:"Write-off Eligibility Assessment",
+type:"DEBT",
+inv:"N/A",
+debt:"Assess whether a debt meets defined criteria for write-off or other final treatment. This includes considering recoverability, value, age, prior actions, policy constraints and approval requirements."
+}
 ]},
 
 /* =========================
@@ -301,12 +642,42 @@ STAGE 12
 stageClass:"s12",
 stage:"Stage 12: Approval & Execution",
 capabilities:[
-{title:"Decision Approval",type:"COMMON",inv:"Approve outcome.",debt:"Approve action."},
-{title:"Outcome Execution",type:"COMMON",inv:"Execute outcome.",debt:"Execute recovery actions."},
-{title:"Outcome Communication Management",type:"COMMON",inv:"Communicate result.",debt:"Notify customers."},
-{title:"Exception Governance",type:"COMMON",inv:"Manage overrides.",debt:"Manage overrides."},
-{title:"Execute Recovery Actions",type:"DEBT",inv:"N/A",debt:"Execute enforcement."},
-{title:"Payment Arrangement Execution",type:"DEBT",inv:"N/A",debt:"Manage arrangements."}
+{
+title:"Decision Approval",
+type:"COMMON",
+inv:"Obtain required approval for investigation outcomes or significant decisions before execution. This ensures decisions have been reviewed, endorsed and authorised in accordance with governance requirements.",
+debt:"Obtain required approval for recovery decisions, escalation actions, arrangements, write-offs or other significant outcomes before they are executed."
+},
+{
+title:"Outcome Execution",
+type:"COMMON",
+inv:"Execute the approved investigation outcome, including updating records, issuing required communications, implementing decisions and triggering downstream actions.",
+debt:"Execute the approved recovery outcome, including updating case status, initiating recovery actions, progressing arrangements, issuing communications or closing the case."
+},
+{
+title:"Outcome Communication Management",
+type:"COMMON",
+inv:"Communicate investigation outcomes to customers or stakeholders through appropriate correspondence, ensuring messages are accurate, approved and recorded against the case.",
+debt:"Communicate recovery outcomes to customers or stakeholders, including arrangement decisions, escalation notices, closure outcomes or enforcement-related communications."
+},
+{
+title:"Exception Governance",
+type:"COMMON",
+inv:"Manage approved deviations from standard investigation rules or pathways. This includes documenting the exception, rationale, approval and any controls required to ensure the deviation remains governed.",
+debt:"Manage approved deviations from standard recovery rules, pathways or thresholds. This includes documenting rationale, approvals and controls for exceptions such as special arrangements or non-standard treatment."
+},
+{
+title:"Execute Recovery Actions",
+type:"DEBT",
+inv:"N/A",
+debt:"Carry out recovery actions such as issuing demand notices, referring cases for specialist handling, assigning matters for enforcement, initiating legal pathways, applying holds or progressing other approved recovery treatments."
+},
+{
+title:"Payment Arrangement Execution",
+type:"DEBT",
+inv:"N/A",
+debt:"Set up, manage and action payment arrangements or repayment plans. This includes capturing arrangement details, establishing schedules, monitoring compliance, managing variation, suspension or cancellation, and recording arrangement outcomes."
+}
 ]},
 
 /* =========================
@@ -316,12 +687,42 @@ STAGE 13
 stageClass:"s13",
 stage:"Stage 13: Closure & Insights",
 capabilities:[
-{title:"Performance Reporting",type:"COMMON",inv:"Report performance.",debt:"Report metrics."},
-{title:"Dispute Management",type:"COMMON",inv:"Handle disputes.",debt:"Handle objections."},
-{title:"Continuous Improvement",type:"COMMON",inv:"Improve processes.",debt:"Improve strategies."},
-{title:"Knowledge Management",type:"COMMON",inv:"Capture knowledge.",debt:"Capture patterns."},
-{title:"Case Lifecycle Management",type:"COMMON",inv:"Manage lifecycle.",debt:"Manage closure."},
-{title:"Debt Outcome Tracking",type:"DEBT",inv:"N/A",debt:"Track outcomes."}
+{
+title:"Performance Reporting",
+type:"COMMON",
+inv:"Measure and report on investigation performance, including throughput, timeliness, case outcomes, workload, SLA adherence and process effectiveness. This supports management visibility and continuous improvement.",
+debt:"Measure and report on debt recovery performance, including recovery outcomes, case volumes, ageing, reminder effectiveness, escalations, arrangements and closure rates."
+},
+{
+title:"Dispute Management",
+type:"COMMON",
+inv:"Manage disputes, challenges or review requests arising from investigation outcomes. This includes capturing dispute details, linking them to the case, supporting review activity and maintaining traceability of decisions.",
+debt:"Manage objections, disputes or challenges arising from recovery actions or debt outcomes. This includes recording dispute status, pausing or adjusting recovery activity where appropriate, and tracking resolution."
+},
+{
+title:"Continuous Improvement",
+type:"COMMON",
+inv:"Identify opportunities to improve investigation processes, decision rules, workflows, communications, data quality and operational controls based on case outcomes and performance insights.",
+debt:"Identify opportunities to improve recovery strategies, reminder effectiveness, case routing, communication, data quality and recovery outcomes based on operational insights."
+},
+{
+title:"Knowledge Management",
+type:"COMMON",
+inv:"Capture and maintain knowledge generated through investigation activity, including lessons learned, reusable guidance, decision patterns, precedents and process improvements.",
+debt:"Capture and maintain knowledge generated through recovery activity, including effective treatments, common issues, escalation patterns, customer behaviour insights and operational guidance."
+},
+{
+title:"Case Lifecycle Management",
+type:"COMMON",
+inv:"Manage final lifecycle transitions for investigation cases, ensuring all actions, artefacts, decisions, approvals and communications are complete before closure. This supports clean closure, auditability and future reference.",
+debt:"Manage final lifecycle transitions for recovery cases, ensuring outcomes such as payment, write-off, escalation completion, arrangement completion or closure are recorded and auditable."
+},
+{
+title:"Debt Outcome Tracking",
+type:"DEBT",
+inv:"N/A",
+debt:"Track final and interim outcomes of debt recovery activity, including paid, partially paid, defaulted, arranged, escalated, written-off or closed outcomes. This supports reporting, learning and future recovery strategy refinement."
+}
 ]}
 ];
 const map=document.getElementById("map");

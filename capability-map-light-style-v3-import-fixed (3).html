@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CAPMAP - Capability Model</title>
+<style>
+body {font-family: Inter, Arial, sans-serif; background:#f4f6f9; padding:20px; margin:0; color:#111827;}
+h2 {margin:0 0 14px 0; font-size:22px; color:#111827;}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;}
+button{padding:8px 12px;border:1px solid #ccc;background:#fff;border-radius:6px;cursor:pointer;font-size:12px;}
+button:hover{background:#f9fafb;}
+button.active{background:#111827;color:#fff;border-color:#111827;}
+button.primary{background:#fff;border-color:#2563eb;color:#2563eb;font-weight:700;}
+button.danger{border-color:#ef4444;color:#ef4444;}
+.meta{font-size:12px;color:#6b7280;margin-left:auto;}
+.tabs{display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap;}
+.tab{font-weight:700;text-transform:capitalize;}
+.tab.active{background:#111827;color:#fff;border-color:#111827;}
+.container{display:flex;gap:10px;overflow-x:auto;align-items:flex-start;padding-bottom:6px;}
+.column{min-width:240px;flex:0 0 auto;}
+.header{color:#fff;padding:10px;font-size:11px;font-weight:700;text-transform:uppercase;border-radius:6px 6px 0 0;text-align:center;min-height:60px;display:flex;align-items:center;justify-content:center;line-height:1.35;}
+.track{background:#fff;border:1px solid #ddd;border-top:none;padding:10px;display:flex;flex-direction:column;gap:8px;border-radius:0 0 6px 6px;min-height:560px;}
+.card{background:#fafafa;border:1px solid #e5e7eb;padding:8px;border-radius:6px;cursor:pointer;font-size:12px;transition:all .15s ease;}
+.card:hover{background:#fff;border-color:#cbd5e1;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.card.selected{background:#eff6ff;border-color:#2563eb;box-shadow:0 1px 4px rgba(37,99,235,.15);}
+.card.common {border-left:4px solid #16a34a;}
+.card.debt {border-left:4px solid #eab308;}
+.card.general {border-left:4px solid #2563eb;}
+.card.low {border-left:4px solid #ef4444;}
+.card.med {border-left:4px solid #eab308;}
+.card.high {border-left:4px solid #16a34a;}
+.card small {display:block;color:#777;margin-top:4px;line-height:1.35;}
+.card .desc{display:block;color:#777;margin-top:4px;line-height:1.35;font-size:11px;}
+.card .chips{margin-top:5px;display:flex;gap:4px;flex-wrap:wrap;}
+.chip{font-size:10px;color:#92400e;background:#fef3c7;border:1px solid #fde68a;border-radius:999px;padding:1px 7px;}
+.pips{display:flex;gap:3px;margin-top:6px;}.pip{width:14px;height:4px;border-radius:2px;background:#e5e7eb;}
+.s1{background:#0f7a4e}.s2{background:#2563eb}.s3{background:#6d28d9}.s4{background:#b91c1c}.s5{background:#92400e}.s6{background:#0ea5e9}.s7{background:#9333ea}.s8{background:#15803d}.s9{background:#1d4ed8}.s10{background:#b45309}.s11{background:#374151}.s12{background:#111827}.s13{background:#065f46}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);display:none;z-index:998;}.overlay.open{display:block;}
+.panel{position:fixed;right:-520px;top:0;width:500px;height:100%;background:#fff;padding:20px;overflow:auto;transition:.3s;box-shadow:-4px 0 16px rgba(0,0,0,.16);z-index:999;}.panel.open{right:0;}
+.close{position:absolute;top:12px;right:12px;cursor:pointer;width:28px;height:28px;border:1px solid #ddd;display:flex;align-items:center;justify-content:center;background:#fff;}
+.section{margin-top:16px;font-size:11px;font-weight:bold;color:#777;text-transform:uppercase;}.panel h3{margin:0;font-size:20px;margin-bottom:6px;padding-right:36px;}.panel p{font-size:13px;line-height:1.5;white-space:pre-line;}.label{font-weight:bold;color:#333;margin-top:10px;}.badge{display:inline-block;font-size:11px;border:1px solid #ddd;background:#f9fafb;padding:3px 8px;border-radius:999px;margin:2px 4px 2px 0;}
+.importBox{background:#fff;border:1px solid #ddd;border-radius:8px;padding:14px;max-width:1100px;}textarea,input{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:12px;border:1px solid #ddd;border-radius:6px;padding:10px;background:#fff;color:#111827;}textarea{width:100%;resize:vertical;line-height:1.5;box-sizing:border-box;}
+.filters{background:#fff;border:1px solid #ddd;border-radius:8px;padding:10px;margin-bottom:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}.filterLabel{font-size:11px;font-weight:700;color:#777;text-transform:uppercase;}.logrow{display:flex;gap:10px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;margin-bottom:6px;color:#4b5563;}.empty{height:520px;display:flex;align-items:center;justify-content:center;color:#777;background:#fff;border:1px dashed #ddd;border-radius:8px;text-align:center;}.muted{color:#6b7280;font-size:12px;line-height:1.5;}.hint{background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:10px;margin:10px 0;color:#4b5563;font-size:12px;line-height:1.5;}.hidden{display:none!important;}
+</style>
+</head>
+<body>
+<h2>Capability Model</h2>
+<div class="toolbar">
+  <button onclick="expandAll()">Expand First Card</button>
+  <button onclick="scrollToStart()">Back to Start</button>
+  <button id="domainView" class="active" onclick="setView('domain')">By Domain</button>
+  <button id="heatView" onclick="setView('heat')">Heat Map</button>
+  <button class="primary" id="exportHtml" onclick="exportStatic()">Export HTML</button>
+  <button onclick="exportCSV()">Export CSV</button>
+  <button onclick="copyJson()">Copy JSON</button>
+  <button class="danger" onclick="clearAll()">Clear</button>
+  <span class="meta" id="count"></span>
+</div>
+<div class="tabs">
+  <button class="tab active" data-tab="map" onclick="setTab('map')">map</button>
+  <button class="tab" data-tab="import" onclick="setTab('import')">import</button>
+  <button class="tab" data-tab="log" onclick="setTab('log')">log</button>
+</div>
+<div id="main"></div>
+<div class="overlay" id="overlay" onclick="closePanel()"></div>
+<div class="panel" id="panel">
+  <div class="close" onclick="closePanel()">✖</div>
+  <h3 id="title"></h3><div id="stageLabel"></div>
+  <div class="section">Description</div><p id="desc"></p>
+  <div class="section">Maturity</div><p id="maturity"></p>
+  <div class="section">Related Processes</div><p id="processes"></p>
+  <div class="section">Related Technical Capabilities</div><p id="tech"></p>
+  <div class="section">Projects</div><p id="projects"></p>
+  <div class="section">Evidence / Notes</div><p id="evidence"></p>
+  <div style="margin-top:16px;display:flex;gap:8px;"><button onclick="openEdit()">Edit</button><button class="danger" onclick="removeSelected()">Remove</button></div>
+</div>
+<div class="overlay" id="editOverlay"></div>
+<div class="panel" id="editPanel">
+  <div class="close" onclick="closeEdit()">✖</div><h3>Edit Capability</h3>
+  <div class="section">Name</div><input id="editName" style="width:100%;box-sizing:border-box;">
+  <div class="section">Description</div><textarea id="editDesc" style="height:80px"></textarea>
+  <div class="section">Stage</div><input id="editStage" style="width:100%;box-sizing:border-box;">
+  <div class="section">Domain</div><input id="editDomain" style="width:100%;box-sizing:border-box;">
+  <div class="section">Maturity 1-5</div><input id="editMaturity" type="number" min="1" max="5" style="width:100%;box-sizing:border-box;">
+  <div class="section">Related Processes — one per line</div><textarea id="editProcesses" style="height:70px"></textarea>
+  <div class="section">Related Tech — one per line</div><textarea id="editTech" style="height:70px"></textarea>
+  <div class="section">Projects — one per line</div><textarea id="editProjects" style="height:70px"></textarea>
+  <div class="section">Notes</div><textarea id="editNotes" style="height:70px"></textarea>
+  <div style="margin-top:14px;display:flex;gap:8px;justify-content:flex-end;"><button onclick="closeEdit()">Cancel</button><button class="primary" onclick="saveEdit()">Save</button></div>
+</div>
+<script>
+const STAGE_ORDER=['Collect','Identify','Assess','Decide','Plan','Execute','Operate','Manage','Monitor','Report','Engage','Comply'];
+const STAGE_CLASSES=['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13'];
+const MATURITY_LABELS={1:'Initial',2:'Developing',3:'Defined',4:'Managed',5:'Optimised'};
+const MATURITY_COLOURS={1:'#ef4444',2:'#f97316',3:'#eab308',4:'#22c55e',5:'#2dd4bf'};
+const ALIASES={'data collection':'Collect','collection':'Collect','intake':'Collect','ingestion':'Collect','information gathering':'Collect','input':'Collect','identification':'Identify','identify':'Identify','detection':'Identify','discovery':'Identify','assessment':'Assess','assess':'Assess','analysis':'Assess','analyse':'Assess','analyze':'Assess','evaluation':'Assess','review':'Assess','decision':'Decide','decide':'Decide','determination':'Decide','approval':'Decide','planning':'Plan','plan':'Plan','execution':'Execute','execute':'Execute','action':'Execute','implementation':'Execute','delivery':'Execute','management':'Manage','manage':'Manage','administration':'Manage','monitoring':'Monitor','monitor':'Monitor','oversight':'Monitor','tracking':'Monitor','reporting':'Report','report':'Report','communication':'Report','notification':'Report','customer service':'Engage','customer engagement':'Engage','engagement':'Engage','service':'Engage','compliance':'Comply','comply':'Comply','regulation':'Comply','risk':'Comply','operations':'Operate','operate':'Operate','support':'Operate','analytics':'Report','intelligence':'Assess'};
+const CAPS_KEY='capmap_light_caps_v3',DEFS_KEY='capmap_light_defs_v3';
+let caps=[],defs={},tab='map',view='domain',selectedId=null,log=[],filters={maturity:[],process:'',tech:'',project:''};
+const EXAMPLE=[{"name":"Customer Enquiry Management","domain":"Customer Service","stage":"Engage","description":"Centralised handling of inbound calls, emails and web submissions.","maturity":3,"evidence":"centralised contact centre","projects":["CRM Uplift"],"relatedProcesses":["Intake Process"],"relatedTech":["CRM","Telephony"]},{"name":"Knowledge Management","domain":"Operations","stage":"Collect","description":"Maintaining a knowledge base for agent issue resolution.","maturity":2,"evidence":"knowledge base inconsistently maintained","projects":[],"relatedProcesses":["Content Review"],"relatedTech":["Knowledge Base System"]},{"name":"Performance Reporting","domain":"Analytics","stage":"Report","description":"Weekly operational reporting via manual Excel extracts.","maturity":1,"evidence":"Excel extracts, no real-time visibility","projects":["Reporting Uplift"],"relatedProcesses":["Monthly Review"],"relatedTech":["Excel"]}];
+function esc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;')}
+function genId(){return Math.random().toString(36).slice(2,8)}
+function normStage(s){if(!s)return 'General';const k=String(s).toLowerCase().trim();return ALIASES[k]||String(s).split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ')}
+function arr(v){if(Array.isArray(v))return v; if(!v)return []; return String(v).split(';').map(x=>x.trim()).filter(Boolean)}
+function norm(item){const m=Math.max(1,Math.min(5,Number(item.maturity)||3));return{id:item.id||genId(),name:String(item.name||item.capability||item.Capability||'').trim(),domain:item.domain||item.Domain||'General',stage:normStage(item.stage||item.Stage),description:item.description||item.Description||'',maturity:m,sources:item.evidence?[item.evidence]:(Array.isArray(item.sources)?item.sources:arr(item.Notes||item.notes)),notes:item.notes||item.Notes||'',relatedProcesses:arr(item.relatedProcesses||item['Related Processes']),relatedTech:arr(item.relatedTech||item['Related Tech']),projects:arr(item.projects||item.Projects)}}
+function save(){localStorage.setItem(CAPS_KEY,JSON.stringify(caps));localStorage.setItem(DEFS_KEY,JSON.stringify(defs))}
+function load(){try{caps=JSON.parse(localStorage.getItem(CAPS_KEY)||'[]');defs=JSON.parse(localStorage.getItem(DEFS_KEY)||'{}');if(caps.length)addLog('Restored '+caps.length+' capabilities','success')}catch(e){caps=[];defs={}}}
+function addLog(msg,type='info'){log=[{msg,type,ts:new Date().toLocaleTimeString()},...log].slice(0,100)}
+function stages(){const s=[...new Set(caps.map(c=>c.stage))];return[...STAGE_ORDER.filter(x=>s.includes(x)),...s.filter(x=>!STAGE_ORDER.includes(x))]}
+function domains(){return[...new Set(caps.map(c=>c.domain))]}
+function filtered(){return caps.filter(c=>(!filters.maturity.length||filters.maturity.includes(c.maturity))&&(!filters.process||(c.relatedProcesses||[]).some(x=>x.toLowerCase().includes(filters.process.toLowerCase())))&&(!filters.tech||(c.relatedTech||[]).some(x=>x.toLowerCase().includes(filters.tech.toLowerCase())))&&(!filters.project||(c.projects||[]).some(x=>x.toLowerCase().includes(filters.project.toLowerCase()))))}
+function setTab(t){tab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));render()}
+function setView(v){view=v;document.getElementById('domainView').classList.toggle('active',v==='domain');document.getElementById('heatView').classList.toggle('active',v==='heat');render()}
+function render(){document.getElementById('count').textContent=`${caps.length} capabilities · ${stages().length} stages`;['exportHtml'].forEach(id=>document.getElementById(id).style.display=caps.length?'inline-block':'none');if(tab==='map')renderMap();if(tab==='import')renderImport();if(tab==='log')renderLog()}
+function renderMap(){const main=document.getElementById('main');if(!caps.length){main.innerHTML='<div class="empty">Map is empty — go to Import and load the example, paste JSON, or paste the exported CSV back in.</div>';return}const fc=filtered();main.innerHTML=`<div class="filters"><span class="filterLabel">Filter</span>${[1,2,3,4,5].map(n=>`<button style="border-color:${filters.maturity.includes(n)?MATURITY_COLOURS[n]:'#ccc'};color:${filters.maturity.includes(n)?MATURITY_COLOURS[n]:'#111827'}" onclick="toggleMat(${n})">${MATURITY_LABELS[n]}</button>`).join('')}<input placeholder="Process..." value="${esc(filters.process)}" oninput="filters.process=this.value;render()"><input placeholder="Tech..." value="${esc(filters.tech)}" oninput="filters.tech=this.value;render()"><input placeholder="Project..." value="${esc(filters.project)}" oninput="filters.project=this.value;render()"><button onclick="filters={maturity:[],process:'',tech:'',project:''};render()">Clear</button><span class="meta">${fc.length} of ${caps.length}</span></div><div class="container" id="map">${stages().map((s,i)=>stageHtml(s,i,fc)).join('')}</div>`}
+function stageHtml(stage,i,fc){const stageCaps=fc.filter(c=>c.stage===stage);const all=caps.filter(c=>c.stage===stage);const avg=all.length?(all.reduce((a,c)=>a+c.maturity,0)/all.length).toFixed(1):'0.0';const def=defs[stage];return`<div class="column"><div class="header ${STAGE_CLASSES[i%STAGE_CLASSES.length]}">${esc(stage)}<br><span style="font-weight:400;text-transform:none">${stageCaps.length} caps · avg ${avg}</span></div><div class="track">${def?`<div class="card general"><strong>Stage definition</strong><small>${esc(def).slice(0,150)}${def.length>150?'...':''}</small></div>`:''}${domains().filter(d=>stageCaps.some(c=>c.domain===d)).map(d=>`<div class="section" style="margin-top:6px">${esc(d)}</div>${stageCaps.filter(c=>c.domain===d).map(c=>cardHtml(c)).join('')}`).join('')}</div></div>`}
+function cardHtml(c){let cls=view==='heat'?(c.maturity<=2?'low':c.maturity===3?'med':'high'):(String(c.domain).toLowerCase().includes('debt')?'debt':String(c.domain).toLowerCase().includes('common')?'common':'general');return`<div class="card ${cls} ${selectedId===c.id?'selected':''}" onclick="openPanel('${c.id}')"><strong>${esc(c.name)}</strong><small>${esc(c.domain)} · ${MATURITY_LABELS[c.maturity]}</small><span class="desc">${esc(c.description)}</span>${pips(c.maturity)}<div class="chips">${(c.projects||[]).filter(Boolean).map(p=>`<span class="chip">${esc(p)}</span>`).join('')}</div></div>`}
+function pips(m){return'<div class="pips">'+[1,2,3,4,5].map(i=>`<span class="pip" style="background:${i<=m?MATURITY_COLOURS[m]:'#e5e7eb'}"></span>`).join('')+'</div>'}
+function openPanel(id){selectedId=id;const c=caps.find(x=>x.id===id);if(!c)return;document.getElementById('title').innerText=c.name;document.getElementById('stageLabel').innerHTML=`<span class="badge">${esc(c.stage)}</span><span class="badge">${esc(c.domain)}</span>`;document.getElementById('desc').innerText=c.description||'Not provided';document.getElementById('maturity').innerText=`${c.maturity} — ${MATURITY_LABELS[c.maturity]}`;document.getElementById('processes').innerText=(c.relatedProcesses||[]).join('\n')||'Not provided';document.getElementById('tech').innerText=(c.relatedTech||[]).join('\n')||'Not provided';document.getElementById('projects').innerText=(c.projects||[]).join('\n')||'Not provided';document.getElementById('evidence').innerText=[...(c.sources||[]),c.notes].filter(Boolean).join('\n\n')||'Not provided';document.getElementById('overlay').classList.add('open');document.getElementById('panel').classList.add('open');renderMap()}
+function closePanel(){document.getElementById('overlay').classList.remove('open');document.getElementById('panel').classList.remove('open')}
+function renderImport(){document.getElementById('main').innerHTML=`<div class="importBox"><h3 style="margin-top:0">Import Capabilities</h3><p class="muted">Paste either capability JSON or the exported CSV. The importer now auto-detects JSON vs CSV.</p><div class="hint"><b>JSON accepted:</b> array/object with name, domain, stage, description, maturity, evidence, relatedProcesses, relatedTech, projects.<br><b>CSV accepted:</b> Stage, Domain, Capability, Description, Maturity, Related Processes, Related Tech, Projects, Notes.</div><textarea id="jsonIn" style="height:240px" placeholder="Paste JSON or CSV here..."></textarea><div class="toolbar" style="margin-top:10px"><button onclick="document.getElementById('jsonIn').value=JSON.stringify(EXAMPLE,null,2)">Load JSON example</button><button onclick="document.getElementById('jsonIn').value=sampleCSV()">Load CSV example</button><button class="primary" onclick="loadAny()">Import into map →</button></div><h3>Stage Definitions</h3><p class="muted">Optional. Paste a JSON object using stage name as key.</p><textarea id="defsIn" style="height:130px" placeholder='{\n  "Collect": "Definition here..."\n}'></textarea><div class="toolbar" style="margin-top:10px"><button class="primary" onclick="loadDefs()">Load stage definitions →</button></div></div>`}
+function renderLog(){document.getElementById('main').innerHTML='<div class="importBox"><h3 style="margin-top:0">Activity Log</h3>'+(log.length?log.map(e=>`<div class="logrow"><span>${e.ts}</span><span>${esc(e.msg)}</span></div>`).join(''):'<p class="muted">No activity yet.</p>')+'</div>'}
+function toggleMat(n){filters.maturity=filters.maturity.includes(n)?filters.maturity.filter(x=>x!==n):[...filters.maturity,n];render()}
+function loadAny(){try{const text=document.getElementById('jsonIn').value.trim();if(!text)throw new Error('Paste JSON or CSV first.');const arr=(text[0]=='['||text[0]=='{')?parseJSONCaps(text):parseCSVCaps(text);mergeCaps(arr);save();setTab('map')}catch(e){alert('Import failed: '+e.message);addLog('Import failed: '+e.message,'error')}}
+function parseJSONCaps(text){const parsed=JSON.parse(text);const arr=Array.isArray(parsed)?parsed:[parsed];const bad=arr.find(x=>!(x.name||x.Capability||x.capability));if(bad)throw new Error('Each JSON capability must include name or Capability.');return arr.map(norm)}
+function parseCSVCaps(text){const rows=parseCSV(text);if(rows.length<2)throw new Error('CSV needs a header row plus at least one data row.');const headers=rows[0].map(h=>h.trim());const get=(row,name)=>{const i=headers.findIndex(h=>h.toLowerCase()===name.toLowerCase());return i>=0?row[i]||'':''};return rows.slice(1).filter(r=>r.some(x=>String(x).trim())).map(r=>norm({Stage:get(r,'Stage'),Domain:get(r,'Domain'),Capability:get(r,'Capability')||get(r,'Name'),Description:get(r,'Description'),maturity:get(r,'Maturity'),'Related Processes':get(r,'Related Processes'),'Related Tech':get(r,'Related Tech'),Projects:get(r,'Projects'),Notes:get(r,'Notes')})).filter(c=>c.name)}
+function parseCSV(text){const rows=[];let row=[],cell='',q=false;for(let i=0;i<text.length;i++){const ch=text[i],nx=text[i+1];if(ch=='"'&&q&&nx=='"'){cell+='"';i++;continue}if(ch=='"'){q=!q;continue}if(ch==','&&!q){row.push(cell);cell='';continue}if((ch=='\n'||ch=='\r')&&!q){if(ch=='\r'&&nx=='\n')i++;row.push(cell);rows.push(row);row=[];cell='';continue}cell+=ch}row.push(cell);rows.push(row);return rows}
+function mergeCaps(arr){let added=0,updated=0;arr.forEach(nc=>{const i=caps.findIndex(c=>c.name.toLowerCase()===nc.name.toLowerCase());if(i>=0){caps[i]={...caps[i],...nc,sources:[...(caps[i].sources||[]),...(nc.sources||[])]};updated++}else{caps.push(nc);added++}});addLog(`Imported ${added} new, ${updated} updated`,'success')}
+function sampleCSV(){return 'Stage,Domain,Capability,Description,Maturity,Related Processes,Related Tech,Projects,Notes\n"Engage","Customer Service","Customer Enquiry Management","Centralised handling of inbound calls, emails and web submissions.","3","Intake Process","CRM; Telephony","CRM Uplift","centralised contact centre"'}
+function loadDefs(){try{const p=JSON.parse(document.getElementById('defsIn').value.trim());if(!p||Array.isArray(p)||typeof p!=='object')throw new Error('Stage definitions must be a JSON object.');defs={...defs,...p};save();addLog('Loaded '+Object.keys(p).length+' stage definitions','success');setTab('map')}catch(e){alert('Invalid JSON: '+e.message);addLog('Stage definition import failed','error')}}
+function scrollToStart(){const el=document.querySelector('.container');if(el)el.scrollTo({left:0,behavior:'smooth'})}
+function expandAll(){if(caps.length)openPanel(caps[0].id)}
+function removeSelected(){if(!selectedId)return;caps=caps.filter(c=>c.id!==selectedId);selectedId=null;save();closePanel();addLog('Removed capability');render()}
+function clearAll(){if(confirm('Clear all capabilities and stage definitions?')){caps=[];defs={};selectedId=null;save();addLog('Map cleared');render()}}
+function copyJson(){setTab('import');setTimeout(()=>{document.getElementById('jsonIn').value=JSON.stringify(caps,null,2)},0)}
+function openEdit(){const c=caps.find(x=>x.id===selectedId);if(!c)return;document.getElementById('editName').value=c.name;document.getElementById('editDesc').value=c.description||'';document.getElementById('editStage').value=c.stage;document.getElementById('editDomain').value=c.domain;document.getElementById('editMaturity').value=c.maturity;document.getElementById('editProcesses').value=(c.relatedProcesses||[]).join('\n');document.getElementById('editTech').value=(c.relatedTech||[]).join('\n');document.getElementById('editProjects').value=(c.projects||[]).join('\n');document.getElementById('editNotes').value=c.notes||'';document.getElementById('editOverlay').classList.add('open');document.getElementById('editPanel').classList.add('open')}
+function closeEdit(){document.getElementById('editOverlay').classList.remove('open');document.getElementById('editPanel').classList.remove('open')}
+function lines(id){return document.getElementById(id).value.split('\n').map(x=>x.trim()).filter(Boolean)}
+function saveEdit(){const i=caps.findIndex(x=>x.id===selectedId);if(i<0)return;caps[i]=norm({...caps[i],name:document.getElementById('editName').value,description:document.getElementById('editDesc').value,stage:document.getElementById('editStage').value,domain:document.getElementById('editDomain').value,maturity:document.getElementById('editMaturity').value,relatedProcesses:lines('editProcesses'),relatedTech:lines('editTech'),projects:lines('editProjects'),notes:document.getElementById('editNotes').value});caps[i].id=selectedId;save();closeEdit();closePanel();addLog('Updated: '+caps[i].name,'success');render()}
+function exportCSV(){if(!caps.length){alert('No capabilities to export');return}const headers=['Stage','Domain','Capability','Description','Maturity','Related Processes','Related Tech','Projects','Notes'];const rows=caps.map(c=>[c.stage||'',c.domain||'',c.name||'',(c.description||'').replaceAll('\n',' '),c.maturity||'',(c.relatedProcesses||[]).join('; '),(c.relatedTech||[]).join('; '),(c.projects||[]).join('; '),([...(c.sources||[]),c.notes].filter(Boolean).join(' | ')).replaceAll('\n',' ')]);const csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');download('capability-map.csv',csv,'text/csv;charset=utf-8;');addLog('Exported capability-map.csv','success')}
+function exportStatic(){const oldTab=tab;tab='map';renderMap();const map=document.getElementById('main').innerHTML;tab=oldTab;render();const style=document.querySelector('style').innerHTML;const content=`<!DOCTYPE html><html lang="en-AU"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Capability Map</title><style>${style}body{overflow:auto}.filters,.tabs,.toolbar{display:none}</style></head><body><h2>Capability Model</h2>${map}</body></html>`;download('capability-map-light.html',content,'text/html');addLog('Exported capability-map-light.html','success')}
+function download(name,text,type){const b=new Blob([text],{type});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
+load();render();
+</script>
+</body>
+</html>

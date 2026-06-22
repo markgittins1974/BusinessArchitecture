@@ -1,0 +1,476 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Insolvency Decision Wizard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root { --blue:#1e3a8a; --blue-light:#dbeafe; --blue-mid:#3b82f6; --green:#16a34a; --green-light:#dcfce7; --red:#dc2626; --red-light:#fee2e2; --amber:#d97706; --amber-light:#fef3c7; --purple:#7c3aed; --purple-light:#ede9fe; --gray:#6b7280; --gray-light:#f3f4f6; --text:#0f172a; --text-mid:#475569; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:Segoe UI,Arial,sans-serif; background:#f8fafc; color:var(--text); }
+    header { background:linear-gradient(135deg,#0f2347,var(--blue)); padding:24px 32px; color:white; }
+    header h1 { font-size:24px; font-weight:800; }
+    header p { font-size:13px; opacity:0.8; margin-top:4px; }
+    .container { max-width:700px; margin:0 auto; padding:24px 16px; }
+    .progress { display:flex; gap:4px; margin-bottom:24px; }
+    .progress-step { flex:1; height:6px; border-radius:3px; background:#e2e8f0; }
+    .progress-step.done { background:var(--green); }
+    .progress-step.now { background:var(--blue-mid); }
+    .card { background:white; border-radius:12px; padding:28px; box-shadow:0 2px 12px rgba(0,0,0,0.06); margin-bottom:16px; }
+    .qlabel { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--blue-mid); margin-bottom:8px; }
+    .qtitle { font-size:20px; font-weight:800; margin-bottom:16px; line-height:1.3; }
+    .qcontext { font-size:14px; color:var(--text-mid); margin-bottom:20px; line-height:1.6; }
+    .warn { background:var(--red-light); border-left:5px solid var(--red); padding:14px 18px; border-radius:0 8px 8px 0; margin-bottom:16px; font-size:13px; font-weight:600; color:#991b1b; }
+    .opts { display:flex; flex-direction:column; gap:10px; }
+    .opt { display:block; width:100%; padding:16px 18px; border:2px solid #e2e8f0; border-radius:10px; background:white; cursor:pointer; font-family:inherit; font-size:15px; font-weight:600; color:var(--text); text-align:left; -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+    .opt:active { border-color:var(--blue-mid); background:var(--blue-light); }
+    .opt-sub { font-size:12px; color:var(--text-mid); font-weight:400; margin-top:4px; display:block; }
+    .navrow { display:flex; gap:12px; margin-top:20px; }
+    .nbtn { padding:14px 24px; border-radius:8px; border:none; font-family:inherit; font-size:15px; font-weight:700; cursor:pointer; -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+    .nbtn-back { background:var(--gray-light); color:var(--text-mid); }
+    .nbtn-go { background:var(--blue); color:white; }
+    .nbtn-restart { background:var(--green); color:white; }
+    .out { padding:20px; border-radius:10px; margin-bottom:16px; }
+    .out-green { background:var(--green-light); border-left:5px solid var(--green); }
+    .out-amber { background:var(--amber-light); border-left:5px solid var(--amber); }
+    .out-blue { background:var(--blue-light); border-left:5px solid var(--blue); }
+    .out-purple { background:var(--purple-light); border-left:5px solid var(--purple); }
+    .out h3 { font-size:16px; margin-bottom:8px; }
+    .out p,.out li { font-size:13px; line-height:1.6; color:var(--text-mid); }
+    .out ul { margin-left:18px; margin-top:6px; }
+    .chk { display:flex; align-items:flex-start; gap:10px; padding:10px 14px; background:var(--gray-light); border-radius:8px; font-size:13px; line-height:1.5; margin-bottom:8px; }
+    .chk input { margin-top:3px; width:18px; height:18px; }
+    .tracker { background:white; border-radius:12px; padding:20px; box-shadow:0 2px 12px rgba(0,0,0,0.06); margin-bottom:16px; display:none; }
+    .tracker.show { display:block; }
+    .tracker h3 { font-size:14px; font-weight:700; margin-bottom:12px; color:var(--blue); }
+    .trow { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #f1f5f9; font-size:13px; }
+    .trow:last-child { border-bottom:none; }
+    .exit-icon { font-size:48px; text-align:center; margin-bottom:16px; }
+    .exit-title { font-size:20px; font-weight:800; margin-bottom:12px; text-align:center; }
+    .exit-desc { font-size:14px; color:var(--text-mid); line-height:1.6; margin-bottom:20px; text-align:center; }
+
+    /* Procedure detail panel */
+    .detail-toggle { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:#f0f4ff; border:1px solid #c7d2fe; border-radius:8px; cursor:pointer; margin-top:20px; margin-bottom:4px; -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+    .detail-toggle-text { font-size:13px; font-weight:700; color:var(--blue); }
+    .detail-toggle-arrow { font-size:16px; color:var(--blue); transition:transform 0.2s; }
+    .detail-toggle-arrow.open { transform:rotate(180deg); }
+    .detail-panel { display:none; background:#f8faff; border:1px solid #e0e7ff; border-top:none; border-radius:0 0 8px 8px; padding:16px; margin-bottom:16px; }
+    .detail-panel.open { display:block; }
+    .detail-panel h4 { font-size:14px; font-weight:700; color:var(--blue); margin:12px 0 6px; }
+    .detail-panel h4:first-child { margin-top:0; }
+    .detail-panel p { font-size:13px; color:var(--text-mid); line-height:1.6; margin-bottom:8px; }
+    .detail-panel ul { font-size:13px; color:var(--text-mid); line-height:1.6; margin-left:18px; margin-bottom:8px; }
+    .detail-panel li { margin-bottom:4px; }
+    .detail-panel .page-ref { font-size:11px; color:var(--blue-mid); font-weight:600; margin-top:8px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Insolvency Decision Wizard</h1>
+  <p>Land Tax Insolvency Procedure - Step by step guided assessment | v4.0</p>
+</header>
+
+<div class="container">
+  <div class="progress" id="prog"></div>
+  <div id="wizard"></div>
+  <div class="tracker" id="tracker"><h3>Case Summary</h3><div id="tdata"></div></div>
+</div>
+
+<script>
+(function(){
+  var S = {};
+  var nav = [];
+  var currentScreen = '';
+  var STEPS = 7;
+
+  var progHtml = '';
+  for(var i=0;i<STEPS;i++) progHtml += '<div class="progress-step" id="p'+i+'"></div>';
+  document.getElementById('prog').innerHTML = progHtml;
+
+  // Procedure detail content per step
+  var details = {
+    q1: {
+      title: 'Reviewing IP Correspondence',
+      sections: [
+        { heading:'Action Item Intake', text:'Open insolvency action item from your work tray. Filter by Work Item Description = Insolvency, Revenue Line = Land Tax. Click Find. Highlight item and select Launch. If no action item exists and you have received correspondence directly from SRO DMS/Legal Team, create a new action item and save to CM10.' },
+        { heading:'Relevancy Check', text:'IP requests can sometimes be out of date and no longer relevant. If IP documentation is older than 6 months, conduct searches to confirm the customer is still insolvent (ASIC lookup, VEDA check). Update/complete the action item accordingly.' },
+        { heading:'Revenue Line Routing', list:['Land Tax only: follow this procedure','Payroll Tax only: refer to Initial Checks - Payroll Tax Node Instructions','Both: complete LTX insolvency procedures first, then send email to ptx.capture@sro.vic.gov.au advising customer number and PTX insolvency'] },
+        { heading:'Multiple Entities / Properties', text:'If the IP document lists numerous entities or properties for checking: review each entity/property one at a time, send correspondence for each entity/property separately, complete each individual action item associated with each entity/property. Use the IP document to track all correspondence and action items completed overall.' },
+        { heading:'Before You Begin', text:'Allocate the action item to your name immediately. Change status from PENDING ACTION to IN PROGRESS. This ensures no items automate and are not recorded as completed by you.' },
+        { ref:'Procedure reference: Reviewing IP Correspondence (p.7, 11-13); Before you begin (p.6); Summary of Steps (p.5)' }
+      ]
+    },
+    q2: {
+      title: 'Customer Registration in e-Sys',
+      sections: [
+        { heading:'Search Steps', text:'Search for the customer in e-Sys using identifiers provided in IP correspondence. If not found immediately, escalate through the following searches before issuing clearance.' },
+        { heading:'4-Step Search Escalation', list:['Check IP correspondence for correct entity - confirm Name and/or ACN/ABN','Complete ABN Lookup (if relevant)','Complete an ASIC search','Complete an Equifax - IQ Connect (VEDA) search'] },
+        { heading:'If Still Cannot Find Customer', text:'Send correspondence to IP advising customer not registered. Use template: LTX - NOT REGISTERED IN E-SYS - CLEARANCE CORRESPONDENCE.' },
+        { heading:'CM10 Filing', text:'Save both incoming and outgoing correspondence to CM10 folder VF/24/41 under the current year. Naming conventions: Individual: Surname - Insolvency with no Associated Customer - Received/Sent - Date. Company: ACN/ABN (no spaces) - Insolvency with no Associated Customer - Received/Sent - Date.' },
+        { ref:'Procedure reference: Customer Not Registered in E-Sys (p.7); Customer Is Registered - Locating Action Item (p.8)' }
+      ]
+    },
+    q3a: {
+      title: 'Verifying Insolvency Status',
+      sections: [
+        { heading:'Cessation Check', text:'When reviewing a customer account and due to the amount of time passed, the customer may no longer be insolvent (i.e. no longer bankrupt, in administration etc). Confirm via ASIC lookup or VEDA check.' },
+        { heading:'If No Longer Insolvent', list:['Add Cessation Date to IP appointment','Remove IP names from Customer name (e.g. Bankrupt Estate)','Convert mailing protocols back to original mailing address, contact addresses','If IP has provided recent contact information, add this to the account','Check ASIC for most recent address','Complete action item advising of outcome','Send correspondence to IP if relevant'] },
+        { ref:'Procedure reference: Customer No Longer Insolvent (p.20); Cessation Date (p.21)' }
+      ]
+    },
+    q3b: {
+      title: 'Land Ownership Assessment',
+      sections: [
+        { heading:'Customer Tree Review', text:'Check the Insolvent Customer Tree for: Land Owner Node. Click the Land Owner Node to view MC322 (View Customer Land Ownerships). This shows Properties Owned by Customer.' },
+        { heading:'Trust / Trustee Complexity', text:'When the customer is a trustee, check to see if the trust owns any properties or if there are multiple trusts. Load associated Insolvent Trustee/Trust accounts into the Customer Tree. Note: A trust account can have multiple Trustee Accounts AND a Trustee can have multiple Trust Accounts. Be clear about land ownership for each Trustee and Trust account.' },
+        { heading:'Verification Tools', text:'Utilise ASIC Reports / COI / LTO to assist in identifying who owns the land. This is especially important for Trustee and Trust account relationships.' },
+        { heading:'Privacy - CRITICAL', text:'The NEXT STEPS are CRITICAL for PRIVACY RULES and the RELEASE OF INFORMATION to IP regarding INSOLVENCY REVIEW. If information between land ownership of an entity conflicts with what is stated in the IP document (names, DOB, addresses, property ownership), ensure information is only released relating to the property provided by IP. If any information received from IP differs to what is listed in e-Sys, send only relevant correspondence to IP.' },
+        { ref:'Procedure reference: Initial Insolvent Customer Check (p.9-11); Privacy Checks (p.13)' }
+      ]
+    },
+    q3c: {
+      title: 'Checking Outstanding Liabilities',
+      sections: [
+        { heading:'How to Check', text:'Under the Insolvent Customer Tree, click Land Taxpayer Node, then double-click Liabilities. The Assessment Year Liability Summary window opens. Scroll right to see the Net Liability column.' },
+        { heading:'What to Record', list:['Date of Debt/Liability','Debt/Liability Amount','Any Amount including Interest','Penalties etc for future correspondence'] },
+        { heading:'If Property Listed', text:'Take note of property owned and continue with steps.' },
+        { heading:'If No Property Listed', text:'Check if customer has outstanding debt. If has outstanding debt, POD will need to be created - continue with steps. If no outstanding debt and no land ownership, refer to correspondence: LTX REGISTERED - WAS A LANDOWNER / HAS NO DEBT.' },
+        { ref:'Procedure reference: Initial Insolvent Customer Check (p.9-11); Checking Insolvency Application via CM/TRIM (p.11)' }
+      ]
+    },
+    q4: {
+      title: 'Insolvency Practitioner - IP',
+      sections: [
+        { heading:'Appointment Types', list:['Receiver and Manager - takes control of company undertaking or property for enforcement of creditor security','Controller - controls particular property for charge enforcement','Administrator - manages business, disposes assets, restructures for creditor returns','Liquidator - winds up company, collects and distributes assets','Deed Administrator - manages Deed of Company Arrangement (DOCA)','Bankruptcy - IP is appointed trustee to manage bankrupt estate','Mortgagee of Possession - NOT an insolvency. IP acts on behalf of mortgagee. IP is not added. Only property-specific information released.'] },
+        { heading:'Checking IP in e-Sys', text:'Check Insolvent Customer Tree for (IP) Managed Customer Node. If listed, double-click to open View IP Managers window. Check who is listed, the Relationship (Liquidator, Receiver/Manager etc), and the Effective Start and Cease Dates.' },
+        { heading:'If IP Does Not Match', text:'Go to Insolvency Practitioner (IP) Spreadsheet via One Note Templates - Insolvency TAB - Insolvency IP Listing. Open and search for IP. Copy CID number, return to e-Sys, search and add IP Customer to Tree.' },
+        { heading:'If IP Not In Spreadsheet', text:'Search in e-Sys by IP Name and/or ACN/ABN. Note: IP name can sometimes change. If still cannot find, create new IP Customer in e-Sys (refer First Time Liability-Land Ownership instructions, BTO if needed). Add newly created IP Name and CID to the spreadsheet.' },
+        { heading:'Adding IP Type (Two-Part Process)', text:'When adding an Insolvency Practitioner type to the IP Customer, it automatically completes a two-part process: (1) Adds IP type to IP Customer node, (2) Adds IP type to the Insolvent Customer.' },
+        { heading:'Multiple IPs', text:'You can have multiple IPs allocated to an account at any time (e.g. Receiver and Manager at the same time as Liquidator). Update Land Taxpayer Mailing Protocols of the R&M IP details. If R&M has no debt and has not requested outstanding liabilities, no response required.' },
+        { heading:'Cessation Rules', text:'If a further appointment is to be applied, cease date is one day prior to the next appointment. Exception: Receivers and Managers may continue during an additional appointment.' },
+        { heading:'Mailing Protocol Format', list:['LINE 1: Entity Name (Appointment type/s)','LINE 2: C/- IP Name','LINE 3: ATTN: IP appointed person(s) name'] },
+        { ref:'Procedure reference: Insolvency Practitioner - IP (p.14-20); No IP Managed Customer Node (p.15); Adding an IP Insolvency Type (p.18-19); Update Land Taxpayer Mailing Protocols (p.21-23); Cessation Date (p.21)' }
+      ]
+    },
+    q5: {
+      title: 'Determining Pre and Post Appointment Debt',
+      sections: [
+        { heading:'Pre-Appointment Debt', text:'Any debt that became payable before the IP was appointed. Example: IP is appointed in June 2023. Pre-appointment Debt/Liability is any liability outstanding prior to, and including the 2023 year (2023 debt became payable as at midnight on 31 December 2022, prior to the appointment date). Pre-appointment debt for land tax is not apportioned, but advised for the full year. POD always matches the Pre-Appointment Debt.' },
+        { heading:'Post-Appointment Debt', text:'Any debt that became payable after the IP was appointed. Example: IP is appointed in June 2023. Post-appointment Debt/Liability will include any outstanding land tax assessment(s) on or after 31 December 2023 (after the appointment date).' },
+        { heading:'How to Check', text:'Return to Insolvent Customer on Tree. Click Land Taxpayer Node. Double-click Liabilities. Assessment Year Liability Summary opens. Scroll right for Net Liability column. Determine what is Pre-Appointment Debt and what this is made up of, AND/OR Post-Appointment Debt and what this is made up of.' },
+        { heading:'Complex Calculations', text:'For complex calculations, refer to the POD Reconciliation Template via One Note Templates - Insolvency TAB - POD-Reconciliation Template.' },
+        { heading:'Suspense Money', text:'Check for Suspense Money under Insolvent Customer Tree: Land Taxpayer Node, click Allocations. Tick Suspense, click Apply. If suspense payments exist, allocate monies towards any outstanding liabilities. If further money in suspense, contact IP for their banking details.' },
+        { heading:'IMPORTANT', text:'Ensure all assessments for Pre-appointment AND/OR Post-Appointment Debt/Liability(s) have been issued before proceeding to correspondence.' },
+        { ref:'Procedure reference: Determining Pre-Appointment and Post-Appointment Debt/Liability (p.26-28); Suspense Money (p.28-29)' }
+      ]
+    },
+    q6: {
+      title: 'Correspondence for IP',
+      sections: [
+        { heading:'Purpose', text:'Generate correspondence for IP (when required) to advise: SRO is aware of the appointment, advise of any land tax liabilities, any other relevant information as result of review.' },
+        { heading:'Template Selection', text:'There are various correspondence templates dependent on outcome of LTX Review. Choose the appropriate Correspondence Type and send via email or letter process. Templates are located via One Note Templates - Insolvency TAB.' },
+        { heading:'Debt Letter Rules', text:'Debt letters should advise the land tax liability as at the date of appointment and indicate if there are current (pre-appointment) and/or future (post-appointment) liabilities. If land is still owned, the letter should advise that the IP can get further information on outstanding liabilities by requesting a clearance certificate via LTX Express.' },
+        { heading:'When to Issue POD', text:'A Proof of Debt (POD) should be issued where land has already been sold and there is still a debt owing, and/or when there is a Bankrupt Estate. Use Bankruptcy Estate POD (Individual) or General POD (Company/Trusts). If the taxpayer no longer owns the land but a debt is still outstanding, a POD will need to be issued. A land tax (POD) template should be used unless the debt relates to a Bankrupt Estate.' },
+        { heading:'SRO as Secured Creditor', text:'If the customer does have a land tax debt and a debt letter is issued for land still owned, SRO is a secured creditor and a charge is placed on title (Land Tax Charge on Title). Do NOT issue a POD where land is currently owned.' },
+        { heading:'LTX Charge Review', text:'Check Recovery Node, PropChg box. If ticked and single property: NFAR. If ticked and multiple properties: continue. If not ticked: create action item - Type of Work: LTX CHARGE REVIEW REQUIRED. Add comments: IP appointment type, assessment year effected, trust/trustee CIDs, property name and LID, what is required (review of current charge or new charge).' },
+        { heading:'Joint Ownership POD', text:'Proof of Debt for a Bankrupt Joint-Owner is issued under the joint owner, so it shows all owners. If the bankrupt person within the joint ownership has debt under their individual account, complete an additional proof of debt for the individual account.' },
+        { ref:'Procedure reference: Correspondence for IP (p.32-33); Create Proof of Debt (p.30-31); LTX Charge Review Required (p.29-30); Introduction/Background (p.2-3)' }
+      ]
+    },
+    q7: {
+      title: 'Finalising Action Item',
+      sections: [
+        { heading:'How to Complete', text:'Navigate to the Insolvent Customer Action Item - Insolvency. Right-click the Insolvency Item, select Edit.' },
+        { heading:'Reference Tab', text:'Update with relevant information advising of what actions have been taken: Name and Type of IP, IP Appointed and Effective Date, Landowner/Debt, Refund (if any), Pre-appointment/Post-Appointment Debt, POD, any assessments issued/reissued, LTX Charge Review created, any other relevant information, Type of Correspondence sent. Refer to One Note Templates for examples.' },
+        { heading:'Enquiry Tab', text:'Add date if required.' },
+        { heading:'Main Tab', text:'Update status to COMPLETED if possible.' },
+        { heading:'Creditors Report', text:'If you receive a Creditors Report normally after you have completed an insolvency action item, review the report and forward it to DMS Team Leader (John Cahir) if asked to vote on proposal.' },
+        { ref:'Procedure reference: Finalising Action Item (p.34-35)' }
+      ]
+    }
+  };
+
+  var screens = {
+    q1: function(){
+      return screen('Q1 - IP Correspondence','What revenue line does this IP request relate to?',
+        'Check the IP correspondence. If documentation is older than 6 months, verify insolvency status via ASIC/VEDA before proceeding.',null,[
+        btn('Land Tax only','Proceed with this wizard','q1_ltx'),
+        btn('Payroll Tax only','Refer to PTX procedures','q1_ptx'),
+        btn('Both LTX and PTX','Complete LTX here, then email ptx.capture@sro.vic.gov.au','q1_both'),
+        btn('Not current or relevant','Correspondence is outdated or not related','q1_invalid')
+      ],null,'q1');
+    },
+    q2: function(){
+      return screen('Q2 - Customer Registration','Is the customer registered in e-Sys?',
+        'Search using identifiers from IP correspondence. If not found: check IP correspondence for correct entity, ABN Lookup, ASIC search, then Equifax/VEDA search.',null,[
+        btn('Yes - found in e-Sys','Customer record located','q2_yes'),
+        btn('No - not found after all searches','ABN, ASIC, and Equifax/VEDA all checked','q2_no')
+      ],'back','q2');
+    },
+    q3a: function(){
+      return screen('Q3 - Customer Status','Is the customer still insolvent?',
+        'Check ASIC / VEDA. If customer is no longer bankrupt, in administration etc, they may no longer be insolvent.',null,[
+        btn('Yes - still insolvent','Confirmed via system checks','q3a_yes'),
+        btn('No - no longer insolvent','Cessation path required','q3a_no')
+      ],'back','q3a');
+    },
+    q3b: function(){
+      return screen('Q3 - Land Ownership','Does the customer currently own land?',
+        'Check the Land Owner node (MC322). For trustees: check if the trust owns properties. Use ASIC/COI/LTO to verify.',
+        'PRIVACY: Only release information directly related to the IP request. If IP-provided details conflict with e-Sys, send only relevant correspondence.',[
+        btn('Yes - currently owns land','Property listed in MC322','q3b_yes'),
+        btn('Was a landowner - no longer owns','Previously owned but land sold','q3b_was'),
+        btn('Never a landowner','No property records found','q3b_never')
+      ],'back','q3b');
+    },
+    q3c: function(){
+      return screen('Q3 - Outstanding Debt','Does the customer have outstanding land tax debt?',
+        'Check liabilities under Land Taxpayer node. Scroll to Net Liability column in the Assessment Year Liability Summary.',null,[
+        btn('Yes - outstanding debt exists','Liability amounts showing in e-Sys','q3c_yes'),
+        btn('No - no outstanding debt','All liabilities are zero or paid','q3c_no')
+      ],'back','q3c');
+    },
+    q4: function(){
+      return screen('Q4 - Appointment Type','What type of insolvency appointment applies?',
+        'Check IP correspondence for appointment type. Verify against (IP) Managed Customer Node in e-Sys.',null,[
+        btn('Receiver and Manager','Controls company undertaking/property','q4_receiver'),
+        btn('Controller','Controls particular property for charge','q4_controller'),
+        btn('Administrator','Manages business, restructures','q4_admin'),
+        btn('Liquidator','Winds up company, distributes assets','q4_liquidator'),
+        btn('Deed Administrator','Deed of Company Arrangement','q4_deed'),
+        btn('Bankruptcy','Trustee manages bankrupt estate','q4_bankruptcy'),
+        btn('Mortgagee of Possession','NOT an insolvency - property info only','q4_mortgagee')
+      ],'back','q4');
+    },
+    q5: function(){
+      return screen('Q5 - Debt Timing','Is the debt pre-appointment, post-appointment, or both?',
+        'Pre-appointment: liabilities payable as at midnight 31 December before appointment date (full year, not apportioned). Post-appointment: assessments on or after 31 December after appointment date.',
+        'Ensure all assessments for pre and post-appointment debt have been issued before sending correspondence.',[
+        btn('Pre-appointment debt only','','q5_pre'),
+        btn('Post-appointment debt only','','q5_post'),
+        btn('Both pre and post-appointment debt','','q5_both')
+      ],'back','q5');
+    },
+    q6: function(){
+      var r = getCorrespondence();
+      var h = '<div class="qlabel">Q6 - Correspondence Required</div>';
+      h += '<div class="qtitle">'+r.title+'</div>';
+      h += '<div class="out out-blue"><h3>Template: '+r.template+'</h3></div>';
+      if(r.warnings.length){ r.warnings.forEach(function(w){ h+='<div class="warn">'+w+'</div>'; }); }
+      h += '<div class="out out-amber"><h3>Actions Required</h3><ul>';
+      r.actions.forEach(function(a){ h+='<li>'+a+'</li>'; });
+      h += '</ul></div>';
+      h += '<div class="out out-purple"><h3>Debt Classification</h3><ul>';
+      if(S.debtTiming==='pre'||S.debtTiming==='both') h+='<li><strong>Pre-appointment:</strong> Liabilities payable as at 31 Dec before appointment. Full year, not apportioned. POD matches this amount.</li>';
+      if(S.debtTiming==='post'||S.debtTiming==='both') h+='<li><strong>Post-appointment:</strong> Assessments on or after 31 Dec after appointment date.</li>';
+      h += '</ul></div>';
+      h += detailPanel('q6');
+      h += '<div class="navrow"><button class="nbtn nbtn-back" data-action="back">Back</button><button class="nbtn nbtn-go" data-action="goto_q7">Proceed to Checklist</button></div>';
+      return h;
+    },
+    q7: function(){
+      var checks = ['Name and Type of IP recorded','IP appointment and effective date recorded','Landowner / Debt status recorded','Pre/Post appointment debt breakdown noted','Refund details recorded (if any)','POD issued and attached (if applicable)','Assessments issued / reissued noted','LTX Charge Review created (if applicable)','Correspondence type sent recorded','Mailing protocols updated','Correspondence saved to TRIM/CM10','Enquiry tab date updated','Status set to COMPLETED'];
+      var h = '<div class="qlabel">Q7 - Finalise Action Item</div>';
+      h += '<div class="qtitle">Completion Checklist</div>';
+      h += '<div class="qcontext">Edit the action item and record the following in the Reference tab before setting status to COMPLETED.</div>';
+      checks.forEach(function(c){ h += '<label class="chk"><input type="checkbox"> '+c+'</label>'; });
+      h += detailPanel('q7');
+      h += '<div class="navrow"><button class="nbtn nbtn-back" data-action="back">Back</button><button class="nbtn nbtn-restart" data-action="restart">Start New Case</button></div>';
+      return h;
+    },
+    exitPTX: function(){
+      return exitScreen('&#8594;','Refer to Payroll Tax Procedures','This IP request relates to Payroll Tax only. Refer to Initial Checks - Payroll Tax Node Instructions.')+'<div class="navrow" style="justify-content:center"><button class="nbtn nbtn-restart" data-action="restart">Start Over</button></div>';
+    },
+    exitInvalid: function(){
+      return exitScreen('&#10006;','Correspondence Not Current or Relevant','Update and complete the action item. If IP documentation is older than 6 months, confirm insolvency status via ASIC/VEDA.')+'<div class="navrow" style="justify-content:center"><button class="nbtn nbtn-restart" data-action="restart">Start Over</button></div>';
+    },
+    exitNotReg: function(){
+      return exitScreen('&#9993;','Issue Clearance Correspondence','Customer not found after all searches.')+'<div class="out out-blue"><h3>Template: LTX - NOT REGISTERED IN E-SYS - CLEARANCE CORRESPONDENCE</h3><ul><li>Customer is not registered</li><li>Does not own land</li><li>Has no LTX liability/debt</li><li>Covers LTX and PTX clearance</li></ul><p style="margin-top:8px;">Save to CM10 folder VF/24/41 using naming convention.</p></div><div class="navrow" style="justify-content:center"><button class="nbtn nbtn-restart" data-action="restart">Start Over</button></div>';
+    },
+    exitNotInsolvent: function(){
+      return exitScreen('&#8635;','Customer No Longer Insolvent','')+'<div class="out out-amber"><h3>Cessation Actions</h3><ul><li>Add Cessation Date to IP appointment</li><li>Remove IP names from Customer name</li><li>Revert mailing protocols to original address</li><li>Check ASIC for most recent address</li><li>Complete action item advising of outcome</li><li>Send correspondence to IP if relevant</li></ul></div><div class="navrow" style="justify-content:center"><button class="nbtn nbtn-restart" data-action="restart">Start Over</button></div>';
+    },
+    exitMortgagee: function(){
+      return exitScreen('&#9888;','Mortgagee of Possession - Not an Insolvency','Do NOT add IP to customer. Only release property-specific information.')+'<div class="navrow" style="justify-content:center"><button class="nbtn nbtn-restart" data-action="restart">Start Over</button></div>';
+    },
+    exitNoLandNoDebt: function(){
+      var tmpl = S.ownsLand==='was' ? 'WAS A LANDOWNER / HAS NO DEBT' : 'LANDOWNER / NO DEBT';
+      return exitScreen('&#9993;','Clearance','')+'<div class="out out-green"><h3>Template: CUSTOMER REGISTERED - '+tmpl+'</h3><ul><li>Customer is registered</li><li>Customer '+(S.ownsLand==='was'?'no longer owns':'does not own')+' land</li><li>No LTX liability/debt</li></ul></div><div class="navrow"><button class="nbtn nbtn-back" data-action="back">Back</button><button class="nbtn nbtn-go" data-action="goto_q7">Proceed to Checklist</button></div>';
+    },
+    exitLandNoDebt: function(){
+      return exitScreen('&#9993;','Clearance - Landowner, No Debt','')+'<div class="out out-green"><h3>Template: CUSTOMER REGISTERED - LANDOWNER / NO DEBT</h3><ul><li>Customer is registered</li><li>Customer does own land</li><li>No LTX liability/debt</li></ul></div><div class="out out-amber"><h3>LTX Charge Check</h3><p>Check Recovery Node PropChg box. If not ticked, create LTX CHARGE REVIEW REQUIRED action item.</p></div><div class="navrow"><button class="nbtn nbtn-back" data-action="back">Back</button><button class="nbtn nbtn-go" data-action="goto_q7">Proceed to Checklist</button></div>';
+    }
+  };
+
+  function btn(label,sub,action){
+    return '<button class="opt" data-action="'+action+'">'+label+(sub?'<span class="opt-sub">'+sub+'</span>':'')+'</button>';
+  }
+
+  function screen(qlabel,title,context,warning,buttons,navType,detailKey){
+    var h = '<div class="qlabel">'+qlabel+'</div>';
+    h += '<div class="qtitle">'+title+'</div>';
+    if(context) h += '<div class="qcontext">'+context+'</div>';
+    if(warning) h += '<div class="warn">'+warning+'</div>';
+    h += '<div class="opts">'+buttons.join('')+'</div>';
+    if(detailKey) h += detailPanel(detailKey);
+    if(navType==='back') h += '<div class="navrow"><button class="nbtn nbtn-back" data-action="back">Back</button></div>';
+    return h;
+  }
+
+  function detailPanel(key){
+    var d = details[key];
+    if(!d) return '';
+    var h = '<div class="detail-toggle" data-action="toggle_detail"><span class="detail-toggle-text">Procedure Detail: '+d.title+'</span><span class="detail-toggle-arrow" id="arrow_'+key+'">&#9660;</span></div>';
+    h += '<div class="detail-panel" id="panel_'+key+'">';
+    d.sections.forEach(function(s){
+      if(s.ref){ h += '<div class="page-ref">'+s.ref+'</div>'; return; }
+      if(s.heading) h += '<h4>'+s.heading+'</h4>';
+      if(s.text) h += '<p>'+s.text+'</p>';
+      if(s.list){ h += '<ul>'; s.list.forEach(function(li){ h+='<li>'+li+'</li>'; }); h += '</ul>'; }
+    });
+    h += '</div>';
+    return h;
+  }
+
+  function exitScreen(icon,title,desc){
+    return '<div class="exit-icon">'+icon+'</div><div class="exit-title">'+title+'</div>'+(desc?'<div class="exit-desc">'+desc+'</div>':'');
+  }
+
+  function getCorrespondence(){
+    var ownsLand=S.ownsLand==='yes', wasOwner=S.ownsLand==='was', isBankrupt=S.isBankrupt, timing=S.debtTiming;
+    var r={title:'',template:'',actions:[],warnings:[]};
+    if(ownsLand&&!isBankrupt){
+      if(timing==='pre')r.template='CUSTOMER REGISTERED - LANDOWNER WITH PRE-APPOINTMENT DEBT ONLY';
+      else if(timing==='post')r.template='CUSTOMER REGISTERED - LANDOWNER WITH POST-APPOINTMENT DEBT ONLY';
+      else r.template='CUSTOMER REGISTERED - LANDOWNER WITH POST-APPOINTMENT AND PRE-APPOINTMENT DEBT';
+      r.title='Issue Debt Letter (SRO is Secured Creditor)';
+      r.actions.push('Issue debt letter advising of liability at appointment date');
+      r.actions.push('Advise IP to request clearance certificate via LTX Express');
+      r.actions.push('Create LTX Charge on Title');
+      r.actions.push('Check Recovery Node PropChg box - create LTX CHARGE REVIEW REQUIRED if not ticked');
+      r.warnings.push('Do NOT issue Proof of Debt - SRO is a secured creditor while land is owned');
+    }else if(ownsLand&&isBankrupt){
+      r.template='CUSTOMER REGISTERED - BANKRUPT ESTATE - LANDOWNER / HAS DEBT - PROOF OF DEBT';
+      r.title='Bankrupt Estate - Landowner with Debt';
+      r.actions.push('Create LTX Charge action item');
+      r.actions.push('Create Proof of Debt (Bankruptcy Estate POD - Individual)');
+      r.actions.push('Attach POD to correspondence');
+      r.actions.push('Check Recovery Node PropChg box');
+      r.actions.push('Update customer name with (Bankrupt Estate)');
+    }else if(wasOwner&&!isBankrupt){
+      r.template='CUSTOMER REGISTERED - NO LONGER OWNS LAND / BUT HAS DEBT - PROOF OF DEBT';
+      r.title='Issue Proof of Debt (Land Sold, Debt Outstanding)';
+      r.actions.push('Create Proof of Debt - General POD (Company/Trusts)');
+      r.actions.push('Attach POD to correspondence');
+      r.actions.push('Joint ownership: POD under joint owner showing all owners');
+      r.actions.push('If bankrupt person has individual account debt, additional POD needed');
+    }else if(wasOwner&&isBankrupt){
+      r.template='CUSTOMER REGISTERED - BANKRUPT ESTATE - WAS A LANDOWNER / HAS DEBT - PROOF OF DEBT';
+      r.title='Bankrupt Estate - Was Landowner, Has Debt';
+      r.actions.push('Create Proof of Debt (Bankruptcy Estate POD - Individual)');
+      r.actions.push('Attach POD to correspondence');
+      r.actions.push('Update customer name with (Bankrupt Estate)');
+    }else{
+      r.template='CUSTOMER REGISTERED - NO LONGER OWNS LAND / BUT HAS DEBT - PROOF OF DEBT';
+      r.title='Issue Proof of Debt';
+      r.actions.push('Create Proof of Debt');
+      r.actions.push('Attach POD to correspondence');
+    }
+    r.actions.push('Update mailing protocols (Line 1: Entity + Appointment, Line 2: C/- IP, Line 3: ATTN: IP person)');
+    r.actions.push('Save correspondence to TRIM/CM10');
+    return r;
+  }
+
+  function show(id){
+    nav.push(currentScreen);
+    currentScreen=id;
+    document.getElementById('wizard').innerHTML='<div class="card">'+screens[id]()+'</div>';
+    updateProg(id);
+    updateTracker();
+    window.scrollTo(0,0);
+  }
+
+  function goBack(){
+    if(nav.length){
+      var prev=nav.pop();
+      currentScreen=prev;
+      document.getElementById('wizard').innerHTML='<div class="card">'+screens[prev]()+'</div>';
+      updateProg(prev);
+      updateTracker();
+      window.scrollTo(0,0);
+    }
+  }
+
+  function updateProg(id){
+    var map={q1:0,q2:1,q3a:2,q3b:2,q3c:2,q4:3,q5:4,q6:5,q7:6};
+    var step=map[id]; if(step===undefined)step=-1;
+    for(var i=0;i<STEPS;i++){
+      var el=document.getElementById('p'+i);
+      el.className='progress-step';
+      if(i<step)el.className+=' done';
+      else if(i===step)el.className+=' now';
+    }
+  }
+
+  function updateTracker(){
+    var t=document.getElementById('tracker'),d=document.getElementById('tdata'),h='',any=false;
+    function row(l,v){h+='<div class="trow"><span>'+l+'</span><strong>'+v+'</strong></div>';any=true;}
+    if(S.revenue)row('Revenue',{ltx:'Land Tax',ptx:'Payroll Tax',both:'LTX + PTX',invalid:'Not current'}[S.revenue]);
+    if(S.registered)row('Registered',S.registered==='yes'?'Yes':'No');
+    if(S.insolvent)row('Still insolvent',S.insolvent==='yes'?'Yes':'No');
+    if(S.ownsLand)row('Owns land',{yes:'Current owner',was:'Was owner',never:'Never'}[S.ownsLand]);
+    if(S.hasDebt)row('Has debt',S.hasDebt==='yes'?'Yes':'No');
+    if(S.appointType)row('Appointment',{receiver:'Receiver/Manager',controller:'Controller',admin:'Administrator',liquidator:'Liquidator',deed:'Deed Admin',bankruptcy:'Bankruptcy',mortgagee:'Mortgagee'}[S.appointType]);
+    if(S.isBankrupt!==undefined)row('Bankrupt estate',S.isBankrupt?'Yes':'No');
+    if(S.debtTiming)row('Debt timing',{pre:'Pre-appointment',post:'Post-appointment',both:'Pre + Post'}[S.debtTiming]);
+    d.innerHTML=h;
+    t.className=any?'tracker show':'tracker';
+  }
+
+  document.addEventListener('click',function(e){
+    var target=e.target.closest('[data-action]');
+    if(!target)return;
+    var action=target.getAttribute('data-action');
+
+    // Toggle detail panel
+    if(action==='toggle_detail'){
+      var panel=target.nextElementSibling;
+      var arrow=target.querySelector('.detail-toggle-arrow');
+      if(panel){panel.classList.toggle('open');}
+      if(arrow){arrow.classList.toggle('open');}
+      return;
+    }
+
+    if(action==='back')return goBack();
+    if(action==='restart'){S={};nav=[];currentScreen='';show('q1');return;}
+    if(action.indexOf('goto_')===0){show(action.replace('goto_',''));return;}
+
+    if(action==='q1_ltx'){S.revenue='ltx';show('q2');}
+    else if(action==='q1_ptx'){S.revenue='ptx';show('exitPTX');}
+    else if(action==='q1_both'){S.revenue='both';show('q2');}
+    else if(action==='q1_invalid'){S.revenue='invalid';show('exitInvalid');}
+    else if(action==='q2_yes'){S.registered='yes';show('q3a');}
+    else if(action==='q2_no'){S.registered='no';show('exitNotReg');}
+    else if(action==='q3a_yes'){S.insolvent='yes';show('q3b');}
+    else if(action==='q3a_no'){S.insolvent='no';show('exitNotInsolvent');}
+    else if(action==='q3b_yes'){S.ownsLand='yes';show('q3c');}
+    else if(action==='q3b_was'){S.ownsLand='was';show('q3c');}
+    else if(action==='q3b_never'){S.ownsLand='never';show('q3c');}
+    else if(action==='q3c_yes'){S.hasDebt='yes';show('q4');}
+    else if(action==='q3c_no'){S.hasDebt='no';if(S.ownsLand==='yes')show('exitLandNoDebt');else show('exitNoLandNoDebt');}
+    else if(action==='q4_mortgagee'){S.appointType='mortgagee';show('exitMortgagee');}
+    else if(action==='q4_bankruptcy'){S.appointType='bankruptcy';S.isBankrupt=true;show('q5');}
+    else if(action.indexOf('q4_')===0){S.appointType=action.replace('q4_','');S.isBankrupt=false;show('q5');}
+    else if(action==='q5_pre'){S.debtTiming='pre';show('q6');}
+    else if(action==='q5_post'){S.debtTiming='post';show('q6');}
+    else if(action==='q5_both'){S.debtTiming='both';show('q6');}
+  });
+
+  show('q1');
+})();
+</script>
+
+</body>
+</html>

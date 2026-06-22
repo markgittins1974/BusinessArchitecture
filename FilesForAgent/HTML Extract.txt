@@ -1,0 +1,535 @@
+
+Land Tax – Core Views
+End‑to‑end Land Tax value stages with mapped processes.
+View prototype HTML source
+Registration & Information Gathering
+Establish identity, relationships and baseline data.
+
+Maintain Property & Ownership
+Manage Property Valuations
+Evaluation & Determination
+Calculate liabilities and issue enforceable outcomes.
+
+Determine Land Tax Liability
+Generate & Issue Assessments
+Collection & Disbursement
+Settle financial obligations and entitlements.
+
+Manage Payments & Instalments
+Manage Refunds & Adjustments
+Certificates & Notification
+Provide legal certainty and transparency.
+
+Generate & Issue Assessments
+Issue Land Tax Certificates
+Dispute Resolution & Enforcement
+Address non‑compliance and challenges.
+
+Manage Objections
+Manage Payments & Instalments (enforcement)
+HTML Source – Live Prototype
+Download HTML Close
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Land Tax – GOLD 4‑Tabs Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f9fc; --card:#ffffff; --text:#1f2937; --muted:#6b7280;
+    --accent:#2563eb;
+    /* 5-level maturity (L1 grey) */
+    --l1:#e5e7eb; --l2:#e6efff; --l3:#ffe8cc; --l4:#e6f4ea; --l5:#d1fae5;
+    --shadow:0 10px 28px rgba(0,0,0,.08);
+    --chev:#eef2ff;
+  }
+
+  body{font-family:Inter,sans-serif;background:var(--bg);margin:0;padding:28px;color:var(--text)}
+  h1{font-size:22px;margin:0 0 10px}
+
+  /* Tabs */
+  .tabs{display:flex;gap:8px;margin:0 0 16px;flex-wrap:wrap}
+  .tab{padding:8px 14px;border-radius:10px;background:#e5e7eb;color:#111;cursor:pointer;font-size:13px;font-weight:500;user-select:none}
+  .tab.active{background:var(--accent);color:#fff}
+  .tab-content{display:none}
+  .tab-content.active{display:block}
+
+  .card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:22px;overflow-x:auto}
+
+  /* ===== VALUE STREAM CHEVRONS ===== */
+  .chevrons{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;min-width:980px}
+  .chevron{position:relative;background:var(--chev);border-radius:12px;padding:16px 16px 18px}
+  .chevron:not(:last-child)::after{
+    content:""; position:absolute; top:50%; right:-18px; transform:translateY(-50%);
+    border-left:18px solid var(--chev); border-top:22px solid transparent; border-bottom:22px solid transparent;
+  }
+  .chevron h3{margin:0 0 6px;font-size:14px;color:#1e3a8a}
+  .chevron p{margin:0 0 8px;font-size:12px;color:var(--muted)}
+  .chevron ul{margin:0;padding-left:18px;font-size:13px;line-height:1.5}
+
+  /* ===== SIPOC ===== */
+  .sipoc{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;min-width:980px}
+  .sipoc-col{background:#f9fafb;border-radius:12px;padding:14px;border:1px solid #eef2f7}
+  .sipoc-col h3{margin:0 0 8px;font-size:13px;color:#374151}
+  .sipoc-col ul{margin:0;padding-left:16px;font-size:13px;line-height:1.5}
+
+  /* ===== MATRIX ===== */
+  table{border-collapse:separate;border-spacing:8px;width:100%;min-width:1180px}
+  th{font-size:12px;font-weight:600;color:var(--muted);text-align:center;white-space:nowrap}
+  th.process{cursor:pointer;text-align:left;color:var(--accent)}
+  th.capability{cursor:pointer}
+  th.process:hover, th.capability:hover{text-decoration:underline}
+  td{height:46px;border-radius:10px;position:relative;background:#fff}
+
+  .l1{background:var(--l1)} .l2{background:var(--l2)} .l3{background:var(--l3)} .l4{background:var(--l4)} .l5{background:var(--l5)}
+
+  /* icons */
+  .decision::after{content:"▲";position:absolute;bottom:6px;right:8px;font-size:10px;color:#374151}
+  .has-bpmn::before{content:"▭";position:absolute;top:6px;left:8px;font-size:10px;color:#374151}
+  .has-dmn::after{content:"▦";position:absolute;top:6px;right:8px;font-size:10px;color:#374151}
+
+  /* Legend */
+  .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px;font-size:12px;color:var(--muted);align-items:center}
+  .legend-item{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:10px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+  .legend-item.clickable{cursor:pointer}
+  .swatch{width:14px;height:14px;border-radius:4px}
+
+  /* ===== Capability Decomposition (Tab 4) ===== */
+  .l1grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;min-width:980px}
+  @media (max-width: 980px){ .l1grid{grid-template-columns:1fr;min-width:auto} }
+
+  .l1card{border:2px solid #e5e7eb;border-radius:14px;padding:14px;background:#fff}
+  .l1head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}
+  .l1name{font-size:13px;font-weight:700;color:#111827}
+  .l1badge{font-size:11px;color:#111827;background:#f3f4f6;border-radius:999px;padding:2px 8px}
+  .l1desc{font-size:12px;color:var(--muted);margin:-4px 0 10px}
+
+  details.l2item{border:1px solid #eef2f7;border-radius:12px;padding:10px;margin:10px 0;background:#fff}
+  details.l2item[open]{box-shadow:0 8px 18px rgba(0,0,0,.06)}
+  summary.l2sum{cursor:pointer;list-style:none;font-weight:600;font-size:13px}
+  summary.l2sum::-webkit-details-marker{display:none}
+  .rat{margin:8px 0 10px;color:#374151;background:#f9fafb;border:1px solid #eef2f7;padding:8px 10px;border-radius:10px;font-size:12px}
+  .l3list{margin:0;padding-left:18px;font-size:13px}
+  .l3list li{margin:4px 0}
+
+  /* ===== Source Modal ===== */
+  #sourceModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:3000}
+</style>
+</head>
+<body>
+
+<h1>Land Tax – Core Views</h1>
+
+<div class="tabs">
+  <div class="tab active" data-tab="value" onclick="showTab('value')">Land Tax Value Stream</div>
+  <div class="tab" data-tab="sipoc" onclick="showTab('sipoc')">SIPOC</div>
+  <div class="tab" data-tab="matrix" onclick="showTab('matrix')">Process × Capability Matrix</div>
+  <div class="tab" data-tab="decomp" onclick="showTab('decomp')">Capability Decomposition</div>
+</div>
+
+<!-- TAB 1: VALUE STREAM -->
+<div id="value" class="tab-content active">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;">
+      <div style="font-size:13px;color:var(--muted)">End‑to‑end Land Tax value stages with mapped processes.</div>
+      <a href="#" onclick="showSource();return false;" style="font-size:12px;color:#2563eb;text-decoration:underline;">View prototype HTML source</a>
+    </div>
+
+    <div class="chevrons">
+      <div class="chevron">
+        <h3>Registration &amp; Information Gathering</h3>
+        <p>Establish identity, relationships and baseline data.</p>
+        <ul>
+          <li>Maintain Property &amp; Ownership</li>
+          <li>Manage Property Valuations</li>
+        </ul>
+      </div>
+      <div class="chevron">
+        <h3>Evaluation &amp; Determination</h3>
+        <p>Calculate liabilities and issue enforceable outcomes.</p>
+        <ul>
+          <li>Determine Land Tax Liability</li>
+          <li>Generate &amp; Issue Assessments</li>
+        </ul>
+      </div>
+      <div class="chevron">
+        <h3>Collection &amp; Disbursement</h3>
+        <p>Settle financial obligations and entitlements.</p>
+        <ul>
+          <li>Manage Payments &amp; Instalments</li>
+          <li>Manage Refunds &amp; Adjustments</li>
+        </ul>
+      </div>
+      <div class="chevron">
+        <h3>Certificates &amp; Notification</h3>
+        <p>Provide legal certainty and transparency.</p>
+        <ul>
+          <li>Generate &amp; Issue Assessments</li>
+          <li>Issue Land Tax Certificates</li>
+        </ul>
+      </div>
+      <div class="chevron">
+        <h3>Dispute Resolution &amp; Enforcement</h3>
+        <p>Address non‑compliance and challenges.</p>
+        <ul>
+          <li>Manage Objections</li>
+          <li>Manage Payments &amp; Instalments (enforcement)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: SIPOC (FULL DETAIL) -->
+<div id="sipoc" class="tab-content">
+  <div class="card">
+    <div class="sipoc">
+      <div class="sipoc-col">
+        <h3>Suppliers</h3>
+        <ul>
+          <li>Land owners</li>
+          <li>Conveyancers</li>
+          <li>Victorian councils</li>
+          <li>Valuer‑General Victoria</li>
+          <li>Land Registry / Land Use Victoria</li>
+        </ul>
+      </div>
+      <div class="sipoc-col">
+        <h3>Inputs</h3>
+        <ul>
+          <li>Notices of Acquisition (NOA)</li>
+          <li>Ownership and property data</li>
+          <li>Statutory land valuations</li>
+          <li>Council land information</li>
+          <li>Exemption / concession claims</li>
+          <li>Payments, refunds, objections data</li>
+        </ul>
+      </div>
+      <div class="sipoc-col">
+        <h3>Process</h3>
+        <ul>
+          <li>Maintain Property &amp; Ownership</li>
+          <li>Manage Property Valuations</li>
+          <li>Determine Land Tax Liability</li>
+          <li>Generate &amp; Issue Assessments</li>
+          <li>Manage Payments &amp; Instalments</li>
+          <li>Manage Refunds &amp; Adjustments</li>
+          <li>Manage Objections</li>
+          <li>Issue Land Tax Certificates</li>
+        </ul>
+      </div>
+      <div class="sipoc-col">
+        <h3>Outputs</h3>
+        <ul>
+          <li>Land tax assessments &amp; notices</li>
+          <li>Updated ownership records</li>
+          <li>Refunds &amp; adjustments</li>
+          <li>Objection outcomes</li>
+          <li>Certificates</li>
+        </ul>
+      </div>
+      <div class="sipoc-col">
+        <h3>Customers</h3>
+        <ul>
+          <li>Land owners</li>
+          <li>Trustees &amp; companies</li>
+          <li>Conveyancers</li>
+          <li>Internal SRO revenue teams</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: MATRIX (FULL DETAIL + LEGEND + CLICK DESCRIPTIONS) -->
+<div id="matrix" class="tab-content">
+  <div class="card">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:10px;">
+      White = no relationship • Colour = 5‑level maturity (L1 grey) • ▲ decision‑heavy • ▭ BPMN defined • ▦ DMN defined (Customer/Party + Property/Ownership)
+      • Click any process or capability heading for its description.
+    </div>
+
+    <table>
+      <tbody><tr>
+        <th class="process" onclick="openProcess('help')">Process</th>
+        <th class="capability" onclick="openCapability('customer')">Customer / Party</th>
+        <th class="capability" onclick="openCapability('property')">Property &amp; Ownership</th>
+        <th class="capability" onclick="openCapability('valuation')">Valuation</th>
+        <th class="capability" onclick="openCapability('liability')">Liability / Exemptions / Rates</th>
+        <th class="capability" onclick="openCapability('assessment')">Assessment &amp; Comms</th>
+        <th class="capability" onclick="openCapability('payments')">Payments &amp; Debt</th>
+        <th class="capability" onclick="openCapability('refunds')">Refunds &amp; Adjustments</th>
+        <th class="capability" onclick="openCapability('objections')">Objections &amp; Compliance</th>
+        <th class="capability" onclick="openCapability('certificates')">Certificates</th>
+      </tr>
+
+      <tr>
+        <th class="process" onclick="openProcess('p_ownership')">Maintain Property &amp; Ownership</th>
+        <td class="l3 has-bpmn has-dmn"></td>
+        <td class="l3 has-bpmn has-dmn"></td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <th class="process" onclick="openProcess('p_valuation')">Manage Property Valuations</th>
+        <td></td><td></td>
+        <td class="l2 has-bpmn"></td>
+        <td></td><td></td><td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <th class="process" onclick="openProcess('p_liability')">Determine Land Tax Liability</th>
+        <td></td><td></td><td></td>
+        <td class="l1 decision"></td>
+        <td></td><td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <th class="process" onclick="openProcess('p_assessment')">Generate &amp; Issue Assessments</th>
+        <td></td><td></td><td></td><td></td>
+        <td class="l1 has-bpmn"></td>
+        <td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <th class="process" onclick="openProcess('p_payments')">Manage Payments &amp; Instalments</th>
+        <td></td><td></td><td></td><td></td><td></td>
+        <td class="l1 decision"></td>
+        <td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <th class="process" onclick="openProcess('p_refunds')">Manage Refunds &amp; Adjustments</th>
+        <td></td><td></td><td></td><td></td><td></td><td></td>
+        <td class="l1"></td>
+        <td></td><td></td>
+      </tr>
+      <tr>
+        <th class="process" onclick="openProcess('p_objections')">Manage Objections</th>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <td class="l1 decision"></td>
+        <td></td>
+      </tr>
+      <tr>
+        <th class="process" onclick="openProcess('p_certificates')">Issue Land Tax Certificates</th>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <td class="l1 has-bpmn"></td>
+      </tr>
+    </tbody></table>
+
+    <div class="legend">
+      <div class="legend-item clickable" onclick="openMaturity()"><strong>Maturity definition</strong></div>
+      <div class="legend-item"><div class="swatch" style="background:var(--l1)"></div> L1 Initial (Grey)</div>
+      <div class="legend-item"><div class="swatch" style="background:var(--l2)"></div> L2 Repeatable</div>
+      <div class="legend-item"><div class="swatch" style="background:var(--l3)"></div> L3 Defined</div>
+      <div class="legend-item"><div class="swatch" style="background:var(--l4)"></div> L4 Managed</div>
+      <div class="legend-item"><div class="swatch" style="background:var(--l5)"></div> L5 Optimized</div>
+      <div class="legend-item"><div class="swatch" style="background:#fff;border:1px solid #ccc"></div> No relationship</div>
+      <div class="legend-item">▲ Decision‑heavy</div>
+      <div class="legend-item">▭ BPMN defined</div>
+      <div class="legend-item">▦ DMN defined</div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 4: CAPABILITY DECOMPOSITION (L1 = Matrix Columns) -->
+<div id="decomp" class="tab-content">
+  <div class="card">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">L1 headings below match the Process × Capability Matrix columns. L2 groupings and L3 lists are the same content you provided, organised under the relevant L1.</div>
+
+    <div class="l1grid">
+      <div class="l1card">
+        <div class="l1head"><div class="l1name">Customer / Party</div><div class="l1badge">L1</div></div>
+        <div class="l1desc">Identity, authority, engagement and registration context.</div>
+        <details class="l2item"><summary class="l2sum">Customer Communication &amp; Engagement Management <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: All describe how the organisation manages customer communications, regardless of channel or system.</div><ul class="l3list"><li>Communication Preference &amp; Consent Management</li><li>Channel Management</li><li>Digital Communication Management</li><li>Telecommunications Management</li><li>Manual / Physical Communication Management</li><li>Bulk Communication Management</li><li>Automated / Event‑Triggered Communication</li><li>Communication Standards &amp; Templates</li><li>Communication Record Management</li></ul></details>
+        <details class="l2item"><summary class="l2sum">Customer, Stakeholder &amp; Identity Management <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: These define who the organisation is interacting with and under what authority.</div><ul class="l3list"><li>Customer Management</li><li>Stakeholder Management</li><li>User Profile Management</li><li>User Account Management</li><li>Delegated Authority Management</li><li>Authentication Management</li><li>Access Request Management</li></ul></details>
+        <details class="l2item"><summary class="l2sum">Revenue Line &amp; Registration Management <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: All relate to establishing and maintaining revenue‑specific registrations.</div><ul class="l3list"><li>Revenue Line Registration Management</li><li>Revenue Line Data Management</li><li>Revenue Line Attribute Management</li><li>Revenue Line Risk Management</li><li>Revenue Line Contact Management</li><li>Revenue Line Address Management</li></ul></details>
+      </div>
+
+      <div class="l1card">
+        <div class="l1head"><div class="l1name">Property &amp; Ownership</div><div class="l1badge">L1</div></div>
+        <div class="l1desc">Property and ownership domain data used across revenue lines.</div>
+        <details class="l2item"><summary class="l2sum">Property, Valuation &amp; Asset Management <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: These manage land‑based and asset data used across multiple revenue lines.</div><ul class="l3list"><li>Property Management</li><li>Address Management</li><li>Parcel Management</li><li>Ownership Management</li><li>Property Usage Management</li></ul></details>
+      </div>
+
+      <div class="l1card">
+        <div class="l1head"><div class="l1name">Valuation</div><div class="l1badge">L1</div></div>
+        <div class="l1desc">Valuation lifecycle and valuation data management.</div>
+        <details class="l2item"><summary class="l2sum">Property, Valuation &amp; Asset Management <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: These manage land‑based and asset data used across multiple revenue lines.</div><ul class="l3list"><li>Valuation Management</li></ul></details>
+      </div>
+
+      <div class="l1card">
+        <div class="l1head"><div class="l1name">Liability / Exemptions / Rates</div><div class="l1badge">L1</div></div>
+        <div class="l1desc">Calculation, rates, entitlements, penalties and rule‑driven adjustments.</div>
+        <details class="l2item"><summary class="l2sum">Entitlements, Concessions &amp; Exemptions Management <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: These govern reductions, exclusions, or adjustments to liabilities.</div><ul class="l3list"><li>Exemption Management</li><li>Concession Management</li><li>Derived Entitlement Management</li><li>Eligibility &amp; Restriction Management</li></ul></details>
+        <details class="l2item"><summary class="l2sum">Liability, Assessment &amp; Calculation Management <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: These define how amounts are calculated, adjusted, and enforced.</div><ul class="l3list"><li>Rate &amp; Threshold Management</li><li>Calculation Management</li><li>Deduction Management</li><li>Liability / Entitlement Management</li><li>Default Management</li><li>Penalty Management</li><li>Interest Management</li><li>Write‑Off Management</li></ul></details>
+        <details class="l2item"><summary class="l2sum">Rules, Automation &amp; Batch Processing <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: These define how decisions and repeatable processing are controlled.</div><ul class="l3list"><li>Business Rules Management</li><li>Exception Management</li><li>Automated Processing</li><li>Batch Processing</li><li>Rule Governance</li></ul></details>
+      </div>
+
+      <div class="l1card">
+        <div class="l1head"><div class="l1name">Assessment &amp; Comms</div><div class="l1badge">L1</div></div>
+        <div class="l1desc">Digital services, notifications and operational work management for assessment journeys.</div>
+        <details class="l2item"><summary class="l2sum">Digital Service &amp; Portal Management <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: These enable customer‑facing digital services, independent of backend processing.</div><ul class="l3list"><li>Self‑Service Portal Management</li><li>Assisted Digital Management</li><li>Third‑Party Digital Portal Management</li><li>SmartForm Management</li><li>Public Access Service Management</li><li>Digital Service Alert Management</li></ul></details>
+        <details class="l2item"><summary class="l2sum">Workflow &amp; Work Management <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: These manage how work flows through the organisation.</div><ul class="l3list"><li>Workflow Management</li><li>Work Item Management</li><li>Allocation &amp; Routing Management</li><li>Work Prioritisation &amp; Escalation</li><li>SLA Management</li><li>KPI Management</li></ul></details>
+        <details class="l2item"><summary class="l2sum">Platform, Design &amp; Operational Management <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: These support platform quality, consistency, and operability.</div><ul class="l3list"><li>Design Standards Management</li><li>System Testing &amp; Approval</li><li>System Integration Management</li><li>System Use Tracking</li><li>Business Alert Management</li></ul></details>
+      </div>
+
+      <div class="l1card">
+        <div class="l1head"><div class="l1name">Payments &amp; Debt</div><div class="l1badge">L1</div></div>
+        <div class="l1desc">Payments, allocation and suspense used to settle liabilities and manage arrears.</div>
+        <details class="l2item"><summary class="l2sum">Payment, Refund &amp; Financial Transaction Management <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: These cover money movement and financial reconciliation.</div><ul class="l3list"><li>Payment Management</li><li>Payment Allocation Management</li><li>Suspense Management</li></ul></details>
+      </div>
+
+      <div class="l1card">
+        <div class="l1head"><div class="l1name">Refunds &amp; Adjustments</div><div class="l1badge">L1</div></div>
+        <div class="l1desc">Refund processing and disbursement of entitlements / corrections.</div>
+        <details class="l2item"><summary class="l2sum">Payment, Refund &amp; Financial Transaction Management <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: These cover money movement and financial reconciliation.</div><ul class="l3list"><li>Refund Management</li><li>Disbursement Management</li></ul></details>
+      </div>
+
+      <div class="l1card">
+        <div class="l1head"><div class="l1name">Objections &amp; Compliance</div><div class="l1badge">L1</div></div>
+        <div class="l1desc">Dispute handling, case management, compliance and audit controls.</div>
+        <details class="l2item"><summary class="l2sum">Objection, Dispute &amp; Case Management <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: These manage challenges to decisions and formal resolution processes.</div><ul class="l3list"><li>Objection Management</li><li>Valuation Objection Management</li><li>Dispute Resolution Management</li><li>Case Management</li><li>Referral Management</li></ul></details>
+        <details class="l2item"><summary class="l2sum">Compliance, Audit &amp; Quality Management <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: These ensure legislative, policy, and operational integrity.</div><ul class="l3list"><li>Compliance Management</li><li>Audit Management</li><li>Risk Management</li><li>Quality Assurance Management</li></ul></details>
+      </div>
+
+      <div class="l1card">
+        <div class="l1head"><div class="l1name">Certificates</div><div class="l1badge">L1</div></div>
+        <div class="l1desc">Evidence, records, traceability and performance insight supporting certificate outcomes.</div>
+        <details class="l2item"><summary class="l2sum">Records, History &amp; Content Management <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: These manage enterprise information, evidence, and traceability.</div><ul class="l3list"><li>Storage Management</li><li>Content Accessibility Management</li><li>Record Management</li><li>History &amp; Audit Trail Management</li></ul></details>
+        <details class="l2item"><summary class="l2sum">Reporting, Analytics &amp; Performance Management <span style="color:var(--muted);font-weight:500;">(L2)</span></summary><div class="rat">✅ Rationale: These support decision‑making and organisational oversight.</div><ul class="l3list"><li>Reporting Management</li><li>Analytics &amp; Dashboards</li><li>Forecasting &amp; Planning</li><li>Strategic Performance Management</li></ul></details>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== Prototype HTML Source Modal (with DOWNLOAD HYPERLINK) ===== -->
+<div id="sourceModal">
+  <div style="background:#fff;margin:4vh auto;width:92%;height:92%;border-radius:14px;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.35);">
+
+    <div style="padding:12px 16px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;">
+      HTML Source – Live Prototype
+      <div>
+        <a id="downloadLink" href="#" onclick="prepareDownload(this);" style="font-size:12px;color:#2563eb;text-decoration:underline;margin-right:10px;">Download HTML</a>
+        <button onclick="closeSource()" style="border:none;background:#f3f4f6;padding:6px 10px;border-radius:8px;cursor:pointer;">Close</button>
+      </div>
+    </div>
+
+    <textarea id="sourceViewer" readonly="" style="flex:1;width:100%;border:none;padding:14px;font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size:12px;line-height:1.4;white-space:pre;resize:none;outline:none;background:#fafafa;"></textarea>
+  </div>
+</div>
+
+<script>
+  // Tabs
+  function showTab(tabId){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+  }
+
+  // Source modal
+  function showSource(){
+    const viewer = document.getElementById('sourceViewer');
+    viewer.value = document.documentElement.outerHTML;
+    document.getElementById('sourceModal').style.display = 'block';
+  }
+  function closeSource(){
+    document.getElementById('sourceModal').style.display = 'none';
+  }
+
+  function prepareDownload(link){
+    const html = document.documentElement.outerHTML;
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    link.href = url;
+    link.download = 'Land_Tax_HTML_Prototype.html';
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+    // allow normal hyperlink behaviour
+    return true;
+  }
+
+  // Close modal when clicking backdrop
+  document.getElementById('sourceModal').addEventListener('click', (e)=>{
+    if(e.target && e.target.id === 'sourceModal') closeSource();
+  });
+
+  // Esc closes modal
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape' && document.getElementById('sourceModal').style.display === 'block') closeSource();
+  });
+
+  // Capability / Process modals used in Matrix
+  const modal = document.getElementById('modal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalBody = document.getElementById('modalBody');
+  function openModal(title, bodyHtml){
+    modalTitle.textContent = title;
+    modalBody.innerHTML = bodyHtml;
+    modal.style.display = 'flex';
+  }
+  function closeModal(){ modal.style.display = 'none'; }
+
+  const processContent = {
+    help: { title: 'How to use this matrix', body: 'Click any process name (left column) or capability name (top row) to see a plain‑English description. White cells mean <strong>no relationship</strong> — the process does not rely on that capability.' },
+    p_ownership: { title: 'Maintain Property & Ownership', body: 'Maintains authoritative records of land, property and ownership structures (individual, joint, company, trust) and the relationships between parties and land. Includes ownership changes such as Notice of Acquisition (NOA) and other ownership updates. This is foundational input to all downstream LTX outcomes.' },
+    p_valuation: { title: 'Manage Property Valuations', body: 'Receives and maintains statutory valuations (e.g., site value) from the Valuer‑General and associates them with properties. Supplier‑driven and used as input to liability determination.' },
+    p_liability: { title: 'Determine Land Tax Liability', body: 'Determines taxable holdings and calculates LTX liability by applying aggregation rules, thresholds, rates and exemptions/concessions across the customer’s land portfolio. This is highly decision‑dense.' },
+    p_assessment: { title: 'Generate & Issue Assessments', body: 'Generates formal land tax assessments based on calculated liabilities, produces notices and issues them via approved channels.' },
+    p_payments: { title: 'Manage Payments & Instalments', body: 'Manages payment receipt and allocation, instalment arrangements, and hand‑offs to debt/recovery where payment conditions are not met.' },
+    p_refunds: { title: 'Manage Refunds & Adjustments', body: 'Processes refunds and account adjustments arising from overpayments, reassessments, objections or corrections to ownership/valuation data.' },
+    p_objections: { title: 'Manage Objections', body: 'Handles valuation and assessment objections, including validity checks, review, determination and communication of outcomes in line with statutory requirements.' },
+    p_certificates: { title: 'Issue Land Tax Certificates', body: 'Issues point‑in‑time certificates confirming land tax status used for conveyancing and settlement purposes.' }
+  };
+
+  const capabilityContent = {
+    customer: { title: 'Customer / Party Management', body: 'Capability to create, maintain and relate parties (individuals, companies, trustees) including identifiers, roles and authority/representation relationships used across land tax administration.' },
+    property: { title: 'Property & Ownership Management', body: 'Capability to manage land and property records and ownership structures, including joint ownership, trusts, ownership shares and party–property relationships.' },
+    valuation: { title: 'Valuation Management', body: 'Capability to ingest, maintain and apply statutory property valuations (e.g., site value) received from external valuation sources.' },
+    liability: { title: 'Liability / Exemptions / Rates', body: 'Capability to define and apply land tax calculation logic including aggregation, thresholds, rate selection and exemption/concession rules.' },
+    assessment: { title: 'Assessment & Communications', body: 'Capability to create assessments, generate customer notices/documents and manage outbound communications related to assessments.' },
+    payments: { title: 'Payments & Debt Management', body: 'Capability to accept and allocate payments, manage instalment arrangements and interface with debt/recovery activities.' },
+    refunds: { title: 'Refunds & Adjustments', body: 'Capability to process refunds and financial adjustments, including credits arising from reassessments or overpayments.' },
+    objections: { title: 'Objections & Compliance', body: 'Capability to intake and manage objections and compliance review activities, including case handling, validations and determinations.' },
+    certificates: { title: 'Certificates Management', body: 'Capability to generate and issue land tax clearance/certificate outputs providing a point‑in‑time statement of tax status.' }
+  };
+
+  function openProcess(key){
+    const c = processContent[key];
+    if(!c) return;
+    openModal(c.title, `<p>${c.body}</p>`);
+  }
+
+  function openCapability(key){
+    const c = capabilityContent[key];
+    if(!c) return;
+    openModal(c.title, `<p>${c.body}</p>`);
+  }
+
+  function openMaturity(){
+    openModal('The 5 Process Maturity Levels', `
+      <div>
+        <span class="pill"><strong>L1</strong> Initial</span>
+        <span class="pill"><strong>L2</strong> Repeatable</span>
+        <span class="pill"><strong>L3</strong> Defined</span>
+        <span class="pill"><strong>L4</strong> Managed</span>
+        <span class="pill"><strong>L5</strong> Optimized</span>
+      </div>
+      <p><strong>Level 1 – Initial (Chaotic/Ad Hoc):</strong> Processes are unorganized, undocumented, and inconsistent. Success depends on individual effort rather than established procedures.</p>
+      <p><strong>Level 2 – Repeatable (Managed):</strong> Basic project management is in place. Processes are consistent enough that previous successes can be repeated, though often still siloed within teams.</p>
+      <p><strong>Level 3 – Defined:</strong> Processes are standardized, documented, and communicated across the organization. Procedures are proactive rather than reactive.</p>
+      <p><strong>Level 4 – Managed (Quantitatively Managed):</strong> Processes are measured, controlled, and analyzed using metrics to identify opportunities and manage performance.</p>
+      <p><strong>Level 5 – Optimized (Continuous Improvement):</strong> The organization focuses on constantly improving performance, innovating, and adapting to change using data from the process.</p>
+    `);
+  }
+</script>
+
+<!-- Reusable modal used for process/capability/maturity (Matrix) -->
+<div class="modal-backdrop" id="modal" style="position:fixed;inset:0;background:rgba(17,24,39,.45);display:none;align-items:center;justify-content:center;z-index:2000;padding:18px;">
+  <div class="modal" style="background:#fff;border-radius:14px;width:min(860px, 100%);box-shadow:0 24px 60px rgba(0,0,0,.25);overflow:hidden;">
+    <div class="modal-header" style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:14px 18px;border-bottom:1px solid #eee;">
+      <div class="modal-title" id="modalTitle" style="font-weight:600">Title</div>
+      <button class="close" onclick="closeModal()" style="border:none;background:#f3f4f6;border-radius:8px;padding:6px 10px;cursor:pointer">Close</button>
+    </div>
+    <div class="modal-body" id="modalBody" style="padding:16px 18px;font-size:13px;line-height:1.5"></div>
+  </div>
+</div>
+
+
+</body></html>

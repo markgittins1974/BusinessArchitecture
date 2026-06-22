@@ -1,0 +1,1762 @@
+{
+  "_meta": {
+    "description": "Land Tax Value Stream Map — Complete Data Specification",
+    "version": "1.0",
+    "owner": "SRO Transformation Architecture",
+    "arrays": {
+      "DATA": "6 value stages with Land Tax L3 capabilities",
+      "COMMON_DATA": "9 consolidated Common platform capability groups",
+      "SG_DATA": "16 Support & Govern capability groups"
+    },
+    "stats": {
+      "value_stages": 6,
+      "common_groups": 9,
+      "sg_groups": 16,
+      "total_l3_capabilities": 49
+    }
+  },
+  "DATA": [
+    {
+      "stage": "VS1 – Maintain Land & Ownership Records",
+      "shortStage": "Maintain Land & Ownership Records",
+      "description": "Maintain an accurate and current representation of land and ownership so all Land Tax decisions are based on reliable information.",
+      "invokes": [
+        "Customer Management",
+        "Property & Data Management",
+        "Revenue Line Management"
+      ],
+      "l1": [
+        {
+          "name": "Property & Ownership Management",
+          "l2": [
+            {
+              "name": "Taxable Land Maintenance",
+              "description": "Maintain records of land that is subject to Land Tax, ensuring only qualifying land is included in assessments.",
+              "synonyms": [
+                "Taxable Land",
+                "Land Record",
+                "SRO Land File"
+              ],
+              "policy": "Land Tax Act 2005 — s19",
+              "process": "Maintain Taxable Land Register"
+            },
+            {
+              "name": "Subdivisions & Consolidations",
+              "description": "Manage changes to land parcels resulting from subdivision or consolidation, and update taxable land records accordingly.",
+              "synonyms": [
+                "Subdivision",
+                "Consolidation",
+                "Parcel Change",
+                "Land Split"
+              ],
+              "policy": "Land Tax Act 2005 — s22",
+              "process": "Process Subdivision & Consolidation"
+            },
+            {
+              "name": "Title to Property Relationship",
+              "description": "Maintain the relationship between legal land titles and property records, ensuring title changes are reflected in the system.",
+              "synonyms": [
+                "Title",
+                "Certificate of Title",
+                "Title Link",
+                "Property–Title Association"
+              ],
+              "policy": "Land Tax Act 2005 — s8, s10",
+              "process": "Manage Title to Property Links"
+            },
+            {
+              "name": "Ownership Maintenance",
+              "description": "Maintain ownership details and ownership changes over time so the correct party is held liable.",
+              "synonyms": [
+                "Owner",
+                "Land Owner",
+                "Ownership Change",
+                "Transfer of Ownership"
+              ],
+              "policy": "Land Tax Act 2005 — s8, s10",
+              "process": "Maintain Ownership Records"
+            },
+            {
+              "name": "Joint Ownership",
+              "description": "Manage land owned by more than one party, including proportional interests and lead-owner assignment.",
+              "synonyms": [
+                "Joint Owner",
+                "Co-Owner",
+                "Proportional Interest",
+                "Multiple Owners"
+              ],
+              "policy": "Land Tax Act 2005 — s38",
+              "process": "Register Joint Ownership"
+            },
+            {
+              "name": "Land Held on Trust",
+              "description": "Manage land ownership where land is held under trust arrangements, capturing trustee and beneficiary relationships.",
+              "synonyms": [
+                "Trust",
+                "Trustee",
+                "Beneficiary",
+                "Land Trust"
+              ],
+              "policy": "Land Tax Act 2005 — ss46A–46M",
+              "process": "Register Land Held on Trust"
+            },
+            {
+              "name": "Unknown Customer",
+              "description": "Manage land or ownership records where the liable party is not yet identified, flagging for investigation.",
+              "synonyms": [
+                "Unknown Owner",
+                "Unidentified Party",
+                "Unknown Liable Person"
+              ],
+              "policy": "Taxation Administration Act 1997 — s11",
+              "process": "Identify Unknown Liable Party"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "VS2 – Determine How Land Is Taxed",
+      "shortStage": "Determine How Land Is Taxed",
+      "description": "Determine the correct Land Tax treatment for land based on ownership structure and circumstances.",
+      "invokes": [],
+      "l1": [
+        {
+          "name": "Property & Ownership Management",
+          "l2": [
+            {
+              "name": "Joint Ownership",
+              "description": "Determine tax treatment for land owned jointly, applying the correct grouping and rate rules.",
+              "synonyms": [
+                "Joint Owner Tax",
+                "Co-Owner Assessment",
+                "Joint Liability"
+              ],
+              "policy": "Land Tax Act 2005 — s38, s40",
+              "process": "Determine Joint Ownership Tax Treatment"
+            },
+            {
+              "name": "Land Held on Trust",
+              "description": "Determine tax treatment for land held under trust arrangements, applying trust-specific rates and surcharges.",
+              "synonyms": [
+                "Trust Taxation",
+                "Trust Surcharge",
+                "Trustee Liability"
+              ],
+              "policy": "Land Tax Act 2005 — ss46A–46M",
+              "process": "Determine Trust Tax Treatment"
+            }
+          ]
+        },
+        {
+          "name": "Land Tax Assessment & Determination",
+          "l2": [
+            {
+              "name": "Determine Land Tax Liability",
+              "description": "Determine whether Land Tax applies to specific land and how liability is calculated, including thresholds and exemptions.",
+              "synonyms": [
+                "Liability Check",
+                "Taxable Determination",
+                "Applicable Rate"
+              ],
+              "policy": "Taxation Administration Act 1997 — s8",
+              "process": "Determine Land Tax Liability"
+            }
+          ]
+        },
+        {
+          "name": "Exemption Management",
+          "l2": [
+            {
+              "name": "Exemption Creation Management",
+              "description": "Defining and configuring exemption types available under the Land Tax Act, including eligibility criteria and duration.",
+              "synonyms": [
+                "Exemption Type",
+                "Exemption Rule",
+                "Eligible Exemption"
+              ],
+              "policy": "",
+              "process": "Configure Land Tax Exemption Types"
+            },
+            {
+              "name": "Exemption Application Management",
+              "l3": [
+                {
+                  "name": "Automated Exemption Application",
+                  "description": "System-driven application of an exemption based on configured business rules and data triggers.",
+                  "synonyms": [
+                    "Auto Exemption",
+                    "System Exemption",
+                    "Rule-Based Exemption"
+                  ],
+                  "policy": "",
+                  "process": "Apply Automated Exemption"
+                },
+                {
+                  "name": "Manual Exemption Application",
+                  "description": "Processing a customer-submitted application for an exemption by a staff member.",
+                  "synonyms": [
+                    "Exemption Application",
+                    "PPR Exemption",
+                    "Manual Exemption"
+                  ],
+                  "policy": "",
+                  "process": "Process Exemption Application"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Concession Management",
+          "l2": [
+            {
+              "name": "Concession Application",
+              "description": "Receiving and processing applications for land tax concessions including eligibility assessment and approval.",
+              "synonyms": [
+                "Concession Application",
+                "Rate Reduction",
+                "Concession Grant"
+              ],
+              "policy": "",
+              "process": "Process Concession Application"
+            }
+          ]
+        },
+        {
+          "name": "Liability/Entitlement Management",
+          "l2": [
+            {
+              "name": "Tax/Entitlement Rate Management",
+              "description": "Managing the land tax rates applicable to different taxpayer types and ownership categories.",
+              "synonyms": [
+                "Tax Rate",
+                "Rate Table",
+                "Land Tax Rate",
+                "Rate Configuration"
+              ],
+              "policy": "",
+              "process": "Manage Land Tax Rates"
+            },
+            {
+              "name": "Threshold Management",
+              "l3": [
+                {
+                  "name": "Tax Free Threshold Management",
+                  "description": "Managing the tax-free threshold below which no land tax is payable.",
+                  "synonyms": [
+                    "Tax Free Threshold",
+                    "Minimum Value",
+                    "Exemption Threshold"
+                  ],
+                  "policy": "",
+                  "process": "Manage Tax Free Threshold"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Revenue Line Relationship Management",
+          "l2": [
+            {
+              "name": "Land Tax",
+              "l3": [
+                {
+                  "name": "Absentee Owner Management",
+                  "description": "Managing the identification and assessment of absentee owners who are subject to additional land tax surcharge.",
+                  "synonyms": [
+                    "Absentee Owner",
+                    "Foreign Owner",
+                    "Surcharge",
+                    "Absentee Surcharge"
+                  ],
+                  "policy": "",
+                  "process": "Manage Absentee Owner Surcharge"
+                },
+                {
+                  "name": "Build to Rent Management",
+                  "description": "Managing the registration and assessment of build-to-rent properties subject to specific land tax treatment.",
+                  "synonyms": [
+                    "BTR",
+                    "Build-to-Rent",
+                    "BTR Concession",
+                    "Residential Rental"
+                  ],
+                  "policy": "",
+                  "process": "Manage Build to Rent Registration"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Property Usage",
+          "l2": [
+            {
+              "name": "Usage Management",
+              "description": "Managing information about how a property is occupied and used, which affects land tax exemption and concession eligibility.",
+              "synonyms": [
+                "Property Use",
+                "Occupancy Type",
+                "Land Use",
+                "Usage Classification"
+              ],
+              "policy": "",
+              "process": "Record & Assess Property Usage"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "VS3 – Assess & Issue Land Tax",
+      "shortStage": "Assess & Issue Land Tax",
+      "description": "Calculate Land Tax liabilities and issue formal assessments to customers.",
+      "invokes": [
+        "Assessment Management",
+        "Customer Communication Management",
+        "Valuation Management"
+      ],
+      "l1": [
+        {
+          "name": "Valuation Management (Land Tax)",
+          "l2": [
+            {
+              "name": "Valuations Maintenance",
+              "description": "Maintain valuation data used for Land Tax assessment, including updates from the Valuer-General.",
+              "synonyms": [
+                "Valuation Record",
+                "Site Value",
+                "Capital Improved Value",
+                "CIV"
+              ],
+              "policy": "Land Tax Act 2005 — s21",
+              "process": "Maintain Land Valuations"
+            },
+            {
+              "name": "General Valuations",
+              "description": "Apply standard Valuer-General valuation data for the annual Land Tax assessment cycle.",
+              "synonyms": [
+                "General Valuation",
+                "VG Valuation",
+                "Annual Valuation"
+              ],
+              "policy": "Land Tax Act 2005 — s21; Part 1 definitions",
+              "process": "Apply General Valuation Cycle"
+            },
+            {
+              "name": "Supplementary Valuations",
+              "description": "Apply updated valuations when land circumstances change between general valuation cycles.",
+              "synonyms": [
+                "Supplementary Valuation",
+                "Interim Valuation",
+                "VG Supplementary"
+              ],
+              "policy": "Land Tax Act 2005 — s21",
+              "process": "Apply Supplementary Valuation"
+            },
+            {
+              "name": "SRO Requested Valuations",
+              "description": "Manage valuations specifically requested by SRO to support assessment decisions.",
+              "synonyms": [
+                "SRO Valuation",
+                "Requested Valuation",
+                "Special Valuation"
+              ],
+              "policy": "Land Tax Act 2005 — s21",
+              "process": "Request & Apply SRO Valuation"
+            },
+            {
+              "name": "Single Valuation for Multiple Properties",
+              "description": "Apply a single valuation across related properties where appropriate under the Land Tax Act.",
+              "synonyms": [
+                "Consolidated Valuation",
+                "Aggregated Valuation",
+                "Multi-Property Valuation"
+              ],
+              "policy": "Land Tax Act 2005 — s36",
+              "process": "Apply Single Valuation Across Properties"
+            }
+          ]
+        },
+        {
+          "name": "Land Tax Assessment & Determination",
+          "l2": [
+            {
+              "name": "Generate Land Tax Assessments",
+              "description": "Generate Land Tax assessment outcomes using validated liability calculations and valuation data.",
+              "synonyms": [
+                "Assessment Generation",
+                "Assessment Run",
+                "Batch Assessment",
+                "Issue Cycle"
+              ],
+              "policy": "Taxation Administration Act 1997 — s8, s11",
+              "process": "Generate Land Tax Assessments"
+            },
+            {
+              "name": "Issue Land Tax Assessments",
+              "description": "Issue formal Land Tax assessments to customers, giving legal effect to the tax obligation.",
+              "synonyms": [
+                "Notice of Assessment",
+                "Assessment Notice",
+                "Issue Assessment"
+              ],
+              "policy": "Taxation Administration Act 1997 — s14, s14A",
+              "process": "Issue Land Tax Assessment Notices"
+            }
+          ]
+        },
+        {
+          "name": "Assessment Management",
+          "l2": [
+            {
+              "name": "Issue Cycle Management",
+              "l3": [
+                {
+                  "name": "Issue Cycle Schedule Management",
+                  "description": "Scheduling and managing the timing of the annual land tax issue cycle.",
+                  "synonyms": [
+                    "Issue Cycle",
+                    "Annual Run",
+                    "Assessment Schedule"
+                  ],
+                  "policy": "",
+                  "process": "Schedule Annual Issue Cycle"
+                },
+                {
+                  "name": "First Time Liability Management",
+                  "description": "Managing the identification and assessment of taxpayers newly liable for land tax.",
+                  "synonyms": [
+                    "New Liability",
+                    "First Assessment",
+                    "New Taxpayer"
+                  ],
+                  "policy": "",
+                  "process": "Identify & Assess First Time Liability"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Liability/Entitlement Management",
+          "l2": [
+            {
+              "name": "Liability/Entitlement Calculation Management",
+              "l3": [
+                {
+                  "name": "Automated Liability/Entitlement Calculation",
+                  "description": "System-driven automated calculation of land tax liability during the issue cycle.",
+                  "synonyms": [
+                    "Auto-Calculation",
+                    "Automated Assessment",
+                    "System Calculation"
+                  ],
+                  "policy": "",
+                  "process": "Calculate Land Tax Liability (Automated)"
+                },
+                {
+                  "name": "Manual Liability/Entitlement Calculation",
+                  "description": "Performing a manual land tax calculation in response to specific circumstances or amendments.",
+                  "synonyms": [
+                    "Manual Calculation",
+                    "Ad Hoc Assessment",
+                    "Recalculation"
+                  ],
+                  "policy": "",
+                  "process": "Calculate Land Tax Liability (Manual)"
+                }
+              ]
+            },
+            {
+              "name": "Deduction Management",
+              "l3": [
+                {
+                  "name": "Trust Deduction Management",
+                  "description": "Managing the trust deduction available to certain trust structures under the Land Tax Act.",
+                  "synonyms": [
+                    "Trust Deduction",
+                    "Deduction Amount",
+                    "Trust Offset"
+                  ],
+                  "policy": "",
+                  "process": "Apply Trust Deduction"
+                }
+              ]
+            },
+            {
+              "name": "Threshold Management",
+              "l3": [
+                {
+                  "name": "Minimum Liability Threshold Management",
+                  "description": "Managing the minimum liability amount below which no assessment is issued.",
+                  "synonyms": [
+                    "Minimum Amount",
+                    "De Minimis",
+                    "No-Issue Threshold"
+                  ],
+                  "policy": "",
+                  "process": "Apply Minimum Liability Threshold"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "VS4 – Manage Payments & Adjustments",
+      "shortStage": "Manage Payments & Adjustments",
+      "description": "Settle Land Tax liabilities through payments, refunds, instalments, and adjustments.",
+      "invokes": [
+        "Financial Obligations Management",
+        "Payment & Financial Management"
+      ],
+      "l1": [
+        {
+          "name": "Payments, Refunds & Financial Settlement",
+          "l2": [
+            {
+              "name": "Payment Management",
+              "description": "Receive and manage Land Tax payments from customers across all payment channels.",
+              "synonyms": [
+                "Payment",
+                "BPAY",
+                "EFT",
+                "Direct Payment",
+                "Land Tax Payment"
+              ],
+              "policy": "Taxation Administration Act 1997 — s44",
+              "process": "Receive & Record Payment"
+            },
+            {
+              "name": "Payment Allocation Management",
+              "description": "Allocate payments to the correct Land Tax liabilities at customer and property levels.",
+              "synonyms": [
+                "Payment Allocation",
+                "Apply Payment",
+                "Match Payment"
+              ],
+              "policy": "Taxation Administration Act 1997 — s20A",
+              "process": "Allocate Payment to Liability"
+            },
+            {
+              "name": "Instalment Management",
+              "description": "Manage instalment arrangements for paying Land Tax, including schedule setup and monitoring.",
+              "synonyms": [
+                "Instalment",
+                "Payment Plan",
+                "Instalment Arrangement"
+              ],
+              "policy": "Taxation Administration Act 1997 — s49",
+              "process": "Manage Payment Instalment Arrangement"
+            },
+            {
+              "name": "Refund Management",
+              "description": "Process refunds arising from overpayment or reassessment of Land Tax.",
+              "synonyms": [
+                "Refund",
+                "Overpayment",
+                "Repayment"
+              ],
+              "policy": "Taxation Administration Act 1997 — ss19–20",
+              "process": "Process Land Tax Refund"
+            },
+            {
+              "name": "Adjustment Management",
+              "description": "Apply financial adjustments to Land Tax liabilities following reassessment, amendment, or correction.",
+              "synonyms": [
+                "Adjustment",
+                "Credit",
+                "Financial Correction",
+                "Liability Adjustment"
+              ],
+              "policy": "Taxation Administration Act 1997 — s9, s15",
+              "process": "Apply Financial Adjustment"
+            }
+          ]
+        },
+        {
+          "name": "Payment Management",
+          "l2": [
+            {
+              "name": "Payment Allocation Management",
+              "l3": [
+                {
+                  "name": "Property Liability Allocation",
+                  "description": "Allocating payments against liabilities at the property level.",
+                  "synonyms": [
+                    "Property Payment",
+                    "Land Credit",
+                    "Title Payment"
+                  ],
+                  "policy": "",
+                  "process": "Allocate Payment to Property Liability"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "VS5 – Resolve Issues & Enforce Compliance",
+      "shortStage": "Resolve Issues & Enforce Compliance",
+      "description": "Resolve objections and disputes and ensure compliance with Land Tax obligations.",
+      "invokes": [
+        "Case & Compliance Management"
+      ],
+      "l1": [
+        {
+          "name": "Objections, Disputes & Compliance",
+          "l2": [
+            {
+              "name": "Objection Management",
+              "description": "Manage formal objections to Land Tax decisions, including receipt, review and determination.",
+              "synonyms": [
+                "Objection",
+                "Formal Objection",
+                "Object to Assessment"
+              ],
+              "policy": "Taxation Administration Act 1997 — s96",
+              "process": "Manage Land Tax Objection"
+            },
+            {
+              "name": "Valuation Objection Management",
+              "description": "Manage objections relating specifically to land valuations used in Land Tax assessments.",
+              "synonyms": [
+                "Valuation Objection",
+                "VG Objection",
+                "Dispute Valuation"
+              ],
+              "policy": "Taxation Administration Act 1997 — s100A",
+              "process": "Manage Valuation Objection"
+            },
+            {
+              "name": "Dispute Resolution Management",
+              "description": "Resolve disputes arising from Land Tax matters, including VCAT referrals and settlements.",
+              "synonyms": [
+                "Dispute",
+                "VCAT",
+                "Tribunal",
+                "Settlement"
+              ],
+              "policy": "Taxation Administration Act 1997 — s106",
+              "process": "Resolve Land Tax Dispute"
+            },
+            {
+              "name": "Case Management",
+              "description": "Manage Land Tax cases across their full lifecycle including creation, tracking and closure.",
+              "synonyms": [
+                "Case",
+                "Land Tax Case",
+                "Matter",
+                "Investigation"
+              ],
+              "policy": "Taxation Administration Act 1997 — s72–73, s101",
+              "process": "Manage Land Tax Case"
+            },
+            {
+              "name": "Compliance Management",
+              "description": "Monitor and address non-compliance with Land Tax obligations, including proactive and reactive activities.",
+              "synonyms": [
+                "Compliance",
+                "Non-Compliance",
+                "Land Tax Compliance"
+              ],
+              "policy": "Taxation Administration Act 1997 — s45",
+              "process": "Monitor & Enforce Compliance"
+            },
+            {
+              "name": "Audit Management",
+              "description": "Conduct audit activities to validate correctness and compliance with land tax obligations.",
+              "synonyms": [
+                "Audit",
+                "Compliance Audit",
+                "Land Tax Audit"
+              ],
+              "policy": "Taxation Administration Act 1997 — Part 9",
+              "process": "Conduct Land Tax Audit"
+            },
+            {
+              "name": "Risk Management",
+              "description": "Identify and manage risks associated with Land Tax administration.",
+              "synonyms": [
+                "Risk",
+                "Land Tax Risk",
+                "Risk Register",
+                "Risk Assessment"
+              ],
+              "policy": "Taxation Administration Act 1997 — s63",
+              "process": "Identify & Manage Compliance Risk"
+            },
+            {
+              "name": "Quality Assurance Management",
+              "description": "Ensure accuracy and consistency of Land Tax decisions through sampling and review activities.",
+              "synonyms": [
+                "QA",
+                "Quality Check",
+                "Decision Review",
+                "Accuracy"
+              ],
+              "policy": "Taxation Administration Act 1997 — s127–128",
+              "process": "Perform Quality Assurance Review"
+            }
+          ]
+        },
+        {
+          "name": "Case Management",
+          "l2": [
+            {
+              "name": "Referral Management",
+              "l3": [
+                {
+                  "name": "Private Ruling Management",
+                  "description": "Managing applications for private rulings on land tax obligations.",
+                  "synonyms": [
+                    "Private Ruling",
+                    "Ruling Application",
+                    "Advance Opinion"
+                  ],
+                  "policy": "",
+                  "process": "Process Private Ruling Application"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "VS6 – Provide Certificates & Assurance",
+      "shortStage": "Provide Certificates & Assurance",
+      "description": "Provide trusted evidence of Land Tax status relied on by customers and third parties.",
+      "invokes": [
+        "Assessment Management",
+        "Customer Communication Management"
+      ],
+      "l1": [
+        {
+          "name": "Certificates & Notifications (Land Tax)",
+          "l2": [
+            {
+              "name": "Issue Land Tax Certificates",
+              "description": "Issue certificates confirming Land Tax status for land, used in property settlement and conveyancing.",
+              "synonyms": [
+                "Land Tax Certificate",
+                "Clearance Certificate",
+                "Settlement Certificate"
+              ],
+              "policy": "Taxation Administration Act 1997 — s128",
+              "process": "Issue Land Tax Certificate"
+            },
+            {
+              "name": "Certificate Evidence & Record Management",
+              "description": "Maintain records and evidence supporting issued certificates, including liability outstanding at issue.",
+              "synonyms": [
+                "Certificate Record",
+                "Evidence",
+                "Certificate History"
+              ],
+              "policy": "Taxation Administration Act 1997 — s128–129",
+              "process": "Maintain Certificate Evidence & Records"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "COMMON_DATA": [
+    {
+      "name": "Assessment Management",
+      "invokedBy": [
+        "Assess & Issue Land Tax",
+        "Provide Certificates & Assurance"
+      ],
+      "l2": [
+        {
+          "name": "Assessment Cancellation Management",
+          "l3s": [],
+          "desc": "Managing the cancellation of assessment notices that have been issued in error or superseded.",
+          "syns": [
+            "Cancel Assessment",
+            "Assessment Cancellation",
+            "Void Notice"
+          ],
+          "pol": ""
+        },
+        {
+          "name": "Assessment Generation Management",
+          "l3s": [],
+          "desc": "Managing the process of generating assessment notices from calculated liabilities.",
+          "syns": [
+            "Assessment Run",
+            "Generate Notice",
+            "Assessment Batch"
+          ],
+          "pol": ""
+        },
+        {
+          "name": "Assessment Withdrawal Management",
+          "l3s": [],
+          "desc": "Managing the formal withdrawal of issued assessment notices.",
+          "syns": [
+            "Withdraw Assessment",
+            "Recall Notice",
+            "Assessment Withdrawal"
+          ],
+          "pol": ""
+        },
+        {
+          "name": "Service of Notice Management",
+          "l3s": [],
+          "desc": "Managing the formal service of assessment notices to customers, including electronic and postal channels.",
+          "syns": [
+            "Service of Notice",
+            "Correspondence",
+            "Notice Delivery"
+          ],
+          "pol": ""
+        }
+      ]
+    },
+    {
+      "name": "Case & Compliance Management",
+      "invokedBy": [
+        "Resolve Issues & Enforce Compliance"
+      ],
+      "l2": [
+        {
+          "name": "Objection Data Management",
+          "l3s": [
+            {
+              "name": "Objection Creation Management",
+              "description": "Creating new objection records in response to a customer disputing a land tax assessment.",
+              "synonyms": [
+                "New Objection",
+                "Lodge Objection",
+                "Objection Record"
+              ],
+              "policy": ""
+            }
+          ],
+          "desc": "",
+          "syns": [],
+          "pol": ""
+        },
+        {
+          "name": "Case Creation",
+          "l3s": [],
+          "desc": "Creating new cases to track complex land tax matters, private rulings and referrals.",
+          "syns": [
+            "New Case",
+            "Open Case",
+            "Create Matter"
+          ],
+          "pol": ""
+        },
+        {
+          "name": "Referral Management",
+          "l3s": [
+            {
+              "name": "Formal Objection Management",
+              "description": "Managing the referral and tracking of formal objections through to determination.",
+              "synonyms": [
+                "Formal Objection",
+                "Objection Referral"
+              ],
+              "policy": ""
+            }
+          ],
+          "desc": "",
+          "syns": [],
+          "pol": ""
+        },
+        {
+          "name": "External Compliance Management",
+          "l3s": [
+            {
+              "name": "Self Reporting Management",
+              "description": "Managing the receipt and processing of self-reported information from taxpayers.",
+              "synonyms": [
+                "Self Report",
+                "Voluntary Report",
+                "Taxpayer Disclosure"
+              ],
+              "policy": ""
+            },
+            {
+              "name": "Tip Offs and Voluntary Disclosure Management",
+              "description": "Managing anonymous and named tip-offs from third parties regarding suspected non-compliance.",
+              "synonyms": [
+                "Tip Off",
+                "Voluntary Disclosure",
+                "Anonymous Report"
+              ],
+              "policy": ""
+            }
+          ],
+          "desc": "",
+          "syns": [],
+          "pol": ""
+        },
+        {
+          "name": "Internal Compliance Management",
+          "l3s": [
+            {
+              "name": "Potential Investigation Cases (PICs)",
+              "description": "Identifying and managing cases where a taxpayer may not be meeting their land tax obligations.",
+              "synonyms": [
+                "PIC",
+                "Investigation",
+                "Potential Non-Compliance"
+              ],
+              "policy": ""
+            }
+          ],
+          "desc": "",
+          "syns": [],
+          "pol": ""
+        },
+        {
+          "name": "Insolvency Relationship Management",
+          "l3s": [],
+          "desc": "Managing land tax obligations and debt recovery for customers who are subject to insolvency proceedings.",
+          "syns": [
+            "Insolvency",
+            "Liquidation",
+            "Administration",
+            "Receivership"
+          ],
+          "pol": ""
+        }
+      ]
+    },
+    {
+      "name": "Customer Communication Management",
+      "invokedBy": [
+        "Assess & Issue Land Tax",
+        "Provide Certificates & Assurance"
+      ],
+      "l2": [
+        {
+          "name": "Automated Communication Management",
+          "l3s": [],
+          "desc": "Managing system-generated outbound communications triggered by assessment events.",
+          "syns": [
+            "Auto-Mail",
+            "System Letter",
+            "Automated Notice"
+          ],
+          "pol": ""
+        },
+        {
+          "name": "Communication Preference Management",
+          "l3s": [
+            {
+              "name": "Electronic Communication Consent Management",
+              "description": "Managing customer consent to receive official communications electronically.",
+              "synonyms": [
+                "E-Consent",
+                "Electronic Consent",
+                "Digital Communication Preference"
+              ],
+              "policy": ""
+            }
+          ],
+          "desc": "",
+          "syns": [],
+          "pol": ""
+        },
+        {
+          "name": "Customer Communication Record Management",
+          "l3s": [],
+          "desc": "Recording and maintaining a history of all communications with customers.",
+          "syns": [
+            "Correspondence Record",
+            "Communication Log",
+            "Correspondence History"
+          ],
+          "pol": ""
+        }
+      ]
+    },
+    {
+      "name": "Customer Management",
+      "invokedBy": [
+        "Maintain Land & Ownership Records"
+      ],
+      "l2": [
+        {
+          "name": "Customer Creation Management",
+          "l3s": [
+            {
+              "name": "Automated Customer Creation",
+              "description": "System-initiated creation of customer records based on data received from third-party sources such as land registries.",
+              "synonyms": [
+                "Auto-Registration",
+                "System-Generated Account",
+                "Automated Enrolment"
+              ],
+              "policy": ""
+            },
+            {
+              "name": "Manual Customer Creation",
+              "description": "Creating a new customer record through direct staff data entry, typically in response to a customer contact or application.",
+              "synonyms": [
+                "New Account",
+                "Manual Entry",
+                "Staff-Created Record"
+              ],
+              "policy": ""
+            }
+          ],
+          "desc": "",
+          "syns": [],
+          "pol": ""
+        },
+        {
+          "name": "Customer Identification Management",
+          "l3s": [
+            {
+              "name": "Customer Data Matching",
+              "description": "Comparing incoming customer data against existing records to identify potential matches and prevent duplicates.",
+              "synonyms": [
+                "Record Matching",
+                "Party Match",
+                "Data Deduplication"
+              ],
+              "policy": ""
+            },
+            {
+              "name": "Customer Identity Verification",
+              "description": "Confirming a customer's identity against authoritative sources before granting access or making changes to their account.",
+              "synonyms": [
+                "ID Check",
+                "Identity Proof",
+                "KYC Verification"
+              ],
+              "policy": ""
+            }
+          ],
+          "desc": "",
+          "syns": [],
+          "pol": ""
+        },
+        {
+          "name": "Duplicate Customer Management",
+          "l3s": [
+            {
+              "name": "Duplicate Customer Detection",
+              "description": "Automated and manual processes to identify customer records that may represent the same real-world entity.",
+              "synonyms": [
+                "Match Detection",
+                "Duplicate Flag",
+                "Potential Match"
+              ],
+              "policy": ""
+            }
+          ],
+          "desc": "",
+          "syns": [],
+          "pol": ""
+        },
+        {
+          "name": "Joint Ownership Customer Management",
+          "l3s": [
+            {
+              "name": "Joint Ownership Member Management",
+              "description": "Managing all customers who share ownership of a property, including their proportional interests.",
+              "synonyms": [
+                "Joint Owner",
+                "Co-Owner",
+                "Proportional Interest"
+              ],
+              "policy": ""
+            }
+          ],
+          "desc": "",
+          "syns": [],
+          "pol": ""
+        },
+        {
+          "name": "Trust Management",
+          "l3s": [
+            {
+              "name": "Trustee Management",
+              "description": "Recording and maintaining trustee details and their relationship to trust accounts.",
+              "synonyms": [
+                "Trustee",
+                "Trust Account",
+                "Trustee Record"
+              ],
+              "policy": ""
+            }
+          ],
+          "desc": "",
+          "syns": [],
+          "pol": ""
+        }
+      ]
+    },
+    {
+      "name": "Financial Obligations Management",
+      "invokedBy": [
+        "Manage Payments & Adjustments"
+      ],
+      "l2": [
+        {
+          "name": "Interest Management",
+          "l3s": [],
+          "desc": "Managing interest charges applied to overdue Land Tax liabilities.",
+          "syns": [
+            "Interest",
+            "Late Payment Interest",
+            "Interest Accrual"
+          ],
+          "pol": ""
+        },
+        {
+          "name": "Penalty Management",
+          "l3s": [],
+          "desc": "Managing penalties applied for late lodgement or payment of Land Tax.",
+          "syns": [
+            "Penalty",
+            "Late Penalty",
+            "Penalty Notice"
+          ],
+          "pol": ""
+        },
+        {
+          "name": "Write Off Management",
+          "l3s": [],
+          "desc": "Managing the write-off of Land Tax debts deemed irrecoverable.",
+          "syns": [
+            "Write Off",
+            "Bad Debt",
+            "Debt Write-off"
+          ],
+          "pol": ""
+        }
+      ]
+    },
+    {
+      "name": "Payment & Financial Management",
+      "invokedBy": [
+        "Manage Payments & Adjustments"
+      ],
+      "l2": [
+        {
+          "name": "Payment Allocation Management",
+          "l3s": [
+            {
+              "name": "Customer Liability Allocation",
+              "description": "Allocating payments against liabilities at the customer level.",
+              "synonyms": [
+                "Customer Payment",
+                "Liability Match",
+                "Account Credit"
+              ],
+              "policy": ""
+            }
+          ],
+          "desc": "",
+          "syns": [],
+          "pol": ""
+        },
+        {
+          "name": "Suspense Management",
+          "l3s": [],
+          "desc": "Managing unallocated or unidentified payments held in suspense pending correct allocation.",
+          "syns": [
+            "Suspense Account",
+            "Unallocated Payment",
+            "Suspense Payment"
+          ],
+          "pol": ""
+        },
+        {
+          "name": "Refund Data Management",
+          "l3s": [],
+          "desc": "Maintaining records of refund transactions and supporting documentation.",
+          "syns": [
+            "Refund Record",
+            "Refund History",
+            "Repayment Record"
+          ],
+          "pol": ""
+        }
+      ]
+    },
+    {
+      "name": "Property & Data Management",
+      "invokedBy": [
+        "Maintain Land & Ownership Records"
+      ],
+      "l2": [
+        {
+          "name": "Address Validation Management",
+          "l3s": [],
+          "desc": "Validating addresses against authoritative sources such as GNAF to ensure they are accurate and deliverable.",
+          "syns": [
+            "Address Validation",
+            "GNAF",
+            "Australia Post",
+            "Address Check"
+          ],
+          "pol": ""
+        },
+        {
+          "name": "Property Creation",
+          "l3s": [],
+          "desc": "Creating new property records in the system from data received via third-party feeds or manual staff entry.",
+          "syns": [
+            "New Property",
+            "Property Record Creation",
+            "Add Property"
+          ],
+          "pol": ""
+        },
+        {
+          "name": "Property Data Acquisition",
+          "l3s": [
+            {
+              "name": "Property Data Validation",
+              "description": "Applying business rules to confirm property data meets mandatory format and integrity requirements.",
+              "synonyms": [
+                "Data Quality",
+                "Property Validation",
+                "Format Check"
+              ],
+              "policy": ""
+            }
+          ],
+          "desc": "",
+          "syns": [],
+          "pol": ""
+        },
+        {
+          "name": "Ownership Management",
+          "l3s": [],
+          "desc": "Managing the link between properties and their registered owners within the revenue system.",
+          "syns": [
+            "Ownership Link",
+            "Property–Owner Association"
+          ],
+          "pol": ""
+        },
+        {
+          "name": "Subdivision/Consolidation Management",
+          "l3s": [],
+          "desc": "Managing property record changes arising from subdivision or consolidation events.",
+          "syns": [
+            "Parcel Change",
+            "Title Split",
+            "Land Consolidation"
+          ],
+          "pol": ""
+        }
+      ]
+    },
+    {
+      "name": "Revenue Line Management",
+      "invokedBy": [
+        "Maintain Land & Ownership Records"
+      ],
+      "l2": [
+        {
+          "name": "Revenue Line Registration Management",
+          "l3s": [
+            {
+              "name": "Automatic Revenue Line Registration Creation",
+              "description": "System-triggered creation of land tax registrations based on data events such as property ownership changes.",
+              "synonyms": [
+                "Auto-Registration",
+                "System-Triggered Enrolment"
+              ],
+              "policy": ""
+            }
+          ],
+          "desc": "",
+          "syns": [],
+          "pol": ""
+        }
+      ]
+    },
+    {
+      "name": "Valuation Management",
+      "invokedBy": [
+        "Assess & Issue Land Tax"
+      ],
+      "l2": [
+        {
+          "name": "Valuation Data Acquisition",
+          "l3s": [],
+          "desc": "Receiving and ingesting valuation data from the Valuer-General and other authoritative sources.",
+          "syns": [
+            "Valuation Feed",
+            "VG Data",
+            "Data Ingestion",
+            "Valuation Import"
+          ],
+          "pol": ""
+        },
+        {
+          "name": "Valuation Data Management",
+          "l3s": [],
+          "desc": "Maintaining the accuracy and completeness of valuation records used in assessment calculations.",
+          "syns": [
+            "Valuation Record",
+            "Valuation Maintenance",
+            "Site Value"
+          ],
+          "pol": ""
+        }
+      ]
+    }
+  ],
+  "SG_DATA": [
+    {
+      "l1": "Business Rules Management",
+      "items": [
+        {
+          "l2": "Automated Processing",
+          "l3": null,
+          "desc": "Managing the automated processing of land tax transactions based on configured business rules."
+        },
+        {
+          "l2": "Batch Management",
+          "l3": null,
+          "desc": "Managing scheduled batch jobs that drive bulk processing of assessments, payments and communications."
+        },
+        {
+          "l2": "Business Rule Governance",
+          "l3": null,
+          "desc": "Governing the lifecycle of business rules including approval, versioning and retirement."
+        },
+        {
+          "l2": "Business Rules Configuration",
+          "l3": null,
+          "desc": "Configuring business rules that drive automated validation, eligibility and processing decisions."
+        },
+        {
+          "l2": "Exception Management",
+          "l3": null,
+          "desc": "Managing exceptions raised when automated processing cannot complete due to data or rule failures."
+        }
+      ]
+    },
+    {
+      "l1": "Content Storage Management",
+      "items": [
+        {
+          "l2": "Storage Management",
+          "l3": null,
+          "desc": "Managing the physical and logical storage of documents and content associated with land tax records."
+        },
+        {
+          "l2": "Content Accessibility Management",
+          "l3": null,
+          "desc": "Ensuring content is stored, published and accessible to authorised staff and customers."
+        },
+        {
+          "l2": "Storage System Integration",
+          "l3": null,
+          "desc": "Integrating content storage systems with the core revenue system for seamless document linkage."
+        }
+      ]
+    },
+    {
+      "l1": "Corporate Governance",
+      "items": [
+        {
+          "l2": "Legislative Reform Management",
+          "l3": null,
+          "desc": "Managing the impact of legislative changes on land tax processes and system configuration."
+        },
+        {
+          "l2": "Policy Management",
+          "l3": null,
+          "desc": "Creating, maintaining and communicating policies governing land tax administration."
+        },
+        {
+          "l2": "Procedure Management",
+          "l3": null,
+          "desc": "Creating and maintaining operational procedures that guide staff in consistent execution of processes."
+        },
+        {
+          "l2": "Change Management",
+          "l3": null,
+          "desc": "Managing organisational change initiatives including communications, training and impact assessment."
+        },
+        {
+          "l2": "Strategic Planning",
+          "l3": null,
+          "desc": "Developing and managing the strategic plan for land tax operations and capability improvement."
+        },
+        {
+          "l2": "Third Party Contract Management",
+          "l3": null,
+          "desc": "Managing contracts and agreements with third-party service providers."
+        }
+      ]
+    },
+    {
+      "l1": "Customer Data Security Management",
+      "items": [
+        {
+          "l2": "Privacy Management",
+          "l3": "Customer Data Security Classification",
+          "desc": "Classifying customer data by its sensitivity level to determine appropriate handling, access and storage requirements."
+        },
+        {
+          "l2": "Privacy Management",
+          "l3": "Personal Identifiable Information Management",
+          "desc": "Managing the storage, access and use of personally identifiable information in compliance with privacy laws."
+        },
+        {
+          "l2": "Privacy Management",
+          "l3": "Customer Data Privacy Auditing",
+          "desc": "Conducting audits to ensure customer data access and usage complies with privacy policies and legislation."
+        },
+        {
+          "l2": "Privacy Breach Management",
+          "l3": "Privacy Breach Identification/Evaluation",
+          "desc": "Identifying and assessing potential privacy breaches to determine their scope and severity."
+        },
+        {
+          "l2": "Privacy Breach Management",
+          "l3": "Breach Notifications",
+          "desc": "Issuing mandatory notifications to affected individuals and regulators following a confirmed privacy breach."
+        },
+        {
+          "l2": "Privacy Breach Management",
+          "l3": "Data Remediation",
+          "desc": "Correcting or removing compromised data following a privacy breach."
+        }
+      ]
+    },
+    {
+      "l1": "Customer Education Management",
+      "items": [
+        {
+          "l2": "Customer Education Documentation",
+          "l3": null,
+          "desc": "Creating and maintaining written guidance materials to help customers understand and meet their obligations."
+        },
+        {
+          "l2": "Customer Education Tools",
+          "l3": null,
+          "desc": "Providing digital calculators and interactive tools to help customers self-assess their obligations."
+        },
+        {
+          "l2": "Interactive Customer Education",
+          "l3": null,
+          "desc": "Delivering education through interactive formats such as webinars, workshops or online help."
+        }
+      ]
+    },
+    {
+      "l1": "Customer Experience Management",
+      "items": [
+        {
+          "l2": "Customer Feedback Management",
+          "l3": null,
+          "desc": "Collecting, recording and acting on feedback from customers about their service experience."
+        }
+      ]
+    },
+    {
+      "l1": "History Management",
+      "items": [
+        {
+          "l2": "History Data Management",
+          "l3": "Record Version Management",
+          "desc": "Maintaining previous versions of records to enable historical comparison and audit."
+        },
+        {
+          "l2": "History Data Management",
+          "l3": "User Activity Logging",
+          "desc": "Recording all actions taken by users within the system against customer and revenue records."
+        },
+        {
+          "l2": "History Relationship Management",
+          "l3": null,
+          "desc": "Managing associations between history records and related entities."
+        }
+      ]
+    },
+    {
+      "l1": "Knowledge Management",
+      "items": [
+        {
+          "l2": "Documentation Management",
+          "l3": null,
+          "desc": "Managing procedures and policy documents within the knowledge management system."
+        },
+        {
+          "l2": "Staff Training",
+          "l3": null,
+          "desc": "Delivering compulsory and role-based training to land tax staff."
+        },
+        {
+          "l2": "Staff Support",
+          "l3": null,
+          "desc": "Providing staff with guidance and escalation support for complex land tax enquiries."
+        },
+        {
+          "l2": "Succession Planning",
+          "l3": null,
+          "desc": "Managing skills analysis and training plans to support succession and capability planning."
+        }
+      ]
+    },
+    {
+      "l1": "Operational Governance",
+      "items": [
+        {
+          "l2": "Resource Management",
+          "l3": null,
+          "desc": "Planning and managing team resources and capacity for land tax operations."
+        },
+        {
+          "l2": "Process Improvement",
+          "l3": null,
+          "desc": "Identifying and implementing continuous improvements to land tax processes."
+        },
+        {
+          "l2": "People Management",
+          "l3": null,
+          "desc": "Managing staff engagement, feedback and development within operational teams."
+        },
+        {
+          "l2": "Meeting Governance",
+          "l3": null,
+          "desc": "Managing meeting agendas, minutes and follow-up actions for operational governance meetings."
+        },
+        {
+          "l2": "Collaboration Tools",
+          "l3": null,
+          "desc": "Using digital collaboration platforms to support team communication and document sharing."
+        }
+      ]
+    },
+    {
+      "l1": "Performance Management",
+      "items": [
+        {
+          "l2": "Key Performance Indicator (KPI) Management",
+          "l3": null,
+          "desc": "Setting, tracking and reporting on KPIs for land tax processing and service delivery."
+        },
+        {
+          "l2": "Service Level Agreement (SLA) Management",
+          "l3": null,
+          "desc": "Setting, tracking and managing SLAs for land tax service delivery."
+        },
+        {
+          "l2": "Quality Management",
+          "l3": null,
+          "desc": "Managing quality standards and measures for land tax processing outputs."
+        },
+        {
+          "l2": "Strategic Performance Management",
+          "l3": null,
+          "desc": "Measuring performance against corporate and branch-level KPIs and strategic objectives."
+        },
+        {
+          "l2": "User Performance Management",
+          "l3": null,
+          "desc": "Managing individual staff performance through scorecards and development plans."
+        }
+      ]
+    },
+    {
+      "l1": "Quality Assurance Management",
+      "items": [
+        {
+          "l2": "Audit Management",
+          "l3": null,
+          "desc": "Managing formal audit activities including quality assurance audits and website content reviews."
+        },
+        {
+          "l2": "Quality Assessment & Validation",
+          "l3": null,
+          "desc": "Sampling and validating assessments and decisions to ensure accuracy and compliance with policy."
+        },
+        {
+          "l2": "Risk Management and Standardization",
+          "l3": null,
+          "desc": "Identifying, assessing and mitigating risks through standardised decision-making tools."
+        },
+        {
+          "l2": "System Quality Assurance Management",
+          "l3": null,
+          "desc": "Ensuring the quality and integrity of system configurations and processing outputs."
+        }
+      ]
+    },
+    {
+      "l1": "Reporting Management",
+      "items": [
+        {
+          "l2": "Operational Reporting",
+          "l3": null,
+          "desc": "Producing reports on land tax processing volumes, automation rates and workload."
+        },
+        {
+          "l2": "Revenue Reporting",
+          "l3": null,
+          "desc": "Producing reports on land tax revenue collections, forecasts and accruals."
+        },
+        {
+          "l2": "Financial Reporting",
+          "l3": null,
+          "desc": "Producing financial reports including income and expenditure reports for the land tax program."
+        },
+        {
+          "l2": "Compliance Reporting",
+          "l3": null,
+          "desc": "Producing reports on compliance with land tax obligations and internal administration standards."
+        },
+        {
+          "l2": "Data Analytics",
+          "l3": null,
+          "desc": "Analysing land tax data to identify trends, insights and areas for improvement."
+        },
+        {
+          "l2": "External Reports",
+          "l3": null,
+          "desc": "Producing reports for external stakeholders including Treasury and Department of Treasury and Finance."
+        },
+        {
+          "l2": "Forecasting & Planning",
+          "l3": null,
+          "desc": "Forecasting future land tax workloads and workforce requirements."
+        },
+        {
+          "l2": "Reporting Tools",
+          "l3": null,
+          "desc": "Managing the tools and platforms used for reporting and data visualisation."
+        }
+      ]
+    },
+    {
+      "l1": "Security Management",
+      "items": [
+        {
+          "l2": "Internal User Access Management",
+          "l3": null,
+          "desc": "Managing staff access to land tax systems, including role-based access profiles."
+        },
+        {
+          "l2": "External User Access Management",
+          "l3": null,
+          "desc": "Managing external user access including customer and agent portal access."
+        },
+        {
+          "l2": "Data File Security Management",
+          "l3": null,
+          "desc": "Managing the secure transfer of data files between the revenue system and external parties."
+        }
+      ]
+    },
+    {
+      "l1": "Stakeholder Management",
+      "items": [
+        {
+          "l2": "Stakeholder Engagement",
+          "l3": null,
+          "desc": "Proactively engaging with stakeholders to inform, consult and collaborate."
+        },
+        {
+          "l2": "Stakeholder Agreement Management",
+          "l3": null,
+          "desc": "Maintaining formal agreements with stakeholders such as MOUs and data sharing arrangements."
+        },
+        {
+          "l2": "Stakeholder Education",
+          "l3": null,
+          "desc": "Delivering training, conferences and briefings to stakeholders."
+        },
+        {
+          "l2": "Internal Stakeholder Management",
+          "l3": null,
+          "desc": "Managing relationships and communications with internal business units and cross-divisional teams."
+        }
+      ]
+    },
+    {
+      "l1": "System Design Management",
+      "items": [
+        {
+          "l2": "External Facing Systems",
+          "l3": null,
+          "desc": "Managing the design standards for customer and agent-facing digital systems."
+        },
+        {
+          "l2": "Internal Facing Systems",
+          "l3": null,
+          "desc": "Managing the design standards for internal staff-facing systems."
+        },
+        {
+          "l2": "System Quality Testing and Approval",
+          "l3": null,
+          "desc": "Managing system quality testing and user acceptance testing processes before deployment."
+        },
+        {
+          "l2": "Aggregated View Management",
+          "l3": null,
+          "desc": "Managing aggregated views of data to provide a consolidated picture of customer and revenue data."
+        },
+        {
+          "l2": "Business Alert Management",
+          "l3": null,
+          "desc": "Managing the configuration of business alerts surfaced within the system to prompt staff action."
+        }
+      ]
+    },
+    {
+      "l1": "Workflow Management",
+      "items": [
+        {
+          "l2": "Workflow Creation",
+          "l3": null,
+          "desc": "Creating workflow tasks either manually by staff or automatically triggered by system events."
+        },
+        {
+          "l2": "Workflow Allocation Management",
+          "l3": null,
+          "desc": "Assigning workflow tasks to individual staff or team queues."
+        },
+        {
+          "l2": "Workflow Automation Management",
+          "l3": null,
+          "desc": "Automating the closure and processing of workflow tasks based on configured business rules."
+        },
+        {
+          "l2": "Work Prioritisation Management",
+          "l3": null,
+          "desc": "Managing priority flags and escalation rules to ensure high-priority tasks are actioned promptly."
+        },
+        {
+          "l2": "Workflow SLA Management",
+          "l3": null,
+          "desc": "Tracking and managing service level agreements for workflow task completion."
+        },
+        {
+          "l2": "Workflow KPI Management",
+          "l3": null,
+          "desc": "Tracking key performance indicators related to workflow processing efficiency."
+        },
+        {
+          "l2": "Non Issue Indicator Management",
+          "l3": null,
+          "desc": "Managing flags that suppress workflow creation or assessment issuance for certain customers or registrations."
+        }
+      ]
+    }
+  ]
+}

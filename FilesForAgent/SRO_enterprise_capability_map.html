@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SRO One Page Capability View</title>
+
+<style>
+body { margin:0; font-family:Arial; background:#f7f9fc; }
+
+/* ✅ HEADER */
+.header{
+  background:#0c2d63;
+  color:#fff;
+  padding:12px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+}
+
+.header-left h1{
+  margin:0 0 6px 0;
+  font-size:26px;
+}
+
+.header-meta{
+  font-size:13px;
+  line-height:1.5;
+  opacity:0.9;
+}
+
+.header-buttons{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+
+
+}
+
+.btn{
+  background:#ffffff;
+  color:#0c2d63;
+  border:none;
+  padding:12px 14px;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  width:auto;
+  text-align:left;
+  min-width:180px;
+}
+
+.btn.secondary{
+  background:#dde6f6;
+}
+
+/* GRID */
+
+
+.container{
+  display:grid;
+  grid-template-columns:repeat(5, minmax(0, 1fr));
+  gap:16px;
+  padding:16px;
+  align-items:start;
+  grid-auto-rows:min-content;  /* ✅ THIS IS THE KEY FIX */
+  min-width:1200px;
+}
+
+
+
+/* CARD */
+
+
+.card{
+  background:#f3f6fb;
+  border:1px solid #d6dbe6;
+  border-radius:12px;
+
+  padding:14px;
+
+  display:flex;
+  flex-direction:column;
+
+  align-items:stretch;       /* ✅ ensures children fill properly */
+  
+
+  box-shadow:0 2px 5px rgba(0,0,0,0.04);
+}
+
+
+
+
+
+.card h2{
+  font-size:14px;
+  font-weight:700;
+  margin-bottom:10px;
+
+  border-bottom:1px solid #e6eaf0;
+  padding-bottom:6px;
+}
+
+
+
+/* MULTI COLUMN */
+
+
+
+
+.l2-list{ 
+ display:grid; 
+ grid-template-columns:repeat(2, minmax(0, 1fr));  /* ✅ fix */
+ gap:10px;
+ align-content:start;   /* ✅ prevents stretch/overflow */
+}
+
+
+
+
+
+.l2-column{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  flex:1;
+}
+
+/* TILE */
+
+.l2{
+  background:#ffffff;
+  border:1px solid #d6dbe6;
+  border-radius:10px;
+  width:100%;  
+  min-width:0;                /* ✅ CRITICAL FIX */
+  max-width:none;
+  padding:12px;
+  justify-content:start;
+  font-size:12px;
+  font-weight:600;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  cursor:pointer;
+  box-sizing:border-box; /* ✅ prevents overflow */
+  min-height:60px;
+  word-break:break-word;      /* ✅ prevents text overflow */
+
+  transition:all 0.15s ease;
+}
+
+
+
+
+.l2:hover{
+  border-color:#2f6cc9;
+  background:#f4f8ff;
+  transform:translateY(-2px);
+  box-shadow:0 3px 8px rgba(0,0,0,0.08);
+}
+
+
+/* OVERLAY */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.overlay.active{ display:flex; }
+
+.panel{
+  background:#fff;
+  padding:20px;
+  width:900px;
+  max-height:80vh;
+  overflow:auto;
+  border-radius:10px;
+}
+
+/* ✅ PRINT MODE - capability map */
+.print-mode .container{
+  display:grid;
+  grid-template-columns:repeat(8, 1fr);
+  gap:12px;
+}
+
+.print-mode .card{
+  background:#ffffff;
+  border:1px solid #bbb;
+  box-shadow:none;
+  padding:8px;
+}
+
+.print-mode .card h2{
+  font-size:12px;
+  margin-bottom:6px;
+}
+
+.print-mode .l2-list{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:6px;
+}
+
+
+.print-mode .l2{
+  font-size:10px;
+  padding:8px 10px;
+  min-height:50px;
+}
+
+
+/* ✅ hide popup */
+.print-mode .overlay{
+  display:none !important;
+}
+
+/* ✅ PRINT EXPORT CLEAN */
+@media print {
+
+  .header, .btn {
+    display:none !important;
+  }
+
+  body{
+    background:#fff;
+  }
+
+  .container{
+    padding:0;
+  }
+}
+
+
+@media print {
+
+  @page {
+    size: A3 landscape;
+    margin: 8mm;
+  }
+
+  body{
+    zoom: 1; /* ✅ prevent browser shrink */
+    background:#fff;
+  }
+
+  .header, .btn{
+    display:none !important;
+  }
+
+  
+.container{
+  display:flex;
+  gap:16px;
+  padding:16px;
+  flex:1;
+}
+
+
+  .card{
+    border:1px solid #bbb;
+    box-shadow:none;
+    padding:10px;
+    break-inside:avoid;
+    overflow:hidden;   /* ✅ prevents visual bleed */
+  }
+
+  .card h2{
+    font-size:13px;
+    margin-bottom:4px;
+  }
+
+  .l2-list{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr); /* ✅ wider tiles */
+    gap:8px;
+  }
+
+  .l2{
+    font-size:10px;
+    padding:8px;
+    min-height:45px;
+  }
+
+}
+
+
+@media print {
+  .card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
+/* ✅ L1 ONLY MODE */
+.l1-only .l2-list{
+  display:none;
+}
+
+.l1-only .card{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:120px;
+}
+
+.l1-only .card h2{
+  font-size:16px;
+  text-align:center;
+}
+
+/* ✅ L2 ICON STRUCTURE */
+.l2-header{
+  display:flex;
+  align-items:flex-start;
+  gap:6px;
+  margin-bottom:6px;
+}
+
+.l2-icon{
+  font-size:14px;
+  flex-shrink:0;
+  margin-top:2px;
+}
+
+.l2-title{
+  font-weight:600;
+  line-height:1.2;
+}
+
+.l2-meta{
+  font-size:10px;
+  color:#6b7280;
+}
+
+.button-bar{
+  display:flex;               /* ✅ horizontal */
+  gap:12px;                  /* spacing between buttons */
+  padding:12px 16px;
+  background:#eef2f8;        /* subtle contrast row */
+  border-bottom:1px solid #d6dbe6;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ✅ HEADER -->
+
+<div class="header">
+  <div class="header-left">
+    <h1>State Revenue Office Enterprise Capability Model</h1>
+    <div class="header-meta">
+      Version: v.1 050626 | Date Created: 05/06/2026 | Last Modified: 05/06/2026
+    </div>
+  </div>
+</div>
+
+<!-- ✅ NEW BUTTON BAR -->
+<div class="button-bar">
+  <button class="btn" onclick="exportCSV()">Export to Excel (CSV)</button>
+  <button class="btn secondary" onclick="printView()">Print Capability Map</button>
+  <button class="btn secondary" onclick="toggleL1View()">Toggle L1 View</button>
+</div>
+
+
+<div id="grid" class="container"></div>
+
+<div id="overlay" class="overlay">
+  <div class="panel">
+    <div onclick="closePanel()" style="cursor:pointer;float:right">Close</div>
+    <h2 id="title"></h2>
+    <div id="l3"></div>
+  </div>
+</div>
+
+<script>
+
+/* ✅ YOUR MODEL ONLY */
+const model = [
+  {
+    l1: "Customer Management",
+    description: "Manages customer identity, data, relationships, contacts, communications, and protections across all services and revenue lines.",
+    l2: [
+      {
+        name: "Customer Data Management",
+        description: "Manages customer master data including identity, registration, attributes, validation, and lifecycle to ensure accurate, consistent, and compliant customer records.",
+        l3: [
+          {
+            name: "Customer Identification",
+            description: "Establishes and maintains a uniquely identifiable customer record by assigning and managing a customer identifier and required identity attributes."
+          },
+          {
+            name: "Customer Registration",
+            description: "Creates and maintains customer records with the minimum required attributes, classifications, and relationships needed to support service delivery and revenue processing."
+          },
+          {
+            name: "Identity Verification and Authentication",
+            description: "Verifies customer identity against trusted sources and supports secure authentication for access to services and systems."
+          },
+          {
+            name: "Customer Address and Address Format Management",
+            description: "Maintains customer address records, classifications, and formatting rules to support accurate correspondence and service delivery."
+          },
+          {
+            name: "Customer Data Verification and Validation",
+            description: "Ensures customer data is accurate, current, complete, and compliant by verifying against trusted sources and validating against business rules."
+          },
+          {
+            name: "Customer Profile Management",
+            description: "Maintains customer profile attributes such as names, statuses, classifications, and other key details throughout the customer lifecycle."
+          },
+          {
+            name: "Customer Contact Management",
+            description: "Maintains customer contact details, including phone and email information, to support communication, service access, and digital interaction."
+          }
+        ]
+      },
+      {
+        name: "Customer Service Request and Support Management",
+        description: "Manages customer service interactions, support requests, complaints, and service obligations to ensure enquiries are handled consistently and transparently.",
+        l3: [
+          {
+            name: "Enquiry Management",
+            description: "Captures, tracks, and resolves customer enquiries across available service channels."
+          },
+          {
+            name: "Customer Identity Verification",
+            description: "Validates customer identity during service interactions to ensure information is released or actions are taken only for authorised parties."
+          },
+          {
+            name: "Complaint Management",
+            description: "Records, tracks, and manages customer complaints from receipt through to resolution and response."
+          },
+          {
+            name: "Service Level Management",
+            description: "Defines, monitors, and manages service level commitments for customer requests and support activities."
+          }
+        ]
+      },
+      {
+        name: "Customer Communication and Engagement",
+        description: "Manages communication channels, notifications, and ongoing customer engagement activities to support service delivery and relationship management.",
+        l3: [
+          {
+            name: "Communication Channel Management",
+            description: "Defines and manages the channels through which the organisation communicates with customers, including their availability and use."
+          },
+          {
+            name: "Customer Notifications",
+            description: "Generates and sends notifications to customers in response to events, status changes, reminders, or other business triggers."
+          },
+          {
+            name: "Customer Relationship Management",
+            description: "Maintains visibility of customer interactions, preferences, and engagement history to support informed relationship handling."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    l1: "Amendment Management",
+    description: "Manages the capture, assessment, update, and withdrawal of requests to amend existing records, assessments, or related business outcomes.",
+    l2: [
+      {
+        name: "Amendment Processing",
+        description: "Co-ordinates the end-to-end handling of amendment requests from receipt through to decision and record update.",
+        l3: [
+          {
+            name: "Amendment Request",
+            description: "Captures and records requests to amend an existing record or assessment, including the reason for change and supporting information."
+          },
+          {
+            name: "Amendment Review",
+            description: "Assesses amendment requests to determine validity, completeness, and whether the requested change should proceed."
+          },
+          {
+            name: "Assessment Update",
+            description: "Applies approved amendment outcomes to the relevant assessment or business record in accordance with business rules."
+          },
+          {
+            name: "Amendment Withdrawal",
+            description: "Cancels or withdraws amendment requests that are invalid, incomplete, duplicated, or no longer required."
+          }
+        ]
+      }
+    ]
+  },
+
+  
+
+  {
+    l1: "Exemption and Concession Management",
+    description: "Manages exemption and concession applications, determinations, maintenance, cessation, and associated customer or entity outcomes.",
+    l2: [
+      {
+        name: "Exemption Application Management",
+        description: "Manages the intake and assignment of exemption applications for subsequent assessment and decision-making.",
+        l3: [
+          {
+            name: "Application Intake",
+            description: "Captures an exemption application and the required supporting information for processing."
+          },
+          {
+            name: "Application Assignment",
+            description: "Allocates an exemption application to the appropriate team, user, or process for review."
+          }
+        ]
+      },
+      {
+        name: "Exemption Processing",
+        description: "Assesses exemption applications and applies resulting updates and notifications where eligibility is confirmed or denied.",
+        l3: [
+          {
+            name: "Eligibility Determination",
+            description: "Assesses whether the applicant or subject entity meets the criteria required for exemption."
+          },
+          {
+            name: "Exemption Record Update",
+            description: "Updates systems and relevant records to reflect the approved exemption outcome and related details."
+          },
+          {
+            name: "Taxpayer Notification",
+            description: "Communicates the outcome of exemption processing to the customer or authorised representative."
+          }
+        ]
+      },
+      {
+        name: "Exemption Maintenance",
+        description: "Maintains exemption types and associated settings so exemption arrangements can be consistently applied and managed.",
+        l3: [
+          {
+            name: "Exemption Type Management",
+            description: "Defines and maintains exemption types, conditions, statuses, and other rules required for exemption administration."
+          }
+        ]
+      },
+      {
+        name: "Exemption Revocation",
+        description: "Ceases or revokes exemptions that no longer apply or have been withdrawn, expired, or invalidated.",
+        l3: []
+      }
+    ]
+  },
+
+ 
+
+  {
+    l1: "Payment Management",
+    description: "Manages payment options, receipt, allocation, suspense handling, exceptions, and reporting across customer and liability contexts.",
+    l2: [
+      {
+        name: "Payment Options Management",
+        description: "Defines and manages the available payment methods and arrangements a customer can use to meet liabilities or obligations.",
+        l3: [
+          {
+            name: "Payment Channel Management",
+            description: "Defines and manages supported channels through which payments can be made."
+          },
+          {
+            name: "Payment Instalment Management",
+            description: "Creates and manages instalment arrangements for liabilities that can be paid over time."
+          }
+        ]
+      },
+      {
+        name: "Payment Allocation Management",
+        description: "Manages receipt, allocation, suspense, banking exceptions, and reporting of payments against the correct liabilities or accounts.",
+        l3: [
+          {
+            name: "Payment Allocation",
+            description: "Allocates received payments to the correct liabilities, accounts, or outstanding amounts."
+          },
+          {
+            name: "Payment Receipt",
+            description: "Captures and records the receipt of payments from customers or third parties."
+          },
+          {
+            name: "Suspense Management",
+            description: "Manages payments that cannot yet be matched or allocated and holds them in suspense until resolved."
+          },
+          {
+            name: "Banking Exception Management",
+            description: "Handles payment and banking issues such as mismatches, failures, reversals, or other exceptions."
+          },
+          {
+            name: "Payment History",
+            description: "Maintains the history of payments received, allocated, reversed, or otherwise processed for a customer or liability."
+          },
+          {
+            name: "Revenue Reporting",
+            description: "Provides reporting and visibility of payment performance, collected revenue, and related trends."
+          }
+        ]
+      },
+      {
+        name: "Late Payment Assessment Management",
+        description: "Identifies and manages late payment situations, including triggers for follow-up action, escalation, or additional charging.",
+        l3: []
+      }
+    ]
+  },
+
+  {
+    l1: "Property Management",
+    description: "Manages identification, structure, address, ownership, and lifecycle of property records used across revenue, assessment, and certificate processes.",
+    l2: [
+      {
+        name: "Property Data Management",
+        description: "Maintains core property information, address details, valuation-relevant attributes, and structural relationships such as subdivision and consolidation.",
+        l3: [
+          {
+            name: "Property Identification",
+            description: "Establishes and maintains uniquely identifiable property records using the attributes and references needed to locate and distinguish each property."
+          },
+          {
+            name: "Property Valuation",
+            description: "Maintains and uses property valuation information relevant to taxation, assessment, and other property-based business processes."
+          },
+          {
+            name: "Subdivision and Consolidation Management",
+            description: "Manages property changes arising from subdivision or consolidation and preserves the lineage and relationships between parent and child properties."
+          },
+          {
+            name: "Property Address Management",
+            description: "Creates, updates, validates, and maintains addresses associated with properties and property-based entities."
+          }
+        ]
+      },
+      {
+        name: "Land Ownership Management",
+        description: "Maintains ownership and transfer relationships for land and property so customer, liability, and certificate processes reflect the correct ownership position.",
+        l3: [
+          {
+            name: "Property Ownership and Transfer Management",
+            description: "Maintains property ownership records, transfers, ownership history, and related changes that impact administration and liability."
+          }
+        ]
+      }
+    ]
+  },
+ {
+    l1: "Liability Management",
+    description: "Manages calculation, rates, penalties, reconciliation, and write-off of liabilities across revenue lines and assessment periods.",
+    l2: [
+      {
+        name: "Liability Calculation",
+        description: "Calculates liabilities based on revenue rules, values, rates, thresholds, and applicable business conditions.",
+        l3: [
+          {
+            name: "Tax Rate Calculation",
+            description: "Determines the tax amount to be applied using relevant rates, thresholds, and calculation rules."
+          }
+        ]
+      },
+      {
+        name: "Liability Interest and Penalties Management",
+        description: "Manages the calculation and application of interest and penalty components associated with liabilities.",
+        l3: [
+          {
+            name: "Interest Calculation",
+            description: "Calculates interest payable on outstanding liabilities using the applicable interest rules and periods."
+          },
+          {
+            name: "Penalty Calculation",
+            description: "Calculates penalty amounts based on non-compliance, late action, or other penalty-triggering conditions."
+          }
+        ]
+      },
+      {
+        name: "Liability Rate Maintenance",
+        description: "Maintains the rate tables and configurations used to calculate liabilities, interest, and penalties over time.",
+        l3: [
+          {
+            name: "Rate Table Maintenance",
+            description: "Maintains core rate tables used in liability calculation, including historic and future-effective rates."
+          },
+          {
+            name: "Penalty Rate Maintenance",
+            description: "Maintains penalty rate structures and ensures the correct penalty scales are available for calculation."
+          }
+        ]
+      },
+      {
+        name: "Liability Write-off Management",
+        description: "Manages approval and recording of liability write-offs under appropriate authority and policy controls.",
+        l3: [
+          {
+            name: "Liability Write-off Approval",
+            description: "Reviews and approves requests to write off liabilities in accordance with delegated authority and policy."
+          }
+        ]
+      },
+      {
+        name: "Periodic Liability Management",
+        description: "Manages liabilities calculated and administered on a recurring periodic basis.",
+        l3: [
+          {
+            name: "Liability Calculation",
+            description: "Calculates periodic liabilities using the rules, thresholds, and data relevant to the applicable period."
+          },
+          {
+            name: "Liability Interest and Penalties Management",
+            description: "Applies interest and penalties relevant to periodic liabilities and late or non-compliant obligations."
+          },
+          {
+            name: "Liability Rate Maintenance",
+            description: "Maintains the periodic liability rates and related settings required for periodic calculation."
+          },
+          {
+            name: "Liability Write-off Management",
+            description: "Manages write-off decisions and approvals for periodic liabilities where appropriate."
+          }
+        ]
+      },
+      {
+        name: "Annual Liability Management",
+        description: "Manages liabilities calculated and administered on an annual basis, including annual-specific rates and outcomes.",
+        l3: [
+          {
+            name: "Liability Calculation",
+            description: "Calculates annual liabilities using annual values, thresholds, and business rules."
+          },
+          {
+            name: "Liability Interest and Penalties Management",
+            description: "Applies annual liability interest and penalties where annual obligations are overdue or non-compliant."
+          },
+          {
+            name: "Liability Rate Maintenance",
+            description: "Maintains the annual liability rates and related settings needed for annual assessment."
+          },
+          {
+            name: "Liability Write-off Management",
+            description: "Manages write-off decisions and approvals for annual liabilities where authorised."
+          }
+        ]
+      },
+      {
+        name: "Annual Reconciliation Management",
+        description: "Manages annual reconciliation of liability positions where year-end or reconciliation-based adjustments are required.",
+        l3: []
+      },
+      {
+        name: "Liability Reconciliation",
+        description: "Reconciles liability records to ensure calculated, assessed, and maintained liabilities accurately reflect the correct position.",
+        l3: []
+      },
+      {
+        name: "Payment Reconciliation",
+        description: "Reconciles payments against liabilities to ensure offsets, balances, and outstanding amounts are correctly recorded.",
+        l3: []
+      }
+    ]
+  },
+
+{
+    l1: "Assessment Management",
+    description: "Manages the creation, issue, maintenance, storage, and variation of assessments across assessment types and time-based cycles.",
+    l2: [
+      {
+        name: "Assessment Generation and Issue",
+        description: "Creates and issues assessments through manual, bulk, and digital channels to communicate liabilities and outcomes.",
+        l3: [
+          {
+            name: "Manual Assessment Generation",
+            description: "Creates assessments individually based on specific transactions, cases, or manually initiated events."
+          },
+          {
+            name: "Bulk Assessment Generation",
+            description: "Generates large volumes of assessments using batch rules and predefined processing logic."
+          },
+          {
+            name: "Digital Assessment Issue",
+            description: "Issues assessments through digital channels and makes them available for customer access and retrieval."
+          },
+          {
+            name: "Assessment Notification",
+            description: "Notifies customers that an assessment has been issued and provides access or direction to the relevant information."
+          }
+        ]
+      },
+      {
+        name: "Assessment Maintenance",
+        description: "Maintains assessment records after issue, including updates, cancellation, and withdrawal where required.",
+        l3: [
+          {
+            name: "Assessment Update",
+            description: "Updates issued assessment records to reflect corrected information, amended data, or changed circumstances."
+          },
+          {
+            name: "Assessment Withdrawal",
+            description: "Withdraws an assessment that is no longer valid or should no longer remain in effect."
+          },
+          {
+            name: "Assessment Cancellation",
+            description: "Cancels an assessment due to error, duplication, invalid conditions, or other approved reasons."
+          }
+        ]
+      },
+      {
+        name: "Assessment Notice Printing",
+        description: "Manages physical printing and mail distribution of assessment notices through internal or external channels.",
+        l3: [
+          {
+            name: "SRO Print and Mail",
+            description: "Produces and distributes assessment notices using the organisation’s internal print and mail arrangements."
+          },
+          {
+            name: "External Mailhouse Print and Mail",
+            description: "Produces and distributes assessment notices through an external mailhouse provider."
+          }
+        ]
+      },
+      {
+        name: "Assessment Storage and Retrieval",
+        description: "Stores assessment artefacts and supports search, retrieval, and audit access to assessment records.",
+        l3: [
+          {
+            name: "Digital Assessment Storage",
+            description: "Stores assessment records in digital form for retrieval, reference, reissue, and audit purposes."
+          }
+        ]
+      },
+      {
+        name: "Assessment Amendment",
+        description: "Manages the formal amendment of existing assessments where issued assessment outcomes need to change.",
+        l3: []
+      },
+      {
+        name: "Periodic Assessment Management",
+        description: "Manages assessments that recur on a defined periodic basis and require period-specific handling and controls.",
+        l3: []
+      },
+      {
+        name: "Periodic Assessment Type Determination",
+        description: "Determines the applicable periodic assessment type based on relevant business, legislative, or transaction conditions.",
+        l3: []
+      },
+      {
+        name: "Periodic Assessment Generation",
+        description: "Creates assessments for recurring periods using the rules and timing relevant to periodic assessment cycles.",
+        l3: []
+      },
+      {
+        name: "Periodic Assessment Maintenance",
+        description: "Maintains periodic assessment records after creation, including updates, corrections, and other changes during the period lifecycle.",
+        l3: []
+      },
+      {
+        name: "Periodic Assessment Notice Printing",
+        description: "Produces physical notices for periodic assessments through print and mail processes.",
+        l3: []
+      },
+      {
+        name: "Periodic Assessment Storage and Retrieval",
+        description: "Stores and retrieves periodic assessment records and associated artefacts for operational and audit use.",
+        l3: []
+      },
+      {
+        name: "Periodic Assessment Amendment",
+        description: "Manages amendments specific to periodic assessments where reassessment or correction is required.",
+        l3: []
+      },
+      {
+        name: "Periodic Assessment Withdrawal and Cancellation",
+        description: "Manages withdrawal or cancellation of periodic assessments when a previously generated outcome is no longer valid.",
+        l3: []
+      },
+      {
+        name: "Annual Reconciliation Assessment Management",
+        description: "Manages annual reconciliation assessments, including determination, generation, maintenance, issue, and storage of annual assessment outcomes.",
+        l3: [
+          {
+            name: "Annual Assessment Type Determination",
+            description: "Determines the applicable annual assessment type and basis for annual reconciliation processing."
+          },
+          {
+            name: "Annual Assessment Generation",
+            description: "Creates annual reconciliation assessments using the rules relevant to annual reporting and reconciliation."
+          },
+          {
+            name: "Annual Assessment Maintenance",
+            description: "Maintains annual assessment records after creation, including updates, corrections, and other changes."
+          },
+          {
+            name: "Annual Assessment Notice Printing",
+            description: "Produces printed annual assessment notices for customers or external distribution."
+          },
+          {
+            name: "Annual Assessment Storage and Retrieval",
+            description: "Stores annual assessment records and supports retrieval for operational, customer, and audit purposes."
+          }
+        ]
+      }
+    ]
+  },
+
+
+  {
+    l1: "Reassessment Management",
+    description: "Manages reassessment creation, maintenance, issue, storage, and variation where existing assessments require revision.",
+    l2: [
+      {
+        name: "Reassessment Amendment",
+        description: "Manages formal amendments to reassessments where previously determined reassessment outcomes need to change.",
+        l3: []
+      },
+      {
+        name: "Reassessment Generation and Issue",
+        description: "Creates and issues reassessments through manual, bulk, and digital methods where revised assessment outcomes are required.",
+        l3: [
+          {
+            name: "Manual Reassessment Generation",
+            description: "Creates reassessments individually where manual initiation or review is required."
+          },
+          {
+            name: "Bulk Reassessment Generation",
+            description: "Generates large volumes of reassessments using batch processing and predefined rules."
+          },
+          {
+            name: "Digital Reassessment Issue",
+            description: "Issues reassessments through digital channels and supports digital access to revised assessment records."
+          },
+          {
+            name: "Reassessment Notification",
+            description: "Notifies customers that a reassessment has been issued and provides access or direction to the revised outcome."
+          }
+        ]
+      },
+      {
+        name: "Reassessment Notice Printing",
+        description: "Manages physical print and mail production of reassessment notices through internal or external channels.",
+        l3: [
+          {
+            name: "SRO Print and Mail",
+            description: "Produces and distributes reassessment notices using the organisation’s internal print and mail arrangements."
+          },
+          {
+            name: "External Mailhouse Print and Mail",
+            description: "Produces and distributes reassessment notices through an external mailhouse provider."
+          }
+        ]
+      },
+      {
+        name: "Reassessment Storage and Retrieval",
+        description: "Stores reassessment artefacts and supports their retrieval for operational, customer, and audit use.",
+        l3: [
+          {
+            name: "Digital Reassessment Storage",
+            description: "Stores reassessment records in digital form for retrieval, reissue, and audit access."
+          }
+        ]
+      },
+      {
+        name: "Reassessment Maintenance",
+        description: "Maintains reassessment records after issue, including update, cancellation, and withdrawal of reassessment outcomes.",
+        l3: [
+          {
+            name: "Reassessment Cancellation",
+            description: "Cancels a reassessment that was issued in error or is no longer valid."
+          },
+          {
+            name: "Reassessment Update",
+            description: "Updates reassessment records to reflect corrected or changed information."
+          },
+          {
+            name: "Reassessment Withdrawal",
+            description: "Withdraws a reassessment that should no longer remain active or effective."
+          }
+        ]
+      },
+      {
+        name: "Periodic Reassessment Management",
+        description: "Manages reassessments that recur on a periodic basis or arise from periodic reassessment cycles.",
+        l3: []
+      },
+      {
+        name: "Periodic Reassessment Type Determination",
+        description: "Determines the applicable periodic reassessment type based on relevant rules or business conditions.",
+        l3: []
+      },
+      {
+        name: "Periodic Reassessment Generation",
+        description: "Creates reassessments for periodic cycles when previously issued assessment outcomes need revisiting.",
+        l3: []
+      },
+      {
+        name: "Periodic Reassessment Maintenance",
+        description: "Maintains periodic reassessment records after their creation, including updates and corrections.",
+        l3: []
+      },
+      {
+        name: "Periodic Reassessment Notice Printing",
+        description: "Produces printed notices for periodic reassessments through print and mail processes.",
+        l3: []
+      },
+      {
+        name: "Periodic Reassessment Storage and Retrieval",
+        description: "Stores and retrieves periodic reassessment records and associated artefacts for operational and audit use.",
+        l3: []
+      },
+      {
+        name: "Periodic Reassessment Amendment",
+        description: "Manages amendments specific to periodic reassessments where further change is required.",
+        l3: []
+      },
+      {
+        name: "Periodic Reassessment Withdrawal and Cancellation",
+        description: "Manages withdrawal or cancellation of periodic reassessments when the revised outcome should no longer stand.",
+        l3: []
+      },
+      {
+        name: "Annual Reconciliation Reassessment Management",
+        description: "Manages annual reconciliation reassessments, including determination, creation, maintenance, issue, and storage of annual revised outcomes.",
+        l3: [
+          {
+            name: "Annual Reassessment Type Determination",
+            description: "Determines the applicable annual reassessment type based on annual reconciliation requirements."
+          },
+          {
+            name: "Annual Reassessment Generation",
+            description: "Creates annual reassessments where annual reconciliation or revised annual outcomes are required."
+          },
+          {
+            name: "Annual Reassessment Maintenance",
+            description: "Maintains annual reassessment records after creation, including updates and corrections."
+          },
+          {
+            name: "Annual Reassessment Notice Printing",
+            description: "Produces printed annual reassessment notices for customers or external distribution."
+          },
+          {
+            name: "Annual Reassessment Storage and Retrieval",
+            description: "Stores annual reassessment records and supports their retrieval for operational and audit purposes."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    l1: "Refunds Management",
+    description: "Manages refund creation, validation, decisioning, payment processing, and handling of exceptions where monies are to be returned.",
+    l2: [
+      {
+        name: "Refund Processing",
+        description: "Manages the end-to-end handling of refund requests including creation, validation, approval, cancellation, and completion status updates.",
+        l3: [
+          {
+            name: "Refund Creation",
+            description: "Creates a refund request or refund instruction based on overpayment, entitlement, or other valid reason for return of funds."
+          },
+          {
+            name: "Refund Validation",
+            description: "Validates a refund request against business rules, supporting information, and eligibility conditions."
+          },
+          {
+            name: "Refund Completion Import",
+            description: "Updates the system with confirmation that a refund has been completed or processed externally."
+          },
+          {
+            name: "Refund Approval",
+            description: "Approves a refund for payment in accordance with business rules and delegated authority."
+          },
+          {
+            name: "Refund Cancellation",
+            description: "Cancels a refund request or refund instruction that is invalid, duplicated, or no longer required."
+          }
+        ]
+      },
+      {
+        name: "Refund Payment Processing via Bank",
+        description: "Manages the transfer of approved refund information to banking channels and records confirmation of refund completion.",
+        l3: [
+          {
+            name: "Approved and Issued Refund Export",
+            description: "Exports approved refund instructions to the relevant banking or external payment mechanism for processing."
+          },
+          {
+            name: "Refund Completion Import",
+            description: "Imports confirmation that bank-based refund processing has been completed so internal records can be updated."
+          }
+        ]
+      },
+      {
+        name: "Refund Exception Handling",
+        description: "Manages issues and discrepancies that arise during refund creation, approval, payment processing, or completion.",
+        l3: []
+      }
+    ]
+  },
+
+  {
+    l1: "Return Management",
+    description: "Manages periodic and reconciliation return activities, including creation, maintenance, deductions, and annual return adjustments.",
+    l2: [
+      {
+        name: "Periodic Return Management",
+        description: "Manages returns that are lodged or generated on a recurring periodic basis.",
+        l3: [
+          {
+            name: "Monthly Return Generation",
+            description: "Creates periodic monthly returns based on submitted, calculated, or system-derived information."
+          },
+          {
+            name: "Deduction Management",
+            description: "Applies and manages deductions relevant to periodic return processing and resulting liability outcomes."
+          }
+        ]
+      },
+      {
+        name: "Reconciliation Return Management",
+        description: "Manages return activities required for reconciliation, including maintenance of monthly and annual returns and associated deductions.",
+        l3: [
+          {
+            name: "Monthly Return Generation",
+            description: "Creates or recreates monthly returns needed as part of reconciliation or return correction processes."
+          },
+          {
+            name: "Monthly Return Maintenance",
+            description: "Maintains monthly return records after creation, including changes, corrections, and updates."
+          },
+          {
+            name: "Annual Return Maintenance",
+            description: "Maintains annual return records as part of reconciliation, review, or correction processes."
+          },
+          {
+            name: "Deduction Management",
+            description: "Applies and manages deductions used in reconciliation return processing and resulting outcomes."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    l1: "Eligibility Assessment",
+    description: "Assesses and determines whether a person, entity, or application meets the required criteria for a service, exemption, benefit, or other outcome.",
+    l2: [
+      {
+        name: "Eligibility Determination and Approval",
+        description: "Assesses eligibility criteria and supports approval decisions where an outcome depends on meeting defined conditions.",
+        l3: [
+          {
+            name: "Eligibility Determination",
+            description: "Determines whether the required eligibility conditions are met for the relevant process or benefit."
+          },
+          {
+            name: "Eligibility Evaluation",
+            description: "Conducts detailed review of supporting information and conditions to confirm or reject eligibility."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    l1: "Application Management",
+    description: "Manages application intake, review, approval, withdrawal, and related grant or disbursement calculations.",
+    l2: [
+      {
+        name: "Application Processing",
+        description: "Co-ordinates the end-to-end intake, review, approval, and withdrawal of applications.",
+        l3: [
+          {
+            name: "Application Intake",
+            description: "Captures application details, supporting data, and required attachments for further processing."
+          },
+          {
+            name: "Application Review",
+            description: "Reviews applications to confirm completeness, validity, and suitability for progression."
+          },
+          {
+            name: "Application Approval",
+            description: "Approves applications that satisfy the required conditions and are ready to proceed."
+          },
+          {
+            name: "Application Withdrawal",
+            description: "Withdraws applications that have been cancelled, superseded, or are no longer required."
+          }
+        ]
+      },
+      {
+        name: "Grant Disbursement Management",
+        description: "Manages calculation and related administration of grant amounts to support grant payment processes.",
+        l3: [
+          {
+            name: "Grant Amount Calculation",
+            description: "Calculates the grant amount payable based on the applicable rules, values, and eligibility conditions."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    l1: "Objection Management",
+    description: "Manages the receipt, review, documentation, resolution, communication, and improvement of objection handling activities.",
+    l2: [
+      {
+        name: "Objection Receipt and Acknowledgement",
+        description: "Captures objections and confirms their receipt so objection handling can commence formally.",
+        l3: [
+          {
+            name: "Objection Intake",
+            description: "Captures an objection submission and the information needed to register and progress the objection."
+          },
+          {
+            name: "Objection Acknowledgement",
+            description: "Acknowledges receipt of an objection and confirms that it has been recorded for handling."
+          }
+        ]
+      },
+      {
+        name: "Objection Document Management",
+        description: "Manages objection documents, records, and supporting materials needed to progress and evidence objection handling.",
+        l3: [
+          {
+            name: "Document Generation",
+            description: "Produces the documents required during objection handling, including letters, notices, and formal outputs."
+          },
+          {
+            name: "Documentation Management",
+            description: "Stores, maintains, and retrieves objection-related documents and supporting materials."
+          },
+          {
+            name: "Objection Record Tracking",
+            description: "Maintains the status, activity history, and record of objection handling from start to finish."
+          }
+        ]
+      },
+      {
+        name: "Objection Review and Triage",
+        description: "Evaluates objections to determine validity, priority, and the appropriate workflow or escalation path.",
+        l3: [
+          {
+            name: "Objection Prioritisation",
+            description: "Assigns urgency or priority to objections based on impact, complexity, and business rules."
+          },
+          {
+            name: "Objection Workflow and Escalation",
+            description: "Routes objections through defined handling workflows and escalates them where additional review or authority is required."
+          },
+          {
+            name: "Objection Validity and Relevance Assessment",
+            description: "Assesses whether the objection is valid, relevant, and suitable for progression under the applicable rules."
+          }
+        ]
+      },
+      {
+        name: "Comprehensive Objection Review",
+        description: "Performs detailed review of objection matters and supporting evidence to inform resolution decisions.",
+        l3: [
+          {
+            name: "Objection Review",
+            description: "Conducts detailed examination of objection content, issues raised, and the overall position under review."
+          },
+          {
+            name: "Supporting Documentation Analysis",
+            description: "Reviews the documents and evidence provided in support of the objection to inform decision-making."
+          }
+        ]
+      },
+      {
+        name: "Objection Resolution Planning",
+        description: "Plans the resolution approach for objections, including complex resolution paths, alternative dispute options, and appeals handling.",
+        l3: [
+          {
+            name: "Complex Objection Resolution",
+            description: "Manages resolution of objections involving complex facts, multiple issues, or heightened risk or impact."
+          },
+          {
+            name: "Alternative Dispute Resolution",
+            description: "Facilitates non-litigious approaches to resolving objection matters where appropriate."
+          },
+          {
+            name: "Appeals Management",
+            description: "Manages escalation of objection matters into formal appeal processes and tracks associated actions."
+          }
+        ]
+      },
+      {
+        name: "Continuous Improvement and Training",
+        description: "Improves objection handling capability through training, review, and ongoing enhancement of objection practices.",
+        l3: [
+          {
+            name: "Training and Professional Development",
+            description: "Builds staff capability through objection-related training, guidance, and professional development activities."
+          },
+          {
+            name: "Objection Handling Process Improvement",
+            description: "Identifies and implements improvements to objection handling processes, controls, and consistency."
+          }
+        ]
+      },
+      {
+        name: "Communication and Engagement",
+        description: "Manages objection-related communication, correspondence, and requests for further information.",
+        l3: [
+          {
+            name: "Objection Correspondence Management",
+            description: "Manages formal and informal communication associated with objection handling and outcomes."
+          },
+          {
+            name: "Request for Information",
+            description: "Requests additional information needed to assess, progress, or resolve an objection."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    l1: "Investigation Management",
+    description: "Manages investigation intake, review, planning, analysis, interviewing, fraud response, and continuous improvement of investigation handling.",
+    l2: [
+      {
+        name: "Preliminary Assessment",
+        description: "Performs early investigation activities to gather information and determine whether a matter should proceed.",
+        l3: [
+          {
+            name: "Information Gathering",
+            description: "Collects the information, evidence, and context required to assess whether an investigation should proceed."
+          },
+          {
+            name: "Initial Assessment",
+            description: "Performs an early assessment of the matter to determine relevance, validity, and likely next steps."
+          }
+        ]
+      },
+      {
+        name: "Investigation Document Management",
+        description: "Manages investigation documents, records, and supporting materials required to progress and evidence investigations.",
+        l3: [
+          {
+            name: "Investigation Record Tracking",
+            description: "Maintains the status, activity history, and record of investigation handling from commencement to outcome."
+          },
+          {
+            name: "Document Generation",
+            description: "Produces investigation documents such as notices, case artefacts, letters, and other formal outputs."
+          },
+          {
+            name: "Documentation Management",
+            description: "Stores, maintains, and retrieves investigation documents and related supporting materials."
+          }
+        ]
+      },
+      {
+        name: "Investigation Review and Triage",
+        description: "Evaluates investigation matters to determine validity, priority, and the workflow or escalation path required.",
+        l3: [
+          {
+            name: "Investigation Validity and Relevance Assessment",
+            description: "Assesses whether an investigation matter is valid, relevant, and suitable for further investigation."
+          },
+          {
+            name: "Investigation Workflow and Escalation",
+            description: "Routes investigation matters through defined workflows and escalates them where review, authority, or intervention is required."
+          },
+          {
+            name: "Investigation Prioritisation",
+            description: "Assigns priority to investigation matters based on risk, impact, complexity, or other business criteria."
+          }
+        ]
+      },
+      {
+        name: "Comprehensive Investigation Planning",
+        description: "Defines and co-ordinates the investigation plan, scope, and stakeholder actions needed to execute an investigation effectively.",
+        l3: [
+          {
+            name: "Comprehensive Investigation Planning",
+            description: "Develops the investigation approach, scope, and key activities required to progress the matter."
+          },
+          {
+            name: "Stakeholder Collaboration",
+            description: "Co-ordinates engagement with internal and external stakeholders involved in the investigation process."
+          }
+        ]
+      },
+      {
+        name: "Evidentiary Analysis",
+        description: "Analyses evidence and related information to identify issues, support findings, and inform investigation outcomes.",
+        l3: [
+          {
+            name: "Analytical Review",
+            description: "Performs structured analysis of available facts, data, and evidentiary material to support investigation findings."
+          },
+          {
+            name: "Forensic Accounting",
+            description: "Applies financial and accounting analysis techniques to identify anomalies, discrepancies, or indicators relevant to an investigation."
+          }
+        ]
+      },
+      {
+        name: "Interview Management",
+        description: "Plans and manages interviews conducted as part of investigation activity and evidence gathering.",
+        l3: [
+          {
+            name: "Interview Delivery",
+            description: "Conducts interviews with relevant parties as part of evidence gathering and fact-finding."
+          },
+          {
+            name: "Investigative Interviewing Techniques",
+            description: "Applies structured interviewing techniques to support reliable information gathering during investigations."
+          }
+        ]
+      },
+      {
+        name: "Complex Investigation Management",
+        description: "Manages high-risk, high-profile, or otherwise complex investigations that require enhanced oversight and control.",
+        l3: [
+          {
+            name: "Complex and High-profile Investigation Management",
+            description: "Oversees investigation matters that involve heightened complexity, sensitivity, risk, or external visibility."
+          }
+        ]
+      },
+      {
+        name: "Fraud Detection and Prevention",
+        description: "Defines and applies the fraud-related frameworks and strategies needed to detect, assess, and respond to fraud risk.",
+        l3: [
+          {
+            name: "Fraud Risk Assessment Frameworks",
+            description: "Defines and applies the methods used to identify, assess, and monitor fraud risk."
+          },
+          {
+            name: "Fraud Strategy Development and Implementation",
+            description: "Develops and implements the strategies, controls, and approaches used to detect and prevent fraud."
+          }
+        ]
+      },
+      {
+        name: "Continuous Improvement and Training",
+        description: "Improves investigation capability through training, review, and enhancement of investigation handling practices.",
+        l3: [
+          {
+            name: "Training and Professional Development",
+            description: "Builds staff capability through investigation-related training, guidance, and professional development."
+          },
+          {
+            name: "Investigation Handling Process Improvement",
+            description: "Identifies and implements improvements to investigation handling processes, controls, and consistency."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    l1: "Debt Management",
+    description: "Manages debt identification, assessment, settlement, recovery planning, complex resolution, portfolio oversight, and enforcement activities.",
+    l2: [
+      {
+        name: "Debt Identification",
+        description: "Identifies debtors and outstanding debt positions requiring management, recovery, or further action.",
+        l3: [
+          {
+            name: "Debtor Record Maintenance",
+            description: "Maintains records of debtors and the core information needed to administer outstanding debt."
+          },
+          {
+            name: "Outstanding Debt Identification",
+            description: "Identifies debts that are overdue, unpaid, or otherwise outstanding and require attention."
+          }
+        ]
+      },
+      {
+        name: "Debt Assessment",
+        description: "Assesses debt matters and analyses debtor information to support recovery decisions and case handling.",
+        l3: [
+          {
+            name: "Debt Assessment",
+            description: "Evaluates debt matters to determine recovery options, risk, and the appropriate course of action."
+          },
+          {
+            name: "Debtor Information Analysis",
+            description: "Analyses debtor information and context to support decision-making and recovery planning."
+          }
+        ]
+      },
+      {
+        name: "Negotiation and Settlement",
+        description: "Manages negotiated debt outcomes and repayment arrangements to resolve debt in a structured way.",
+        l3: [
+          {
+            name: "Repayment Arrangements",
+            description: "Establishes and manages repayment arrangements agreed with debtors to satisfy outstanding debt over time."
+          }
+        ]
+      },
+      {
+        name: "Debt Recovery Planning",
+        description: "Defines and prepares recovery plans for debt matters based on risk, value, and recovery strategy.",
+        l3: [
+          {
+            name: "Debt Recovery Plan Identification",
+            description: "Identifies the appropriate recovery strategy or plan for a given debt matter."
+          },
+          {
+            name: "Debt Recovery Plan Development",
+            description: "Develops the detailed plan, activities, and approach required to pursue recovery of debt."
+          }
+        ]
+      },
+      {
+        name: "Complex Debt Resolution",
+        description: "Manages debt matters that involve heightened complexity, value, stakeholder sensitivity, or non-standard resolution arrangements.",
+        l3: [
+          {
+            name: "Stakeholder Engagement",
+            description: "Engages internal or external stakeholders needed to progress or resolve complex debt matters."
+          },
+          {
+            name: "Complex and High-value Debt Management",
+            description: "Oversees debt matters that are significant in value, complexity, or sensitivity and require enhanced control."
+          }
+        ]
+      },
+      {
+        name: "Debt Portfolio Management",
+        description: "Monitors and manages the overall debt portfolio to support prioritisation, performance, and strategic intervention.",
+        l3: [
+          {
+            name: "Advanced Debt Portfolio Management",
+            description: "Applies portfolio-level approaches to segment, manage, and optimise the treatment of debt matters."
+          },
+          {
+            name: "Debt Portfolio Monitoring and Analysis",
+            description: "Tracks and analyses debt portfolio performance, trends, and recovery outcomes."
+          }
+        ]
+      },
+      {
+        name: "Legal Enforcement and Remediation",
+        description: "Manages escalation of debt matters into legal enforcement and remediation pathways where required.",
+        l3: [
+          {
+            name: "Legal Enforcement Coordination",
+            description: "Co-ordinates legal enforcement activities, parties, and actions needed to pursue debt recovery."
+          },
+          {
+            name: "Legal Enforcement Initiation",
+            description: "Initiates formal legal enforcement proceedings in accordance with authority and process requirements."
+          }
+        ]
+      },
+      {
+        name: "Communication and Engagement",
+        description: "Manages debt-related communication and requests for information needed to progress debt matters.",
+        l3: [
+          {
+            name: "Request for Information",
+            description: "Requests additional information required to assess, progress, or resolve a debt matter."
+          },
+          {
+            name: "Debt Correspondence Management",
+            description: "Manages communication and correspondence issued or received in relation to debt handling and recovery."
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    l1: "Transfer Duty Management",
+    description: "Manages document, lodgement, and transaction categorisation activities needed to support transfer duty administration.",
+    l2: [
+      {
+        name: "Documents and Lodgement Management",
+        description: "Manages document types, lodgement mechanisms, and transaction classifications required to receive and process transfer duty matters.",
+        l3: [
+          {
+            name: "Document Type Determination",
+            description: "Determines the required document type applicable to a transfer duty matter or submission."
+          },
+          {
+            name: "Document Type Maintenance",
+            description: "Maintains document type definitions and associated rules used in transfer duty processing."
+          },
+          {
+            name: "Complex Lodgement Management",
+            description: "Manages lodgements involving complex conditions, structures, or non-standard processing requirements."
+          },
+          {
+            name: "Public and Internal Lodgement",
+            description: "Supports receipt and management of lodgements submitted by external parties or internal users."
+          },
+          {
+            name: "Transaction Type Determination",
+            description: "Determines the applicable transaction type for a transfer duty matter based on the relevant facts and rules."
+          },
+          {
+            name: "Transaction Type Maintenance",
+            description: "Maintains transaction type definitions and associated rules used in transfer duty handling."
+          }
+        ]
+      }
+    ]
+  }
+];
+
+
+/* ✅ EXPORT CSV */
+function exportCSV(){
+  let rows = [["L1","L2","L3","Description"]];
+
+  model.forEach(g=>{
+    g.l2.forEach(cap=>{
+      (cap.l3 || []).forEach(x=>{
+        rows.push([g.l1, cap.name, x.name, x.description]);
+      });
+    });
+  });
+
+  let csv = rows.map(r=>r.map(v=>`"${v}"`).join(",")).join("\n");
+
+  let blob = new Blob([csv], {type:"text/csv"});
+  let url = URL.createObjectURL(blob);
+
+  let a = document.createElement("a");
+  a.href = url;
+  a.download = "Capability_Model.csv";
+  a.click();
+}
+
+/* ✅ RENDER */
+function render(){
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+
+  model.forEach(group => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const h = document.createElement("h2");
+    h.innerText = group.l1;
+    card.appendChild(h);
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "l2-list";
+
+    // ✅ CORRECT LOOP
+    group.l2.forEach(cap => {
+      const btn = document.createElement("div");
+      btn.className = "l2";
+
+      btn.innerHTML = ` 
+        <div class="l2-header"> 
+          <span class="l2-icon">📦</span> 
+          <span class="l2-title">${cap.name}</span> 
+        </div> 
+        <div class="l2-meta"> 
+          ${(cap.l3?.length || 0)} capabilities 
+        </div> 
+      `;
+
+      btn.onclick = () => openPanel(group.l1, cap);
+
+      wrapper.appendChild(btn);  // ✅ direct into grid
+    });
+
+    // ✅ THESE MUST BE AFTER THE LOOP
+    card.appendChild(wrapper);
+    grid.appendChild(card);
+  });
+}
+
+/* ✅ PANEL */
+function openPanel(l1, cap){
+  document.getElementById("overlay").classList.add("active");
+  document.getElementById("title").innerText = l1 + " > " + cap.name;
+
+  const wrap = document.getElementById("l3");
+  wrap.innerHTML="";
+
+cap.l3.forEach(x=>{
+  const d = document.createElement("div");
+
+  d.style.marginBottom = "18px";
+  d.style.padding = "10px";
+  d.style.background = "#f9fbff";
+  d.style.border = "1px solid #e3e8f2";
+  d.style.borderRadius = "8px";
+
+  d.innerHTML = `
+    <div style="font-weight:700;margin-bottom:4px;">
+      ${x.name}
+    </div>
+    <div style="font-size:13px;color:#374151;">
+      ${x.description}
+    </div>
+  `;
+
+  wrap.appendChild(d);
+});
+}
+
+function closePanel(){
+  document.getElementById("overlay").classList.remove("active");
+}
+
+function printView(){
+
+  document.body.classList.add("print-mode");
+
+  setTimeout(()=>{
+    window.print();
+    document.body.classList.remove("print-mode");
+  }, 300);
+}
+
+function closePanel(){
+  document.getElementById("overlay").classList.remove("active");
+}
+
+/* ✅ STEP 2 - ADD THIS HERE */
+let isL1Only = false;
+
+function toggleL1View(){
+  isL1Only = !isL1Only;
+
+  if(isL1Only){
+    document.body.classList.add("l1-only");
+  } else {
+    document.body.classList.remove("l1-only");
+  }
+}
+
+/* ✅ INIT (leave this at bottom) */
+render();
+
+render();
+
+</script>
+
+</body>
+</html>
+``

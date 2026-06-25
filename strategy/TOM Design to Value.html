@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOM – Design to Value | SRO LXT</title>
+<style>
+:root {
+  --lane-w: 200px;
+  --phase-w: 260px;
+  --card-h: 200px;
+  --gap: 6px;
+  --tb-h: 108px;
+  --ink: #0f1c2e;
+  --ink2: #3a4a5c;
+  --ink3: #6b7a8d;
+  --surface: #f0f3f7;
+  --border: #d0d8e4;
+  --white: #ffffff;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.12);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.18);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  height:100%;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  font-size:13px;
+  background:#e2e8f0;
+  color:var(--ink);
+  overflow:hidden;
+}
+
+/* ── Toolbar ─────────────────────────────────────── */
+.toolbar{
+  position:sticky;top:0;z-index:200;
+  display:flex;flex-wrap:nowrap;align-items:flex-end;
+  gap:8px;padding:12px 16px 10px;
+  background:linear-gradient(180deg,#0a1628 0%,#101e35 100%);
+  color:#fff;
+  box-shadow:0 4px 16px rgba(0,0,0,.4);
+  overflow-x:auto;
+  min-height:80px;
+}
+.brand{flex-shrink:0;display:flex;flex-direction:column;gap:2px;min-width:250px;margin-right:8px;align-self:center}
+.brand-super{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.brand-title{font-size:14px;font-weight:700;color:#fff;line-height:1.2}
+.brand-sub{font-size:10px;color:rgba(255,255,255,.45);margin-top:1px}
+.tb-control{flex-shrink:0;display:flex;flex-direction:column;gap:3px;min-width:110px}
+.tb-control label{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+.tb-control select,.tb-control input{
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.15);
+  color:#fff;
+  border-radius:4px;padding:4px 7px;
+  font-size:11px;height:28px;width:100%;
+  appearance:none;-webkit-appearance:none;outline:none;
+}
+.tb-control select:focus,.tb-control input:focus{border-color:rgba(255,255,255,.4)}
+.tb-control input::placeholder{color:rgba(255,255,255,.3)}
+.tb-btn-group{flex-shrink:0;display:flex;flex-direction:column;gap:4px;min-width:110px;align-self:flex-end}
+.tb-btn{
+  display:flex;align-items:center;justify-content:center;
+  height:28px;padding:0 10px;
+  border-radius:4px;border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);
+  font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;
+  transition:background .15s;
+}
+.tb-btn:hover{background:rgba(255,255,255,.18)}
+.tb-btn.danger{border-color:rgba(239,68,68,.45);color:#fca5a5}
+.tb-btn.danger:hover{background:rgba(239,68,68,.15)}
+.tb-btn.export{border-color:rgba(74,222,128,.35);color:#86efac}
+.tb-btn.export:hover{background:rgba(74,222,128,.12)}
+
+/* ── Canvas & Board ───────────────────────────────── */
+.canvas{
+  overflow:auto;
+  height:calc(100vh - var(--tb-h));
+  padding:12px 16px 40px;
+  background:#e2e8f0;
+}
+.board{
+  display:grid;
+  /* col 1 = lane label; cols 2-9 = 8 phases */
+  grid-template-columns:var(--lane-w) repeat(8,var(--phase-w));
+  /* row 1 = zone band; row 2 = phase headers; row 3 = overlay; rows 4-13 = lanes */
+  grid-template-rows:48px 80px 40px repeat(10,var(--card-h));
+  gap:var(--gap);
+  width:max-content;
+  min-width:100%;
+  padding-bottom:24px;
+}
+
+/* ── Zone row (row 1) ─────────────────────────────── */
+.zone-corner{
+  grid-row:1;grid-column:1;
+  position:sticky;left:0;top:0;z-index:151;
+  background:#0a1628;border-radius:4px;
+}
+.zone{
+  grid-row:1;
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.9);border-radius:4px;padding:0 8px;
+}
+.zone-strategy{grid-column:2/5;background:linear-gradient(135deg,#1e3a8a,#1e40af)}
+.zone-gate{grid-column:5/7;background:#166534;font-size:11px;letter-spacing:.06em}
+.zone-delivery{grid-column:7/10;background:linear-gradient(135deg,#312e81,#4c1d95)}
+
+/* ── Phase header row (row 2) ─────────────────────── */
+.phase-corner{
+  grid-row:2;grid-column:1;
+  position:sticky;left:0;top:48px;z-index:152;
+  background:#0a1628;border-radius:4px;
+}
+.phase-hdr{
+  grid-row:2;
+  position:sticky;top:48px;z-index:99;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  border-radius:4px;padding:6px 8px;text-align:center;
+  box-shadow:var(--shadow-sm);
+}
+.ph-num{font-size:9px;font-weight:700;letter-spacing:.1em;opacity:.6;text-transform:uppercase;color:#fff}
+.ph-name{font-size:11px;font-weight:700;color:#fff}
+.ph-desc{font-size:9px;color:rgba(255,255,255,.55);line-height:1.3}
+.ph-strategy{background:linear-gradient(135deg,#1e3a8a,#1d4ed8)}
+.ph-gate{background:linear-gradient(135deg,#14532d,#15803d)}
+.ph-delivery{background:linear-gradient(135deg,#312e81,#5b21b6)}
+.ph-value{background:linear-gradient(135deg,#7c2d12,#c2410c)}
+
+/* ── Overlay row (row 3) ──────────────────────────── */
+.overlay-corner{
+  grid-row:3;grid-column:1;
+  position:sticky;left:0;top:128px;z-index:153;
+  background:#0a1628;border-radius:4px;
+}
+.overlay{
+  grid-row:3;
+  position:sticky;top:128px;z-index:98;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  border-radius:4px;padding:0 10px;text-align:center;
+}
+.ov-strategy{grid-column:2/5;background:rgba(30,58,138,.12);border:1px solid rgba(30,58,138,.25);color:#1e3a8a}
+.ov-gate{grid-column:5/7;background:#16a34a;color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;border:none}
+.ov-delivery{grid-column:7/10;background:rgba(49,46,129,.1);border:1px solid rgba(49,46,129,.22);color:#312e81}
+
+/* ── Lane label column (col 1) ───────────────────── */
+.lane-lbl{
+  grid-column:1;
+  position:sticky;left:0;z-index:97;
+  background:linear-gradient(135deg,#1a2840,#0f1c2e);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:8px 10px;border-radius:4px;
+  box-shadow:3px 0 8px rgba(0,0,0,.25);
+  border-right:2px solid rgba(255,255,255,.06);
+}
+.ll-num{font-size:8px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.28);text-transform:uppercase}
+.ll-name{font-size:11px;font-weight:700;color:rgba(255,255,255,.9);line-height:1.25;margin-top:2px}
+.ll-role{font-size:9px;color:rgba(255,255,255,.38);margin-top:2px}
+
+/* ── Cells ─────────────────────────────────────────── */
+.cell{
+  border-radius:7px;
+  min-height:var(--card-h);
+  overflow:hidden;
+  transition:opacity .2s,transform .15s;
+}
+.cell-placeholder{
+  border:1px dashed rgba(160,175,195,.4);
+  background:rgba(200,210,225,.07);
+  border-radius:7px;
+}
+.cell-dimmed{opacity:.18;pointer-events:none}
+.cell-up .card-inner{outline:2px solid #1d4ed8;outline-offset:-2px}
+.cell-down .card-inner{outline:2px solid #15803d;outline-offset:-2px}
+.cell-selected .card-inner{
+  outline:2px solid #f59e0b;outline-offset:-2px;
+  box-shadow:0 0 0 5px rgba(245,158,11,.18);
+}
+
+/* ── Cards ─────────────────────────────────────────── */
+.card-inner{
+  height:100%;
+  background:var(--white);
+  border-radius:7px;
+  padding:9px 10px 8px;
+  display:flex;flex-direction:column;gap:4px;
+  cursor:pointer;
+  box-shadow:var(--shadow-sm);
+  transition:box-shadow .15s,transform .1s;
+  border-top:3px solid var(--lane-color,#3b82f6);
+  overflow:hidden;
+}
+.card-inner:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:4px}
+.c-meta{font-size:8px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3)}
+.c-state{font-size:8px;font-weight:600;padding:1px 5px;border-radius:99px;white-space:nowrap;flex-shrink:0}
+.s-active{background:#dcfce7;color:#15803d}
+.s-planned{background:#dbeafe;color:#1d4ed8}
+.s-review{background:#fef9c3;color:#a16207}
+.s-complete{background:#f3f4f6;color:#374151}
+.c-title{font-size:11px;font-weight:700;color:var(--ink);line-height:1.3}
+.c-desc{font-size:10px;color:var(--ink2);line-height:1.45;flex:1}
+.c-body{
+  font-size:9px;color:var(--ink3);line-height:1.4;
+  overflow:hidden;display:-webkit-box;
+  -webkit-line-clamp:3;-webkit-box-orient:vertical;
+}
+.c-chips{display:flex;flex-wrap:wrap;gap:3px;margin-top:2px}
+.chip{
+  font-size:8px;font-weight:600;padding:1px 5px;
+  border-radius:99px;background:var(--surface);
+  color:var(--ink2);border:1px solid var(--border);
+}
+
+/* View modes */
+.view-exec .c-body{display:none}
+.view-dense{--card-h:138px}
+.view-dense .c-body{display:none}
+.view-dense .c-desc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.view-dense .card-inner{gap:3px;padding:7px 8px}
+
+/* ── Drawer ─────────────────────────────────────────── */
+.drw-backdrop{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.38);
+  z-index:300;
+  display:none;
+  backdrop-filter:blur(2px);
+}
+.drw-backdrop.open{display:block}
+.drawer{
+  position:fixed;top:0;right:-490px;
+  width:470px;height:100vh;
+  background:var(--white);
+  z-index:400;
+  overflow-y:auto;
+  transition:right .25s ease;
+  box-shadow:-8px 0 32px rgba(0,0,0,.22);
+  display:flex;flex-direction:column;
+}
+.drw-backdrop.open .drawer{right:0}
+.drw-head{
+  padding:18px 20px 14px;
+  background:linear-gradient(135deg,#0f1c2e,#1a2840);
+  color:#fff;flex-shrink:0;position:relative;
+}
+.drw-phase{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.drw-title{font-size:16px;font-weight:700;margin-top:4px;line-height:1.25}
+.drw-meta{font-size:10px;color:rgba(255,255,255,.5);margin-top:3px}
+.drw-close{
+  position:absolute;top:14px;right:14px;
+  width:28px;height:28px;
+  background:rgba(255,255,255,.12);border:none;border-radius:50%;
+  color:#fff;cursor:pointer;font-size:14px;
+  display:flex;align-items:center;justify-content:center;
+}
+.drw-close:hover{background:rgba(255,255,255,.22)}
+.drw-body{padding:18px 20px;flex:1}
+.drw-section-head{
+  font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink3);margin:14px 0 6px;
+  padding-bottom:4px;border-bottom:1px solid var(--border);
+}
+.drw-field{margin-bottom:10px}
+.drw-label{display:block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:3px}
+.drw-field p{font-size:12px;color:var(--ink);line-height:1.5}
+.drw-field code{font-size:10px;background:var(--surface);color:var(--ink2);padding:2px 5px;border-radius:3px;font-family:monospace}
+.drw-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
+.drw-chip{font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--surface);color:var(--ink2);border:1px solid var(--border)}
+
+/* ── Legend ─────────────────────────────────────────── */
+.legend{
+  position:fixed;bottom:12px;left:16px;z-index:180;
+  background:rgba(15,28,46,.9);border-radius:7px;
+  padding:7px 12px;display:flex;gap:12px;align-items:center;
+  backdrop-filter:blur(6px);box-shadow:var(--shadow-md);
+}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:9px;color:rgba(255,255,255,.7);font-weight:600}
+.leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+/* ── Validation banner ──────────────────────────────── */
+.val-banner{
+  position:fixed;top:10px;right:10px;z-index:999;
+  background:#991b1b;color:#fff;
+  padding:8px 12px;border-radius:7px;
+  font-size:11px;max-width:320px;display:none;
+}
+
+/* ── Print ──────────────────────────────────────────── */
+@media print{
+  html,body{background:#fff;overflow:visible}
+  .toolbar,.drw-backdrop,.legend,.val-banner{display:none!important}
+  .canvas{overflow:visible;max-width:none;height:auto;padding:0}
+  .board{width:max-content;page-break-inside:auto}
+  .zone,.phase-hdr,.overlay,.lane-lbl{position:static;box-shadow:none}
+  .cell,.card-inner{height:auto;overflow:visible}
+  .c-body{overflow:visible;-webkit-line-clamp:unset;display:block}
+  @page{size:A3 landscape;margin:10mm}
+}
+</style>
+</head>
+<body>
+<div class="val-banner" id="valBanner"></div>
+<div class="toolbar" id="toolbar">
+  <div class="brand">
+    <div class="brand-super">State Revenue Office Victoria — Land Tax Transformation</div>
+    <div class="brand-title">Target Operating Model – Design to Value</div>
+    <div class="brand-sub">Business Architecture Practice &nbsp;·&nbsp; LXT Program</div>
+  </div>
+  <div class="tb-control">
+    <label>Phase</label>
+    <select id="filterPhase"><option value="">All Phases</option></select>
+  </div>
+  <div class="tb-control">
+    <label>Lane</label>
+    <select id="filterLane"><option value="">All Lanes</option></select>
+  </div>
+  <div class="tb-control">
+    <label>Level</label>
+    <select id="filterLevel"><option value="">All Levels</option></select>
+  </div>
+  <div class="tb-control">
+    <label>State</label>
+    <select id="filterState"><option value="">All States</option></select>
+  </div>
+  <div class="tb-control">
+    <label>Search</label>
+    <input type="text" id="filterSearch" placeholder="Title, lead, chip…">
+  </div>
+  <div class="tb-control">
+    <label>View</label>
+    <select id="viewMode">
+      <option value="detail">Detail</option>
+      <option value="exec">Exec</option>
+      <option value="dense">Dense</option>
+    </select>
+  </div>
+  <div class="tb-btn-group">
+    <button class="tb-btn danger" id="clearFlow">✕ Clear Flow</button>
+    <button class="tb-btn export" id="exportCSV">⬇ Export CSV</button>
+    <button class="tb-btn" id="printPDF">🖨 Print / PDF</button>
+  </div>
+</div>
+<div class="canvas" id="canvas">
+  <div class="board" id="board"></div>
+</div>
+<div class="drw-backdrop" id="drwBackdrop">
+  <div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drwTitle">
+    <div class="drw-head">
+      <div class="drw-phase" id="drwPhase"></div>
+      <div class="drw-title" id="drwTitle"></div>
+      <div class="drw-meta" id="drwMeta"></div>
+      <button class="drw-close" id="drwClose" aria-label="Close">✕</button>
+    </div>
+    <div class="drw-body" id="drwBody"></div>
+  </div>
+</div>
+<div class="legend">
+  <div class="leg-item"><div class="leg-dot" style="background:#f59e0b"></div>Selected</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#1d4ed8"></div>Upstream</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#15803d"></div>Downstream</div>
+  <div class="leg-item"><div class="leg-dot" style="background:rgba(160,175,195,.45);border:1px dashed #aaa"></div>Placeholder</div>
+</div>
+<script>
+const modelData = {
+  lanes: [
+    {name:"Lifecycle Readiness",role:"Program / Product",num:"01"},
+    {name:"Artefact Spine",role:"BA Practice Lead",num:"02"},
+    {name:"HCD / Experience",role:"Service Design",num:"03"},
+    {name:"Business Analysis",role:"BA / Product Owner",num:"04"},
+    {name:"Architecture",role:"Solution / Enterprise Arch",num:"05"},
+    {name:"Development",role:"Engineering Lead",num:"06"},
+    {name:"Testing / QE",role:"QA Lead",num:"07"},
+    {name:"DevOps / Platform",role:"Platform Engineering",num:"08"},
+    {name:"Change & Adoption",role:"Change Manager",num:"09"},
+    {name:"Governance Checkpoints",role:"Program Director / Governance / Sponsor",num:"10"}
+  ],
+  phases: [
+    {name:"P1 Problem",num:"P1",desc:"Problem framing & mandate",cls:"ph-strategy"},
+    {name:"P2 Context",num:"P2",desc:"Current state & constraints",cls:"ph-strategy"},
+    {name:"P3 Current State",num:"P3",desc:"Process & capability baseline",cls:"ph-strategy"},
+    {name:"P4 Target Design",num:"P4",desc:"To-be process, platform & design",cls:"ph-design"},
+    {name:"P5 Ready Gate",num:"P5",desc:"Build readiness & governance",cls:"ph-design"},
+    {name:"P6 Build & Test",num:"P6",desc:"Configure, build & verify",cls:"ph-delivery"},
+    {name:"P7 Deploy & Release",num:"P7",desc:"Release, train & cutover",cls:"ph-delivery"},
+    {name:"P8 Value",num:"P8",desc:"Realise, measure & optimise",cls:"ph-value"}
+  ],
+  cards: [
+    /* LANE: Lifecycle Readiness */
+    {id:"LR-P1-MANDATE",lane:"Lifecycle Readiness",phase:"P1 Problem",level:"Program",state:"Active",meta:"Program Frame",title:"Program Mandate & Problem Statement",description:"Formalises the business case for transformation, establishing strategic intent and problem boundaries before discovery investment begins.",body:"The program mandate captures the sponsor-endorsed rationale, articulates the problem that land tax administration faces, and sets the scope boundary that constrains subsequent artefact production. It anchors all downstream phases and prevents scope drift by requiring explicit change control for boundary adjustments.",lead:"Program Director",support:"Sponsor, BA Practice",deliverable:"Program charter, problem statement, scope boundary",traceability:"Mandate → Problem Statement → Design Brief",governance:"Sponsor endorsement / governance entry gate",chips:["Charter","Mandate","Scope"],template_url:""},
+    {id:"LR-P2-STAKEHOLDER",lane:"Lifecycle Readiness",phase:"P2 Context",level:"Program",state:"Active",meta:"Stakeholder Map",title:"Stakeholder & Context Register",description:"Maps all affected parties, their interests, and the organisational context within which the transformation will operate.",body:"A structured stakeholder register identifies decision-makers, SMEs, impacted business units, and external parties including taxpayers and agents. Context mapping captures regulatory obligations, legacy platform constraints, and the political landscape that will shape design decisions and change strategy throughout the lifecycle.",lead:"Program Director",support:"Change Manager, BA",deliverable:"Stakeholder register, context map, RACI",traceability:"Context → Change Impact → Adoption Plan",governance:"Sponsor review / program governance awareness",chips:["Stakeholders","Context","RACI"],template_url:""},
+    {id:"LR-P3-BASELINE",lane:"Lifecycle Readiness",phase:"P3 Current State",level:"Program",state:"Active",meta:"Baseline",title:"Capability & Platform Baseline Assessment",description:"Establishes the current capability maturity and platform fitness level as the comparative baseline for target state design.",body:"A structured assessment across People, Process, and Technology dimensions produces a maturity baseline for each capability domain. Platform assessment documents ESYS, CM10, COI, HCL Notes, TARB, and LetterPro against functional requirements to surface reuse opportunities and identify gaps requiring configuration or build investment.",lead:"Solution Architect",support:"BA, Platform Eng",deliverable:"Capability maturity baseline, platform fit assessment",traceability:"Baseline → Gap Analysis → Architecture Decisions",governance:"governance baseline endorsement",chips:["Maturity","Platform","Baseline"],template_url:""},
+    {id:"LR-P4-DESIGN-BRIEF",lane:"Lifecycle Readiness",phase:"P4 Target Design",level:"Program",state:"Active",meta:"Design Frame",title:"Design Brief & Delivery Principles",description:"Establishes the design intent, delivery principles, and architectural guardrails that govern all target state decisions.",body:"The design brief codifies the non-negotiable principles — configuration before customisation, platform reuse, process-first design — that constrain how the target state is built. It includes architecture guardrails, platform selection rationale, and the operating model intent that all delivery streams must honour. Acts as the reference document for governance escalation when design pressure conflicts with principles.",lead:"Enterprise Architect",support:"BA Practice, Product",deliverable:"Design brief, delivery principles, platform selection",traceability:"Principles → Architecture Decision Records → Backlog",governance:"governance endorsement required before P5",chips:["Design Brief","Principles","Guardrails"],template_url:""},
+    {id:"LR-P5-READY-GATE",lane:"Lifecycle Readiness",phase:"P5 Ready Gate",level:"Program",state:"Active",meta:"Gate Check",title:"Build Readiness Gate Assessment",description:"Formal multi-disciplinary gate check confirming all conditions for build entry are satisfied across process, architecture, and delivery.",body:"The readiness gate validates that the full set of entry conditions is met: approved process design, complete business rules, resolved architecture decisions, signed-off user stories with acceptance criteria, test strategy in place, environment provisioned, and change plan initiated. Any unresolved item is tracked as a gate risk with an explicit owner and resolution timeline before build commences.",lead:"Program Director",support:"All Disciplines",deliverable:"Gate assessment report, risk register, entry decision",traceability:"Gate Conditions → Build Entry → Sprint 1 Planning",governance:"Formal governance gate — sign-off required",chips:["Gate","Readiness","Sign-off"],template_url:""},
+    {id:"LR-P6-SPRINT-PLAN",lane:"Lifecycle Readiness",phase:"P6 Build & Test",level:"Program",state:"Planned",meta:"Delivery Frame",title:"Sprint Cadence & Delivery Governance",description:"Establishes the sprint rhythm, delivery governance model, and escalation pathways for the build and test phase.",body:"Sprint cadence is set, ceremonies defined, and the delivery governance model established including fortnightly steering committee reporting, design authority advisory access, and a defined escalation path for mid-sprint architectural or business rule conflicts. Backlog health, velocity tracking, and defect triage protocols are agreed before Sprint 1 commences.",lead:"Delivery Lead",support:"BA, QA, Architecture",deliverable:"Sprint plan, governance calendar, escalation protocol",traceability:"Sprint Plan → Story Delivery → Velocity Reporting",governance:"Steering committee / Program Director approval",chips:["Sprints","Cadence","Governance"],template_url:""},
+    {id:"LR-P7-RELEASE-PLAN",lane:"Lifecycle Readiness",phase:"P7 Deploy & Release",level:"Program",state:"Planned",meta:"Release Frame",title:"Release Strategy & Cutover Plan",description:"Defines the release approach, cutover sequence, rollback conditions, and communication plan for go-live.",body:"The release strategy determines whether a phased, big-bang, or parallel-run deployment model is appropriate given operational risk. The cutover plan sequences each system migration, data migration, staff communication, and support model transition. Rollback conditions and triggers are documented with clear decision authority assigned to the Program Director or Executive Sponsor.",lead:"Delivery Lead",support:"DevOps, Change, QA",deliverable:"Release strategy, cutover plan, rollback protocol",traceability:"Release Plan → Cutover → Go-Live Checklist",governance:"Executive sponsor / design authority release authority",chips:["Release","Cutover","Rollback"],template_url:""},
+    {id:"LR-P8-BENEFITS",lane:"Lifecycle Readiness",phase:"P8 Value",level:"Program",state:"Planned",meta:"Benefits Frame",title:"Benefits Realisation & Optimisation Cycle",description:"Tracks the delivery of forecast benefits against the program mandate and initiates optimisation cycles where gaps emerge.",body:"A benefits realisation register maps each program benefit to a measurable indicator, a baseline value, a target value, and a scheduled measurement date. Post-go-live reviews at 30, 90, and 180 days assess actual outcomes against forecast. Where benefits are not tracking to plan, the optimisation cycle initiates a structured root-cause analysis and corrective action that feeds back into the capability maturity model.",lead:"Program Director",support:"BA, Finance, Operations",deliverable:"Benefits register, measurement dashboard, optimisation log",traceability:"Benefits Register → Measurement → Corrective Actions",governance:"Executive sponsor / program board review",chips:["Benefits","Measurement","Optimisation"],template_url:""},
+    /* LANE: Artefact Spine */
+    {id:"AS-P1-PROBLEM-FRAME",lane:"Artefact Spine",phase:"P1 Problem",level:"Artefact",state:"Active",meta:"Frame",title:"Problem Framing Artefact",description:"Documents the validated problem statement, hypothesis, and design questions that anchor the transformation artefact chain.",body:"The problem framing artefact captures the validated problem statement using a structured format: context, complication, question, and answer. It documents the hypothesis being tested, the assumptions underpinning the program, and the design questions that discovery must answer. This artefact is the root node of the traceability chain and all subsequent artefacts must trace back to it.",lead:"BA Practice Lead",support:"Sponsor, Program Director",deliverable:"Problem statement, hypothesis, design questions",traceability:"Problem Frame → Discovery → All Downstream Artefacts",governance:"Sponsor sign-off / governance entry",chips:["Problem","Hypothesis","Traceability"],template_url:""},
+    {id:"AS-P2-DISCOVERY-SYNTHESIS",lane:"Artefact Spine",phase:"P2 Context",level:"Program",state:"Active",meta:"Artefact Gate",title:"Discovery Synthesis & Value Stream Register",description:"Consolidates discovery outputs into a structured synthesis package anchored by the endorsed Value Stream Register — the traceability root for all program artefacts.",body:"The discovery synthesis artefact package consolidates all P2 outputs into a coherent baseline: the stakeholder research synthesis, constraint analysis, and — critically — the endorsed Value Stream Register that establishes the top level of the program decomposition hierarchy. The Value Stream Register names each in-scope value stream, records its trigger and customer outcome, identifies its current operational owner, and flags its priority for transformation sequencing. This register is the traceability root: every subsequent artefact — capability maps, epics, features, stories — must reference it. The package is presented to the program governance for endorsement before P3 discovery begins.",lead:"BA Practice Lead",support:"Product Owner, Architecture",deliverable:"Discovery Synthesis Package, Value Stream Register (endorsed), Constraint Log",traceability:"Value Stream Register → P3 Capability Map → P4 Epic Register",governance:"governance endorsement — gate condition for P3 entry",chips:["Value Stream Register","Discovery Synthesis","Traceability Root","program governance Gate"],template_url:""},
+    {id:"AS-P3-PROCESS-MAP",lane:"Artefact Spine",phase:"P3 Current State",level:"Artefact",state:"Active",meta:"AS-IS",title:"Current State Process & Service Blueprint",description:"Produces the authoritative as-is process map and service blueprint used as the baseline for gap analysis and target design.",body:"Level 2 and Level 3 BPMN process maps are produced for all in-scope processes, validated with SMEs, and published as the current state baseline. A service blueprint layer captures the frontstage, backstage, and support system interactions to surface hidden complexity and integration dependencies. This artefact is the primary input to the gap analysis and cannot be bypassed in the design sequence.",lead:"BA",support:"SMEs, HCD, Architecture",deliverable:"AS-IS BPMN L2/L3, service blueprint, validated with SMEs",traceability:"AS-IS Process → Gap Analysis → TO-BE Process",governance:"SME sign-off / design authority process baseline endorsement",chips:["BPMN","Service Blueprint","AS-IS"],template_url:""},
+    {id:"AS-P4-TARGET-ARTEFACT-SUITE",lane:"Artefact Spine",phase:"P4 Target Design",level:"Program",state:"Active",meta:"Artefact Gate",title:"Target Design Suite & Epic Register",description:"Consolidates the complete target design artefact suite including the endorsed Epic Register — the decomposition artefact that gates entry to P5 story decomposition and backlog preparation.",body:"The target design artefact suite is the most comprehensive artefact package in the transformation lifecycle. It includes: the TO-BE process maps, the solution architecture, integration design, ADRs, business rules register, target experience design, and — as the decomposition centrepiece — the endorsed Epic Register with Feature Backlog. The Epic Register records every epic by capability reference, problem statement, acceptance conditions, architecture disposition, and estimated Feature count. The Feature Backlog records each Feature with its parent Epic, its outcome statement, and its draft acceptance criteria. Together these constitute the decomposition spine from Value Stream through to Feature level. The package is presented to the program governance for joint endorsement before P5 work begins.",lead:"BA Practice Lead",support:"Solution Architect, Product Owner",deliverable:"Full Target Design Package, Endorsed Epic Register, Feature Backlog (draft)",traceability:"Epic Register + Feature Backlog → P5 Story Decomposition → DoR Backlog",governance:"Program governance endorsement — mandatory gate to P5",chips:["Epic Register","Feature Backlog","Design Suite","Governance Gate"],template_url:""},
+    {id:"AS-P5-BACKLOG-GATE",lane:"Artefact Spine",phase:"P5 Ready Gate",level:"Program",state:"Active",meta:"Artefact Gate",title:"DoR-Compliant Backlog & Decomposition Traceability Package",description:"Finalises and certifies the DoR-compliant story backlog and produces the full decomposition traceability package — Value Stream to Story — as primary gate evidence for the Build Gate.",body:"The backlog artefact gate consolidates the complete decomposition traceability package for the Build Gate evidence bundle. This package demonstrates end-to-end traceability from Value Stream through Capability to Epic to Feature to Story for every item in the sprint-ready backlog. The traceability package allows the gate panel to verify that every story in the backlog can be traced to a capability gap, which traces to a value stream, which traces to the program mandate. Stories without full traceability are excluded from the gate evidence package and treated as backlog debt requiring resolution before sprint entry. The DoR Compliance Certificate from the BA Practice Lead is the primary backlog gate condition.",lead:"BA Practice Lead",support:"Product Owner, Solution Architect",deliverable:"Decomposition Traceability Package, DoR Backlog, Traceability Matrix (VS→Cap→Epic→Feature→Story)",traceability:"Full decomposition spine certified → Build Gate → Sprint 1",governance:"Build Gate mandatory evidence — sponsor and design authority review",chips:["Traceability Package","DoR Backlog","Decomposition Spine","Build Gate Evidence"],template_url:""},
+    {id:"AS-P6-CHANGE-LOG",lane:"Artefact Spine",phase:"P6 Build & Test",level:"Artefact",state:"Planned",meta:"Change Log",title:"Build Artefact & Change Log",description:"Maintains a versioned record of all design changes, business rule amendments, and configuration decisions made during build.",body:"The build change log is a living artefact maintained by the BA throughout the delivery phase. It records every deviation from the approved design, the business justification, the approver, and the impact on test cases and acceptance criteria. Changes above a defined threshold are escalated to design authority. The log feeds directly into the release readiness assessment and provides an audit trail for post-implementation review.",lead:"BA",support:"Product Owner, Architecture",deliverable:"Change log, impact register, governance escalation record",traceability:"Change Log → Test Case Updates → Release Readiness",governance:"BA practice / design authority threshold-based escalation",chips:["Change Log","Version Control","Audit"],template_url:""},
+    {id:"AS-P7-RUNBOOK",lane:"Artefact Spine",phase:"P7 Deploy & Release",level:"Artefact",state:"Planned",meta:"Operations",title:"Operational Runbook & Knowledge Transfer",description:"Produces the operational runbook, procedure documentation, and knowledge transfer materials required for sustainable operations post-go-live.",body:"The runbook documents all operational procedures for the transformed process including exception handling, escalation paths, system access, daily reconciliation, and month-end obligations. Knowledge transfer materials include annotated process maps, quick reference guides, and recorded walkthroughs. Procedure artefacts follow the DCPR methodology for rapid production and publication to the SRO procedure library.",lead:"BA",support:"Operations, DevOps, Change",deliverable:"Operational runbook, procedure artefacts, knowledge transfer pack",traceability:"Runbook → Training → Sustained Operations",governance:"Operations sign-off / go-live readiness",chips:["Runbook","Procedures","DCPR"],template_url:""},
+    {id:"AS-P8-RETRO",lane:"Artefact Spine",phase:"P8 Value",level:"Artefact",state:"Planned",meta:"Retrospective",title:"Post-Implementation Review & Lessons",description:"Captures the post-implementation review findings, methodology refinements, and lessons that feed back into the BA practice.",body:"The post-implementation review evaluates the quality and utility of the artefact spine across the lifecycle, identifying where artefacts were underdeveloped, where they were bypassed, and where they added disproportionate value. Findings update the BA practice methodology, the artefact templates, and the gate criteria for future programs. The lessons register is published to the BA practice portal and referenced in the next program initiation.",lead:"BA Practice Lead",support:"Program Director, All Disciplines",deliverable:"PIR report, lessons register, methodology update",traceability:"PIR → Methodology Update → Next Program",governance:"BA practice governance / program board",chips:["PIR","Lessons","Methodology"],template_url:""},
+    /* LANE: HCD / Experience */
+    {id:"HCD-P1-BRIEF",lane:"HCD / Experience",phase:"P1 Problem",level:"HCD",state:"Active",meta:"Research Brief",title:"HCD Research Brief & Framing",description:"Establishes the human-centred design research brief aligned to the problem statement, identifying user populations and research questions.",body:"The HCD research brief defines the user populations to be researched — including taxpayers, tax agents, SRO staff processing roles, and appeals officers — and frames the design questions from a human experience perspective. Research methods are scoped including contextual interviews, task analysis, and service observation. The brief is aligned to the program problem statement to ensure design research reinforces rather than duplicates business analysis discovery.",lead:"Service Designer",support:"BA, Program Director",deliverable:"HCD research brief, user population map, research plan",traceability:"Research Brief → User Research → Experience Insights",governance:"Program Director awareness / BA alignment",chips:["HCD","Research Brief","User Populations"],template_url:""},
+    {id:"HCD-P2-RESEARCH",lane:"HCD / Experience",phase:"P2 Context",level:"HCD",state:"Active",meta:"User Research",title:"User Research & Experience Insights",description:"Conducts user research to surface the lived experience of current land tax processes and identify pain points from the user perspective.",body:"Structured user research activities including interviews with taxpayers, tax agents, and SRO staff produce a set of validated experience insights. Insights are categorised by severity, frequency, and user segment, then cross-referenced with the business analysis discovery findings to identify where process pain correlates with user distress. Research outputs are synthesised into experience principles that constrain target design decisions.",lead:"Service Designer",support:"BA, SMEs",deliverable:"User research report, experience insights, experience principles",traceability:"Research → Personas → Journey Maps → Experience Principles",governance:"BA synthesis alignment / program governance awareness",chips:["User Research","Insights","Experience"],template_url:""},
+    {id:"HCD-P3-JOURNEY",lane:"HCD / Experience",phase:"P3 Current State",level:"HCD",state:"Active",meta:"AS-IS Journey",title:"Current State Journey Maps & Personas",description:"Produces validated current state journey maps and personas that visualise the end-to-end user experience across the land tax lifecycle.",body:"Journey maps are produced for each primary user segment covering the full land tax interaction lifecycle from notification receipt through to assessment, objection, and payment. Maps document touchpoints, emotions, pain points, and moments of truth. Personas are validated with research data and reviewed by SRO operations staff. Journey maps are published alongside the AS-IS process map as a complementary lens on current state complexity.",lead:"Service Designer",support:"BA, Operations SMEs",deliverable:"Validated journey maps, personas, experience baseline",traceability:"Journey Maps → Experience Gaps → Target Experience Design",governance:"SME validation / BA alignment with process map",chips:["Journey Maps","Personas","Experience Baseline"],template_url:""},
+    {id:"HCD-P4-TARGET-EXP",lane:"HCD / Experience",phase:"P4 Target Design",level:"HCD",state:"Active",meta:"TO-BE Experience",title:"Target Experience Design & Interaction Principles",description:"Produces the target state experience design including key interaction principles, UI pattern guidance, and service experience commitments.",body:"Target experience design translates HCD research insights into a set of interaction principles and service experience commitments that constrain platform configuration and UI decisions. Key screens and interaction flows are prototyped and validated with users before the design is handed to architecture and development. The target experience artefacts are referenced in user story acceptance criteria to ensure delivery remains experience-aligned.",lead:"Service Designer",support:"BA, Architecture, Development",deliverable:"Target experience design, interaction principles, validated prototypes",traceability:"Experience Design → UI Principles → Story Acceptance Criteria",governance:"design authority design review / experience validation with users",chips:["Target Experience","Interaction Design","Prototypes"],template_url:""},
+    {id:"HCD-P6-UAT-SUPPORT",lane:"HCD / Experience",phase:"P6 Build & Test",level:"HCD",state:"Planned",meta:"Validation",title:"HCD Build Validation & UAT Support",description:"Provides structured user validation of built features against target experience design during the build and test phase.",body:"The service designer participates in sprint reviews to validate built features against the target experience design and interaction principles. Where deviations are identified, they are logged in the change log with a severity rating and referred to the Product Owner for resolution. Moderated user testing sessions are conducted at defined sprint milestones to confirm the cumulative build is tracking to the target experience intent.",lead:"Service Designer",support:"BA, QA, Development",deliverable:"HCD validation report, deviation log, user testing findings",traceability:"Build Validation → UAT → Go-Live Readiness",governance:"Sprint review / Product Owner decision",chips:["UAT Support","User Validation","HCD Review"],template_url:""},
+    {id:"HCD-P7-TRAINING",lane:"HCD / Experience",phase:"P7 Deploy & Release",level:"HCD",state:"Planned",meta:"Training Design",title:"Training Materials & Experience Guides",description:"Produces HCD-informed training materials and experience guides that support effective adoption of the new process and platform.",body:"Training materials are designed using the same experience principles that guided the platform build, ensuring consistency between the designed experience and the learning experience. Materials include role-based quick reference guides, annotated workflow diagrams, and short-form instructional content optimised for operational staff. Experience guides for taxpayers and agents are produced for publication on MyLandTax and SRO digital channels.",lead:"Service Designer",support:"Change Manager, BA, Operations",deliverable:"Training materials, quick reference guides, taxpayer experience guides",traceability:"Training → Adoption → Experience Measurement",governance:"Change manager approval / go-live readiness",chips:["Training","Experience Guides","Adoption"],template_url:""},
+    {id:"HCD-P8-MEASUREMENT",lane:"HCD / Experience",phase:"P8 Value",level:"HCD",state:"Planned",meta:"Experience Measure",title:"Post-Go-Live Experience Measurement",description:"Measures the delivered user experience against the target experience design to identify gaps and improvement opportunities.",body:"Post-go-live experience measurement uses a combination of quantitative metrics including task completion rates, error rates, and contact volume, alongside qualitative feedback from staff sentiment surveys and taxpayer feedback channels. Findings are mapped against the original experience principles and fed into the optimisation cycle. Persistent experience gaps are escalated to the program board for resolution funding.",lead:"Service Designer",support:"BA, Operations, Analytics",deliverable:"Experience measurement report, improvement backlog",traceability:"Experience Measurement → Benefits Register → Optimisation",governance:"Program board / operations review",chips:["Experience Measurement","Feedback","Optimisation"],template_url:""},
+    /* LANE: Business Analysis */
+    {id:"BA-P1-SCOPE",lane:"Business Analysis",phase:"P1 Problem",level:"Process",state:"Active",meta:"Scope",title:"In-Scope Process Inventory & Discovery Plan",description:"Identifies all in-scope processes, establishes the BA discovery plan, and confirms SME engagement commitments for current state mapping.",body:"The BA produces a structured inventory of all in-scope processes using the SRO process taxonomy as the reference framework. Each process is assessed for complexity, volume, and discovery priority. The discovery plan schedules SME workshops, assigns BA resource, and defines the artefact output standard for each process. SME engagement commitments are confirmed with operations management before discovery investment proceeds.",lead:"BA",support:"Operations, Program Director",deliverable:"Process inventory, discovery plan, SME engagement schedule",traceability:"Process Inventory → Discovery → AS-IS Mapping",governance:"BA practice sign-off / operations management confirmation",chips:["Process Inventory","Discovery Plan","Scope"],template_url:""},
+    {id:"BA-P2-VALUE-STREAM-ID",lane:"Business Analysis",phase:"P2 Context",level:"Operational",state:"Active",meta:"Decomposition",title:"Value Stream Identification & Scoping",description:"Identifies and bounds the value streams in scope for transformation, establishing the decomposition framework that drives all downstream backlog work.",body:"Value stream identification is the foundational decomposition activity of the transformation. The BA works with the product owner and subject matter experts to name, bound, and prioritise the value streams that the transformation will address. Each value stream is defined by its trigger, its customer outcome, and its current operational boundary. The output is a Value Stream Register that becomes the top level of the traceability hierarchy — every capability, epic, feature, and story must trace to an entry in this register. Value streams that are out of scope are explicitly documented to prevent scope creep.",lead:"BA Practice Lead",support:"Product Owner, Subject Matter Experts",deliverable:"Value Stream Register, Decomposition Framework, Scope Boundary Map",traceability:"Value Streams → Capability Map → Epic Register → Feature Backlog → Stories",governance:"Governance endorsement required — scope baseline for entire program",chips:["Value Stream","Decomposition","Scope Baseline","Traceability"],template_url:""},
+    {id:"BA-P3-CAPABILITY-MAP",lane:"Business Analysis",phase:"P3 Current State",level:"Operational",state:"Active",meta:"Decomposition",title:"Capability Mapping & Gap Analysis",description:"Maps current capabilities against each value stream, assesses maturity and fitness, and produces the gap analysis that directly seeds the Epic Register in P4.",body:"Capability mapping is the second level of the decomposition hierarchy. For each value stream identified in P2, the BA and Solution Architect identify the capabilities required to deliver the value stream outcome — both current capabilities and target capabilities. Each capability is assessed for maturity across People, Process, and Technology dimensions. The gap between current and target maturity for each capability is recorded in the Capability Gap Register. This register is the direct input to Epic definition in P4: each material capability gap becomes the basis for one or more epics. Capabilities with no gap are documented as baseline confirmations and require no further decomposition.",lead:"BA Practice Lead",support:"Solution Architect, SMEs",deliverable:"Capability Map, Capability Maturity Assessment, Capability Gap Register",traceability:"Value Streams → Capabilities → Gaps → Epic Register (P4)",governance:"design authority endorsement of capability architecture — mandatory before P4",chips:["Capability Map","Gap Analysis","Maturity Assessment","Decomposition L2"],template_url:""},
+    {id:"BA-P4-EPIC-DEFINITION",lane:"Business Analysis",phase:"P4 Target Design",level:"Operational",state:"Active",meta:"Decomposition",title:"Epic Definition from Capability Gaps",description:"Translates each capability gap into a bounded Epic, defines acceptance conditions at Epic level, and decomposes each Epic into Features ready for story writing in P5.",body:"Epic definition is the third level of the decomposition hierarchy and the bridge between capability architecture and the delivery backlog. For each capability gap recorded in the Capability Gap Register the BA defines one or more epics that bound the work required to close that gap. Each Epic is written with: a capability reference, a problem statement, a target outcome, high-level acceptance conditions, an architecture disposition (configure/customise/build), and an estimated Feature count. Epics are then decomposed into Features — each Feature representing a discrete, deliverable increment of the Epic that can be independently built and tested. The output is the Epic Register and the Feature Backlog, which together form the structured input to P5 story writing and DoR assessment.",lead:"BA Practice Lead",support:"Product Owner, Solution Architect",deliverable:"Epic Register, Feature Backlog (draft), Capability-to-Epic Traceability Matrix",traceability:"Capability Gaps → Epics → Features → Stories (P5)",governance:"governance endorsement of Epic Register before P5 story decomposition",chips:["Epic Register","Feature Backlog","Decomposition L3","Capability Traceability"],template_url:""},
+    {id:"BA-P5-FEATURE-STORY-DECOMP",lane:"Business Analysis",phase:"P5 Ready Gate",level:"Operational",state:"Active",meta:"Decomposition",title:"Feature Decomposition & Story Writing to DoR",description:"Decomposes each Feature into user stories, applies Definition of Ready criteria, and produces the DoR-compliant sprint-ready backlog that gates the build decision.",body:"Feature decomposition and story writing is the fourth and final level of the decomposition hierarchy. For each Feature in the Feature Backlog the BA writes user stories in the agreed format, ensuring each story has: a clear user role and outcome, acceptance criteria that are testable and unambiguous, a dependency and assumption log, a story point estimate (or t-shirt size for planning), and explicit DoR compliance confirmation. Stories that cannot meet DoR are flagged as blockers with a resolution owner and timeline. The output is the DoR-compliant backlog — the direct input to sprint planning. The backlog is reviewed with the Product Owner and Solution Architect, and the BA certifies DoR compliance as a formal gate condition for the Build Gate in P5.",lead:"BA Practice Lead",support:"Product Owner, Solution Architect, QA Lead",deliverable:"DoR-Compliant Story Backlog, Story-to-Feature Traceability, DoR Compliance Certificate",traceability:"Features → Stories → DoR Certificate → Build Gate Evidence → Sprint Planning",governance:"BA DoR certification — mandatory build gate condition",chips:["Story Writing","DoR","Feature Decomposition","Backlog Readiness","Decomposition L4"],template_url:""},
+    {id:"BA-P6-SME-SUPPORT",lane:"Business Analysis",phase:"P6 Build & Test",level:"Process",state:"Planned",meta:"Build Support",title:"BA Build Support & Rules Clarification",description:"Provides on-demand business rule clarification, process interpretation, and change log maintenance throughout the build and test phase.",body:"The BA acts as the primary business knowledge authority during build, responding to developer and QA queries within an agreed SLA. Business rule clarifications are documented in the change log and, where they alter the accepted design, are escalated to the Product Owner with an impact assessment. The BA maintains the traceability matrix throughout build to ensure stories remain connected to their originating process steps and design decisions.",lead:"BA",support:"Development, QA, Product Owner",deliverable:"Rules clarification log, updated traceability matrix, change decisions",traceability:"Build Queries → Rules Clarification → Change Log → Testing",governance:"Product Owner decision authority / governance for threshold changes",chips:["Build Support","Rules","Traceability"],template_url:""},
+    {id:"BA-P7-UAT",lane:"Business Analysis",phase:"P7 Deploy & Release",level:"Process",state:"Planned",meta:"UAT",title:"UAT Facilitation & Go-Live Sign-Off",description:"Facilitates user acceptance testing, manages defect triage, and provides the business sign-off recommendation for go-live.",body:"The BA designs the UAT script library from the accepted acceptance criteria and facilitates execution with operational SMEs. Defects are triaged against the original business rules and prioritised by operational impact. The BA produces the go-live recommendation report summarising UAT outcomes, outstanding defects with risk ratings, and the change readiness assessment. The go-live sign-off recommendation is provided to the Product Owner and Program Director.",lead:"BA",support:"SMEs, QA, Operations",deliverable:"UAT scripts, defect triage register, go-live recommendation",traceability:"UAT → Defect Resolution → Go-Live Decision",governance:"Product Owner sign-off / Program Director go-live authority",chips:["UAT","Go-Live","Sign-Off"],template_url:""},
+    {id:"BA-P8-OPTIMISE",lane:"Business Analysis",phase:"P8 Value",level:"Process",state:"Planned",meta:"Optimisation",title:"Process Performance & Optimisation Analysis",description:"Analyses post-go-live process performance data to identify optimisation opportunities and update the capability maturity baseline.",body:"The BA conducts structured post-implementation process reviews at 30, 90, and 180 days using process performance data from operational systems. Analysis compares actual process execution against the target state design, identifying deviations, bottlenecks, and rule failures. Findings are mapped to the capability maturity model to update the baseline and identify the next optimisation sprint. The BA practice portal is updated with refined process artefacts reflecting the evolved operational reality.",lead:"BA",support:"Operations, Analytics, Platform",deliverable:"Process performance report, maturity update, optimisation backlog",traceability:"Performance Data → Optimisation Analysis → Updated Artefacts",governance:"Operations management / program board",chips:["Process Performance","Optimisation","Maturity"],template_url:""},
+    /* LANE: Architecture */
+    {id:"ARCH-P1-LANDSCAPE",lane:"Architecture",phase:"P1 Problem",level:"Architecture",state:"Active",meta:"Landscape",title:"Architecture Landscape & Platform Context",description:"Documents the current architecture landscape, platform inventory, and integration topology as the architectural foundation for design decisions.",body:"The architecture landscape document maps all platforms relevant to the transformation — ESYS, CM10, COI, HCL Notes, TARB, LetterPro, MyLandTax, and LOAN — against functional domains, integration dependencies, and technical debt indicators. The integration topology diagram shows current data flows and event streams. This artefact establishes the architectural context within which all design decisions must be made and is the primary reference for configuration-before-customisation assessments.",lead:"Solution Architect",support:"Platform Eng, BA",deliverable:"Architecture landscape, platform inventory, integration topology",traceability:"Landscape → Platform Assessment → Architecture Decisions",governance:"governance awareness / Enterprise Architecture alignment",chips:["Landscape","Platforms","Integration"],template_url:""},
+    {id:"ARCH-P2-CONSTRAINTS",lane:"Architecture",phase:"P2 Context",level:"Architecture",state:"Active",meta:"Constraints",title:"Technical Constraints & Risk Register",description:"Identifies the technical constraints, integration risks, and platform limitations that will constrain target design options.",body:"Technical constraint analysis examines each platform against the functional requirements emerging from discovery to surface integration limitations, data model constraints, licensing boundaries, and performance characteristics. Each constraint is assessed for design impact and assigned a risk rating. High-rated constraints are flagged to the Program Director as potential scope or budget risk items. The register is a living artefact updated as design progresses and new constraints emerge through detailed design.",lead:"Solution Architect",support:"Platform Eng, BA",deliverable:"Technical constraints register, integration risk register",traceability:"Constraints → Architecture Decisions → Design Guidance",governance:"design authority review / governance risk awareness",chips:["Constraints","Technical Risk","Integration"],template_url:""},
+    {id:"ARCH-P3-CAPABILITY-ARCH",lane:"Architecture",phase:"P3 Current State",level:"Architecture",state:"Active",meta:"Architecture",title:"Capability Architecture & Platform Fit Assessment",description:"Defines the target capability architecture aligned to each value stream, assesses platform fit for each capability, and identifies the build-vs-configure decisions that constrain Epic scope.",body:"The Solution Architect produces the capability architecture view that maps each in-scope value stream to its required capabilities and then assesses the platform landscape against those capabilities. For each capability the architecture assessment determines whether the gap can be closed by configuration of the target platform, customisation, integration, or net-new build. This assessment is a direct input to Epic scoping in P4: the architecture disposition of each capability gap determines the Epic type, complexity, and governance escalation requirement. Configuration-first is the standing principle — any capability requiring customisation or net-new build must be flagged for design authority review before Epic definition proceeds.",lead:"Solution Architect",support:"BA Practice Lead, Platform Engineering",deliverable:"Capability Architecture View, Platform Fit Matrix, Build-vs-Configure Register",traceability:"Capability Architecture → Platform Fit → Epic Scope Constraints → P4 ADRs",governance:"design authority review of platform fit and build-vs-configure decisions",chips:["Capability Architecture","Platform Fit","Build vs Configure","Design Authority Input"],template_url:""},
+    {id:"ARCH-P4-SOLUTION-DESIGN",lane:"Architecture",phase:"P4 Target Design",level:"Architecture",state:"Active",meta:"Solution Design",title:"Solution Architecture & Integration Design",description:"Produces the target solution architecture, integration design, and Architecture Decision Records that govern the build phase.",body:"The solution architecture document defines the target platform configuration, integration patterns, data model changes, and API contracts required to realise the target operating model. Architecture Decision Records capture each significant design choice with the options considered, the rationale for the selected approach, and the trade-offs accepted. Integration design specifies message formats, event triggers, error handling, and SLA requirements for each integration point. ADRs are reviewed by design authority before gate passage.",lead:"Solution Architect",support:"Enterprise Architect, Development",deliverable:"Solution architecture, integration design, Architecture Decision Records",traceability:"Solution Architecture → ADRs → Technical Stories → Build",governance:"mandatory design authority review and endorsement before P5",chips:["Solution Architecture","ADRs","Integration Design"],template_url:""},
+    {id:"ARCH-P5-TECH-READINESS",lane:"Architecture",phase:"P5 Ready Gate",level:"Architecture",state:"Active",meta:"Tech Readiness",title:"Technical Readiness Assessment & ADR Sign-Off",description:"Confirms all architecture decisions are resolved, technical stories are defined, and the platform is ready for build entry.",body:"The technical readiness assessment validates that all Architecture Decision Records are endorsed, all integration specifications are complete, all technical stories are in the backlog, and all environment prerequisites are met. Unresolved technical decisions are treated as gate-blocking risks. The solution architect certifies technical readiness as a mandatory gate condition. Any open ADR at gate entry is escalated to design authority with a resolution plan and timeline.",lead:"Solution Architect",support:"Platform Eng, Development",deliverable:"Technical readiness certification, ADR endorsement register",traceability:"Technical Readiness → Sprint 1 Tech Stories → Build",governance:"design authority ADR endorsement / gate condition",chips:["Technical Readiness","ADR Sign-Off","Gate"],template_url:""},
+    {id:"ARCH-P6-ARCH-ASSURANCE",lane:"Architecture",phase:"P6 Build & Test",level:"Architecture",state:"Planned",meta:"Assurance",title:"Architecture Assurance & Deviation Management",description:"Provides ongoing architecture assurance during build, managing deviations from approved design and maintaining ADR currency.",body:"The solution architect conducts sprint-cadenced architecture assurance reviews to confirm that build output conforms to approved architecture designs. Technical deviations are logged and assessed for impact on the solution architecture. Deviations above the agreed threshold are escalated to governance for a fast-track decision. The ADR register is updated to reflect approved changes, maintaining a traceable record of the as-built architecture versus the approved design.",lead:"Solution Architect",support:"Development Lead, design authority",deliverable:"Assurance review log, deviation register, updated ADRs",traceability:"Build Output → Assurance Review → ADR Updates",governance:"governance fast-track for threshold deviations",chips:["Architecture Assurance","Deviation Management","ADRs"],template_url:""},
+    {id:"ARCH-P7-DEPLOYMENT",lane:"Architecture",phase:"P7 Deploy & Release",level:"Architecture",state:"Planned",meta:"Deployment Arch",title:"Deployment Architecture & Operational Handover",description:"Confirms the deployment architecture, operational monitoring design, and conducts the formal handover to sustained operations.",body:"The deployment architecture confirms the production topology, scaling parameters, monitoring and alerting configuration, and backup and recovery procedures. Operational monitoring is designed to provide visibility of process execution health, integration event failures, and SLA adherence in real time. The formal architecture handover to operations includes a technical briefing, documentation package, and an agreed hypercare support period during which the solution architect remains accessible for post-go-live technical issues.",lead:"Solution Architect",support:"DevOps, Platform Eng, Operations",deliverable:"Deployment architecture, monitoring design, operational handover pack",traceability:"Deployment Architecture → Monitoring → Sustained Operations",governance:"governance go-live endorsement / operations acceptance",chips:["Deployment Arch","Monitoring","Handover"],template_url:""},
+    {id:"ARCH-P8-ROADMAP",lane:"Architecture",phase:"P8 Value",level:"Architecture",state:"Planned",meta:"Roadmap",title:"Architecture Roadmap & Technical Debt Register",description:"Produces the post-release architecture roadmap identifying capability evolution priorities and documenting accepted technical debt.",body:"The architecture roadmap maps the next evolution of the capability architecture based on post-implementation findings, benefit realisation gaps, and emerging platform capability. Technical debt incurred during the delivery phase is formally registered with an impact assessment and a resolution priority. The roadmap is published to the Enterprise Architecture practice and used as input to the next program planning cycle, ensuring transformation momentum is maintained within the architectural guardrails.",lead:"Solution Architect",support:"Enterprise Architect, BA",deliverable:"Architecture roadmap, technical debt register, evolution plan",traceability:"Architecture Roadmap → Next Program → Capability Evolution",governance:"design authority / Enterprise Architecture governance",chips:["Roadmap","Technical Debt","Capability Evolution"],template_url:""},
+    /* LANE: Development */
+    {id:"DEV-P3-ENV-STRATEGY",lane:"Development",phase:"P3 Current State",level:"Technical",state:"Active",meta:"Environment",title:"Environment Strategy & Development Standards",description:"Establishes the environment strategy, branching model, coding standards, and development toolchain before build commences.",body:"The environment strategy defines the development, system integration test, UAT, staging, and production environments with clear promotion gates between each. The branching model, code review standards, definition of done for technical stories, and the configuration management approach are agreed and published before the first sprint. Development standards are aligned to SRO technical standards and the platform vendor recommended practices to minimise technical debt accumulation.",lead:"Development Lead",support:"DevOps, Solution Architect",deliverable:"Environment strategy, branching model, development standards",traceability:"Dev Standards → Sprint 1 Setup → CI/CD Pipeline",governance:"Architecture review / governance technical standards",chips:["Environment Strategy","Dev Standards","Branching"],template_url:""},
+    {id:"DEV-P4-TECH-DESIGN",lane:"Development",phase:"P4 Target Design",level:"Technical",state:"Active",meta:"Technical Design",title:"Technical Design & Configuration Specifications",description:"Produces the detailed technical design and configuration specifications that developers will implement during the build phase.",body:"Technical design documents translate the solution architecture and user stories into implementation specifications covering object model configuration, workflow logic, integration connector setup, UI component configuration, and data migration scripts. Configuration specifications distinguish between declarative configuration that can be managed by admins and code-level customisation that requires developer involvement and architecture review. Specifications are reviewed by the solution architect before development commences.",lead:"Development Lead",support:"Solution Architect, BA",deliverable:"Technical design documents, configuration specifications",traceability:"Technical Design → Configuration → Test Cases",governance:"Solution Architect review / governance for customisation decisions",chips:["Technical Design","Configuration Spec","Dev Ready"],template_url:""},
+    {id:"DEV-P5-SPIKE",lane:"Development",phase:"P5 Ready Gate",level:"Technical",state:"Active",meta:"Spike",title:"Technical Spike Resolution & Estimate Validation",description:"Resolves technical uncertainties through time-boxed spikes and validates story estimates before Sprint 1 planning.",body:"Technical spikes are conducted for each area of significant implementation uncertainty, with a defined time-box and a clear question to be answered. Spike outcomes validate or revise story estimates and surface any technical blockers to be resolved before Sprint 1 commences. Spike findings inform the technical design documents and are reviewed by the solution architect to confirm alignment with the approved architecture. All spike outcomes are documented in the gate readiness evidence package.",lead:"Development Lead",support:"Solution Architect, QA",deliverable:"Spike findings, revised estimates, technical risk resolution",traceability:"Spikes → Estimate Confidence → Sprint 1 Planning",governance:"Gate readiness evidence / Solution Architect sign-off",chips:["Spikes","Estimates","Technical Risk"],template_url:""},
+    {id:"DEV-P6-BUILD",lane:"Development",phase:"P6 Build & Test",level:"Technical",state:"Planned",meta:"Build",title:"Iterative Configuration & Development Delivery",description:"Delivers configured and developed platform capability through fortnightly sprints, demonstrating working software at each sprint review.",body:"Development delivers through a fortnightly sprint cadence with working software demonstrated at each sprint review. Configuration is the primary delivery mechanism with customisation only where configuration capability is demonstrably insufficient and design-authority-endorsed. Unit tests are written alongside configuration changes. Pull requests require peer review and solution architect sign-off for any changes touching integration logic, security, or data model. Sprint velocity is reported to the steering committee at end of each sprint.",lead:"Development Lead",support:"Solution Architect, QA",deliverable:"Deployed sprint increments, unit test results, velocity reports",traceability:"Sprint Stories → Configured Features → Test Execution",governance:"Sprint review / Architecture assurance / Steering committee",chips:["Build","Configuration","Sprint Delivery"],template_url:""},
+    {id:"DEV-P7-DATA-MIGRATION",lane:"Development",phase:"P7 Deploy & Release",level:"Technical",state:"Planned",meta:"Data Migration",title:"Data Migration Execution & Validation",description:"Executes the validated data migration plan, performs reconciliation, and confirms data integrity before go-live authorisation.",body:"Data migration execution follows the approved migration strategy and scripts validated in the staging environment. Migration is performed in a controlled window with real-time reconciliation against source system record counts and key data quality metrics. Any reconciliation failure triggers an immediate halt and investigation per the defined decision tree. Post-migration validation by the BA and operations SMEs confirms migrated data meets the target state requirements before the go-live decision is made.",lead:"Development Lead",support:"BA, DevOps, Operations",deliverable:"Migration execution report, reconciliation results, data validation sign-off",traceability:"Migration Execution → Reconciliation → Go-Live Decision",governance:"Operations sign-off / Program Director go-live authority",chips:["Data Migration","Reconciliation","Go-Live"],template_url:""},
+    /* LANE: Testing / QE */
+    {id:"QE-P3-TEST-STRATEGY",lane:"Testing / QE",phase:"P3 Current State",level:"Quality",state:"Active",meta:"Strategy",title:"Test Strategy & Quality Framework",description:"Establishes the test strategy, coverage requirements, defect triage model, and quality gates that govern the entire delivery phase.",body:"The test strategy defines the testing approach across unit, integration, system, regression, performance, and user acceptance test levels. Coverage requirements are set per test level with explicit minimum pass thresholds. The defect triage model categorises defects by severity and business impact, specifying resolution SLAs and escalation paths. Quality gates are defined at sprint completion, SIT completion, UAT completion, and go-live, with entry and exit criteria documented for each gate.",lead:"QA Lead",support:"BA, Development, DevOps",deliverable:"Test strategy, quality framework, defect triage model, gate criteria",traceability:"Test Strategy → Test Cases → Execution → Quality Gates",governance:"quality framework review / Program Director endorsement",chips:["Test Strategy","Quality Framework","Gates"],template_url:""},
+    {id:"QE-P4-TEST-DESIGN",lane:"Testing / QE",phase:"P4 Target Design",level:"Quality",state:"Active",meta:"Test Design",title:"Test Case Design & Traceability Matrix",description:"Designs test cases from acceptance criteria and business rules, producing a full test-to-requirement traceability matrix.",body:"Test cases are designed in parallel with user story acceptance criteria, ensuring each acceptance criterion has at least one corresponding test case. The test-to-requirement traceability matrix maps each test case to the originating acceptance criterion, business rule, and process step. Automated test candidates are identified and flagged for automation development. Boundary conditions, negative paths, and exception scenarios are explicitly included to achieve comprehensive business rule coverage.",lead:"QA Lead",support:"BA, Development",deliverable:"Test case library, traceability matrix, automation candidates",traceability:"Test Cases → Acceptance Criteria → Process Steps",governance:"BA review of traceability / QA practice peer review",chips:["Test Cases","Traceability","Test Design"],template_url:""},
+    {id:"QE-P5-TEST-ENVIRONMENT",lane:"Testing / QE",phase:"P5 Ready Gate",level:"Quality",state:"Active",meta:"Environment",title:"Test Environment Readiness & Data Setup",description:"Confirms test environments are provisioned, test data is prepared, and the QA team is ready for Sprint 1 test execution.",body:"Test environment readiness is confirmed by verifying that all required environments are provisioned and stable, test data has been prepared to cover all identified test scenarios including boundary conditions and exception paths, the test automation framework is in place for automated candidates, and the QA team has been briefed on the test strategy and case library. Environment readiness is a mandatory gate condition. Any outstanding environment issues at gate entry are treated as high-priority risks.",lead:"QA Lead",support:"DevOps, BA, Development",deliverable:"Environment readiness confirmation, test data setup, automation framework",traceability:"Test Environment → Sprint Test Execution → Results",governance:"Gate condition / QA Lead certification",chips:["Test Environment","Test Data","Automation"],template_url:""},
+    {id:"QE-P6-EXECUTION",lane:"Testing / QE",phase:"P6 Build & Test",level:"Quality",state:"Planned",meta:"Execution",title:"Test Execution, Regression & Quality Reporting",description:"Executes the test plan across all test levels, manages regression suites, and reports quality status to the steering committee.",body:"Test execution follows the sprint-cadenced plan with functional testing completed within each sprint and regression testing at defined sprint milestones. Automated test suites are maintained and extended with each sprint increment. Defects are triaged within the agreed SLA and the weekly quality dashboard is distributed to the steering committee. Quality metrics including defect injection rate, test pass rate, and automation coverage are trended to surface systemic quality issues early and enable corrective action before they impact the timeline.",lead:"QA Lead",support:"Development, BA, DevOps",deliverable:"Test execution results, defect register, quality dashboard",traceability:"Test Execution → Defects → Resolution → Regression",governance:"Sprint review / Steering committee quality reporting",chips:["Test Execution","Regression","Quality Reporting"],template_url:""},
+    {id:"QE-P7-UAT-SIGN-OFF",lane:"Testing / QE",phase:"P7 Deploy & Release",level:"Quality",state:"Planned",meta:"UAT Sign-Off",title:"UAT Execution & Go-Live Quality Certificate",description:"Completes formal UAT execution, manages final defect resolution, and issues the quality certificate authorising go-live.",body:"User acceptance testing is conducted by operational SMEs facilitated by the BA using the approved UAT script library. The QA lead manages the UAT environment, tracks defect resolution, and produces the go-live quality certificate once all blocking defects are resolved and the UAT pass threshold is met. The quality certificate includes a summary of test coverage, defect resolution status, outstanding known issues with risk ratings, and the QA recommendation on go-live readiness.",lead:"QA Lead",support:"BA, Operations SMEs",deliverable:"UAT results, defect resolution summary, go-live quality certificate",traceability:"UAT → Defect Resolution → Quality Certificate → Go-Live",governance:"Operations sign-off / Program Director authority",chips:["UAT","Quality Certificate","Go-Live Sign-Off"],template_url:""},
+    {id:"QE-P8-QUALITY-REVIEW",lane:"Testing / QE",phase:"P8 Value",level:"Quality",state:"Planned",meta:"Review",title:"Post-Go-Live Quality Review & Regression Handover",description:"Reviews post-go-live defect trends, hands over regression suites to operations, and identifies quality improvement priorities.",body:"The post-go-live quality review analyses production defect rates against the UAT quality certificate baseline to identify any testing coverage gaps or production-specific failure modes. The automated regression suite is handed over to the operations and platform team with documentation and run instructions. Quality improvement recommendations are fed into the optimisation backlog. The QA practice methodology is updated with lessons from the delivery to improve test coverage and efficiency for future programs.",lead:"QA Lead",support:"DevOps, Operations, BA",deliverable:"Post-go-live quality report, regression handover, QA lessons",traceability:"Production Defects → Quality Review → Optimisation Backlog",governance:"Operations management / QA practice governance",chips:["Post-Go-Live","Regression Handover","Quality Lessons"],template_url:""},
+    /* LANE: DevOps / Platform */
+    {id:"DEVOPS-P3-PLATFORM",lane:"DevOps / Platform",phase:"P3 Current State",level:"Platform",state:"Active",meta:"Platform Inventory",title:"Platform Inventory & Operations Baseline",description:"Documents the current platform operations model, CI/CD maturity, and infrastructure baseline as the foundation for target platform design.",body:"The platform inventory documents all infrastructure components, CI/CD toolchain capabilities, deployment automation maturity, environment provisioning procedures, and incident response protocols. Operations baseline metrics capture current deployment frequency, change failure rate, mean time to recovery, and environment stability. This baseline is referenced in the target platform design to identify automation investment priorities and operations maturity improvements required to support a modern delivery cadence.",lead:"Platform Engineer",support:"Development Lead, Architecture",deliverable:"Platform inventory, CI/CD maturity assessment, operations baseline",traceability:"Platform Inventory → CI/CD Design → Environment Strategy",governance:"Architecture review / governance platform awareness",chips:["Platform Inventory","CI/CD Maturity","Operations Baseline"],template_url:""},
+    {id:"DEVOPS-P4-CICD",lane:"DevOps / Platform",phase:"P4 Target Design",level:"Platform",state:"Active",meta:"CI/CD Design",title:"CI/CD Pipeline Design & Environment Architecture",description:"Designs the target CI/CD pipeline, environment architecture, and automated deployment strategy for the transformation delivery.",body:"The CI/CD pipeline design specifies the build, test, and deployment stages with automation targets for each stage. Environment architecture defines the sandbox, development, SIT, UAT, staging, and production environments with infrastructure-as-code provisioning where available. Deployment automation targets include automated regression execution on deployment, smoke test execution post-deployment, and environment health monitoring. The design is reviewed by the solution architect for alignment with the broader platform architecture.",lead:"Platform Engineer",support:"Development Lead, Architecture",deliverable:"CI/CD pipeline design, environment architecture, IaC specifications",traceability:"CI/CD Design → Pipeline Build → Automated Deployment",governance:"Architecture review / governance platform endorsement",chips:["CI/CD","Environment Architecture","Automation"],template_url:""},
+    {id:"DEVOPS-P5-ENV-PROVISION",lane:"DevOps / Platform",phase:"P5 Ready Gate",level:"Platform",state:"Active",meta:"Provisioning",title:"Environment Provisioning & Pipeline Validation",description:"Provisions all delivery environments and validates the CI/CD pipeline end-to-end as a mandatory gate condition for build entry.",body:"All delivery environments — development, SIT, UAT, and staging — are provisioned and validated before gate passage. The CI/CD pipeline is executed end-to-end with a sample deployment to confirm that build, test, and deployment automation is functioning correctly. Environment access, secrets management, and monitoring agent installation are confirmed. Platform team provides a formal environment readiness certification that is included in the gate evidence package.",lead:"Platform Engineer",support:"Development Lead, QA",deliverable:"Environment readiness certification, pipeline validation report",traceability:"Environment Readiness → Sprint 1 Deployment → CI/CD Execution",governance:"Gate condition / Platform Engineer certification",chips:["Environment Provisioning","Pipeline Validation","Gate"],template_url:""},
+    {id:"DEVOPS-P6-OPERATE",lane:"DevOps / Platform",phase:"P6 Build & Test",level:"Platform",state:"Planned",meta:"Operations",title:"Platform Operations & Deployment Support",description:"Maintains platform stability, manages environment incidents, and executes controlled deployments throughout the build and test phase.",body:"The platform team maintains environment stability across the delivery phase, responding to environment incidents within agreed SLAs and executing controlled deployments at the end of each sprint. Deployment automation is progressively improved as the pipeline matures through the delivery phase. Environment health metrics are included in the weekly delivery status report. Any platform incident that impacts a sprint is escalated to the delivery lead with an estimated resolution time.",lead:"Platform Engineer",support:"Development Lead, QA",deliverable:"Deployment records, environment health metrics, incident log",traceability:"Sprint Deployments → Environment Health → Test Execution",governance:"Delivery governance / Steering committee awareness",chips:["Platform Operations","Deployments","Environment Health"],template_url:""},
+    {id:"DEVOPS-P7-GOLIVE-DEPLOY",lane:"DevOps / Platform",phase:"P7 Deploy & Release",level:"Platform",state:"Planned",meta:"Go-Live Deploy",title:"Production Deployment & Hypercare Support",description:"Executes the production deployment, monitors go-live stability, and provides hypercare platform support during the post-cutover window.",body:"The production deployment is executed per the approved cutover plan with a platform engineer on standby throughout the cutover window. Post-deployment monitoring confirms all services are healthy before the go-live decision is finalised. A hypercare support window of at least 10 business days is staffed by the platform team with agreed response SLAs for production incidents. All production environment changes during hypercare are change-controlled and reviewed by the solution architect.",lead:"Platform Engineer",support:"Development Lead, Architecture",deliverable:"Production deployment record, go-live monitoring report, hypercare log",traceability:"Production Deployment → Monitoring → Hypercare → Steady State",governance:"Program Director go-live authority / governance awareness",chips:["Production Deploy","Hypercare","Go-Live Monitoring"],template_url:""},
+    {id:"DEVOPS-P8-STEADY-STATE",lane:"DevOps / Platform",phase:"P8 Value",level:"Platform",state:"Planned",meta:"Steady State",title:"Steady State Operations & Platform Optimisation",description:"Transitions the platform to steady-state operations, establishes the operational runbook, and initiates the platform optimisation roadmap.",body:"Steady-state operations are established with a documented operational runbook, defined SLAs, monitoring dashboards, and an on-call escalation protocol. The platform optimisation roadmap identifies automation improvements, performance tuning opportunities, and cost optimisation actions to be implemented in the post-go-live period. DORA metrics are baselined at steady state to provide a continuous improvement baseline for the platform operations team.",lead:"Platform Engineer",support:"Operations, Architecture",deliverable:"Operational runbook, SLA register, platform optimisation roadmap",traceability:"Steady State → DORA Metrics → Platform Optimisation",governance:"Operations management / platform governance",chips:["Steady State","DORA Metrics","Platform Optimisation"],template_url:""},
+    /* LANE: Change & Adoption */
+    {id:"CHG-P1-CHANGE-STRATEGY",lane:"Change & Adoption",phase:"P1 Problem",level:"Change",state:"Active",meta:"Strategy",title:"Change Strategy & Stakeholder Engagement Plan",description:"Defines the change strategy, communications principles, and stakeholder engagement plan aligned to the transformation scope and timeline.",body:"The change strategy establishes the change management approach for the transformation, drawing on a structured change methodology to address the scale and complexity of the land tax operating model redesign. The stakeholder engagement plan maps each stakeholder group to a tailored engagement approach, message, and channel. Communication principles are agreed with the program director and sponsor to ensure consistent messaging throughout the lifecycle. The strategy is reviewed at each phase transition to confirm relevance.",lead:"Change Manager",support:"Sponsor, Program Director, Comms",deliverable:"Change strategy, stakeholder engagement plan, communication principles",traceability:"Change Strategy → Impact Assessment → Training Plan",governance:"Sponsor endorsement / program governance awareness",chips:["Change Strategy","Stakeholder Engagement","Communications"],template_url:""},
+    {id:"CHG-P2-IMPACT",lane:"Change & Adoption",phase:"P2 Context",level:"Change",state:"Active",meta:"Impact Analysis",title:"Change Impact Assessment & Readiness Baseline",description:"Assesses the scale and nature of change impacting each stakeholder group and establishes the change readiness baseline.",body:"The change impact assessment analyses the delta between the current and target operating model across people, process, and technology dimensions for each affected role group. Impact severity is rated by the degree of role change, system change, and process change. The readiness baseline survey measures current awareness, desire, knowledge, ability, and reinforcement factors across key stakeholder groups. The impact assessment informs the training needs analysis and change plan milestones.",lead:"Change Manager",support:"BA, HCD, Operations",deliverable:"Change impact assessment, readiness baseline, training needs analysis",traceability:"Impact Assessment → Training Plan → Adoption Measures",governance:"Sponsor review / program governance awareness",chips:["Impact Assessment","Readiness Baseline","Training Needs"],template_url:""},
+    {id:"CHG-P3-CHANGE-PLAN",lane:"Change & Adoption",phase:"P3 Current State",level:"Change",state:"Active",meta:"Change Plan",title:"Detailed Change Plan & Resistance Management",description:"Produces the detailed change plan with milestones, interventions, and a structured resistance management strategy.",body:"The detailed change plan translates the change strategy into a milestone-driven action plan covering communications, engagement sessions, training delivery, and reinforcement activities aligned to the program timeline. Resistance management identifies the highest-risk stakeholder groups and specific resistance patterns anticipated, with targeted interventions designed to address root causes rather than symptoms. The change plan is integrated into the program schedule and reported at steering committee level.",lead:"Change Manager",support:"HR, Communications, Operations",deliverable:"Detailed change plan, resistance management strategy, communications calendar",traceability:"Change Plan → Training Delivery → Adoption Measurement",governance:"Program Director approval / Steering committee integration",chips:["Change Plan","Resistance Management","Communications"],template_url:""},
+    {id:"CHG-P4-TRAINING-PLAN",lane:"Change & Adoption",phase:"P4 Target Design",level:"Change",state:"Active",meta:"Training Design",title:"Training Needs Analysis & Learning Design",description:"Produces the role-based training needs analysis and learning design specification aligned to the target operating model.",body:"The training needs analysis identifies skill gaps for each role group by comparing current capabilities against the skills required to operate effectively in the target state. Learning design specifications are produced for each training intervention, covering learning objectives, delivery modality, content outline, and assessment approach. Training materials are designed using the target experience principles to ensure the learning experience is consistent with the operational experience the training is preparing staff for.",lead:"Change Manager",support:"HCD, BA, Operations",deliverable:"Training needs analysis, learning design specifications, training schedule",traceability:"Training Design → Material Production → Delivery → Adoption",governance:"Operations management / Program Director endorsement",chips:["Training Design","Learning Design","Skill Gap Analysis"],template_url:""},
+    {id:"CHG-P6-TRAINING-DELIVERY",lane:"Change & Adoption",phase:"P6 Build & Test",level:"Change",state:"Planned",meta:"Training Delivery",title:"Training Material Production & Pilot Delivery",description:"Produces role-based training materials, conducts pilot training sessions, and refines content based on participant feedback.",body:"Training materials are produced in parallel with the build phase, ensuring content reflects the built system rather than design documentation. Pilot training sessions are conducted with representative staff from each role group to validate content accuracy, identify learning gaps, and assess the time required for operational readiness. Pilot feedback is incorporated into the final training materials before broader rollout commences. Training completion tracking is established to provide go-live readiness evidence.",lead:"Change Manager",support:"HCD, BA, Operations",deliverable:"Finalised training materials, pilot evaluation results, training completion tracker",traceability:"Training Delivery → Completion Tracking → Adoption Readiness",governance:"Go-live readiness condition / Operations endorsement",chips:["Training Delivery","Pilot Training","Completion Tracking"],template_url:""},
+    {id:"CHG-P7-GO-LIVE-COMMS",lane:"Change & Adoption",phase:"P7 Deploy & Release",level:"Change",state:"Planned",meta:"Go-Live Comms",title:"Go-Live Communications & Adoption Activation",description:"Executes the go-live communications plan, activates adoption support, and monitors early adoption indicators.",body:"Go-live communications are executed per the approved communications calendar, covering internal staff announcements, taxpayer and agent notifications, MyLandTax portal messaging updates, and media and stakeholder communications. Adoption activation includes floor-walking support during the first week of operations, a dedicated support escalation channel for go-live issues, and daily adoption pulse checks with operational managers. Early adoption indicators are monitored against baseline and reported to the steering committee daily during the first week.",lead:"Change Manager",support:"Comms, Operations, BA",deliverable:"Go-live communications package, adoption activation plan, daily adoption reports",traceability:"Go-Live Comms → Adoption Activation → Adoption Measurement",governance:"Sponsor approval / Steering committee daily reporting",chips:["Go-Live Comms","Adoption Activation","Change Support"],template_url:""},
+    {id:"CHG-P8-EMBEDDING",lane:"Change & Adoption",phase:"P8 Value",level:"Change",state:"Planned",meta:"Embedding",title:"Change Embedding & Sustained Adoption Measurement",description:"Measures sustained adoption, identifies embedding risks, and closes out the formal change management engagement.",body:"Sustained adoption measurement uses a structured framework assessing awareness, proficiency, and engagement metrics at 30, 90, and 180 days post-go-live. Embedding risks including regression to old processes, workaround adoption, and system avoidance are monitored and addressed through targeted reinforcement interventions. The formal change management engagement is closed once sustained adoption targets are met and line management is confident in the capability of operational staff to maintain the new operating model without change management support.",lead:"Change Manager",support:"Operations, HR, BA",deliverable:"Adoption measurement reports, embedding risk register, change closure report",traceability:"Adoption Measurement → Embedding → Benefits Register",governance:"Program Director / Operations management",chips:["Adoption Measurement","Change Embedding","Closure"],template_url:""},
+    /* LANE: Governance Checkpoints */
+    {id:"GOV-P1-ENTRY",lane:"Governance Checkpoints",phase:"P1 Problem",level:"Governance",state:"Active",meta:"Gate",title:"Program Initiation Gate & design authority Entry",description:"Formal governance gate confirming program charter endorsement, governance entry conditions met, and transformation investment authorised.",body:"The program initiation gate requires presentation of the endorsed program charter, problem statement, scope boundary, and investment case to the design authority and executive sponsor. The governance entry review confirms that the transformation approach is architecturally sound, that the platform landscape is understood, and that the configuration-first principle is embedded in the delivery approach. Sponsor endorsement of the investment case triggers program resource allocation and formally opens the transformation lifecycle.",lead:"Program Director",support:"Enterprise Architect, Sponsor",deliverable:"Gate evidence package, governance entry record, sponsor endorsement",traceability:"Program Initiation Gate → P2 Discovery Authority",governance:"governance gate — mandatory sponsor endorsement",chips:["Governance Gate","Program Initiation","Investment Authority"],template_url:""},
+    {id:"GOV-P2-DISCOVERY-REVIEW",lane:"Governance Checkpoints",phase:"P2 Context",level:"Governance",state:"Active",meta:"Checkpoint",title:"Discovery Review Checkpoint",description:"Mid-discovery governance checkpoint confirming scope is tracking to plan, risks are managed, and design intent is maintained.",body:"The discovery review checkpoint is a structured governance touchpoint conducted at the midpoint of the discovery phase. It reviews progress against the discovery plan, confirms that scope boundaries are being maintained, reviews the emerging risk register, and provides an opportunity for the sponsor to clarify any ambiguities in the transformation intent before significant design investment is made. The checkpoint produces a formal record that is held in the program governance file.",lead:"Program Director",support:"BA Practice Lead, Sponsor",deliverable:"Discovery review record, scope confirmation, risk register update",traceability:"Discovery Checkpoint → Continued Discovery → Design Phase Entry",governance:"Sponsor awareness / governance checkpoint",chips:["Discovery Checkpoint","Scope Confirmation","Risk Review"],template_url:""},
+    {id:"GOV-P3-BASELINE-ENDORSE",lane:"Governance Checkpoints",phase:"P3 Current State",level:"Governance",state:"Active",meta:"Endorsement",title:"Current State Baseline Endorsement",description:"Formal governance endorsement of the current state baseline artefacts including process maps, capability maturity, and platform fit assessment.",body:"The current state baseline endorsement requires presentation of the validated AS-IS process maps, capability maturity baseline, platform fit assessment, and gap analysis to the design authority. Endorsement confirms that the baseline accurately represents the current operating model, that the gap analysis is complete, and that the identified architecture decisions are appropriate. Without endorsed baseline artefacts the program may not proceed to target design. Any material disagreement with the baseline triggers a structured review process.",lead:"Solution Architect",support:"BA Practice Lead, Program Director",deliverable:"governance endorsement record, baseline artefact register",traceability:"Baseline Endorsement → Target Design Authority",governance:"mandatory governance endorsement — gate to P4",chips:["Baseline Endorsement","Design Authority Review","Design Authority"],template_url:""},
+    {id:"GOV-P4-DESIGN-REVIEW",lane:"Governance Checkpoints",phase:"P4 Target Design",level:"Governance",state:"Active",meta:"Design Gate",title:"Target Design Design Authority Review & program governance Endorsement",description:"Formal design authority review and governance endorsement of the complete target design artefact suite before gate entry assessment.",body:"The target design design authority review requires presentation of the complete target design suite: solution architecture, integration design, ADRs, TO-BE process maps, business rules register, target experience design, and the design brief compliance assessment. The design authority assesses architecture soundness, platform-fit compliance, configuration-vs-customisation decisions, and integration risk. The program governance endorses the business design including process design, business rules, and the user experience principles. Both endorsements are mandatory before gate entry.",lead:"Enterprise Architect",support:"Solution Architect, BA Practice Lead",deliverable:"design authority review record, governance endorsement, design artefact register",traceability:"Design Design Authority Review → Gate Entry Evidence → P5 Gate",governance:"program governance mandatory — gate entry condition",chips:["Design Authority Review","program governance Endorsement","Design Gate"],template_url:""},
+    {id:"GOV-P5-BUILD-GATE",lane:"Governance Checkpoints",phase:"P5 Ready Gate",level:"Governance",state:"Active",meta:"Build Gate",title:"Build Readiness Gate — Formal Entry Decision",description:"Formal multi-disciplinary gate producing the binary build/no-build decision with documented rationale and risk acceptance.",body:"The build readiness gate is the most significant governance checkpoint in the transformation lifecycle. The gate panel — comprising the Program Director, design authority representative, program governance representative, and sponsor — reviews the complete gate evidence package: readiness assessments from all disciplines, DoR-compliant backlog, environment readiness certifications, architecture endorsements, and the change readiness baseline. The gate produces a binary build/no-build decision. Any gate risks that are accepted are formally documented with an owner, a resolution timeline, and a review date.",lead:"Program Director",support:"All Disciplines",deliverable:"Build gate decision record, accepted risk register, sprint authority",traceability:"Build Gate → Sprint 1 Authority → Delivery Governance",governance:"Formal gate — sponsor, design authority, program governance required",chips:["Build Gate","Go/No-Go","Sprint Authority"],template_url:""},
+    {id:"GOV-P6-SPRINT-GOVERNANCE",lane:"Governance Checkpoints",phase:"P6 Build & Test",level:"Governance",state:"Planned",meta:"Delivery Gov",title:"Sprint Governance & Steering Committee Reporting",description:"Provides fortnightly steering committee reporting on delivery progress, quality, risk, and change impacts during the build phase.",body:"Fortnightly steering committee reports cover sprint velocity, backlog burn rate, quality dashboard summary, risk register updates, architecture deviation log, change readiness progress, and budget tracking. The design authority is available on an advisory basis for mid-sprint architecture questions that require escalation beyond the delivery team delegated authority. governance is notified of any material design changes that alter the endorsed business design. Steering committee members are empowered to escalate emerging risks to the sponsor for a decision outside the fortnightly cycle.",lead:"Program Director",support:"All Disciplines",deliverable:"Fortnightly steering committee reports, risk register updates",traceability:"Sprint Governance → Steering Reports → Risk Decisions",governance:"Steering committee / design authority advisory / sponsor escalation",chips:["Steering Committee","Sprint Governance","Risk Reporting"],template_url:""},
+    {id:"GOV-P7-GOLIVE-GATE",lane:"Governance Checkpoints",phase:"P7 Deploy & Release",level:"Governance",state:"Planned",meta:"Go-Live Gate",title:"Go-Live Gate & Release Authority",description:"Formal go-live gate confirming all release conditions are met and providing the executive authority for production deployment.",body:"The go-live gate requires evidence from all disciplines that release conditions are met: quality certificate from QA, UAT sign-off from the BA and operations, change readiness certification from the change manager, data migration validation sign-off, environment readiness from the platform team, and operational runbook completion. The gate produces a formal release authority signed by the Program Director and Executive Sponsor. Any outstanding conditions are treated as go-live blockers unless explicitly risk-accepted at executive level.",lead:"Program Director",support:"All Disciplines, Executive Sponsor",deliverable:"Go-live gate record, release authority, outstanding conditions register",traceability:"Go-Live Gate → Production Deployment → Hypercare",governance:"Executive sponsor authority — mandatory for production deployment",chips:["Go-Live Gate","Release Authority","Sponsor Sign-Off"],template_url:""},
+    {id:"GOV-P8-PIR-GATE",lane:"Governance Checkpoints",phase:"P8 Value",level:"Governance",state:"Planned",meta:"PIR Gate",title:"Post-Implementation Review Gate & Program Closure",description:"Conducts the formal post-implementation review, confirms benefit realisation progress, and closes the program governance structure.",body:"The post-implementation review gate is convened at 90 days post-go-live to assess the delivery of committed program outcomes against the original program mandate. The review covers benefits realisation progress, quality of delivered artefacts, change embedding status, and the architectural fitness of the deployed solution. Findings are reported to the sponsor and the design authority. Program governance structures are formally closed once the 180-day benefits measurement confirms the transformation is tracking to plan, with residual governance handed over to BAU operations management.",lead:"Program Director",support:"All Disciplines, Sponsor",deliverable:"PIR report, benefits realisation assessment, program closure record",traceability:"PIR → Closure → BAU Governance → Next Program",governance:"Sponsor / Program Board / design authority — formal program closure",chips:["PIR","Benefits Review","Program Closure"],template_url:""}
+  ]
+};/* ============================================================
+   DO NOT EDIT BELOW THIS LINE — Rendering Engine
+============================================================ */
+
+// ── Lane colours ─────────────────────────────────────────────
+const LANE_COLS = [
+  '#2563eb','#7c3aed','#0ea5e9','#059669','#d97706',
+  '#dc2626','#0d9488','#8b5cf6','#db2777','#374151'
+];
+
+// ── Phase class map ───────────────────────────────────────────
+function phaseClass(idx) {
+  if (idx < 3) return 'ph-strategy';
+  if (idx < 5) return 'ph-gate';
+  if (idx < 7) return 'ph-delivery';
+  return 'ph-value';
+}
+
+// ── Validation ────────────────────────────────────────────────
+function validateModel(data) {
+  const errors = [];
+  const ids = new Set();
+  const laneNames = new Set(data.lanes.map(l => l.name));
+  const phaseNames = new Set(data.phases.map(p => p.name));
+  const reqStr = ['id','lane','phase','level','state','meta','title','lead','support','deliverable','traceability','governance'];
+  const forbidden = ['TBD','Placeholder','Lorem ipsum','To be confirmed'];
+
+  data.cards.forEach((c, i) => {
+    reqStr.forEach(f => { if (!c[f]) errors.push(`Card[${i}] missing field: ${f}`); });
+    if (!c.description || c.description.trim().split(/\s+/).length < 10)
+      errors.push(`Card ${c.id}: description < 10 words`);
+    if (!c.body || c.body.trim().split(/\s+/).length < 15)
+      errors.push(`Card ${c.id}: body < 15 words`);
+    if (!c.chips || !c.chips.length) errors.push(`Card ${c.id}: no chips`);
+    if (ids.has(c.id)) errors.push(`Duplicate id: ${c.id}`);
+    ids.add(c.id);
+    if (!laneNames.has(c.lane)) errors.push(`Card ${c.id}: unknown lane "${c.lane}"`);
+    if (!phaseNames.has(c.phase)) errors.push(`Card ${c.id}: unknown phase "${c.phase}"`);
+    forbidden.forEach(f => {
+      if ((c.title||'').includes(f) || (c.description||'').includes(f))
+        errors.push(`Card ${c.id}: contains forbidden text "${f}"`);
+    });
+  });
+  return errors;
+}
+
+// ── State CSS class ───────────────────────────────────────────
+function stateClass(state) {
+  return {Active:'s-active',Planned:'s-planned',Review:'s-review',Complete:'s-complete'}[state] || 's-planned';
+}
+
+// ── Render board ──────────────────────────────────────────────
+function renderBoard() {
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+
+  const lanes = modelData.lanes;
+  const phases = modelData.phases;
+  const cards = modelData.cards;
+
+  // Build lookup: lane → phase → card
+  const lookup = {};
+  cards.forEach(c => {
+    if (!lookup[c.lane]) lookup[c.lane] = {};
+    lookup[c.lane][c.phase] = c;
+  });
+
+  const el = (tag, cls, extra) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (extra) Object.assign(e, extra);
+    return e;
+  };
+
+  // ── Row 1: Zone band ─────────────────────────────────────
+  const zCorner = el('div', 'zone-corner lane-lbl');
+  zCorner.style.gridRow = '1'; zCorner.style.gridColumn = '1';
+  board.appendChild(zCorner);
+
+  [
+    {cls:'zone zone-strategy', col:'2/5', label:'Strategic Cadence'},
+    {cls:'zone zone-gate',     col:'5/7', label:'✓ READY FOR BUILD'},
+    {cls:'zone zone-delivery', col:'7/10', label:'Delivery Cadence'},
+  ].forEach(z => {
+    const d = el('div', z.cls);
+    d.style.gridRow='1'; d.style.gridColumn=z.col;
+    d.textContent = z.label;
+    board.appendChild(d);
+  });
+
+  // ── Row 2: Phase headers ──────────────────────────────────
+  const phCorner = el('div', 'phase-corner lane-lbl');
+  phCorner.style.gridRow = '2'; phCorner.style.gridColumn = '1';
+  board.appendChild(phCorner);
+
+  phases.forEach((p, pi) => {
+    const d = el('div', 'phase-hdr ' + phaseClass(pi));
+    d.style.gridRow = '2'; d.style.gridColumn = String(pi + 2);
+    d.innerHTML = `<span class="ph-num">${p.num}</span><span class="ph-name">${p.name.replace(/^P\d+\s*/,'')}</span><span class="ph-desc">${p.desc}</span>`;
+    board.appendChild(d);
+  });
+
+  // ── Row 3: Overlay band ───────────────────────────────────
+  const ovCorner = el('div', 'overlay-corner lane-lbl');
+  ovCorner.style.gridRow = '3'; ovCorner.style.gridColumn = '1';
+  board.appendChild(ovCorner);
+
+  [
+    {cls:'overlay ov-strategy', col:'2/5', label:'Strategic Cadence'},
+    {cls:'overlay ov-gate',     col:'5/7', label:'✓ READY FOR BUILD'},
+    {cls:'overlay ov-delivery', col:'7/10', label:'Delivery Cadence'},
+  ].forEach(ov => {
+    const d = el('div', ov.cls);
+    d.style.gridRow = '3'; d.style.gridColumn = ov.col;
+    d.textContent = ov.label;
+    board.appendChild(d);
+  });
+
+  // ── Rows 4-13: Lane labels + cells ────────────────────────
+  lanes.forEach((lane, li) => {
+    const rowIdx = li + 4;
+    const color = LANE_COLS[li % LANE_COLS.length];
+
+    // Lane label
+    const ll = el('div', 'lane-lbl');
+    ll.style.gridRow = String(rowIdx); ll.style.gridColumn = '1';
+    ll.style.borderTop = `3px solid ${color}`;
+    ll.innerHTML = `<span class="ll-num">${lane.num}</span><span class="ll-name">${lane.name}</span><span class="ll-role">${lane.role}</span>`;
+    board.appendChild(ll);
+
+    // Cells
+    phases.forEach((phase, pi) => {
+      const card = (lookup[lane.name] || {})[phase.name];
+      const cell = el('div', '');
+      cell.style.gridRow = String(rowIdx);
+      cell.style.gridColumn = String(pi + 2);
+      cell.dataset.lane = lane.name;
+      cell.dataset.phase = phase.name;
+      cell.dataset.phaseIdx = pi;
+
+      if (!card) {
+        cell.className = 'cell cell-placeholder';
+      } else {
+        cell.className = 'cell';
+        cell.dataset.id = card.id;
+        cell.dataset.level = card.level;
+        cell.dataset.state = card.state;
+        cell.tabIndex = 0;
+        cell.setAttribute('role', 'button');
+        cell.setAttribute('aria-label', card.title);
+
+        const chipsHtml = card.chips.map(ch => `<span class="chip">${ch}</span>`).join('');
+        const tmplLink = card.template_url
+          ? '<a class="c-template" href="' + card.template_url + '" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="c-template-icon">📄</span>Template</a>'
+          : '';
+        const inner = el('div', 'card-inner');
+        inner.style.setProperty('--lane-color', color);
+        inner.innerHTML = `
+          <div class="card-top">
+            <span class="c-meta">${card.meta}</span>
+            <span class="c-state ${stateClass(card.state)}">${card.state}</span>
+          </div>
+          <div class="c-title">${card.title}</div>
+          <div class="c-desc">${card.description}</div>
+          <div class="c-body">${card.body}</div>
+          <div class="c-chips">${chipsHtml}</div>
+          ${tmplLink}`;
+        cell.appendChild(inner);
+
+        cell.addEventListener('click', () => handleCardClick(card, cell, li));
+        cell.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleCardClick(card, cell, li); }
+        });
+      }
+      board.appendChild(cell);
+    });
+  });
+}
+
+// ── Card click / drawer ───────────────────────────────────────
+let activeCell = null;
+
+function handleCardClick(card, cell, laneIdx) {
+  if (activeCell === cell) {
+    clearFlow(); closeDrawer();
+    return;
+  }
+  clearFlow();
+  activeCell = cell;
+  cell.classList.add('cell-selected');
+  highlightFlow(card, laneIdx);
+  openDrawer(card);
+}
+
+function openDrawer(card) {
+  document.getElementById('drwPhase').textContent = card.phase;
+  document.getElementById('drwTitle').textContent = card.title;
+  document.getElementById('drwMeta').innerHTML =
+    `<span class="c-meta">${card.meta}</span> · <span class="c-state ${stateClass(card.state)}" style="padding:2px 6px;border-radius:99px">${card.state}</span>`;
+
+  const chipsHtml = card.chips.map(ch => `<span class="drw-chip">${ch}</span>`).join('');
+  const tmplSection = card.template_url
+    ? '<a class="drw-template-btn" href="' + card.template_url + '" target="_blank" rel="noopener">📄 Open Template in Confluence</a><div style="font-size:10px;color:#9ca3af;margin-top:6px;word-break:break-all">' + card.template_url + '</div>'
+    : '<div class="drw-template-none">No template linked — add a Confluence URL via the Excel template_url column and re-import.</div>';
+  document.getElementById('drwBody').innerHTML = `
+    <div class="drw-field"><span class="drw-label">Description</span><p>${card.description}</p></div>
+    <div class="drw-field"><span class="drw-label">Detail</span><p>${card.body}</p></div>
+    <div class="drw-section-head">Accountability</div>
+    <div class="drw-field"><span class="drw-label">Lead</span><p>${card.lead}</p></div>
+    <div class="drw-field"><span class="drw-label">Support</span><p>${card.support}</p></div>
+    <div class="drw-section-head">Artefact &amp; Traceability</div>
+    <div class="drw-field"><span class="drw-label">Deliverable</span><p>${card.deliverable}</p></div>
+    <div class="drw-field"><span class="drw-label">Traceability</span><p>${card.traceability}</p></div>
+    <div class="drw-section-head">Governance</div>
+    <div class="drw-field"><span class="drw-label">Governance</span><p>${card.governance}</p></div>
+    <div class="drw-field"><span class="drw-label">Level</span><p>${card.level}</p></div>
+    <div class="drw-field"><span class="drw-label">Tags</span><div class="drw-chips">${chipsHtml}</div></div>
+    <div class="drw-field"><span class="drw-label">ID</span><code>${card.id}</code></div>
+    <div class="drw-section-head">Template</div>
+    ${tmplSection}`;
+
+  document.getElementById('drwBackdrop').classList.add('open');
+}
+
+function closeDrawer() {
+  document.getElementById('drwBackdrop').classList.remove('open');
+}
+
+// ── Flow highlight ────────────────────────────────────────────
+function highlightFlow(card, laneIdx) {
+  const phaseNames = modelData.phases.map(p => p.name);
+  const selIdx = phaseNames.indexOf(card.phase);
+
+  document.querySelectorAll('.cell').forEach(c => {
+    if (c.dataset.id === card.id) return;
+    if (c.dataset.lane !== card.lane) {
+      c.classList.add('cell-dimmed');
+      return;
+    }
+    const pi = parseInt(c.dataset.phaseIdx, 10);
+    if (pi < selIdx) c.classList.add('cell-up');
+    else if (pi > selIdx) c.classList.add('cell-down');
+  });
+}
+
+function clearFlow() {
+  document.querySelectorAll('.cell').forEach(c => {
+    c.classList.remove('cell-selected','cell-up','cell-down','cell-dimmed');
+  });
+  activeCell = null;
+}
+
+// ── Filters ───────────────────────────────────────────────────
+function applyFilters() {
+  const phase = document.getElementById('filterPhase').value;
+  const lane  = document.getElementById('filterLane').value;
+  const level = document.getElementById('filterLevel').value;
+  const state = document.getElementById('filterState').value;
+  const search = document.getElementById('filterSearch').value.trim().toLowerCase();
+
+  document.querySelectorAll('.cell').forEach(cell => {
+    if (cell.classList.contains('cell-placeholder')) return;
+    if (!cell.dataset.id) return;
+    let vis = true;
+    if (phase && cell.dataset.phase !== phase) vis = false;
+    if (lane  && cell.dataset.lane  !== lane)  vis = false;
+    if (level && cell.dataset.level !== level) vis = false;
+    if (state && cell.dataset.state !== state) vis = false;
+    if (search && !cell.textContent.toLowerCase().includes(search)) vis = false;
+    cell.style.opacity = vis ? '' : '0.15';
+    cell.style.pointerEvents = vis ? '' : 'none';
+  });
+}
+
+// ── View mode ─────────────────────────────────────────────────
+function applyViewMode(mode) {
+  const board = document.getElementById('board');
+  board.classList.remove('view-detail','view-exec','view-dense');
+  board.classList.add('view-' + mode);
+  setTimeout(syncToolbarHeight, 50);
+}
+
+// ── Toolbar height sync ───────────────────────────────────────
+function syncToolbarHeight() {
+  const tb = document.getElementById('toolbar');
+  if (!tb) return;
+  const h = tb.offsetHeight;
+  document.documentElement.style.setProperty('--tb-h', h + 'px');
+  document.getElementById('canvas').style.height = `calc(100vh - ${h}px)`;
+}
+
+// ── CSV export ────────────────────────────────────────────────
+function exportCSV() {
+  const fields = ['id','lane','phase','level','state','meta','title','description','body','lead','support','deliverable','traceability','governance','chips','template_url'];
+  const header = fields.join(',');
+  const rows = modelData.cards.map(c =>
+    fields.map(f => {
+      const v = f === 'chips' ? (c[f]||[]).join('; ') : (c[f]||'');
+      return '"' + String(v).replace(/"/g,'""') + '"';
+    }).join(',')
+  );
+  const blob = new Blob([[header,...rows].join('\n')], {type:'text/csv'});
+  const a = Object.assign(document.createElement('a'), {href:URL.createObjectURL(blob), download:'TOM_Design_to_Value.csv'});
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+// ── Populate selects ──────────────────────────────────────────
+function populateFilters() {
+  const add = (id, val, label) => {
+    const o = document.createElement('option');
+    o.value = val; o.textContent = label;
+    document.getElementById(id).appendChild(o);
+  };
+  modelData.phases.forEach(p => add('filterPhase', p.name, p.num + ' ' + p.name.replace(/^P\d+\s*/,'')));
+  modelData.lanes.forEach(l => add('filterLane', l.name, l.name));
+  [...new Set(modelData.cards.map(c=>c.level))].sort().forEach(v => add('filterLevel', v, v));
+  [...new Set(modelData.cards.map(c=>c.state))].sort().forEach(v => add('filterState', v, v));
+}
+
+// ── Validation banner ─────────────────────────────────────────
+function showValidation(errors) {
+  const b = document.getElementById('valBanner');
+  if (!errors.length) { b.style.display='none'; return; }
+  b.style.display='block';
+  b.innerHTML = `<strong>⚠ Validation (${errors.length})</strong><ul>${errors.map(e=>`<li>${e}</li>`).join('')}</ul>`;
+}
+
+// ── Init ──────────────────────────────────────────────────────
+function init() {
+  showValidation(validateModel(modelData));
+  populateFilters();
+  renderBoard();
+  syncToolbarHeight();
+  applyViewMode('detail');
+
+  // Drawer close
+  document.getElementById('drwClose').addEventListener('click', () => { clearFlow(); closeDrawer(); });
+  document.getElementById('drwBackdrop').addEventListener('click', e => {
+    if (e.target === document.getElementById('drwBackdrop')) { clearFlow(); closeDrawer(); }
+  });
+  document.addEventListener('keydown', e => { if (e.key==='Escape') { clearFlow(); closeDrawer(); } });
+
+  // Filters
+  ['filterPhase','filterLane','filterLevel','filterState'].forEach(id =>
+    document.getElementById(id).addEventListener('change', applyFilters)
+  );
+  document.getElementById('filterSearch').addEventListener('input', applyFilters);
+
+  // View mode
+  document.getElementById('viewMode').addEventListener('change', e => applyViewMode(e.target.value));
+
+  // Buttons
+  document.getElementById('clearFlow').addEventListener('click', () => { clearFlow(); closeDrawer(); });
+  document.getElementById('exportCSV').addEventListener('click', exportCSV);
+  document.getElementById('printPDF').addEventListener('click', () => window.print());
+
+  // Import JSON
+  document.getElementById('importJSON').addEventListener('click', openImportModal);
+  document.getElementById('imCancel').addEventListener('click', closeImportModal);
+  document.getElementById('imApply').addEventListener('click', applyImport);
+  document.getElementById('importModalBackdrop').addEventListener('click', e => {
+    if (e.target === document.getElementById('importModalBackdrop')) closeImportModal();
+  });
+  document.getElementById('imDropzone').addEventListener('click', () => document.getElementById('importFile').click());
+  document.getElementById('importFile').addEventListener('change', e => {
+    if (e.target.files[0]) handleImportFile(e.target.files[0]);
+  });
+  document.getElementById('imDropzone').addEventListener('dragover', e => {
+    e.preventDefault(); e.currentTarget.classList.add('drag-over');
+  });
+  document.getElementById('imDropzone').addEventListener('dragleave', e => {
+    e.currentTarget.classList.remove('drag-over');
+  });
+  document.getElementById('imDropzone').addEventListener('drop', e => {
+    e.preventDefault(); e.currentTarget.classList.remove('drag-over');
+    if (e.dataTransfer.files[0]) handleImportFile(e.dataTransfer.files[0]);
+  });
+
+  // Resize
+  window.addEventListener('resize', syncToolbarHeight);
+}
+
+
+// ── Import JSON ───────────────────────────────────────────────
+let pendingImport = null;
+
+function openImportModal() {
+  pendingImport = null;
+  document.getElementById('imApply').disabled = true;
+  document.getElementById('imError').style.display = 'none';
+  document.getElementById('imDropzone').querySelector('.im-dropzone-text').textContent = 'Click to select a JSON file';
+  document.getElementById('importModalBackdrop').classList.add('open');
+}
+
+function closeImportModal() {
+  document.getElementById('importModalBackdrop').classList.remove('open');
+  pendingImport = null;
+}
+
+function handleImportFile(file) {
+  if (!file || !file.name.endsWith('.json')) {
+    showImportError('Please select a .json file.');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      const errors = validateImport(data);
+      if (errors.length) {
+        showImportError('Validation errors: ' + errors.join('; '));
+        return;
+      }
+      pendingImport = data;
+      document.getElementById('imApply').disabled = false;
+      document.getElementById('imDropzone').querySelector('.im-dropzone-text').textContent = '✓ ' + file.name + ' — ready to apply';
+      document.getElementById('imError').style.display = 'none';
+    } catch(err) {
+      showImportError('Invalid JSON: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function validateImport(data) {
+  const errors = [];
+  if (!data.lanes || !Array.isArray(data.lanes) || !data.lanes.length) errors.push('lanes array missing or empty');
+  if (!data.phases || !Array.isArray(data.phases) || !data.phases.length) errors.push('phases array missing or empty');
+  if (!data.cards || !Array.isArray(data.cards) || !data.cards.length) errors.push('cards array missing or empty');
+  return errors;
+}
+
+function showImportError(msg) {
+  const el = document.getElementById('imError');
+  el.textContent = msg;
+  el.style.display = 'block';
+  document.getElementById('imApply').disabled = true;
+  pendingImport = null;
+}
+
+function applyImport() {
+  if (!pendingImport) return;
+  // Patch modelData in place
+  modelData.lanes = pendingImport.lanes;
+  modelData.phases = pendingImport.phases;
+  modelData.cards = pendingImport.cards;
+  closeImportModal();
+  clearFlow();
+  closeDrawer();
+  // Re-populate filters and re-render
+  document.getElementById('filterPhase').innerHTML = '<option value="">All Phases</option>';
+  document.getElementById('filterLane').innerHTML = '<option value="">All Lanes</option>';
+  document.getElementById('filterLevel').innerHTML = '<option value="">All Levels</option>';
+  document.getElementById('filterState').innerHTML = '<option value="">All States</option>';
+  populateFilters();
+  renderBoard();
+  syncToolbarHeight();
+  applyViewMode(document.getElementById('viewMode').value);
+  showValidation(validateModel(modelData));
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script></body></html>
